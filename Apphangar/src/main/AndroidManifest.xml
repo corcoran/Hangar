@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ca.mimic.apphangar"
+    android:versionCode="2"
+    android:versionName="1.5"
+    android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_apps_white"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+
+        <receiver android:name="ca.mimic.apphangar.BootStart"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="ca.mimic.apphangar.WatchfulService"
+            android:exported="false" >
+        </service>
+
+        <activity
+            android:name="ca.mimic.apphangar.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@android:style/Theme.Holo">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

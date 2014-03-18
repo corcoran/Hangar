@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Hangar</string>
+    <string name="title_behavior">Behavior</string>
+    <string name="title_appearance">Appearance</string>
+    <string name="title_apps">Apps</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Hangar Settings</string>
+
+    <!-- Preferences -->
+    <!-- Behavior -->
+    <string name="title_toggle_preference">Show notification bar</string>
+    <string name="title_boot_preference">Start on boot</string>
+
+    <string name="title_weight_category">Sorting and Icon Order</string>
+
+    <string name="title_weighted_recents_preference">Weighted sorting</string>
+    <string name="summary_weighted_recents_preference">Apps sorted by most used and recency</string>
+
+    <string name="title_weight_priority_preference">Weight bias</string>
+    <string name="summary_weight_priority_preference">%s</string>
+    <string name="dialog_weight_priority_preference">Choose a weight</string>
+
+    <string-array name="entries_weight_priority_preference">
+        <item>Default</item>
+        <item>Recency</item>
+        <item>Number of launches</item>
+        <item>Time spent in app</item>
+    </string-array>
+    <string-array name="values_weight_priority_preference">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string name="title_priority_preference">Notification position</string>
+    <string name="summary_priority_preference">%s position in notification drawer</string>
+    <string name="dialog_priority_preference">Choose a position</string>
+
+    <string-array name="entries_priority_preference">
+        <item>Top</item>
+        <item>Normal</item>
+        <item>Bottom</item>
+    </string-array>
+    <string-array name="values_priority_preference">
+        <item>2</item>
+        <item>0</item>
+        <item>-2</item>
+    </string-array>
+
+    <string name="title_appsno_preference">Number of apps</string>
+    <string name="summary_appsno_preference">Showing up to a maximum of %s apps</string>
+
+    <string-array name="entries_appsno_preference">
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+    </string-array>
+
+    <!-- Appearance -->
+
+    <string name="title_divider_preference">Enable divider</string>
+    <string name="summary_divider_preference">Shows a divider between each app icon</string>
+
+    <string name="title_colorize_preference">Colorize notification icons</string>
+    <string name="summary_colorize_preference">Change the color of the notification icons</string>
+    <string name="title_icon_color_preference">Color</string>
+
+    <string name="title_icon_color_category">Icon Color</string>
+
+    <!-- Color Picker -->
+    <string name="dialog_color_picker">Color Picker</string>
+    <string name="press_color_to_apply">Press on color below to apply</string>
+    <string name="arrow_right">→</string>
+    <string name="arrow_down">↓</string>
+    <string name="hex">Hex:</string>
+    <string name="hex_hint">#ff000000</string>
+    <string name="set">Set</string>
+    <string name="color_default">Default</string>
+</resources>

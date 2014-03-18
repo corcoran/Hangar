@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent">
+
+    <SwitchPreference
+        android:key="toggle_preference"
+        android:title="@string/title_toggle_preference" />
+
+    <SwitchPreference
+        android:key="boot_preference"
+        android:title="@string/title_boot_preference"
+        android:dependency="toggle_preference" />
+
+    <ca.mimic.apphangar.UpdatingListPreference
+        android:key="priority_preference"
+        android:title="@string/title_priority_preference"
+        android:summary="@string/summary_priority_preference"
+        android:entries="@array/entries_priority_preference"
+        android:entryValues="@array/values_priority_preference"
+        android:dialogTitle="@string/dialog_priority_preference"
+        android:defaultValue="2" />
+
+    <PreferenceCategory
+        android:title="@string/title_weight_category">
+
+        <CheckBoxPreference
+            android:key="weighted_recents_preference"
+            android:title="@string/title_weighted_recents_preference"
+            android:summary="@string/summary_weighted_recents_preference" />
+
+        <ca.mimic.apphangar.UpdatingListPreference
+            android:key="weight_priority_preference"
+            android:title="@string/title_weight_priority_preference"
+            android:summary="@string/summary_weight_priority_preference"
+            android:entries="@array/entries_weight_priority_preference"
+            android:entryValues="@array/values_weight_priority_preference"
+            android:dialogTitle="@string/dialog_weight_priority_preference"
+            android:dependency="weighted_recents_preference"
+            android:defaultValue="0" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
