@@ -234,6 +234,14 @@ public class WatchfulService extends Service {
                     }
                     break;
                 } else if (origSize == 0) {
+                    if (isBlacklisted(newInfo.packageName)) {
+                        continue;
+                    }
+
+                    if (newInfo.className.equals("com.android.launcher2.Launcher") ||
+                            newInfo.className.equals("com.android.internal.app.ResolverActivity")) {
+                        continue;
+                    }
                     // No database?  Let's create from memory..
                     updateOrAdd(newInfo);
                     taskList.add(newInfo);
