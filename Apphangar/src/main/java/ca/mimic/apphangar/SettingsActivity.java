@@ -512,8 +512,8 @@ public class SettingsActivity extends Activity implements ActionBar.TabListener 
         }
 
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
             // setRetainInstance(true);
             final int prefLayout = getArguments().getInt("layout");
             addPreferencesFromResource(prefLayout);
