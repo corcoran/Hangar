@@ -1,6 +1,5 @@
 package ca.mimic.apphangar;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -24,9 +23,11 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
@@ -63,9 +64,9 @@ public class SettingsActivity extends Activity implements ActionBar.TabListener 
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
-    private WatchfulService s;
-    private TasksDataSource db;
-    private Context mContext;
+    private static IWatchfulService s;
+    private static TasksDataSource db;
+    // private Context mContext;
 
     static String TAG = "Apphangar";
     static String DIVIDER_PREFERENCE = "divider_preference";
@@ -78,20 +79,33 @@ public class SettingsActivity extends Activity implements ActionBar.TabListener 
     static String COLORIZE_PREFERENCE = "colorize_preference";
     static String ICON_COLOR_PREFERENCE = "icon_color_preference";
 
-    protected View appsView;
-    protected boolean isBound = false;
+    protected static View appsView;
+    protected static boolean isBound = false;
     boolean newStart;
 
-    static boolean DIVIDER_DEFAULT = true;
-    static boolean TOGGLE_DEFAULT = true;
-    static boolean BOOT_DEFAULT = true;
-    static boolean WEIGHTED_RECENTS_DEFAULT = true;
-    static boolean COLORIZE_DEFAULT = false;
-    static int WEIGHT_PRIORITY_DEFAULT = 0;
-    static int APPSNO_DEFAULT = 7;
-    static int PRIORITY_DEFAULT = 2;
-    static int ICON_COLOR_DEFAULT = 0xffffffff;
+    static PrefsGet prefs;
+    static Context mContext;
+    static ServiceCall myService;
 
+    final static boolean DIVIDER_DEFAULT = true;
+    final static boolean TOGGLE_DEFAULT = true;
+    final static boolean BOOT_DEFAULT = true;
+    final static boolean WEIGHTED_RECENTS_DEFAULT = true;
+    final static boolean COLORIZE_DEFAULT = false;
+    final static int WEIGHT_PRIORITY_DEFAULT = 0;
+    final static int APPSNO_DEFAULT = 7;
+    final static int PRIORITY_DEFAULT = 2;
+    final static int ICON_COLOR_DEFAULT = 0xffffffff;
+
+    final static int SERVICE_RUN_SCAN = 0;
+    final static int SERVICE_DESTROY_NOTIFICATIONS = 1;
+    final static int SERVICE_BUILD_TASKS = 2;
+    final static int SERVICE_CLEAR_TASKS = 3;
+
+    final static int START_SERVICE = 0;
+    final static int STOP_SERVICE = 1;
+    static DrawTasks drawT;
+    static int mOrientation;
     static int displayWidth;
 
     @Override
@@ -100,21 +114,20 @@ public class SettingsActivity extends Activity implements ActionBar.TabListener 
 
         setContentView(R.layout.activity_settings);
 
-        SharedPreferences prefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-        if (prefs.getBoolean(TOGGLE_PREFERENCE, TOGGLE_DEFAULT)) {
-            startService(new Intent(this, WatchfulService.class));
+        prefs = new PrefsGet(getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS));
+
+        // SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // startService(new Intent(this, WatchfulService.class));
+
+        if (db == null) {
+            db = new TasksDataSource(this);
+            db.open();
         }
-
-        db = new TasksDataSource(this);
-        db.open();
-
         mContext = this;
 
-        Display display = getWindowManager().getDefaultDisplay();
-
-        Point size = new Point();
-        display.getSize(size);
-        displayWidth = size.x;
+        drawT = new DrawTasks();
+        myService = new ServiceCall(mContext);
+        myService.setConnection(mConnection);
 
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
@@ -134,7 +147,7 @@ public class SettingsActivity extends Activity implements ActionBar.TabListener 
                 try {
                     if (pagePosition == 2 && newStart && state == ViewPager.SCROLL_STATE_IDLE) {
                         newStart = false;
-                        drawTasks(appsView);
+                        drawT.drawTasks(appsView);
                     }
                 } catch (NullPointerException e) {
                     // Not yet created
@@ -166,39 +179,88 @@ public class SettingsActivity extends Activity implements ActionBar.TabListener 
     @Override
     protected void onResume() {
         super.onResume();
-        SharedPreferences prefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-        if (!isBound) {
-            Intent intent = new Intent(this, WatchfulService.class);
-            startService(intent);
-            bindService(intent, mConnection, Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
-        }
+        myService.watchHelper(START_SERVICE);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        try {
-            if (isBound) {
-                unbindService(mConnection);
-                isBound = false;
-            }
-        } catch (RuntimeException e) {
+        if (isBound) {
+            unbindService(myService.mConnection);
+            isBound = false;
         }
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className,
                                        IBinder binder) {
-            WatchfulService.WatchfulBinder b = (WatchfulService.WatchfulBinder) binder;
-            s = b.getService();
+            s = IWatchfulService.Stub.asInterface(binder);
             isBound = true;
-            s.buildTasks();
+            new ServiceCall().execute(SERVICE_BUILD_TASKS);
         }
 
         public void onServiceDisconnected(ComponentName className) {
             s = null;
         }
     };
+
+    protected static class ServiceCall  {
+        Context mContext;
+        ServiceConnection mConnection;
+        ServiceCall(Context context) {
+            mContext = context;
+        }
+        ServiceCall() {
+        }
+        protected void setConnection(ServiceConnection connection) {
+            mConnection = connection;
+        }
+        protected void watchHelper(int which) {
+            Intent intent = new Intent(mContext, WatchfulService.class);
+            switch (which) {
+                case 0:
+                    mContext.startService(intent);
+                    if (!isBound) {
+                        mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
+                    }
+                    break;
+                case 1:
+                    mContext.stopService(intent);
+                    if (isBound) {
+                        mContext.unbindService(mConnection);
+                        isBound = false;
+                    }
+                    break;
+            }
+        }
+        protected void execute(int which) {
+            try {
+                switch(which) {
+                    case SERVICE_RUN_SCAN:
+                        watchHelper(STOP_SERVICE);
+                        watchHelper(START_SERVICE);
+                        break;
+                    case SERVICE_CLEAR_TASKS:
+                        s.clearTasks();
+                        break;
+                    case SERVICE_BUILD_TASKS:
+                        s.buildTasks();
+                        return;
+                    case SERVICE_DESTROY_NOTIFICATIONS:
+                        s.destroyNotification();
+                        s.clearTasks();
+                        break;
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -274,324 +336,347 @@ public class SettingsActivity extends Activity implements ActionBar.TabListener 
             return firstCompare;
         }
     }
-    public class RebuildTasks extends AsyncTask<Void, Void, Void> {
-        @Override protected Void doInBackground(Void... params) {
-            if (isBound) {
-                s.topPackage = null;
-                s.taskList.clear();
-                s.runScan();
-            }
-            return null;
+    public class DrawTasks {
+        View v;
+        void Drawtasks(View view) {
+            v = view;
+            drawTasks(view);
         }
-    }
-    public void drawTasks(View view) {
-        final View v = view;
-        runOnUiThread(new Runnable()
-        {
-            @Override
-            public void run()
+        public void drawTasks(View view) {
+            final View v = view;
+            runOnUiThread(new Runnable()
             {
-                LinearLayout taskRoot = (LinearLayout) v.findViewById(R.id.taskRoot);
-                taskRoot.removeAllViews();
-                int highestSeconds = db.getHighestSeconds();
-                List<TasksModel> tasks = db.getAllTasks();
-                Collections.sort(tasks, new TasksComparator("seconds"));
-                for (TasksModel task : tasks) {
-                    LinearLayout taskRL = new LinearLayout(mContext);
+                @Override
+                public void run()
+                {
+                    Context mContext = getApplicationContext();
+                    LinearLayout taskRoot = (LinearLayout) v.findViewById(R.id.taskRoot);
+                    taskRoot.removeAllViews();
+                    int highestSeconds = db.getHighestSeconds();
+                    List<TasksModel> tasks = db.getAllTasks();
+                    Collections.sort(tasks, new TasksComparator("seconds"));
+                    for (TasksModel task : tasks) {
+                        LinearLayout taskRL = new LinearLayout(getApplicationContext());
 
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params.topMargin = dpToPx(6);
-                    taskRL.setLayoutParams(params);
-                    taskRL.setTag(task);
-                    taskRL.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            TasksModel task = (TasksModel)view.getTag();
-                            TextView text = (TextView)view.findViewWithTag("text");
-                            db.blacklistTask(task, fadeTask(view, text));
-                            new RebuildTasks().execute();
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                        params.topMargin = dpToPx(6);
+                        taskRL.setLayoutParams(params);
+                        taskRL.setTag(task);
+                        taskRL.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                TasksModel task = (TasksModel)view.getTag();
+                                TextView text = (TextView)view.findViewWithTag("text");
+                                db.blacklistTask(task, fadeTask(view, text));
+                                myService.execute(SERVICE_CLEAR_TASKS);
+                                myService.watchHelper(STOP_SERVICE);
+                                myService.watchHelper(START_SERVICE);
+                            }
+                        });
+
+                        TextView useStats = new TextView(mContext);
+                        LinearLayout.LayoutParams useStatsParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                        useStatsParams.topMargin = dpToPx(30);
+                        useStatsParams.leftMargin = dpToPx(10);
+                        useStatsParams.rightMargin = dpToPx(4);
+                        useStats.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                        useStats.setTag("usestats");
+                        useStats.setLayoutParams(useStatsParams);
+                        useStats.setTypeface(null, Typeface.BOLD);
+
+                        LinearLayout textCont = new LinearLayout(mContext);
+                        LinearLayout.LayoutParams useStatsLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+                        textCont.setLayoutParams(useStatsLayout);
+                        textCont.setOrientation(LinearLayout.VERTICAL);
+
+                        TextView taskName = new TextView(mContext);
+                        LinearLayout.LayoutParams nameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+                        nameParams.leftMargin = dpToPx(10);
+                        nameParams.topMargin = dpToPx(4);
+                        taskName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                        taskName.setTag("text");
+                        taskName.setLayoutParams(nameParams);
+
+                        RelativeLayout barCont = new RelativeLayout(mContext);
+                        LinearLayout.LayoutParams barContLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+                        barContLayout.topMargin = dpToPx(10);
+                        barContLayout.leftMargin = dpToPx(10);
+                        barContLayout.height = dpToPx(5);
+                        barCont.setLayoutParams(barContLayout);
+
+
+                        ImageView taskIcon = new ImageView(mContext);
+                        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(dpToPx(46),
+                                dpToPx(46));
+
+                        iconParams.leftMargin = dpToPx(6);
+                        iconParams.rightMargin = dpToPx(6);
+                        iconParams.bottomMargin = dpToPx(6);
+                        taskIcon.setLayoutParams(iconParams);
+
+                        try {
+                            PackageManager pm = getApplicationContext().getPackageManager();
+                            // Log.d(TAG, "Trying to grab AppInfo class[" + task.getClassName()+ "] package[" + task.getPackageName() + "]");
+                            ComponentName componentTask = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
+                            ApplicationInfo appInfo = pm.getApplicationInfo(componentTask.getPackageName(), 0);
+
+                            taskName.setText(task.getName());
+                            taskIcon.setImageDrawable(appInfo.loadIcon(pm));
+                        } catch (Exception e) {
+                            Log.d(TAG, "Could not find Application info for [" + task.getName() + "]");
+                            continue;
                         }
-                    });
 
-                    TextView useStats = new TextView(mContext);
-                    LinearLayout.LayoutParams useStatsParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-                    useStatsParams.topMargin = dpToPx(30);
-                    useStatsParams.leftMargin = dpToPx(10);
-                    useStatsParams.rightMargin = dpToPx(4);
-                    useStats.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-                    useStats.setTag("usestats");
-                    useStats.setLayoutParams(useStatsParams);
-                    useStats.setTypeface(null, Typeface.BOLD);
+                        textCont.addView(taskName);
+                        textCont.addView(barCont);
+                        taskRL.addView(textCont);
+                        taskRL.addView(useStats);
+                        taskRL.addView(taskIcon);
+                        taskRoot.addView(taskRL);
 
-                    LinearLayout textCont = new LinearLayout(mContext);
-                    LinearLayout.LayoutParams useStatsLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-                    textCont.setLayoutParams(useStatsLayout);
-                    textCont.setOrientation(LinearLayout.VERTICAL);
+                        Display display = getWindowManager().getDefaultDisplay();
 
-                    TextView taskName = new TextView(mContext);
-                    LinearLayout.LayoutParams nameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-                    nameParams.leftMargin = dpToPx(10);
-                    nameParams.topMargin = dpToPx(4);
-                    taskName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                    taskName.setTag("text");
-                    taskName.setLayoutParams(nameParams);
+                        Point size = new Point();
+                        display.getSize(size);
+                        displayWidth = size.x;
 
-                    RelativeLayout barCont = new RelativeLayout(mContext);
-                    LinearLayout.LayoutParams barContLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-                    barContLayout.topMargin = dpToPx(10);
-                    barContLayout.leftMargin = dpToPx(10);
-                    barContLayout.height = dpToPx(5);
-                    barCont.setLayoutParams(barContLayout);
-
-
-                    ImageView taskIcon = new ImageView(mContext);
-                    LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(dpToPx(46),
-                            dpToPx(46));
-
-                    iconParams.leftMargin = dpToPx(6);
-                    iconParams.rightMargin = dpToPx(6);
-                    iconParams.bottomMargin = dpToPx(6);
-                    taskIcon.setLayoutParams(iconParams);
-
-                    try {
-                        PackageManager pm = getApplicationContext().getPackageManager();
-                        // Log.d(TAG, "Trying to grab AppInfo class[" + task.getClassName()+ "] package[" + task.getPackageName() + "]");
-                        ComponentName componentTask = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
-                        ApplicationInfo appInfo = pm.getApplicationInfo(componentTask.getPackageName(), 0);
-
-                        taskName.setText(task.getName());
-                        taskIcon.setImageDrawable(appInfo.loadIcon(pm));
-                    } catch (Exception e) {
-                        Log.d(TAG, "Could not find Application info for [" + task.getName() + "]");
-                        continue;
-                    }
-
-                    textCont.addView(taskName);
-                    textCont.addView(barCont);
-                    taskRL.addView(textCont);
-                    taskRL.addView(useStats);
-                    taskRL.addView(taskIcon);
-                    taskRoot.addView(taskRL);
-
-                    int maxWidth = displayWidth - dpToPx(46+14) - useStats.getWidth();
-                    float secondsRatio = (float) task.getSeconds() / highestSeconds;
-                    int barColor;
-                    int secondsColor = (Math.round(secondsRatio * 100));
-                    if (secondsColor >= 80 ) {
-                        barColor = 0xFF34B5E2;
-                    } else if (secondsColor >= 60) {
-                        barColor = 0xFFAA66CC;
-                    } else if (secondsColor >= 40) {
-                        barColor = 0xFF74C353;
-                    } else if (secondsColor >= 20) {
-                        barColor = 0xFFFFBB33;
-                    } else {
-                        barColor = 0xFFFF4444;
-                    }
-                    float adjustedWidth = maxWidth * secondsRatio;
-                    barContLayout.width = Math.round(adjustedWidth);
-                    int[] statsTime = splitToComponentTimes(task.getSeconds());
-                    String statsString = ((statsTime[0] > 0) ? statsTime[0] + "h " : "") + ((statsTime[1] > 0) ? statsTime[1] + "m " : "") + ((statsTime[2] > 0) ? statsTime[2] + "s " : "");
-                    useStats.setText(statsString);
-                    barCont.setBackgroundColor(barColor);
-                    // Log.d(TAG, "Blacklisted? [" + task.getBlacklisted() + "]");
-                    if (task.getBlacklisted()) {
-                        fadeTask(taskRL, taskName);
+                        int maxWidth = displayWidth - dpToPx(46+14) - useStats.getWidth();
+                        float secondsRatio = (float) task.getSeconds() / highestSeconds;
+                        int barColor;
+                        int secondsColor = (Math.round(secondsRatio * 100));
+                        if (secondsColor >= 80 ) {
+                            barColor = 0xFF34B5E2;
+                        } else if (secondsColor >= 60) {
+                            barColor = 0xFFAA66CC;
+                        } else if (secondsColor >= 40) {
+                            barColor = 0xFF74C353;
+                        } else if (secondsColor >= 20) {
+                            barColor = 0xFFFFBB33;
+                        } else {
+                            barColor = 0xFFFF4444;
+                        }
+                        float adjustedWidth = maxWidth * secondsRatio;
+                        barContLayout.width = Math.round(adjustedWidth);
+                        int[] statsTime = splitToComponentTimes(task.getSeconds());
+                        String statsString = ((statsTime[0] > 0) ? statsTime[0] + "h " : "") + ((statsTime[1] > 0) ? statsTime[1] + "m " : "") + ((statsTime[2] > 0) ? statsTime[2] + "s " : "");
+                        useStats.setText(statsString);
+                        barCont.setBackgroundColor(barColor);
+                        // Log.d(TAG, "Blacklisted? [" + task.getBlacklisted() + "]");
+                        if (task.getBlacklisted()) {
+                            fadeTask(taskRL, taskName);
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public static class PrefsGet {
+        SharedPreferences realPrefs;
+        PrefsGet(SharedPreferences prefs) {
+            realPrefs = prefs;
+        }
+        SharedPreferences prefsGet() {
+            return realPrefs;
+        }
+        SharedPreferences.Editor editorGet() {
+            return realPrefs.edit();
+        }
+    }
 
-        SharedPreferences prefs;
-        SharedPreferences.Editor editor;
+    public static class PrefsFragment extends PreferenceFragment {
+        CheckBoxPreference divider_preference;
+        CheckBoxPreference weighted_recents_preference;
+        CheckBoxPreference colorize_preference;
+        ColorPickerPreference icon_color_preference;
+        SwitchPreference toggle_preference;
+        SwitchPreference boot_preference;
+        UpdatingListPreference appnos_preference;
+        UpdatingListPreference priority_preference;
+        UpdatingListPreference weight_priority_preference;
+
+        public static PrefsFragment newInstance(int prefLayout) {
+            PrefsFragment fragment = new PrefsFragment();
+            Bundle args = new Bundle();
+            args.putInt("layout", prefLayout);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public PrefsFragment() {
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            // setRetainInstance(true);
+            final int prefLayout = getArguments().getInt("layout");
+            addPreferencesFromResource(prefLayout);
+            SharedPreferences prefs2 = prefs.prefsGet();
+            SharedPreferences.Editor editor = prefs.editorGet();
+
+            try {
+                // *** Appearance ***
+                divider_preference = (CheckBoxPreference)findPreference(DIVIDER_PREFERENCE);
+                divider_preference.setChecked(prefs2.getBoolean(DIVIDER_PREFERENCE, DIVIDER_DEFAULT));
+                divider_preference.setOnPreferenceChangeListener(changeListener);
+
+                colorize_preference = (CheckBoxPreference)findPreference(COLORIZE_PREFERENCE);
+                colorize_preference.setChecked(prefs2.getBoolean(COLORIZE_PREFERENCE, COLORIZE_DEFAULT));
+                colorize_preference.setOnPreferenceChangeListener(changeListener);
+
+                icon_color_preference = (ColorPickerPreference) findPreference(ICON_COLOR_PREFERENCE);
+                int intColor = prefs2.getInt(ICON_COLOR_PREFERENCE, ICON_COLOR_DEFAULT);
+                String hexColor = String.format("#%08x", (intColor));
+                icon_color_preference.setSummary(hexColor);
+                icon_color_preference.setNewPreviewColor(intColor);
+                icon_color_preference.setOnPreferenceChangeListener(changeListener);
+
+                appnos_preference = (UpdatingListPreference)findPreference(APPSNO_PREFERENCE);
+                appnos_preference.setValue(prefs2.getString(APPSNO_PREFERENCE, Integer.toString(APPSNO_DEFAULT)));
+                appnos_preference.setOnPreferenceChangeListener(changeListener);
+
+            } catch (NullPointerException e) {
+            }
+            try {
+                // *** Behavior ***
+                toggle_preference = (SwitchPreference)findPreference(TOGGLE_PREFERENCE);
+                toggle_preference.setChecked(prefs2.getBoolean(TOGGLE_PREFERENCE, TOGGLE_DEFAULT));
+                toggle_preference.setOnPreferenceChangeListener(changeListener);
+
+                boot_preference = (SwitchPreference)findPreference(BOOT_PREFERENCE);
+                boot_preference.setChecked(prefs2.getBoolean(BOOT_PREFERENCE, BOOT_DEFAULT));
+                boot_preference.setOnPreferenceChangeListener(changeListener);
+
+                weighted_recents_preference = (CheckBoxPreference)findPreference(WEIGHTED_RECENTS_PREFERENCE);
+                weighted_recents_preference.setChecked(prefs2.getBoolean(WEIGHTED_RECENTS_PREFERENCE, WEIGHTED_RECENTS_DEFAULT));
+                weighted_recents_preference.setOnPreferenceChangeListener(changeListener);
+
+                weight_priority_preference = (UpdatingListPreference)findPreference(WEIGHT_PRIORITY_PREFERENCE);
+                weight_priority_preference.setValue(prefs2.getString(WEIGHT_PRIORITY_PREFERENCE, Integer.toString(WEIGHT_PRIORITY_DEFAULT)));
+                weight_priority_preference.setOnPreferenceChangeListener(changeListener);
+
+                priority_preference = (UpdatingListPreference)findPreference(PRIORITY_PREFERENCE);
+                priority_preference.setValue(prefs2.getString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_DEFAULT)));
+                priority_preference.setOnPreferenceChangeListener(changeListener);
+            } catch (NullPointerException e) {
+            }
+        }
+        Preference.OnPreferenceChangeListener changeListener = new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                Log.d(TAG, "onPreferenceChange pref.getKey=[" + preference.getKey() + "] newValue=[" + newValue + "]");
+
+                SharedPreferences prefs2 = prefs.prefsGet();
+                SharedPreferences.Editor editor = prefs.editorGet();
+
+                if (preference.getKey().equals(DIVIDER_PREFERENCE)) {
+                    editor.putBoolean(DIVIDER_PREFERENCE, (Boolean) newValue);
+                    editor.apply();
+                    myService.execute(SERVICE_CLEAR_TASKS);
+                    myService.watchHelper(STOP_SERVICE);
+                    myService.watchHelper(START_SERVICE);
+                } else if (preference.getKey().equals(COLORIZE_PREFERENCE)) {
+                    editor.putBoolean(COLORIZE_PREFERENCE, (Boolean) newValue);
+                    editor.apply();
+                    myService.execute(SERVICE_CLEAR_TASKS);
+                    myService.watchHelper(STOP_SERVICE);
+                    myService.watchHelper(START_SERVICE);
+                } else if (preference.getKey().equals(ICON_COLOR_PREFERENCE)) {
+                    String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String.valueOf(newValue)));
+                    preference.setSummary(hex);
+                    int intHex = ColorPickerPreference.convertToColorInt(hex);
+                    editor.putInt(ICON_COLOR_PREFERENCE, intHex);
+                    editor.apply();
+                    myService.execute(SERVICE_CLEAR_TASKS);
+                    myService.watchHelper(STOP_SERVICE);
+                    myService.watchHelper(START_SERVICE);
+                } else if (preference.getKey().equals(TOGGLE_PREFERENCE)) {
+                    editor.putBoolean(TOGGLE_PREFERENCE, (Boolean) newValue);
+                    editor.apply();
+
+                    myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
+                    myService.watchHelper(STOP_SERVICE);
+                    myService.watchHelper(START_SERVICE);
+
+                    return true;
+                } else if (preference.getKey().equals(BOOT_PREFERENCE)) {
+                    editor.putBoolean(BOOT_PREFERENCE, (Boolean) newValue);
+                    editor.apply();
+                    return true;
+                } else if (preference.getKey().equals(WEIGHT_PRIORITY_PREFERENCE)) {
+                    editor.putString(WEIGHT_PRIORITY_PREFERENCE, (String) newValue);
+                } else if (preference.getKey().equals(WEIGHTED_RECENTS_PREFERENCE)) {
+                    editor.putBoolean(WEIGHTED_RECENTS_PREFERENCE, (Boolean) newValue);
+                } else if (preference.getKey().equals(APPSNO_PREFERENCE)) {
+                    editor.putString(APPSNO_PREFERENCE, (String) newValue);
+                    editor.apply();
+                    myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
+                    myService.watchHelper(STOP_SERVICE);
+                    myService.watchHelper(START_SERVICE);
+                    return true;
+                } else if (preference.getKey().equals(PRIORITY_PREFERENCE)) {
+                    editor.putString(PRIORITY_PREFERENCE, (String) newValue);
+                    editor.apply();
+                    myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
+                    myService.watchHelper(STOP_SERVICE);
+                    myService.watchHelper(START_SERVICE);
+                    return true;
+                }
+                editor.apply();
+                myService.execute(SERVICE_CLEAR_TASKS);
+                myService.watchHelper(STOP_SERVICE);
+                myService.watchHelper(START_SERVICE);
+                return true;
+            }
+        };
+    };
+    public static class AppsFragment extends Fragment {
+        public static Fragment newInstance() {
+            return new AppsFragment();
+        }
+
+        public AppsFragment() {
+        }
+
+        public void onResume() {
+            super.onResume();
+            drawT.drawTasks(appsView);
+        }
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            appsView = inflater.inflate(R.layout.apps_settings, container, false);
+            drawT.drawTasks(appsView);
+            return appsView;
+        }
+
+    }
+
+    public static class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        // SharedPreferences prefs;
+        // SharedPreferences.Editor editor;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
-            prefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-            editor = prefs.edit();
         }
 
         @Override
         public Fragment getItem(final int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            final int prefLayout;
             switch (position) {
                 case 0:
-                    prefLayout = R.layout.behavior_settings;
-                    break;
+                    return PrefsFragment.newInstance(R.layout.behavior_settings);
                 case 1:
-                    prefLayout = R.layout.appearance_settings;
-                    break;
+                    return PrefsFragment.newInstance(R.layout.appearance_settings);
                 default:
-                    Fragment fragment = new Fragment() {
-                        @Override
-                        public void onResume() {
-                            super.onResume();
-                            drawTasks(appsView);
-                        }
-                        @Override
-                        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                                 Bundle savedInstanceState) {
-                            appsView = inflater.inflate(R.layout.apps_settings, container, false);
-                            drawTasks(appsView);
-                            return appsView;
-                        }
-                    };
-                    fragment.setRetainInstance(true);
-                    return fragment;
+                    return AppsFragment.newInstance();
             }
-
-            Fragment fragment = new PreferenceFragment() {
-                CheckBoxPreference divider_preference;
-                CheckBoxPreference weighted_recents_preference;
-                CheckBoxPreference colorize_preference;
-                ColorPickerPreference icon_color_preference;
-                SwitchPreference toggle_preference;
-                SwitchPreference boot_preference;
-                UpdatingListPreference appnos_preference;
-                UpdatingListPreference priority_preference;
-                UpdatingListPreference weight_priority_preference;
-
-                @Override
-                public void onCreate(Bundle savedInstanceState) {
-                    super.onCreate(savedInstanceState);
-                    setRetainInstance(true);
-                    addPreferencesFromResource(prefLayout);
-
-                    try {
-                        // *** Appearance ***
-                        divider_preference = (CheckBoxPreference)findPreference(DIVIDER_PREFERENCE);
-                        divider_preference.setChecked(prefs.getBoolean(DIVIDER_PREFERENCE, DIVIDER_DEFAULT));
-                        divider_preference.setOnPreferenceChangeListener(changeListener);
-
-                        colorize_preference = (CheckBoxPreference)findPreference(COLORIZE_PREFERENCE);
-                        colorize_preference.setChecked(prefs.getBoolean(COLORIZE_PREFERENCE, COLORIZE_DEFAULT));
-                        colorize_preference.setOnPreferenceChangeListener(changeListener);
-
-                        icon_color_preference = (ColorPickerPreference) findPreference(ICON_COLOR_PREFERENCE);
-                        int intColor = prefs.getInt(ICON_COLOR_PREFERENCE, ICON_COLOR_DEFAULT);
-                        String hexColor = String.format("#%08x", (intColor));
-                        icon_color_preference.setSummary(hexColor);
-                        icon_color_preference.setNewPreviewColor(intColor);
-                        icon_color_preference.setOnPreferenceChangeListener(changeListener);
-
-                        appnos_preference = (UpdatingListPreference)findPreference(APPSNO_PREFERENCE);
-                        appnos_preference.setValue(prefs.getString(APPSNO_PREFERENCE, Integer.toString(APPSNO_DEFAULT)));
-                        appnos_preference.setOnPreferenceChangeListener(changeListener);
-
-                    } catch (NullPointerException e) {
-                    }
-                    try {
-                        // *** Behavior ***
-                        toggle_preference = (SwitchPreference)findPreference(TOGGLE_PREFERENCE);
-                        toggle_preference.setChecked(prefs.getBoolean(TOGGLE_PREFERENCE, TOGGLE_DEFAULT));
-                        toggle_preference.setOnPreferenceChangeListener(changeListener);
-
-                        boot_preference = (SwitchPreference)findPreference(BOOT_PREFERENCE);
-                        boot_preference.setChecked(prefs.getBoolean(BOOT_PREFERENCE, BOOT_DEFAULT));
-                        boot_preference.setOnPreferenceChangeListener(changeListener);
-
-                        weighted_recents_preference = (CheckBoxPreference)findPreference(WEIGHTED_RECENTS_PREFERENCE);
-                        weighted_recents_preference.setChecked(prefs.getBoolean(WEIGHTED_RECENTS_PREFERENCE, WEIGHTED_RECENTS_DEFAULT));
-                        weighted_recents_preference.setOnPreferenceChangeListener(changeListener);
-
-                        weight_priority_preference = (UpdatingListPreference)findPreference(WEIGHT_PRIORITY_PREFERENCE);
-                        weight_priority_preference.setValue(prefs.getString(WEIGHT_PRIORITY_PREFERENCE, Integer.toString(WEIGHT_PRIORITY_DEFAULT)));
-                        weight_priority_preference.setOnPreferenceChangeListener(changeListener);
-
-                        priority_preference = (UpdatingListPreference)findPreference(PRIORITY_PREFERENCE);
-                        priority_preference.setValue(prefs.getString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_DEFAULT)));
-                        priority_preference.setOnPreferenceChangeListener(changeListener);
-                    } catch (NullPointerException e) {
-                    }
-                }
-                Preference.OnPreferenceChangeListener changeListener = new Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        Log.d(TAG, "onPreferenceChange pref.getKey=[" + preference.getKey() + "] newValue=[" + newValue + "]");
-
-                        if (preference.getKey().equals(DIVIDER_PREFERENCE)) {
-                            editor.putBoolean(DIVIDER_PREFERENCE, (Boolean) newValue);
-                            s.destroyNotification();
-                            s.runScan();
-                        } else if (preference.getKey().equals(COLORIZE_PREFERENCE)) {
-                            editor.putBoolean(COLORIZE_PREFERENCE, (Boolean) newValue);
-                            s.destroyNotification();
-                            s.runScan();
-                        } else if (preference.getKey().equals(ICON_COLOR_PREFERENCE)) {
-                            String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String.valueOf(newValue)));
-                            preference.setSummary(hex);
-                            int intHex = ColorPickerPreference.convertToColorInt(hex);
-                            editor.putInt(ICON_COLOR_PREFERENCE, intHex);
-                            s.destroyNotification();
-                            s.runScan();
-                        } else if (preference.getKey().equals(TOGGLE_PREFERENCE)) {
-                            editor.putBoolean(TOGGLE_PREFERENCE, (Boolean) newValue);
-                            editor.commit();
-
-                            if (!(Boolean) newValue) {
-                                s.destroyNotification();
-                                // if (isBound) {
-                                //     isBound = false;
-                                //     unbindService(mConnection);
-                                // }
-                                // stopService(new Intent(SettingsActivity.this, WatchfulService.class));
-                            } else {
-                                new RebuildTasks().execute();
-                                // Intent iStart = new Intent(SettingsActivity.this, WatchfulService.class);
-                                // if (!isBound) {
-                                //     startService(iStart);
-                                //     bindService(iStart, mConnection, Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT);
-                                // }
-                            }
-
-                            return true;
-                        } else if (preference.getKey().equals(BOOT_PREFERENCE)) {
-                            editor.putBoolean(BOOT_PREFERENCE, (Boolean) newValue);
-                            editor.commit();
-                            return true;
-                        } else if (preference.getKey().equals(WEIGHT_PRIORITY_PREFERENCE)) {
-                            editor.putString(WEIGHT_PRIORITY_PREFERENCE, (String) newValue);
-                            editor.commit();
-                            s.topPackage = null;
-                            s.taskList.clear();
-                            s.runScan();
-                        } else if (preference.getKey().equals(WEIGHTED_RECENTS_PREFERENCE)) {
-                            editor.putBoolean(WEIGHTED_RECENTS_PREFERENCE, (Boolean) newValue);
-                            editor.commit();
-                            s.topPackage = null;
-                            s.taskList.clear();
-                            s.runScan();
-                        } else if (preference.getKey().equals(APPSNO_PREFERENCE)) {
-                            editor.putString(APPSNO_PREFERENCE, (String) newValue);
-                            editor.commit();
-                            s.createNotification();
-                            return true;
-                        } else if (preference.getKey().equals(PRIORITY_PREFERENCE)) {
-                            editor.putString(PRIORITY_PREFERENCE, (String) newValue);
-                            s.destroyNotification();
-                            s.runScan();
-                        }
-                        editor.commit();
-                        return true;
-                    }
-                };
-            };
-            fragment.setRetainInstance(true);
-            return fragment;
         }
 
         @Override
@@ -604,11 +689,11 @@ public class SettingsActivity extends Activity implements ActionBar.TabListener 
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return getString(R.string.title_behavior).toUpperCase(l);
+                    return mContext.getString(R.string.title_behavior).toUpperCase(l);
                 case 1:
-                    return getString(R.string.title_appearance).toUpperCase(l);
+                    return mContext.getString(R.string.title_appearance).toUpperCase(l);
                 case 2:
-                    return getString(R.string.title_apps).toUpperCase(l);
+                    return mContext.getString(R.string.title_apps).toUpperCase(l);
             }
             return null;
         }

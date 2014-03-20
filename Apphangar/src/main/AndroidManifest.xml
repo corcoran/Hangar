@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ca.mimic.apphangar"
     android:versionCode="2"
-    android:versionName="1.5"
+    android:versionName="1.7"
     android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
 
     <uses-sdk
@@ -28,7 +28,8 @@
 
         <service
             android:name="ca.mimic.apphangar.WatchfulService"
-            android:exported="false" >
+            android:exported="false"
+            android:process=":appwatch">
         </service>
 
         <activity

@@ -2,7 +2,6 @@ package ca.mimic.apphangar;
 
 import android.app.ActivityManager;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
@@ -15,7 +14,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -31,58 +29,61 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-// TODO Run service to loop and poll running apps
-// TODO Report list of app names by most recent
-// TODO Create array of items
-// TODO Update array when new item is added
-
-
 public class WatchfulService extends Service {
     String TAG = "Apphangar";
 
     TasksDataSource db;
 
     SharedPreferences prefs;
-    Context mContext;
     PowerManager pm;
 
     ArrayList<TaskInfo> taskList = new ArrayList<TaskInfo>();
     String topPackage;
-    String topClass;
-    int realMaxButtons;
 
     int MAX_RUNNING_TASKS = 20;
     int TASKLIST_QUEUE_SIZE = 12;
     int TOTAL_CONTAINERS = 9;
     int LOOP_SECONDS = 3;
 
-    RemoteViews customNotifView;
-
     Handler handler = new Handler();
-
-    public class WatchfulBinder extends Binder {
-        WatchfulService getService() {
-            return WatchfulService.this;
-        }
-    }
 
     @Override
     public IBinder onBind(Intent intent) {
-        return mBinder;
+        return new IWatchfulService.Stub() {
+            @Override
+            public void clearTasks() {
+                topPackage = null;
+                taskList.clear();
+            }
+            @Override
+            public void runScan() {
+                WatchfulService.this.runScan();
+            }
+            @Override
+            public void destroyNotification() {
+                WatchfulService.this.destroyNotification();
+            }
+            @Override
+            public void buildTasks() {
+                WatchfulService.this.buildTasks();
+            }
+        };
     }
 
     // This is the object that receives interactions from clients.  See
     // RemoteService for a more complete example.
-    private final IBinder mBinder = new WatchfulBinder();
+    // private final IBinder mBinder = new WatchfulBinder();
 
     @Override
     public void onCreate() {
         super.onCreate();
-        prefs = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-        mContext = this;
-        db = new TasksDataSource(this);
-        db.open();
-        realMaxButtons = Integer.parseInt(prefs.getString(SettingsActivity.APPSNO_PREFERENCE, Integer.toString(SettingsActivity.APPSNO_DEFAULT)));
+        if (db == null) {
+            db = new TasksDataSource(this);
+            db.open();
+        }
+        Log.d(TAG, "starting up..");
+        prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
+        // prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
     }
 
@@ -93,6 +94,9 @@ public class WatchfulService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "Getting prefs");
+        prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
+        // prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         handler.removeCallbacks(scanApps);
         handler.post(scanApps);
         return START_STICKY;
@@ -100,6 +104,7 @@ public class WatchfulService extends Service {
 
     @Override
     public void onDestroy() {
+        Log.d(TAG, "onDestroy service..");
         handler.removeCallbacks(scanApps);
         db.close();
         super.onDestroy();
@@ -109,7 +114,6 @@ public class WatchfulService extends Service {
         private String appName = "";
         private String packageName = "";
         private String className = "";
-        private Drawable icon;
         private int launches = 0;
         private float order = 0;
         private int seconds = 0;
@@ -136,6 +140,7 @@ public class WatchfulService extends Service {
     }
 
     protected void buildTasks() {
+        // prefs = getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS);
         try {
             final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
             final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(MAX_RUNNING_TASKS);
@@ -166,7 +171,6 @@ public class WatchfulService extends Service {
                     return;
                 }
                 topPackage = task.getPackageName();
-                topClass = task.getClassName();
             }
 
             if (taskList.size() < TASKLIST_QUEUE_SIZE) {
@@ -194,8 +198,12 @@ public class WatchfulService extends Service {
                     dbTask.launches = taskM.getLaunches();
                     dbTask.totalseconds = taskM.getSeconds();
 
-                    ApplicationInfo appInfo = pkgm.getApplicationInfo(dbTask.packageName, 0);
-                    dbTask.icon = appInfo.loadIcon(pkgm);
+                    try {
+                        pkgm.getApplicationInfo(dbTask.packageName, 0);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        db.deleteTask(taskM);
+                        continue;
+                    }
 
                     Log.d(TAG, "Adding to taskList [" + dbTask.appName + "] [" + dbTask.launches + "] [" + dbTask.totalseconds + "]s");
                     taskList.add(dbTask);
@@ -213,7 +221,6 @@ public class WatchfulService extends Service {
 
                 TaskInfo newInfo = new TaskInfo();
                 newInfo.appName = appInfo.loadLabel(pkgm).toString();
-                newInfo.icon = appInfo.loadIcon(pkgm);
                 newInfo.packageName = task.getPackageName();
                 newInfo.className = task.getClassName();
 
@@ -404,14 +411,15 @@ public class WatchfulService extends Service {
         return blPNames;
     }
     public void destroyNotification() {
-        topPackage = null;
+        // topPackage = null;
         // handler.removeCallbacks(scanApps);
+        Log.d(TAG, "DESTROY");
         stopForeground(true);
         // NotificationManager NotificationManager = (NotificationManager)
         //         getSystemService(Context.NOTIFICATION_SERVICE);
         // NotificationManager.cancel(1337);
     }
-    protected void clearContainers(int start) {
+    protected void clearContainers(RemoteViews customNotifView, int start, Context mContext) {
         Log.d(TAG, "Clearing containers " + start + "-" + TOTAL_CONTAINERS);
         for (int i=start; i < TOTAL_CONTAINERS; i++) {
             int contID = getResources().getIdentifier("imageCont" + (i + 1), "id", mContext.getPackageName());
@@ -425,7 +433,11 @@ public class WatchfulService extends Service {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
     }
     public void createNotification() {
+        // prefs = this.getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS);
         // Not a fun hack.  No way around it until they let you do getInt for setShowDividers!
+        PackageManager pkgm = getApplicationContext().getPackageManager();
+        RemoteViews customNotifView;
+
         int rootID = prefs.getBoolean(SettingsActivity.DIVIDER_PREFERENCE, SettingsActivity.DIVIDER_DEFAULT) ?
                 getResources().getIdentifier("notification", "layout", this.getPackageName()) :
                 getResources().getIdentifier("notification_no_dividers", "layout", this.getPackageName());
@@ -434,7 +446,7 @@ public class WatchfulService extends Service {
                 rootID);
 
         int maxButtons = 0;
-        realMaxButtons = Integer.parseInt(prefs.getString(SettingsActivity.APPSNO_PREFERENCE, Integer.toString(SettingsActivity.APPSNO_DEFAULT)));
+        int realMaxButtons = Integer.parseInt(prefs.getString(SettingsActivity.APPSNO_PREFERENCE, Integer.toString(SettingsActivity.APPSNO_DEFAULT)));
         int setPriority = Integer.parseInt(prefs.getString(SettingsActivity.PRIORITY_PREFERENCE, Integer.toString(SettingsActivity.PRIORITY_DEFAULT)));
         boolean isColorized = prefs.getBoolean(SettingsActivity.COLORIZE_PREFERENCE, SettingsActivity.COLORIZE_DEFAULT);
         int getColor = prefs.getInt(SettingsActivity.ICON_COLOR_PREFERENCE, SettingsActivity.ICON_COLOR_DEFAULT);
@@ -446,7 +458,7 @@ public class WatchfulService extends Service {
         }
           
         if (maxButtons < TOTAL_CONTAINERS)
-            clearContainers(maxButtons);
+            clearContainers(customNotifView, maxButtons, getApplicationContext());
 
         Log.d(TAG, "taskList.size(): " + taskList.size() + " realmaxbuttons: " + realMaxButtons + " maxbuttons: " + maxButtons);
         int filledConts = 0;
@@ -463,11 +475,19 @@ public class WatchfulService extends Service {
             filledConts += 1;
             customNotifView.setViewVisibility(contID, View.VISIBLE);
 
-            Drawable d;
+            Drawable taskIcon, d;
+            try {
+                ApplicationInfo appInfo = pkgm.getApplicationInfo(taskList.get(i).packageName, 0);
+                taskIcon = appInfo.loadIcon(pkgm);
+            } catch (Exception e) {
+                taskList.remove(i);
+                continue;
+            }
+
             if (isColorized) {
-                d = new BitmapDrawable(ColorHelper.getColoredBitmap(taskList.get(i).icon, getColor));
+                d = new BitmapDrawable(ColorHelper.getColoredBitmap(taskIcon, getColor));
             } else {
-                d = taskList.get(i).icon;
+                d = taskIcon;
             }
 
             Bitmap bmpIcon = ((BitmapDrawable) d).getBitmap();
