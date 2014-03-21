@@ -9,7 +9,15 @@
         android:summary="@string/summary_appsno_preference"
         android:entries="@array/entries_appsno_preference"
         android:entryValues="@array/entries_appsno_preference"
-        android:dialogTitle="Choose no. of apps to show" />
+        android:dialogTitle="@string/dialog_appsno_preference" />
+
+    <ca.mimic.apphangar.UpdatingListPreference
+        android:key="statusbar_icon_preference"
+        android:title="@string/title_statusbar_icon_preference"
+        android:summary="@string/summary_statusbar_icon_preference"
+        android:entries="@array/entries_statusbar_icon_preference"
+        android:entryValues="@array/values_statusbar_icon_preference"
+        android:dialogTitle="@string/dialog_statusbar_icon_preference" />
 
     <CheckBoxPreference
         android:key="divider_preference"
