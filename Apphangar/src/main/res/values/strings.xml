@@ -70,15 +70,19 @@
     <string name="title_statusbar_icon_preference">Statusbar icon</string>
     <string name="summary_statusbar_icon_preference">%s</string>
     <string name="dialog_statusbar_icon_preference">Choose an icon style</string>
+    <string name="alert_title_statusbar_icon_preference">Just so you know..</string>
+    <string name="alert_message_statusbar_icon_preference">Due to the limitations of Android, disabling the statusbar icon can only be done by lowering the priority of the notification.\n\nTL;DR Your Hangar bar will be at the bottom of the notification drawer.</string>
 
     <string-array name="entries_statusbar_icon_preference">
-        <item>Default icon</item>
+        <item>White icon (default)</item>
+        <item>Black icon</item>
         <item>Transparent icon</item>
         <item>No icon</item>
     </string-array>
 
     <string-array name="values_statusbar_icon_preference">
         <item>**default**</item>
+        <item>**black**</item>
         <item>**transparent**</item>
         <item>**none**</item>
     </string-array>

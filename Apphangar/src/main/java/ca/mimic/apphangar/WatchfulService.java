@@ -512,10 +512,18 @@ public class WatchfulService extends Service {
             }
         }
 
+        String mIcon = prefs.getString(SettingsActivity.STATUSBAR_ICON_PREFERENCE, SettingsActivity.STATUSBAR_ICON_DEFAULT);
+        int smallIcon = R.drawable.ic_apps_white;
+        if (mIcon.equals(SettingsActivity.STATUSBAR_ICON_BLACK)) {
+            smallIcon = R.drawable.ic_apps_black;
+        } else if (mIcon.equals(SettingsActivity.STATUSBAR_ICON_TRANSPARENT)) {
+            smallIcon = R.drawable.ic_apps_transparent;
+        }
+
         Notification notification = new Notification.Builder(WatchfulService.this).
                 setContentTitle("Notification title")
                 .setContentText("Notification content")
-                .setSmallIcon(R.drawable.ic_apps_white)
+                .setSmallIcon(smallIcon)
                 .setContent(customNotifView)
                 .setOngoing(true)
                 .setPriority(setPriority)
