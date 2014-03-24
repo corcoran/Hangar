@@ -541,7 +541,7 @@ public class SettingsActivity extends Activity implements ActionBar.TabListener 
                 int intColor = prefs2.getInt(ICON_COLOR_PREFERENCE, ICON_COLOR_DEFAULT);
                 String hexColor = String.format("#%08x", (intColor));
                 icon_color_preference.setSummary(hexColor);
-                icon_color_preference.setNewPreviewColor(intColor);
+                // icon_color_preference.setNewPreviewColor(intColor);
                 icon_color_preference.setOnPreferenceChangeListener(changeListener);
 
                 appnos_preference = (UpdatingListPreference)findPreference(APPSNO_PREFERENCE);

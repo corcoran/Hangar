@@ -36,6 +36,7 @@
             android:key="icon_color_preference"
             android:title="@string/title_icon_color_preference"
             android:defaultValue="0xffffffff"
+            alphaSlider="true"
             android:dependency="colorize_preference" />
     </PreferenceCategory>
 </PreferenceScreen>
