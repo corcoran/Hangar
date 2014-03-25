@@ -2,8 +2,10 @@ package ca.mimic.apphangar;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -99,10 +101,15 @@ public class SettingsActivity extends Activity implements ActionBar.TabListener 
     final static int PRIORITY_DEFAULT = 2;
     final static int PRIORITY_BOTTOM = -2;
     final static int ICON_COLOR_DEFAULT = 0xffffffff;
-    final static String STATUSBAR_ICON_DEFAULT = "**default**";
-    final static String STATUSBAR_ICON_BLACK = "**black**";
+    final static String STATUSBAR_ICON_WHITE_WARM = "**white_warm**";
+    final static String STATUSBAR_ICON_WHITE_COLD = "**white_cold**";
+    final static String STATUSBAR_ICON_WHITE_BLUE = "**white_blue**";
+    final static String STATUSBAR_ICON_BLACK_WARM = "**black_warm**";
+    final static String STATUSBAR_ICON_BLACK_COLD = "**black_cold**";
+    final static String STATUSBAR_ICON_BLACK_BLUE = "**black_blue**";
     final static String STATUSBAR_ICON_TRANSPARENT = "**transparent**";
     final static String STATUSBAR_ICON_NONE = "**none**";
+    final static String STATUSBAR_ICON_DEFAULT = STATUSBAR_ICON_WHITE_WARM;
 
     final static int SERVICE_RUN_SCAN = 0;
     final static int SERVICE_DESTROY_NOTIFICATIONS = 1;

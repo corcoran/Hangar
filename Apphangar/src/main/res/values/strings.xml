@@ -74,15 +74,23 @@
     <string name="alert_message_statusbar_icon_preference">Due to the limitations of Android, disabling the statusbar icon can only be done by lowering the priority of the notification.\n\nTL;DR Your Hangar bar will be at the bottom of the notification drawer.</string>
 
     <string-array name="entries_statusbar_icon_preference">
-        <item>White icon (default)</item>
-        <item>Black icon</item>
+        <item>Warm white icon (default)</item>
+        <item>Cold white icon</item>
+        <item>Blue white icon</item>
+        <item>Warm black icon</item>
+        <item>Cold black icon</item>
+        <item>Blue black icon</item>
         <item>Transparent icon</item>
         <item>No icon</item>
     </string-array>
 
     <string-array name="values_statusbar_icon_preference">
-        <item>**default**</item>
-        <item>**black**</item>
+        <item>**white_warm**</item>
+        <item>**white_cold**</item>
+        <item>**white_blue**</item>
+        <item>**black_warm**</item>
+        <item>**black_cold**</item>
+        <item>**black_blue**</item>
         <item>**transparent**</item>
         <item>**none**</item>
     </string-array>

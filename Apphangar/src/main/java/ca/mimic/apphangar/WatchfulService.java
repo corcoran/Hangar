@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WatchfulService extends Service {
     String TAG = "Apphangar";
@@ -44,6 +46,8 @@ public class WatchfulService extends Service {
     int TASKLIST_QUEUE_SIZE = 12;
     int TOTAL_CONTAINERS = 9;
     int LOOP_SECONDS = 3;
+
+    Map<String, Integer> iconMap;
 
     Handler handler = new Handler();
 
@@ -85,6 +89,15 @@ public class WatchfulService extends Service {
         prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
         // prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+
+        iconMap = new HashMap<String, Integer>();
+        iconMap.put(SettingsActivity.STATUSBAR_ICON_WHITE_WARM, R.drawable.ic_apps_warm);
+        iconMap.put(SettingsActivity.STATUSBAR_ICON_WHITE_COLD, R.drawable.ic_apps_cold);
+        iconMap.put(SettingsActivity.STATUSBAR_ICON_WHITE_BLUE, R.drawable.ic_apps_blue);
+        iconMap.put(SettingsActivity.STATUSBAR_ICON_BLACK_WARM, R.drawable.ic_apps_warm_black);
+        iconMap.put(SettingsActivity.STATUSBAR_ICON_BLACK_COLD, R.drawable.ic_apps_cold_black);
+        iconMap.put(SettingsActivity.STATUSBAR_ICON_BLACK_BLUE, R.drawable.ic_apps_blue_black);
+        iconMap.put(SettingsActivity.STATUSBAR_ICON_TRANSPARENT, R.drawable.ic_apps_transparent);
     }
 
     protected void runScan() {
@@ -513,11 +526,10 @@ public class WatchfulService extends Service {
         }
 
         String mIcon = prefs.getString(SettingsActivity.STATUSBAR_ICON_PREFERENCE, SettingsActivity.STATUSBAR_ICON_DEFAULT);
-        int smallIcon = R.drawable.ic_apps_white;
-        if (mIcon.equals(SettingsActivity.STATUSBAR_ICON_BLACK)) {
-            smallIcon = R.drawable.ic_apps_black;
-        } else if (mIcon.equals(SettingsActivity.STATUSBAR_ICON_TRANSPARENT)) {
-            smallIcon = R.drawable.ic_apps_transparent;
+        int smallIcon = iconMap.get(SettingsActivity.STATUSBAR_ICON_WHITE_WARM);
+        try {
+            smallIcon = iconMap.get(mIcon);
+        } catch (NullPointerException e) {
         }
 
         Notification notification = new Notification.Builder(WatchfulService.this).
