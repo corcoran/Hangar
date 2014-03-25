@@ -431,6 +431,7 @@ public class WatchfulService extends Service {
         // NotificationManager NotificationManager = (NotificationManager)
         //         getSystemService(Context.NOTIFICATION_SERVICE);
         // NotificationManager.cancel(1337);
+
     }
     protected void clearContainers(RemoteViews customNotifView, int start, Context mContext) {
         Log.d(TAG, "Clearing containers " + start + "-" + TOTAL_CONTAINERS);
@@ -441,10 +442,6 @@ public class WatchfulService extends Service {
 
     }
 
-    public int dpToPx(int dp) {
-        Resources r = getResources();
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
-    }
     public void createNotification() {
         // prefs = this.getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS);
         // Not a fun hack.  No way around it until they let you do getInt for setShowDividers!
@@ -458,7 +455,7 @@ public class WatchfulService extends Service {
         customNotifView = new RemoteViews(WatchfulService.this.getPackageName(),
                 rootID);
 
-        int maxButtons = 0;
+        int maxButtons;
         int realMaxButtons = Integer.parseInt(prefs.getString(SettingsActivity.APPSNO_PREFERENCE, Integer.toString(SettingsActivity.APPSNO_DEFAULT)));
         int setPriority = Integer.parseInt(prefs.getString(SettingsActivity.PRIORITY_PREFERENCE, Integer.toString(SettingsActivity.PRIORITY_DEFAULT)));
         boolean isColorized = prefs.getBoolean(SettingsActivity.COLORIZE_PREFERENCE, SettingsActivity.COLORIZE_DEFAULT);

@@ -2,10 +2,8 @@ package ca.mimic.apphangar;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -51,19 +49,8 @@ import net.margaritov.preference.colorpicker.ColorPickerPreference;
 
 public class SettingsActivity extends Activity implements ActionBar.TabListener {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v13.app.FragmentStatePagerAdapter}.
-     */
     SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     ViewPager mViewPager;
     private static IWatchfulService s;
     private static TasksDataSource db;
@@ -96,11 +83,13 @@ public class SettingsActivity extends Activity implements ActionBar.TabListener 
     final static boolean BOOT_DEFAULT = true;
     final static boolean WEIGHTED_RECENTS_DEFAULT = true;
     final static boolean COLORIZE_DEFAULT = false;
+
     final static int WEIGHT_PRIORITY_DEFAULT = 0;
     final static int APPSNO_DEFAULT = 7;
     final static int PRIORITY_DEFAULT = 2;
     final static int PRIORITY_BOTTOM = -2;
     final static int ICON_COLOR_DEFAULT = 0xffffffff;
+
     final static String STATUSBAR_ICON_WHITE_WARM = "**white_warm**";
     final static String STATUSBAR_ICON_WHITE_COLD = "**white_cold**";
     final static String STATUSBAR_ICON_WHITE_BLUE = "**white_blue**";
@@ -302,7 +291,6 @@ public class SettingsActivity extends Activity implements ActionBar.TabListener 
     public boolean fadeTask(View view, TextView text) {
         if ((text.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0) {
             view.setAlpha(1);
-            // view.clearAnimation();
             text.setPaintFlags(text.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             return false;
         } else {
@@ -310,7 +298,6 @@ public class SettingsActivity extends Activity implements ActionBar.TabListener 
             AlphaAnimation aa = new AlphaAnimation(1f, 0.3f);
             aa.setDuration(0);
             aa.setFillAfter(true);
-            // view.startAnimation(aa);
             view.setAlpha((float) 0.5);
             return true;
         }
@@ -350,11 +337,6 @@ public class SettingsActivity extends Activity implements ActionBar.TabListener 
         }
     }
     public class DrawTasks {
-        View v;
-        void Drawtasks(View view) {
-            v = view;
-            drawTasks(view);
-        }
         public void drawTasks(View view) {
             final View v = view;
             runOnUiThread(new Runnable()
