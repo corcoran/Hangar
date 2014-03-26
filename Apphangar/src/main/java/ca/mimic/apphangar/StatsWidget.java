@@ -73,7 +73,7 @@ public class StatsWidget extends AppWidgetProvider {
                     context.getPackageName());
             int statsID = context.getResources().getIdentifier("statsCont" + (count + 1), "id",
                     context.getPackageName());
-            if (count == 5) {
+            if (count == 10) {
                 break;
             }
 
