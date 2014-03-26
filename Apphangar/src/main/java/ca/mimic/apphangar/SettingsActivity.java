@@ -316,7 +316,7 @@ public class SettingsActivity extends Activity implements ActionBar.TabListener 
         int[] ints = {hours , mins , secs};
         return ints;
     }
-    class TasksComparator implements Comparator<TasksModel> {
+   public class TasksComparator implements Comparator<TasksModel> {
         String mType = "seconds";
         TasksComparator(String type) {
             mType = type;
