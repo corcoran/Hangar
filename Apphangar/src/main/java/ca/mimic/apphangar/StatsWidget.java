@@ -7,8 +7,13 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.RemoteViews;
 
@@ -49,6 +54,20 @@ public class StatsWidget extends AppWidgetProvider {
         Resources r = mContext.getResources();
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
     }
+
+    public static Bitmap drawableToBitmap (Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable)drawable).getBitmap();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(dpToPx(100), dpToPx(5), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
             int appWidgetId) {
 
@@ -71,9 +90,11 @@ public class StatsWidget extends AppWidgetProvider {
                     context.getPackageName());
             int barID = context.getResources().getIdentifier("barCont" + (count + 1), "id",
                     context.getPackageName());
+            int imgID = context.getResources().getIdentifier("barImg" + (count + 1), "id",
+                    context.getPackageName());
             int statsID = context.getResources().getIdentifier("statsCont" + (count + 1), "id",
                     context.getPackageName());
-            if (count == 10) {
+            if (count == 6) {
                 break;
             }
 
@@ -91,7 +112,7 @@ public class StatsWidget extends AppWidgetProvider {
             views.setImageViewBitmap(iconID, bmpIcon);
             views.setTextViewText(labelID, task.getName());
 
-            int maxWidth = dpToPx(250) - dpToPx(32+14+14); // ImageView + Margin? + Stats text?
+            // int maxWidth = dpToPx(250) - dpToPx(32+14+14); // ImageView + Margin? + Stats text?
             float secondsRatio = (float) task.getSeconds() / highestSeconds;
             int barColor;
             int secondsColor = (Math.round(secondsRatio * 100));
@@ -106,12 +127,18 @@ public class StatsWidget extends AppWidgetProvider {
             } else {
                 barColor = 0xFFFF4444;
             }
-            float adjustedWidth = maxWidth * secondsRatio;
+            int[] colors = new int[]{barColor, (secondsColor * 10), 0x00000000, (100-secondsColor) * 10};
+            Log.d("Apphangar", "BarDrawable: " + colors[0] + ", " + colors[1] + ", " + colors[2] + ", " + colors[3]);
+            Drawable sd = new BarDrawable(colors);
+            // sd.setBounds(dpToPx(0), dpToPx(0), dpToPx(100), dpToPx(5));
+            Bitmap bmpIcon2 = drawableToBitmap(sd);
+            views.setImageViewBitmap(imgID, bmpIcon2);
+            // float adjustedWidth = maxWidth * secondsRatio;
             // views.setInt(iconID, "width", Math.round(adjustedWidth));
             int[] statsTime = new SettingsActivity().splitToComponentTimes(task.getSeconds());
             String statsString = ((statsTime[0] > 0) ? statsTime[0] + "h " : "") + ((statsTime[1] > 0) ? statsTime[1] + "m " : "") + ((statsTime[2] > 0) ? statsTime[2] + "s " : "");
             views.setTextViewText(statsID, statsString);
-            views.setInt(barID, "setBackgroundColor", barColor);
+            // views.setInt(barID, "setBackgroundColor", barColor);
         }
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

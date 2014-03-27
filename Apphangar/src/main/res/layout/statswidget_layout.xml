@@ -13,33 +13,33 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="left"
             android:layout_weight="1">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="4dp"
-                android:layout_weight="1"
                 android:id="@+id/appName1"
-                android:textSize="14sp" />
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:textSize="14sp"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:id="@+id/barImg1"
+                android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:minHeight="5dp"
-                android:id="@+id/barCont1"
-                android:layout_weight="1">
-            </RelativeLayout>
+                android:layout_weight="1"
+                android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/statsCont1"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="4dp"
             android:textSize="10sp" />
@@ -56,33 +56,33 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="left"
             android:layout_weight="1">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="4dp"
-                android:layout_weight="1"
                 android:id="@+id/appName2"
-                android:textSize="14sp" />
-            <RelativeLayout
+                android:layout_weight="1"
+                android:textSize="14sp"/>
+            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_height="5dp"
+                android:id="@+id/barImg2"
+                android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:minHeight="5dp"
-                android:id="@+id/barCont2"
-                android:layout_weight="1">
-            </RelativeLayout>
+                android:layout_weight="1"
+                android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/statsCont2"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="4dp"
             android:textSize="10sp" />
@@ -99,33 +99,33 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="left"
             android:layout_weight="1">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="4dp"
-                android:layout_weight="1"
                 android:id="@+id/appName3"
-                android:textSize="14sp" />
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:textSize="14sp"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:id="@+id/barImg3"
+                android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:minHeight="5dp"
-                android:id="@+id/barCont3"
-                android:layout_weight="1">
-            </RelativeLayout>
+                android:layout_weight="1"
+                android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/statsCont3"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="4dp"
             android:textSize="10sp" />
@@ -142,33 +142,33 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="left"
             android:layout_weight="1">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="4dp"
-                android:layout_weight="1"
                 android:id="@+id/appName4"
-                android:textSize="14sp" />
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:textSize="14sp"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:id="@+id/barImg4"
+                android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:minHeight="5dp"
-                android:id="@+id/barCont4"
-                android:layout_weight="1">
-            </RelativeLayout>
+                android:layout_weight="1"
+                android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/statsCont4"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="4dp"
             android:textSize="10sp" />
@@ -185,33 +185,33 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="left"
             android:layout_weight="1">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="4dp"
-                android:layout_weight="1"
                 android:id="@+id/appName5"
-                android:textSize="14sp" />
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:textSize="14sp"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:id="@+id/barImg5"
+                android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:minHeight="5dp"
-                android:id="@+id/barCont5"
-                android:layout_weight="1">
-            </RelativeLayout>
+                android:layout_weight="1"
+                android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/statsCont5"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="4dp"
             android:textSize="10sp" />
@@ -228,33 +228,33 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="left"
             android:layout_weight="1">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="4dp"
-                android:layout_weight="1"
                 android:id="@+id/appName6"
-                android:textSize="14sp" />
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:textSize="14sp"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:id="@+id/barImg6"
+                android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:minHeight="5dp"
-                android:id="@+id/barCont6"
-                android:layout_weight="1">
-            </RelativeLayout>
+                android:layout_weight="1"
+                android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/statsCont6"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="4dp"
             android:textSize="10sp" />
@@ -271,33 +271,33 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="left"
             android:layout_weight="1">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="4dp"
-                android:layout_weight="1"
                 android:id="@+id/appName7"
-                android:textSize="14sp" />
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:textSize="14sp"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:id="@+id/barImg7"
+                android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:minHeight="5dp"
-                android:id="@+id/barCont7"
-                android:layout_weight="1">
-            </RelativeLayout>
+                android:layout_weight="1"
+                android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/statsCont7"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="4dp"
             android:textSize="10sp" />
@@ -314,33 +314,33 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="left"
             android:layout_weight="1">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="4dp"
-                android:layout_weight="1"
                 android:id="@+id/appName8"
-                android:textSize="14sp" />
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:textSize="14sp"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:id="@+id/barImg8"
+                android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:minHeight="5dp"
-                android:id="@+id/barCont8"
-                android:layout_weight="1">
-            </RelativeLayout>
+                android:layout_weight="1"
+                android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/statsCont8"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="4dp"
             android:textSize="10sp" />
@@ -348,92 +348,6 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:id="@+id/iconCont8"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginBottom="6dp" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="4dp"
-                android:layout_weight="1"
-                android:id="@+id/appName9"
-                android:textSize="14sp" />
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:minHeight="5dp"
-                android:id="@+id/barCont9"
-                android:layout_weight="1">
-            </RelativeLayout>
-        </LinearLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/statsCont9"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="4dp"
-            android:textSize="10sp" />
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:id="@+id/iconCont9"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginBottom="6dp" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="4dp"
-                android:layout_weight="1"
-                android:id="@+id/appName10"
-                android:textSize="14sp" />
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:minHeight="5dp"
-                android:id="@+id/barCont10"
-                android:layout_weight="1">
-            </RelativeLayout>
-        </LinearLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/statsCont10"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="4dp"
-            android:textSize="10sp" />
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:id="@+id/iconCont10"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
             android:layout_marginBottom="6dp" />
