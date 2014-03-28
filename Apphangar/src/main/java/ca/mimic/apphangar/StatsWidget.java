@@ -1,8 +1,10 @@
 package ca.mimic.apphangar;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -15,6 +17,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import java.util.Collections;
@@ -84,17 +87,17 @@ public class StatsWidget extends AppWidgetProvider {
 
         int count = 0;
         for (TasksModel task : tasks) {
+            int appID = context.getResources().getIdentifier("appCont" + (count + 1), "id",
+                    context.getPackageName());
             int iconID = context.getResources().getIdentifier("iconCont" + (count + 1), "id",
                     context.getPackageName());
             int labelID = context.getResources().getIdentifier("appName" + (count + 1), "id",
-                    context.getPackageName());
-            int barID = context.getResources().getIdentifier("barCont" + (count + 1), "id",
                     context.getPackageName());
             int imgID = context.getResources().getIdentifier("barImg" + (count + 1), "id",
                     context.getPackageName());
             int statsID = context.getResources().getIdentifier("statsCont" + (count + 1), "id",
                     context.getPackageName());
-            if (count == 6) {
+            if (count == 8) {
                 break;
             }
 
@@ -127,7 +130,7 @@ public class StatsWidget extends AppWidgetProvider {
             } else {
                 barColor = 0xFFFF4444;
             }
-            int[] colors = new int[]{barColor, (secondsColor * 10), 0x00000000, (100-secondsColor) * 10};
+            int[] colors = new int[]{barColor, Math.round(secondsColor * 2.5f), 0x00000000, Math.round((100-secondsColor) * 2.5f)};
             Log.d("Apphangar", "BarDrawable: " + colors[0] + ", " + colors[1] + ", " + colors[2] + ", " + colors[3]);
             Drawable sd = new BarDrawable(colors);
             // sd.setBounds(dpToPx(0), dpToPx(0), dpToPx(100), dpToPx(5));
@@ -139,6 +142,14 @@ public class StatsWidget extends AppWidgetProvider {
             String statsString = ((statsTime[0] > 0) ? statsTime[0] + "h " : "") + ((statsTime[1] > 0) ? statsTime[1] + "m " : "") + ((statsTime[2] > 0) ? statsTime[2] + "s " : "");
             views.setTextViewText(statsID, statsString);
             // views.setInt(barID, "setBackgroundColor", barColor);
+            Intent intent;
+            PackageManager manager = context.getPackageManager();
+            intent = manager.getLaunchIntentForPackage(task.getPackageName());
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            intent.setAction("action" + (count));
+            PendingIntent activity = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            views.setOnClickPendingIntent(appID, activity);
+            views.setViewVisibility(appID, View.VISIBLE);
         }
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

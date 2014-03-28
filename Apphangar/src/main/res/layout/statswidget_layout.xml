@@ -11,9 +11,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp">
+        android:background="?android:selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="gone"
+        android:id="@+id/appCont1">
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="left"
@@ -24,15 +28,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/appName1"
-                android:layout_weight="1"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="5dp"
                 android:id="@+id/barImg1"
                 android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="1"
                 android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
@@ -49,14 +51,19 @@
             android:id="@+id/iconCont1"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="2dp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp">
+        android:background="?android:selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="gone"
+        android:id="@+id/appCont2">
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="left"
@@ -67,15 +74,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/appName2"
-                android:layout_weight="1"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="250dp"
                 android:layout_height="5dp"
                 android:id="@+id/barImg2"
                 android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="1"
                 android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
@@ -92,14 +97,19 @@
             android:id="@+id/iconCont2"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="2dp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp">
+        android:background="?android:selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="gone"
+        android:id="@+id/appCont3">
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="left"
@@ -110,15 +120,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/appName3"
-                android:layout_weight="1"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="5dp"
                 android:id="@+id/barImg3"
                 android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="1"
                 android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
@@ -135,14 +143,19 @@
             android:id="@+id/iconCont3"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="2dp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp">
+        android:background="?android:selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="gone"
+        android:id="@+id/appCont4">
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="left"
@@ -153,15 +166,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/appName4"
-                android:layout_weight="1"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="5dp"
                 android:id="@+id/barImg4"
                 android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="1"
                 android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
@@ -178,14 +189,19 @@
             android:id="@+id/iconCont4"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="2dp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp">
+        android:background="?android:selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="gone"
+        android:id="@+id/appCont5">
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="left"
@@ -196,15 +212,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/appName5"
-                android:layout_weight="1"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="5dp"
                 android:id="@+id/barImg5"
                 android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="1"
                 android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
@@ -221,14 +235,19 @@
             android:id="@+id/iconCont5"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="2dp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp">
+        android:background="?android:selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="gone"
+        android:id="@+id/appCont6">
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="left"
@@ -239,15 +258,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/appName6"
-                android:layout_weight="1"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="5dp"
                 android:id="@+id/barImg6"
                 android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="1"
                 android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
@@ -264,14 +281,19 @@
             android:id="@+id/iconCont6"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="2dp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp">
+        android:background="?android:selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="gone"
+        android:id="@+id/appCont7">
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="left"
@@ -282,15 +304,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/appName7"
-                android:layout_weight="1"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="5dp"
                 android:id="@+id/barImg7"
                 android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="1"
                 android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
@@ -307,14 +327,19 @@
             android:id="@+id/iconCont7"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="2dp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp">
+        android:background="?android:selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="gone"
+        android:id="@+id/appCont8">
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="left"
@@ -325,15 +350,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/appName8"
-                android:layout_weight="1"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="5dp"
                 android:id="@+id/barImg8"
                 android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="1"
                 android:scaleType="fitXY" />
         </LinearLayout>
         <TextView
@@ -350,6 +373,99 @@
             android:id="@+id/iconCont8"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="gone"
+        android:id="@+id/appCont9">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="left"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/appName9"
+                android:textSize="14sp"/>
+            <ImageView
+                android:layout_width="250dp"
+                android:layout_height="5dp"
+                android:id="@+id/barImg9"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="10dp"
+                android:scaleType="fitXY" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/statsCont9"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="4dp"
+            android:textSize="10sp" />
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:id="@+id/iconCont9"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:visibility="gone"
+        android:id="@+id/appCont10">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="left"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/appName10"
+                android:textSize="14sp"/>
+            <ImageView
+                android:layout_width="250dp"
+                android:layout_height="5dp"
+                android:id="@+id/barImg10"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="10dp"
+                android:scaleType="fitXY" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/statsCont10"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="4dp"
+            android:textSize="10sp" />
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:id="@+id/iconCont10"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp" />
     </LinearLayout>
 </LinearLayout>
