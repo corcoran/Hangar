@@ -76,6 +76,8 @@ public class StatsWidget extends AppWidgetProvider {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.statswidget_layout);
         PackageManager pkgm = context.getPackageManager();
+        String packageName = context.getPackageName();
+        Intent intent;
 
         if (db == null) {
             db = new TasksDataSource(context);
@@ -88,15 +90,15 @@ public class StatsWidget extends AppWidgetProvider {
         int count = 0;
         for (TasksModel task : tasks) {
             int appID = context.getResources().getIdentifier("appCont" + (count + 1), "id",
-                    context.getPackageName());
+                    packageName);
             int iconID = context.getResources().getIdentifier("iconCont" + (count + 1), "id",
-                    context.getPackageName());
+                    packageName);
             int labelID = context.getResources().getIdentifier("appName" + (count + 1), "id",
-                    context.getPackageName());
+                    packageName);
             int imgID = context.getResources().getIdentifier("barImg" + (count + 1), "id",
-                    context.getPackageName());
+                    packageName);
             int statsID = context.getResources().getIdentifier("statsCont" + (count + 1), "id",
-                    context.getPackageName());
+                    packageName);
             if (count == 8) {
                 break;
             }
@@ -133,23 +135,27 @@ public class StatsWidget extends AppWidgetProvider {
             int[] colors = new int[]{barColor, Math.round(secondsColor * 2.5f), 0x00000000, Math.round((100-secondsColor) * 2.5f)};
             Log.d("Apphangar", "BarDrawable: " + colors[0] + ", " + colors[1] + ", " + colors[2] + ", " + colors[3]);
             Drawable sd = new BarDrawable(colors);
-            // sd.setBounds(dpToPx(0), dpToPx(0), dpToPx(100), dpToPx(5));
             Bitmap bmpIcon2 = drawableToBitmap(sd);
             views.setImageViewBitmap(imgID, bmpIcon2);
-            // float adjustedWidth = maxWidth * secondsRatio;
-            // views.setInt(iconID, "width", Math.round(adjustedWidth));
+
             int[] statsTime = new SettingsActivity().splitToComponentTimes(task.getSeconds());
             String statsString = ((statsTime[0] > 0) ? statsTime[0] + "h " : "") + ((statsTime[1] > 0) ? statsTime[1] + "m " : "") + ((statsTime[2] > 0) ? statsTime[2] + "s " : "");
             views.setTextViewText(statsID, statsString);
-            // views.setInt(barID, "setBackgroundColor", barColor);
-            Intent intent;
-            PackageManager manager = context.getPackageManager();
-            intent = manager.getLaunchIntentForPackage(task.getPackageName());
-            intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            intent.setAction("action" + (count));
-            PendingIntent activity = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-            views.setOnClickPendingIntent(appID, activity);
-            views.setViewVisibility(appID, View.VISIBLE);
+
+            try {
+                intent = pkgm.getLaunchIntentForPackage(task.getPackageName());
+                if (intent == null) {
+                    count --;
+                    throw new PackageManager.NameNotFoundException();
+                }
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                intent.setAction("action" + (count));
+                PendingIntent activity = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                views.setOnClickPendingIntent(appID, activity);
+                views.setViewVisibility(appID, View.VISIBLE);
+            } catch (PackageManager.NameNotFoundException e) {
+
+            }
         }
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
