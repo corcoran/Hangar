@@ -58,6 +58,7 @@ public class StatsWidget extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("Apphangar", "onReceive");
+        mContext = context;
         AppWidgetManager mgr = AppWidgetManager.getInstance(context);
 
         int[] ids = mgr.getAppWidgetIds(new ComponentName(context, StatsWidget.class));
@@ -67,6 +68,7 @@ public class StatsWidget extends AppWidgetProvider {
             try {
                 updateAppWidget(context, mgr, id);
             } catch (NullPointerException e) {
+                e.printStackTrace();
                 Log.d("Apphangar", "NPE onReceive");
             }
             // mgr.notifyAppWidgetViewDataChanged(id, R.id.taskRoot);
