@@ -3,6 +3,7 @@ package ca.mimic.apphangar;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -34,6 +35,7 @@ public class StatsWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        Log.d("Apphangar", "onUpdate");
         // There may be multiple widgets active, so update all of them
         mContext = context;
         final int N = appWidgetIds.length;
@@ -51,6 +53,25 @@ public class StatsWidget extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Log.d("Apphangar", "onReceive");
+        AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+
+        int[] ids = mgr.getAppWidgetIds(new ComponentName(context, StatsWidget.class));
+
+        for(int id : ids) {
+            Log.d("Apphangar", "per id: " + id);
+            try {
+                updateAppWidget(context, mgr, id);
+            } catch (NullPointerException e) {
+                Log.d("Apphangar", "NPE onReceive");
+            }
+            // mgr.notifyAppWidgetViewDataChanged(id, R.id.taskRoot);
+        }
+        super.onReceive(context, intent);
     }
 
     public static int dpToPx(int dp) {
@@ -73,6 +94,8 @@ public class StatsWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
             int appWidgetId) {
+
+        Log.d("Apphangar", "updateAppWidget");
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.statswidget_layout);
         PackageManager pkgm = context.getPackageManager();

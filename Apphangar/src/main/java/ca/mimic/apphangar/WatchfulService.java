@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -152,6 +153,12 @@ public class WatchfulService extends Service {
         return false;
     }
 
+    protected void updateWidget(Context mContext) {
+        Intent i = new Intent(mContext, StatsWidget.class);
+        i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        mContext.sendBroadcast(i);
+    }
+
     protected void buildTasks() {
         // prefs = getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS);
         try {
@@ -166,8 +173,16 @@ public class WatchfulService extends Service {
                 String taskClass = task.getClassName();
                 String taskPackage = task.getPackageName();
 
-                if (taskClass.equals("com.android.launcher2.Launcher") ||
-                        taskClass.equals("com.android.internal.app.ResolverActivity")) {
+                if (taskClass.equals("com.android.launcher2.Launcher")) {
+                    if (!topPackage.equals(taskPackage)) {
+                        // First time in launcher?  Update the widget!
+                        Log.d(TAG, "Calling updateWidget!");
+                        updateWidget(getApplicationContext());
+                    }
+                    topPackage = taskPackage;
+                    return;
+                }
+                if (taskClass.equals("com.android.internal.app.ResolverActivity")) {
                     return;
                 }
 
