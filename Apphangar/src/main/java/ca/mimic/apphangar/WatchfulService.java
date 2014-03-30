@@ -163,42 +163,45 @@ public class WatchfulService extends Service {
 
             if (recentTasks.size() > 0) {
                 ComponentName task = recentTasks.get(0).baseActivity;
+                String taskClass = task.getClassName();
+                String taskPackage = task.getPackageName();
 
-                if (task.getClassName().equals("com.android.launcher2.Launcher") ||
-                        task.getClassName().equals("com.android.internal.app.ResolverActivity")) {
+                if (taskClass.equals("com.android.launcher2.Launcher") ||
+                        taskClass.equals("com.android.internal.app.ResolverActivity")) {
                     return;
                 }
 
-                if (topPackage != null && topPackage.equals(task.getPackageName())) {
-                    TaskInfo runningTask = getTask(task.getPackageName());
+                if (topPackage != null && topPackage.equals(taskPackage)) {
+                    TaskInfo runningTask = getTask(taskPackage);
                     if (runningTask != null && pm.isScreenOn()) {
                         runningTask.seconds += LOOP_SECONDS;
                         Log.d(TAG, "Task [" + runningTask.appName + "] in fg [" + runningTask.seconds + "]s");
                         if (runningTask.seconds >= LOOP_SECONDS * 5) {
                             Log.d(TAG, "Dumping task [" + runningTask.appName + "] to DB [" + runningTask.seconds + "]s");
-                            db.addSeconds(task.getPackageName(), runningTask.seconds);
+                            db.addSeconds(taskPackage, runningTask.seconds);
                             runningTask.totalseconds += runningTask.seconds;
                             runningTask.seconds = 0;
                         }
                     }
                     return;
                 }
-                topPackage = task.getPackageName();
+                topPackage = taskPackage;
             }
 
             if (taskList.size() < TASKLIST_QUEUE_SIZE) {
                 List<TasksModel> tasks = db.getAllTasks(TASKLIST_QUEUE_SIZE);
 
                 for (TasksModel taskM : tasks) {
-                    if (taskM.getPackageName().equals(topPackage))
+                    String taskPackage = taskM.getPackageName();
+                    if (taskPackage.equals(topPackage))
                         continue;
 
-                    if (isBlacklisted(taskM.getPackageName()))
+                    if (isBlacklisted(taskPackage))
                         continue;
 
                     boolean skipTask = false;
                     for (TaskInfo taskL : taskList) {
-                        if (taskM.getPackageName().equals(taskL.packageName))
+                        if (taskPackage.equals(taskL.packageName))
                             skipTask = true;
                     }
                     if (skipTask)
@@ -206,7 +209,7 @@ public class WatchfulService extends Service {
 
                     TaskInfo dbTask = new TaskInfo();
                     dbTask.appName = taskM.getName();
-                    dbTask.packageName = taskM.getPackageName();
+                    dbTask.packageName = taskPackage;
                     dbTask.className = taskM.getClassName();
                     dbTask.launches = taskM.getLaunches();
                     dbTask.totalseconds = taskM.getSeconds();
@@ -227,14 +230,15 @@ public class WatchfulService extends Service {
 
             for (int i = 0; i < recentTasks.size(); i++) {
                 ComponentName task = recentTasks.get(i).baseActivity;
+                String taskPackage = task.getPackageName();
 
-                ApplicationInfo appInfo = pkgm.getApplicationInfo(task.getPackageName(), 0);
-                if (isBlacklisted(task.getPackageName()))
+                ApplicationInfo appInfo = pkgm.getApplicationInfo(taskPackage, 0);
+                if (isBlacklisted(taskPackage))
                     continue;
 
                 TaskInfo newInfo = new TaskInfo();
                 newInfo.appName = appInfo.loadLabel(pkgm).toString();
-                newInfo.packageName = task.getPackageName();
+                newInfo.packageName = taskPackage;
                 newInfo.className = task.getClassName();
 
                 if (i == 0 && origSize > 0) {
@@ -447,10 +451,11 @@ public class WatchfulService extends Service {
         // Not a fun hack.  No way around it until they let you do getInt for setShowDividers!
         PackageManager pkgm = getApplicationContext().getPackageManager();
         RemoteViews customNotifView;
+        String taskPackage = this.getPackageName();
 
         int rootID = prefs.getBoolean(SettingsActivity.DIVIDER_PREFERENCE, SettingsActivity.DIVIDER_DEFAULT) ?
-                getResources().getIdentifier("notification", "layout", this.getPackageName()) :
-                getResources().getIdentifier("notification_no_dividers", "layout", this.getPackageName());
+                getResources().getIdentifier("notification", "layout", taskPackage) :
+                getResources().getIdentifier("notification_no_dividers", "layout", taskPackage);
 
         customNotifView = new RemoteViews(WatchfulService.this.getPackageName(),
                 rootID);
@@ -474,8 +479,8 @@ public class WatchfulService extends Service {
         int filledConts = 0;
 
         for (int i=0; i < taskList.size(); i++) {
-            int resID = getResources().getIdentifier("imageButton" + (filledConts+1), "id", this.getPackageName());
-            int contID = getResources().getIdentifier("imageCont" + (filledConts+1), "id", this.getPackageName());
+            int resID = getResources().getIdentifier("imageButton" + (filledConts+1), "id", taskPackage);
+            int contID = getResources().getIdentifier("imageCont" + (filledConts+1), "id", taskPackage);
 
             if (filledConts == maxButtons) {
                 // Log.d(TAG, "filledConts [" + filledConts + "] == maxButtons [" + maxButtons + "]");
