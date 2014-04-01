@@ -56,17 +56,19 @@ public class Settings extends Activity implements ActionBar.TabListener {
     private static TasksDataSource db;
     // private Context mContext;
 
-    static String TAG = "Apphangar";
-    static String DIVIDER_PREFERENCE = "divider_preference";
-    static String APPSNO_PREFERENCE = "appsno_preference";
-    static String PRIORITY_PREFERENCE = "priority_preference";
-    static String TOGGLE_PREFERENCE = "toggle_preference";
-    static String BOOT_PREFERENCE = "boot_preference";
-    static String WEIGHTED_RECENTS_PREFERENCE = "weighted_recents_preference";
-    static String WEIGHT_PRIORITY_PREFERENCE = "weight_priority_preference";
-    static String COLORIZE_PREFERENCE = "colorize_preference";
-    static String ICON_COLOR_PREFERENCE = "icon_color_preference";
-    static String STATUSBAR_ICON_PREFERENCE = "statusbar_icon_preference";
+    final static String TAG = "Apphangar";
+    final static String DIVIDER_PREFERENCE = "divider_preference";
+    final static String APPSNO_PREFERENCE = "appsno_preference";
+    final static String PRIORITY_PREFERENCE = "priority_preference";
+    final static String TOGGLE_PREFERENCE = "toggle_preference";
+    final static String BOOT_PREFERENCE = "boot_preference";
+    final static String WEIGHTED_RECENTS_PREFERENCE = "weighted_recents_preference";
+    final static String WEIGHT_PRIORITY_PREFERENCE = "weight_priority_preference";
+    final static String COLORIZE_PREFERENCE = "colorize_preference";
+    final static String ICON_COLOR_PREFERENCE = "icon_color_preference";
+    final static String STATUSBAR_ICON_PREFERENCE = "statusbar_icon_preference";
+    final static String BACKGROUND_COLOR_PREFERENCE = "background_color_preference";
+
 
     protected static View appsView;
     protected static boolean isBound = false;
@@ -89,6 +91,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int PRIORITY_DEFAULT = 2;
     final static int PRIORITY_BOTTOM = -2;
     final static int ICON_COLOR_DEFAULT = 0xffffffff;
+    final static int BACKGROUND_COLOR_DEFAULT = 0x00000000;
+    final static int STATS_WIDGET_APPSNO_DEFAULT = 8;
 
     final static String STATUSBAR_ICON_WHITE_WARM = "**white_warm**";
     final static String STATUSBAR_ICON_WHITE_COLD = "**white_cold**";

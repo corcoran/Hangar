@@ -111,5 +111,7 @@
 
     <!-- Stats Widget -->
     <string name="stats_widget_name">Hangar App Stats</string>
+    <string name="title_background_color_preference">Background color</string>
+    <string name="button_name">Place widget</string>
 
 </resources>

@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ca.mimic.apphangar"
     android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
-    android:versionCode="6"
-    android:versionName="1.9.2" >
+    android:versionCode="7"
+    android:versionName="1.10" >
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -38,7 +38,9 @@
                 android:resource="@xml/statswidget" />
         </receiver>
 
-        <activity android:name="ca.mimic.apphangar.StatsWidgetSettings">
+        <activity
+            android:name=".StatsWidgetSettings"
+            android:theme="@android:style/Theme.Holo">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
@@ -59,10 +61,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="ca.mimic.apphangar.StatsWidgetSettings"
-            android:label="@string/title_activity_stats_widget_settings" >
         </activity>
     </application>
 

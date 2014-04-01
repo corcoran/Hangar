@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -21,6 +22,7 @@ import android.widget.RemoteViews;
 import java.util.Collections;
 import java.util.List;
 
+import ca.mimic.apphangar.Settings.PrefsGet;
 
 /**
  * Implementation of App Widget functionality.
@@ -29,6 +31,7 @@ public class StatsWidget extends AppWidgetProvider {
 
     private static TasksDataSource db;
     private static Context mContext;
+    private static PrefsGet prefs;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -95,11 +98,25 @@ public class StatsWidget extends AppWidgetProvider {
             int appWidgetId) {
 
         Log.d("Apphangar", "updateAppWidget");
+        prefs = new PrefsGet(context.getSharedPreferences("StatsWidget", Context.MODE_PRIVATE));
 
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stats_widget);
+        SharedPreferences mPrefs = prefs.prefsGet();
+
+        int statsLayout;
+        if (mPrefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT)) {
+            statsLayout = R.layout.stats_widget;
+        } else {
+            statsLayout = R.layout.stats_widget_no_dividers;
+        }
+        int appsNo = Integer.parseInt(mPrefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_DEFAULT)));
+        int getColor = mPrefs.getInt(Settings.BACKGROUND_COLOR_PREFERENCE, Settings.BACKGROUND_COLOR_DEFAULT);
+
+        RemoteViews views = new RemoteViews(context.getPackageName(), statsLayout);
         PackageManager pkgm = context.getPackageManager();
         String packageName = context.getPackageName();
         Intent intent;
+
+        views.setInt(R.id.taskRoot, "setBackgroundColor", getColor);
 
         if (db == null) {
             db = new TasksDataSource(context);
@@ -121,8 +138,10 @@ public class StatsWidget extends AppWidgetProvider {
                     packageName);
             int statsID = context.getResources().getIdentifier("statsCont" + (count + 1), "id",
                     packageName);
-            if (count == 8) {
-                break;
+            if (count >= appsNo) {
+                views.setViewVisibility(appID, View.GONE);
+                count++;
+                continue;
             }
 
             Drawable taskIcon;
