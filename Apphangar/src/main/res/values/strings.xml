@@ -106,5 +106,10 @@
     <string name="hex_hint">#ff000000</string>
     <string name="set">Set</string>
     <string name="color_default">Default</string>
+    <string name="title_activity_stats_widget_settings">StatsWidget Settings</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- Stats Widget -->
+    <string name="stats_widget_name">Hangar App Stats</string>
 
 </resources>

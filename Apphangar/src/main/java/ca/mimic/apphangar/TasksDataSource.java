@@ -69,7 +69,7 @@ public class TasksDataSource {
                     + Tasks.COLUMN_ID + " = " + id);
             return task.getSeconds() + seconds;
         } catch (Exception e) {
-            Log.d(SettingsActivity.TAG, "Exception for addSeconds [" + name + "]");
+            Log.d(Settings.TAG, "Exception for addSeconds [" + name + "]");
             e.printStackTrace();
         }
         return 0;
@@ -92,7 +92,7 @@ public class TasksDataSource {
                     + Tasks.COLUMN_ID + " = " + id);
             return task.getLaunches() + 1;
         } catch (Exception e) {
-            Log.d(SettingsActivity.TAG, "Exception for increaseLaunch [" + name + "]");
+            Log.d(Settings.TAG, "Exception for increaseLaunch [" + name + "]");
         }
         return 0;
     }

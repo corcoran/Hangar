@@ -11,11 +11,8 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -99,7 +96,7 @@ public class StatsWidget extends AppWidgetProvider {
 
         Log.d("Apphangar", "updateAppWidget");
 
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.statswidget_layout);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.stats_widget);
         PackageManager pkgm = context.getPackageManager();
         String packageName = context.getPackageName();
         Intent intent;
@@ -110,7 +107,7 @@ public class StatsWidget extends AppWidgetProvider {
         }
         int highestSeconds = db.getHighestSeconds();
         List<TasksModel> tasks = db.getAllTasks();
-        Collections.sort(tasks, new SettingsActivity().new TasksComparator("seconds"));
+        Collections.sort(tasks, new Settings().new TasksComparator("seconds"));
 
         int count = 0;
         for (TasksModel task : tasks) {
@@ -163,7 +160,7 @@ public class StatsWidget extends AppWidgetProvider {
             Bitmap bmpIcon2 = drawableToBitmap(sd);
             views.setImageViewBitmap(imgID, bmpIcon2);
 
-            int[] statsTime = new SettingsActivity().splitToComponentTimes(task.getSeconds());
+            int[] statsTime = new Settings().splitToComponentTimes(task.getSeconds());
             String statsString = ((statsTime[0] > 0) ? statsTime[0] + "h " : "") + ((statsTime[1] > 0) ? statsTime[1] + "m " : "") + ((statsTime[2] > 0) ? statsTime[2] + "s " : "");
             views.setTextViewText(statsID, statsString);
 

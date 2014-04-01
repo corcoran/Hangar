@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -19,7 +18,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -92,13 +90,13 @@ public class WatchfulService extends Service {
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
         iconMap = new HashMap<String, Integer>();
-        iconMap.put(SettingsActivity.STATUSBAR_ICON_WHITE_WARM, R.drawable.ic_apps_warm);
-        iconMap.put(SettingsActivity.STATUSBAR_ICON_WHITE_COLD, R.drawable.ic_apps_cold);
-        iconMap.put(SettingsActivity.STATUSBAR_ICON_WHITE_BLUE, R.drawable.ic_apps_blue);
-        iconMap.put(SettingsActivity.STATUSBAR_ICON_BLACK_WARM, R.drawable.ic_apps_warm_black);
-        iconMap.put(SettingsActivity.STATUSBAR_ICON_BLACK_COLD, R.drawable.ic_apps_cold_black);
-        iconMap.put(SettingsActivity.STATUSBAR_ICON_BLACK_BLUE, R.drawable.ic_apps_blue_black);
-        iconMap.put(SettingsActivity.STATUSBAR_ICON_TRANSPARENT, R.drawable.ic_apps_transparent);
+        iconMap.put(Settings.STATUSBAR_ICON_WHITE_WARM, R.drawable.ic_apps_warm);
+        iconMap.put(Settings.STATUSBAR_ICON_WHITE_COLD, R.drawable.ic_apps_cold);
+        iconMap.put(Settings.STATUSBAR_ICON_WHITE_BLUE, R.drawable.ic_apps_blue);
+        iconMap.put(Settings.STATUSBAR_ICON_BLACK_WARM, R.drawable.ic_apps_warm_black);
+        iconMap.put(Settings.STATUSBAR_ICON_BLACK_COLD, R.drawable.ic_apps_cold_black);
+        iconMap.put(Settings.STATUSBAR_ICON_BLACK_BLUE, R.drawable.ic_apps_blue_black);
+        iconMap.put(Settings.STATUSBAR_ICON_TRANSPARENT, R.drawable.ic_apps_transparent);
     }
 
     protected void runScan() {
@@ -287,9 +285,9 @@ public class WatchfulService extends Service {
                 }
             }
             if (taskList.size() > 0) {
-                boolean weightedRecents = prefs.getBoolean(SettingsActivity.WEIGHTED_RECENTS_PREFERENCE,
-                        SettingsActivity.WEIGHTED_RECENTS_DEFAULT);
-                boolean isToggled = prefs.getBoolean(SettingsActivity.TOGGLE_PREFERENCE, SettingsActivity.TOGGLE_DEFAULT);
+                boolean weightedRecents = prefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
+                        Settings.WEIGHTED_RECENTS_DEFAULT);
+                boolean isToggled = prefs.getBoolean(Settings.TOGGLE_PREFERENCE, Settings.TOGGLE_DEFAULT);
                 if (isToggled) {
                     if (weightedRecents)
                         reorderTasks();
@@ -323,8 +321,8 @@ public class WatchfulService extends Service {
     {
         private String mType;
 
-        int weightPriority = Integer.parseInt(prefs.getString(SettingsActivity.WEIGHT_PRIORITY_PREFERENCE,
-                Integer.toString(SettingsActivity.WEIGHT_PRIORITY_DEFAULT)));
+        int weightPriority = Integer.parseInt(prefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
+                Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
 
         public TaskComparator (String type){
             this.mType = type;
@@ -468,7 +466,7 @@ public class WatchfulService extends Service {
         RemoteViews customNotifView;
         String taskPackage = this.getPackageName();
 
-        int rootID = prefs.getBoolean(SettingsActivity.DIVIDER_PREFERENCE, SettingsActivity.DIVIDER_DEFAULT) ?
+        int rootID = prefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT) ?
                 getResources().getIdentifier("notification", "layout", taskPackage) :
                 getResources().getIdentifier("notification_no_dividers", "layout", taskPackage);
 
@@ -476,10 +474,10 @@ public class WatchfulService extends Service {
                 rootID);
 
         int maxButtons;
-        int realMaxButtons = Integer.parseInt(prefs.getString(SettingsActivity.APPSNO_PREFERENCE, Integer.toString(SettingsActivity.APPSNO_DEFAULT)));
-        int setPriority = Integer.parseInt(prefs.getString(SettingsActivity.PRIORITY_PREFERENCE, Integer.toString(SettingsActivity.PRIORITY_DEFAULT)));
-        boolean isColorized = prefs.getBoolean(SettingsActivity.COLORIZE_PREFERENCE, SettingsActivity.COLORIZE_DEFAULT);
-        int getColor = prefs.getInt(SettingsActivity.ICON_COLOR_PREFERENCE, SettingsActivity.ICON_COLOR_DEFAULT);
+        int realMaxButtons = Integer.parseInt(prefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.APPSNO_DEFAULT)));
+        int setPriority = Integer.parseInt(prefs.getString(Settings.PRIORITY_PREFERENCE, Integer.toString(Settings.PRIORITY_DEFAULT)));
+        boolean isColorized = prefs.getBoolean(Settings.COLORIZE_PREFERENCE, Settings.COLORIZE_DEFAULT);
+        int getColor = prefs.getInt(Settings.ICON_COLOR_PREFERENCE, Settings.ICON_COLOR_DEFAULT);
 
         if (taskList.size() < realMaxButtons) {
             maxButtons = taskList.size();
@@ -542,8 +540,8 @@ public class WatchfulService extends Service {
             }
         }
 
-        String mIcon = prefs.getString(SettingsActivity.STATUSBAR_ICON_PREFERENCE, SettingsActivity.STATUSBAR_ICON_DEFAULT);
-        int smallIcon = iconMap.get(SettingsActivity.STATUSBAR_ICON_WHITE_WARM);
+        String mIcon = prefs.getString(Settings.STATUSBAR_ICON_PREFERENCE, Settings.STATUSBAR_ICON_DEFAULT);
+        int smallIcon = iconMap.get(Settings.STATUSBAR_ICON_WHITE_WARM);
         try {
             smallIcon = iconMap.get(mIcon);
         } catch (NullPointerException e) {

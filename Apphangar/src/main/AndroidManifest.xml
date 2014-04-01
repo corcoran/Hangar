@@ -28,7 +28,7 @@
         <receiver
             android:name="ca.mimic.apphangar.StatsWidget"
             android:icon="@drawable/ic_launcher"
-            android:label="@string/app_name" >
+            android:label="@string/stats_widget_name" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -38,6 +38,12 @@
                 android:resource="@xml/statswidget" />
         </receiver>
 
+        <activity android:name="ca.mimic.apphangar.StatsWidgetSettings">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
         <service
             android:name="ca.mimic.apphangar.WatchfulService"
             android:exported="false"
@@ -45,7 +51,7 @@
         </service>
 
         <activity
-            android:name="ca.mimic.apphangar.SettingsActivity"
+            android:name=".Settings"
             android:label="@string/title_activity_settings"
             android:theme="@android:style/Theme.Holo" >
             <intent-filter>
@@ -53,6 +59,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="ca.mimic.apphangar.StatsWidgetSettings"
+            android:label="@string/title_activity_stats_widget_settings" >
         </activity>
     </application>
 

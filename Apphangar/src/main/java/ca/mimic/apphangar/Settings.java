@@ -47,7 +47,7 @@ import android.widget.TextView;
 
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
 
-public class SettingsActivity extends Activity implements ActionBar.TabListener {
+public class Settings extends Activity implements ActionBar.TabListener {
 
     SectionsPagerAdapter mSectionsPagerAdapter;
 
