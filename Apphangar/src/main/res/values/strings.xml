@@ -12,12 +12,9 @@
     <!-- Behavior -->
     <string name="title_toggle_preference">Show notification bar</string>
     <string name="title_boot_preference">Start on boot</string>
-
     <string name="title_weight_category">Sorting and Icon Order</string>
-
     <string name="title_weighted_recents_preference">Weighted sorting</string>
     <string name="summary_weighted_recents_preference">Apps sorted by most used and recency</string>
-
     <string name="title_weight_priority_preference">Weight bias</string>
     <string name="summary_weight_priority_preference">%s</string>
     <string name="dialog_weight_priority_preference">Choose a weight</string>
@@ -66,7 +63,6 @@
         <item>9</item>
     </string-array>
 
-
     <string name="title_statusbar_icon_preference">Statusbar icon</string>
     <string name="summary_statusbar_icon_preference">%s</string>
     <string name="dialog_statusbar_icon_preference">Choose an icon style</string>
@@ -83,7 +79,6 @@
         <item>Transparent icon</item>
         <item>No icon</item>
     </string-array>
-
     <string-array name="values_statusbar_icon_preference">
         <item>**white_warm**</item>
         <item>**white_cold**</item>
@@ -97,11 +92,9 @@
 
     <string name="title_divider_preference">Enable divider</string>
     <string name="summary_divider_preference">Shows a divider between each app icon</string>
-
     <string name="title_colorize_preference">Colorize notification icons</string>
     <string name="summary_colorize_preference">Change the color of the notification icons</string>
     <string name="title_icon_color_preference">Color</string>
-
     <string name="title_icon_color_category">Icon Color</string>
 
     <!-- Color Picker -->
@@ -113,4 +106,5 @@
     <string name="hex_hint">#ff000000</string>
     <string name="set">Set</string>
     <string name="color_default">Default</string>
+
 </resources>
