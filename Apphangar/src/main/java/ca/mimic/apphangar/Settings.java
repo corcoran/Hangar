@@ -36,12 +36,15 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -269,7 +272,13 @@ public class Settings extends Activity implements ActionBar.TabListener {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.settings, menu);
+        return true;
+    }
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        mContext.startActivity(new Intent(mContext, StatsWidgetSettings.class));
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
@@ -364,13 +373,32 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         taskRL.setTag(task);
                         taskRL.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View view) {
-                                TasksModel task = (TasksModel)view.getTag();
-                                TextView text = (TextView)view.findViewWithTag("text");
-                                db.blacklistTask(task, fadeTask(view, text));
-                                myService.execute(SERVICE_CLEAR_TASKS);
-                                myService.watchHelper(STOP_SERVICE);
-                                myService.watchHelper(START_SERVICE);
+                            public void onClick(final View view) {
+                                final TasksModel task = (TasksModel)view.getTag();
+                                final TextView text = (TextView)view.findViewWithTag("text");
+                                PopupMenu popup = new PopupMenu(getApplicationContext(), view);
+                                popup.getMenuInflater().inflate(R.menu.app_action, popup.getMenu());
+                                PopupMenu.OnMenuItemClickListener menuAction = new PopupMenu.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem item) {
+                                        switch (item.getItemId()) {
+                                            case R.id.action_blacklist:
+                                                db.blacklistTask(task, fadeTask(view, text));
+                                                break;
+                                            case R.id.action_reset_stats:
+                                                db.resetTaskStats(task);
+                                                drawT.drawTasks(appsView);
+                                                break;
+                                        }
+                                        myService.execute(SERVICE_CLEAR_TASKS);
+                                        myService.watchHelper(STOP_SERVICE);
+                                        myService.watchHelper(START_SERVICE);
+                                        return true;
+                                    }
+                                };
+                                popup.setOnMenuItemClickListener(menuAction);
+                                popup.show();
+
                             }
                         });
 
@@ -475,6 +503,12 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
     }
 
+    private static class reconfigureStatsWidget {
+        reconfigureStatsWidget(Context context) {
+            context.startActivity(new Intent(context, StatsWidgetSettings.class));
+        }
+    }
+
     public static class PrefsGet {
         SharedPreferences realPrefs;
         PrefsGet(SharedPreferences prefs) {
@@ -514,8 +548,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-            // setRetainInstance(true);
             final int prefLayout = getArguments().getInt("layout");
+            setHasOptionsMenu(true);
             addPreferencesFromResource(prefLayout);
             SharedPreferences prefs2 = prefs.prefsGet();
             SharedPreferences.Editor editor = prefs.editorGet();
@@ -685,9 +719,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
             super.onResume();
             drawT.drawTasks(appsView);
         }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+            setHasOptionsMenu(true);
             appsView = inflater.inflate(R.layout.apps_settings, container, false);
             drawT.drawTasks(appsView);
             return appsView;

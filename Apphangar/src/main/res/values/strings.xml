@@ -107,11 +107,17 @@
     <string name="set">Set</string>
     <string name="color_default">Default</string>
     <string name="title_activity_stats_widget_settings">StatsWidget Settings</string>
-    <string name="hello_world">Hello world!</string>
+
+    <!-- Action menu -->
+    <string name="action_blacklist">Blacklist</string>
+    <string name="action_reset_stats">Reset stats</string>
+    <string name="configure_stats_widget">Configure stats widget</string>
 
     <!-- Stats Widget -->
-    <string name="stats_widget_name">Hangar App Stats</string>
+    <string name="stats_widget_name">Hangar Stats Widget</string>
     <string name="title_background_color_preference">Background color</string>
     <string name="button_name">Place widget</string>
+    <string name="reconfigure_button_name">Save widget preferences</string>
+    <string name="reconfigure_reminder">You can modify the widget settings at any time from the Hangar Settings menu</string>
 
 </resources>

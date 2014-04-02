@@ -153,11 +153,17 @@ public class TasksDataSource {
         return null;
     }
 
+    public void resetTaskStats(TasksModel task) {
+        ContentValues args = new ContentValues();
+        args.put(Tasks.COLUMN_LAUNCHES, 0);
+        args.put(Tasks.COLUMN_SECONDS, 0);
+        database.update(Tasks.TABLE_TASKS, args, Tasks.COLUMN_ID
+                + " = " + task.getId(), null);
+    }
+
     public void blacklistTask(TasksModel task, boolean blacklisted) {
         ContentValues args = new ContentValues();
         args.put(Tasks.COLUMN_BLACKLISTED, blacklisted ? 1 : 0);
-        args.put(Tasks.COLUMN_LAUNCHES, 0);
-        args.put(Tasks.COLUMN_SECONDS, 0);
         database.update(Tasks.TABLE_TASKS, args, Tasks.COLUMN_ID
                 + " = " + task.getId(), null);
     }

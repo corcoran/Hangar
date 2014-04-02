@@ -14,6 +14,7 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
 
@@ -33,6 +34,7 @@ public class StatsWidgetSettings extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         prefs = new PrefsGet(getSharedPreferences("StatsWidget", Context.MODE_PRIVATE));
         addPreferencesFromResource(R.layout.stats_widget_settings);
+        setTitle(R.string.stats_widget_name);
         setResult(RESULT_CANCELED);
 
         ListView v = getListView();
@@ -43,6 +45,12 @@ public class StatsWidgetSettings extends PreferenceActivity {
         LinearLayout footer = (LinearLayout) inflater.inflate(R.layout.stats_widget_footer, v, false);
         footer.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT));
         Button createButton = (Button) footer.findViewById(R.id.placementButton);
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            createButton.setText(R.string.reconfigure_button_name);
+        } else {
+            createButton.setText(R.string.button_name);
+        }
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,6 +63,9 @@ public class StatsWidgetSettings extends PreferenceActivity {
                     Intent resultValue = new Intent();
                     resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
                     setResult(RESULT_OK, resultValue);
+                    Toast.makeText(getApplicationContext(), R.string.reconfigure_reminder, Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
                     finish();
                 }
             }
