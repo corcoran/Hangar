@@ -37,7 +37,6 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -500,12 +499,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     }
                 }
             });
-        }
-    }
-
-    private static class reconfigureStatsWidget {
-        reconfigureStatsWidget(Context context) {
-            context.startActivity(new Intent(context, StatsWidgetSettings.class));
         }
     }
 

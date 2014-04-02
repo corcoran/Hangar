@@ -109,7 +109,7 @@
     <string name="title_activity_stats_widget_settings">StatsWidget Settings</string>
 
     <!-- Action menu -->
-    <string name="action_blacklist">Blacklist</string>
+    <string name="action_blacklist">Toggle blacklist</string>
     <string name="action_reset_stats">Reset stats</string>
     <string name="configure_stats_widget">Configure stats widget</string>
 

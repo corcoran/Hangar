@@ -138,7 +138,10 @@ public class StatsWidget extends AppWidgetProvider {
                     packageName);
             int statsID = context.getResources().getIdentifier("statsCont" + (count + 1), "id",
                     packageName);
+
+            if (task.getBlacklisted()) { continue; }
             if (count >= appsNo) {
+                if (count == 10) { break; }
                 views.setViewVisibility(appID, View.GONE);
                 count++;
                 continue;

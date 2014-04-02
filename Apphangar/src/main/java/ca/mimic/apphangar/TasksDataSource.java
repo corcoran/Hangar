@@ -101,7 +101,7 @@ public class TasksDataSource {
         //Cursor cursor = database.query(Tasks.TABLE_TASKS,
         //        allColumns, Tasks.COLUMN_SECONDS + " = (SELECT MAX(seconds))",
         //        null, null, null, null);
-        Cursor cursor = database.query(Tasks.TABLE_TASKS, new String [] {"MAX(" + Tasks.COLUMN_SECONDS + ")"}, null, null, null, null, null);
+        Cursor cursor = database.query(Tasks.TABLE_TASKS, new String [] {"MAX(" + Tasks.COLUMN_SECONDS + ")"}, Tasks.COLUMN_BLACKLISTED + " = " + 0, null, null, null, null);
         // Log.d("Apphangar", "getHighestSeconds cursor:" + cursor.getInt(0));
         try {
             while (cursor.moveToFirst()) {
@@ -119,7 +119,7 @@ public class TasksDataSource {
     }
 
     public int getHighestLaunch() {
-        Cursor cursor = database.query(Tasks.TABLE_TASKS, new String [] {"MAX(" + Tasks.COLUMN_LAUNCHES + ")"}, null, null, null, null, null);
+        Cursor cursor = database.query(Tasks.TABLE_TASKS, new String [] {"MAX(" + Tasks.COLUMN_LAUNCHES + ")"}, Tasks.COLUMN_BLACKLISTED + " = " + 0, null, null, null, null);
         try {
             while (cursor.moveToFirst()) {
                 return cursor.getInt(0);

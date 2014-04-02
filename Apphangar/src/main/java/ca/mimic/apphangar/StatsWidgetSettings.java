@@ -28,7 +28,6 @@ public class StatsWidgetSettings extends PreferenceActivity {
     ColorPickerPreference background_color_preference;
     UpdatingListPreference appnos_preference;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
