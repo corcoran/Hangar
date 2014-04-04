@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -40,6 +41,7 @@ public class WatchfulService extends Service {
 
     ArrayList<TaskInfo> taskList = new ArrayList<TaskInfo>();
     String topPackage;
+    String launcherPackage;
 
     int MAX_RUNNING_TASKS = 20;
     int TASKLIST_QUEUE_SIZE = 12;
@@ -85,6 +87,7 @@ public class WatchfulService extends Service {
             db.open();
         }
         Log.d(TAG, "starting up..");
+
         prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
         // prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -104,11 +107,27 @@ public class WatchfulService extends Service {
         handler.post(scanApps);
     }
 
+    protected String getLauncher() {
+        final Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        final ResolveInfo res = getPackageManager().resolveActivity(intent, 0);
+        if (res.activityInfo == null) {
+            // should not happen. A home is always installed, isn't it?
+        }
+        if ("android".equals(res.activityInfo.packageName)) {
+            // No default selected
+        } else {
+            return res.activityInfo.packageName;
+        }
+        return null;
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Getting prefs");
         prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
         // prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        launcherPackage = getLauncher();
         handler.removeCallbacks(scanApps);
         handler.post(scanApps);
         return START_STICKY;
@@ -171,10 +190,10 @@ public class WatchfulService extends Service {
                 String taskClass = task.getClassName();
                 String taskPackage = task.getPackageName();
 
-                if (taskClass.equals("com.android.launcher2.Launcher")) {
+                if (taskPackage.equals(launcherPackage)) {
                     if (!topPackage.equals(taskPackage)) {
                         // First time in launcher?  Update the widget!
-                        Log.d(TAG, "Calling updateWidget!");
+                        Log.d(TAG, "Found launcher -- Calling updateWidget!");
                         updateWidget(getApplicationContext());
                     }
                     topPackage = taskPackage;
@@ -275,7 +294,7 @@ public class WatchfulService extends Service {
                         continue;
                     }
 
-                    if (newInfo.className.equals("com.android.launcher2.Launcher") ||
+                    if (newInfo.packageName.equals(launcherPackage) ||
                             newInfo.className.equals("com.android.internal.app.ResolverActivity")) {
                         continue;
                     }
