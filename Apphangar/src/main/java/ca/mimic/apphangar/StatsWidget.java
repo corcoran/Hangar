@@ -110,18 +110,22 @@ public class StatsWidget extends AppWidgetProvider {
         }
         boolean appsNoByWidgetSize = mPrefs.getBoolean(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE, Settings.APPS_BY_WIDGET_SIZE_DEFAULT);
         int appsNo;
+        int appsNoLs;
+
         Log.d("Apphangar", "minHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT));
         Log.d("Apphangar", "maxHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
-        if (appsNoByWidgetSize) {
-            appsNo = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) - 15) / 35);
+        appsNo = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) - 15) / 35);
+        appsNoLs = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) - 15) / 35);
+
+        if (appsNoByWidgetSize && appsNo > 0) {
             Log.d("Apphangar", "appsNoByWidgetSize=true, appsNo=" + appsNo);
         } else {
             appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_DEFAULT)));
         }
 
         if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            if (appsNoByWidgetSize) {
-                appsNo = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) - 15) / 35);
+            if (appsNoByWidgetSize && appsNoLs > 0) {
+                appsNo = appsNoLs;
                 Log.d("Apphangar", "Landscape! appsNoByWidgetSize=true, appsNo=" + appsNo);
             } else {
                 appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_LS_DEFAULT)));
