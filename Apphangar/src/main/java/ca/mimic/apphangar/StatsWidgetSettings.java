@@ -166,6 +166,10 @@ public class StatsWidgetSettings extends PreferenceActivity {
                         appnos_preference.goDefault(String.format(getResources().getString(R.string.summary_stats_widget_appsno_preference), appnos_preference.getValue()));
                         appnos_ls_preference.goDefault(String.format(getResources().getString(R.string.summary_stats_widget_appsno_ls_preference), appnos_ls_preference.getValue()));
                     }
+                } else if (preference.getKey().equals(Settings.STATS_WIDGET_APPSNO_PREFERENCE)) {
+                    appnos_preference.goDefault(String.format(getResources().getString(R.string.summary_stats_widget_appsno_preference), (String) newValue));
+                } else if (preference.getKey().equals(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE)) {
+                    appnos_ls_preference.goDefault(String.format(getResources().getString(R.string.summary_stats_widget_appsno_ls_preference), (String) newValue));
                 }
                 return true;
             }

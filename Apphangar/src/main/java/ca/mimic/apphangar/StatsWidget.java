@@ -56,7 +56,13 @@ public class StatsWidget extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("Apphangar", "onReceive");
-        mContext = context;
+        if (mContext == null) {
+            mContext = context;
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(BCAST_CONFIGCHANGED);
+            context.getApplicationContext().registerReceiver(mBroadcastReceiver, filter);
+        }
+
         AppWidgetManager mgr = AppWidgetManager.getInstance(context);
 
         int[] ids = mgr.getAppWidgetIds(new ComponentName(context, StatsWidget.class));

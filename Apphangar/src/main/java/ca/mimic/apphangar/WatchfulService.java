@@ -39,8 +39,8 @@ public class WatchfulService extends Service {
     PowerManager pm;
 
     ArrayList<TaskInfo> taskList = new ArrayList<TaskInfo>();
-    String topPackage;
-    String launcherPackage;
+    String topPackage = null;
+    String launcherPackage = null;
 
     int MAX_RUNNING_TASKS = 20;
     int TASKLIST_QUEUE_SIZE = 12;
@@ -168,7 +168,7 @@ public class WatchfulService extends Service {
                 String taskClass = task.getClassName();
                 String taskPackage = task.getPackageName();
 
-                if (taskPackage.equals(launcherPackage)) {
+                if (launcherPackage != null && taskPackage.equals(launcherPackage)) {
                     if (!topPackage.equals(taskPackage)) {
                         // First time in launcher?  Update the widget!
                         Log.d(TAG, "Found launcher -- Calling updateWidget!");
