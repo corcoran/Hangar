@@ -396,6 +396,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                         switch (item.getItemId()) {
                                             case R.id.action_blacklist:
                                                 db.blacklistTask(task, fadeTask(view, text));
+                                                Tools.updateWidget(getApplicationContext());
                                                 break;
                                             case R.id.action_reset_stats:
                                                 db.resetTaskStats(task);

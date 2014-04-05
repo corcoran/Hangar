@@ -5,6 +5,7 @@
     android:minWidth="180dp"
     android:configure="ca.mimic.apphangar.StatsWidgetSettings"
     android:resizeMode="vertical|horizontal"
+    android:previewImage="@drawable/ic_stats_widget_preview"
     android:updatePeriodMillis="0" >
 
 </appwidget-provider>
