@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="20dp"
     android:gravity="center">
 
     <Button
-        android:layout_marginTop="5dp"
         android:text="@string/button_name"
         android:id="@+id/placementButton"
         android:layout_width="wrap_content"

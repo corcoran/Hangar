@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -107,27 +106,12 @@ public class WatchfulService extends Service {
         handler.post(scanApps);
     }
 
-    protected String getLauncher() {
-        final Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        final ResolveInfo res = getPackageManager().resolveActivity(intent, 0);
-        if (res.activityInfo == null) {
-            // should not happen. A home is always installed, isn't it?
-        }
-        if ("android".equals(res.activityInfo.packageName)) {
-            // No default selected
-        } else {
-            return res.activityInfo.packageName;
-        }
-        return null;
-    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Getting prefs");
         prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
         // prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        launcherPackage = getLauncher();
+        launcherPackage = Tools.getLauncher(getApplicationContext());
         handler.removeCallbacks(scanApps);
         handler.post(scanApps);
         return START_STICKY;

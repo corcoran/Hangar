@@ -1,21 +1,24 @@
 package ca.mimic.apphangar;
 
+import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -33,15 +36,21 @@ public class StatsWidget extends AppWidgetProvider {
     private static Context mContext;
     private static PrefsGet prefs;
 
+    private static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Log.d("Apphangar", "onUpdate");
         // There may be multiple widgets active, so update all of them
         mContext = context;
-        final int N = appWidgetIds.length;
-        for (int i=0; i<N; i++) {
-            updateAppWidget(context, appWidgetManager, appWidgetIds[i]);
-        }
+        // final int N = appWidgetIds.length;
+        // for (int i=0; i<N; i++) {
+        //     Bundle options=appWidgetManager.getAppWidgetOptions(appWidgetIds[i]);
+        //     updateAppWidget(context, appWidgetManager, appWidgetIds[i], options);
+        // }
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BCAST_CONFIGCHANGED);
+        context.getApplicationContext().registerReceiver(mBroadcastReceiver, filter);
     }
 
 
@@ -66,7 +75,8 @@ public class StatsWidget extends AppWidgetProvider {
         for(int id : ids) {
             Log.d("Apphangar", "per id: " + id);
             try {
-                updateAppWidget(context, mgr, id);
+                Bundle options=mgr.getAppWidgetOptions(id);
+                updateAppWidget(context, mgr, id, options);
             } catch (NullPointerException e) {
                 e.printStackTrace();
                 Log.d("Apphangar", "NPE onReceive");
@@ -76,17 +86,12 @@ public class StatsWidget extends AppWidgetProvider {
         super.onReceive(context, intent);
     }
 
-    public static int dpToPx(int dp) {
-        Resources r = mContext.getResources();
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
-    }
-
     public static Bitmap drawableToBitmap (Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable)drawable).getBitmap();
         }
 
-        Bitmap bitmap = Bitmap.createBitmap(dpToPx(100), dpToPx(5), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(Tools.dpToPx(mContext, 100), Tools.dpToPx(mContext, 5), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
@@ -95,7 +100,7 @@ public class StatsWidget extends AppWidgetProvider {
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-            int appWidgetId) {
+            int appWidgetId, Bundle options) {
 
         Log.d("Apphangar", "updateAppWidget");
         prefs = new PrefsGet(context.getSharedPreferences("StatsWidget", Context.MODE_PRIVATE));
@@ -108,8 +113,12 @@ public class StatsWidget extends AppWidgetProvider {
         } else {
             statsLayout = R.layout.stats_widget_no_dividers;
         }
-        int appsNo = Integer.parseInt(mPrefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_DEFAULT)));
+        int appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_DEFAULT)));
         int getColor = mPrefs.getInt(Settings.BACKGROUND_COLOR_PREFERENCE, Settings.BACKGROUND_COLOR_DEFAULT);
+        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_LS_DEFAULT)));
+            Log.d("Apphangar", "LANDSCAPE");
+        }
 
         RemoteViews views = new RemoteViews(context.getPackageName(), statsLayout);
         PackageManager pkgm = context.getPackageManager();
@@ -176,7 +185,7 @@ public class StatsWidget extends AppWidgetProvider {
             } else {
                 barColor = 0xFFFF4444;
             }
-            int[] colors = new int[]{barColor, Math.round(secondsColor * 2.5f), 0x00000000, Math.round((100-secondsColor) * 2.5f)};
+            int[] colors = new int[]{barColor, Math.round(secondsColor * 2.55f), 0x00000000, Math.round((100-secondsColor) * 2.55f)};
             Log.d("Apphangar", "BarDrawable: " + colors[0] + ", " + colors[1] + ", " + colors[2] + ", " + colors[3]);
             Drawable sd = new BarDrawable(colors);
             Bitmap bmpIcon2 = drawableToBitmap(sd);
@@ -204,6 +213,26 @@ public class StatsWidget extends AppWidgetProvider {
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
+    public BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent myIntent) {
+
+            if ( myIntent.getAction().equals( BCAST_CONFIGCHANGED ) ) {
+                final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+                final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(1);
+                if (recentTasks.size() > 0) {
+                    ComponentName task = recentTasks.get(0).baseActivity;
+                    String taskPackage = task.getPackageName();
+                    if (taskPackage.equals(Tools.getLauncher(context))) {
+                        Log.d("Apphangar", "We're in the launcher changing orientation!");
+                        StatsWidget.this.onReceive(context, new Intent());
+                    }
+                }
+                // updateAppWidget(mContext, appWidgetManager, thisWidget);
+
+            }
+        }
+    };
 }
 
 

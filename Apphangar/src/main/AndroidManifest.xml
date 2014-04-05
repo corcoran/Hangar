@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ca.mimic.apphangar"
     android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
-    android:versionCode="9"
-    android:versionName="1.11.2" >
+    android:versionCode="10"
+    android:versionName="1.11.3" >
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -31,6 +31,9 @@
             android:label="@string/stats_widget_name" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.CONFIGURATION_CHANGED"/>
             </intent-filter>
 
             <meta-data

@@ -70,6 +70,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String ICON_COLOR_PREFERENCE = "icon_color_preference";
     final static String STATUSBAR_ICON_PREFERENCE = "statusbar_icon_preference";
     final static String BACKGROUND_COLOR_PREFERENCE = "background_color_preference";
+    final static String STATS_WIDGET_APPSNO_PREFERENCE = "stats_widget_appsno_preference";
+    final static String STATS_WIDGET_APPSNO_LS_PREFERENCE = "stats_widget_appsno_ls_preference";
 
 
     protected static View appsView;
@@ -95,6 +97,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int ICON_COLOR_DEFAULT = 0xffffffff;
     final static int BACKGROUND_COLOR_DEFAULT = 0x00000000;
     final static int STATS_WIDGET_APPSNO_DEFAULT = 8;
+    final static int STATS_WIDGET_APPSNO_LS_DEFAULT = 4;
 
     final static String STATUSBAR_ICON_WHITE_WARM = "**white_warm**";
     final static String STATUSBAR_ICON_WHITE_COLD = "**white_cold**";
@@ -314,10 +317,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
             return true;
         }
     }
-    public int dpToPx(int dp) {
-        Resources r = getResources();
-        return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
-    }
     public static int[] splitToComponentTimes(int longVal) {
         int hours = longVal / 3600;
         int remainder = longVal - hours * 3600;
@@ -359,15 +358,27 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     Context mContext = getApplicationContext();
                     LinearLayout taskRoot = (LinearLayout) v.findViewById(R.id.taskRoot);
                     taskRoot.removeAllViews();
+
                     int highestSeconds = db.getHighestSeconds();
                     List<TasksModel> tasks = db.getAllTasks();
                     Collections.sort(tasks, new TasksComparator("seconds"));
+
+                    Display display = getWindowManager().getDefaultDisplay();
+
+                    Point size = new Point();
+                    try {
+                        display.getRealSize(size);
+                        displayWidth = size.x;
+                    } catch (NoSuchMethodError e) {
+                        displayWidth = display.getWidth();
+                    }
+
                     for (TasksModel task : tasks) {
                         LinearLayout taskRL = new LinearLayout(getApplicationContext());
 
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
-                        params.topMargin = dpToPx(6);
+                        params.topMargin = Tools.dpToPx(mContext,6);
                         taskRL.setLayoutParams(params);
                         taskRL.setTag(task);
                         taskRL.setOnClickListener(new View.OnClickListener() {
@@ -404,9 +415,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         TextView useStats = new TextView(mContext);
                         LinearLayout.LayoutParams useStatsParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
-                        useStatsParams.topMargin = dpToPx(30);
-                        useStatsParams.leftMargin = dpToPx(10);
-                        useStatsParams.rightMargin = dpToPx(4);
+                        useStatsParams.topMargin = Tools.dpToPx(mContext,30);
+                        useStatsParams.leftMargin = Tools.dpToPx(mContext,10);
+                        useStatsParams.rightMargin = Tools.dpToPx(mContext,4);
                         useStats.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                         useStats.setTag("usestats");
                         useStats.setLayoutParams(useStatsParams);
@@ -421,28 +432,27 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         TextView taskName = new TextView(mContext);
                         LinearLayout.LayoutParams nameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-                        nameParams.leftMargin = dpToPx(10);
-                        nameParams.topMargin = dpToPx(4);
+                        nameParams.leftMargin = Tools.dpToPx(mContext,10);
+                        nameParams.topMargin = Tools.dpToPx(mContext,4);
                         taskName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
                         taskName.setTag("text");
                         taskName.setLayoutParams(nameParams);
 
-                        RelativeLayout barCont = new RelativeLayout(mContext);
+                        LinearLayout barCont = new LinearLayout(mContext);
                         LinearLayout.LayoutParams barContLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-                        barContLayout.topMargin = dpToPx(10);
-                        barContLayout.leftMargin = dpToPx(10);
-                        barContLayout.height = dpToPx(5);
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                        barContLayout.topMargin = Tools.dpToPx(mContext,10);
+                        barContLayout.leftMargin = Tools.dpToPx(mContext,10);
+                        barContLayout.height = Tools.dpToPx(mContext,5);
                         barCont.setLayoutParams(barContLayout);
 
-
                         ImageView taskIcon = new ImageView(mContext);
-                        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(dpToPx(46),
-                                dpToPx(46));
+                        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(Tools.dpToPx(mContext,46),
+                                Tools.dpToPx(mContext,46));
 
-                        iconParams.leftMargin = dpToPx(6);
-                        iconParams.rightMargin = dpToPx(6);
-                        iconParams.bottomMargin = dpToPx(6);
+                        iconParams.leftMargin = Tools.dpToPx(mContext,6);
+                        iconParams.rightMargin = Tools.dpToPx(mContext,6);
+                        iconParams.bottomMargin = Tools.dpToPx(mContext,6);
                         taskIcon.setLayoutParams(iconParams);
 
                         try {
@@ -465,13 +475,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         taskRL.addView(taskIcon);
                         taskRoot.addView(taskRL);
 
-                        Display display = getWindowManager().getDefaultDisplay();
-
-                        Point size = new Point();
-                        display.getSize(size);
-                        displayWidth = size.x;
-
-                        int maxWidth = displayWidth - dpToPx(46+14) - useStats.getWidth();
                         float secondsRatio = (float) task.getSeconds() / highestSeconds;
                         int barColor;
                         int secondsColor = (Math.round(secondsRatio * 100));
@@ -486,12 +489,14 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         } else {
                             barColor = 0xFFFF4444;
                         }
-                        float adjustedWidth = maxWidth * secondsRatio;
-                        barContLayout.width = Math.round(adjustedWidth);
                         int[] statsTime = splitToComponentTimes(task.getSeconds());
                         String statsString = ((statsTime[0] > 0) ? statsTime[0] + "h " : "") + ((statsTime[1] > 0) ? statsTime[1] + "m " : "") + ((statsTime[2] > 0) ? statsTime[2] + "s " : "");
                         useStats.setText(statsString);
                         barCont.setBackgroundColor(barColor);
+                        int maxWidth = displayWidth - Tools.dpToPx(mContext,46+14+90);
+                        float adjustedWidth = maxWidth * secondsRatio;
+                        barContLayout.width = Math.round(adjustedWidth);
+
                         // Log.d(TAG, "Blacklisted? [" + task.getBlacklisted() + "]");
                         if (task.getBlacklisted()) {
                             fadeTask(taskRL, taskName);
@@ -718,7 +723,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                  Bundle savedInstanceState) {
             setHasOptionsMenu(true);
             appsView = inflater.inflate(R.layout.apps_settings, container, false);
-            drawT.drawTasks(appsView);
+            // drawT.drawTasks(appsView);
             return appsView;
         }
 
