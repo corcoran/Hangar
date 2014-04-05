@@ -154,12 +154,6 @@ public class WatchfulService extends Service {
         return false;
     }
 
-    protected void updateWidget(Context mContext) {
-        Intent i = new Intent(mContext, StatsWidget.class);
-        i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        mContext.sendBroadcast(i);
-    }
-
     protected void buildTasks() {
         // prefs = getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS);
         try {
@@ -178,7 +172,7 @@ public class WatchfulService extends Service {
                     if (!topPackage.equals(taskPackage)) {
                         // First time in launcher?  Update the widget!
                         Log.d(TAG, "Found launcher -- Calling updateWidget!");
-                        updateWidget(getApplicationContext());
+                        Tools.updateWidget(getApplicationContext());
                     }
                     topPackage = taskPackage;
                     return;

@@ -72,6 +72,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String BACKGROUND_COLOR_PREFERENCE = "background_color_preference";
     final static String STATS_WIDGET_APPSNO_PREFERENCE = "stats_widget_appsno_preference";
     final static String STATS_WIDGET_APPSNO_LS_PREFERENCE = "stats_widget_appsno_ls_preference";
+    final static String APPS_BY_WIDGET_SIZE_PREFERENCE = "apps_by_widget_size_preference";
 
 
     protected static View appsView;
@@ -89,6 +90,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static boolean BOOT_DEFAULT = true;
     final static boolean WEIGHTED_RECENTS_DEFAULT = true;
     final static boolean COLORIZE_DEFAULT = false;
+    final static boolean APPS_BY_WIDGET_SIZE_DEFAULT = true;
 
     final static int WEIGHT_PRIORITY_DEFAULT = 0;
     final static int APPSNO_DEFAULT = 7;
@@ -96,8 +98,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int PRIORITY_BOTTOM = -2;
     final static int ICON_COLOR_DEFAULT = 0xffffffff;
     final static int BACKGROUND_COLOR_DEFAULT = 0x00000000;
-    final static int STATS_WIDGET_APPSNO_DEFAULT = 8;
-    final static int STATS_WIDGET_APPSNO_LS_DEFAULT = 4;
+    final static int STATS_WIDGET_APPSNO_DEFAULT = 6;
+    final static int STATS_WIDGET_APPSNO_LS_DEFAULT = 3;
 
     final static String STATUSBAR_ICON_WHITE_WARM = "**white_warm**";
     final static String STATUSBAR_ICON_WHITE_COLD = "**white_cold**";

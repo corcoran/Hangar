@@ -32,11 +32,11 @@ import ca.mimic.apphangar.Settings.PrefsGet;
  */
 public class StatsWidget extends AppWidgetProvider {
 
-    private static TasksDataSource db;
-    private static Context mContext;
-    private static PrefsGet prefs;
+    protected static TasksDataSource db;
+    protected static Context mContext;
+    protected static PrefsGet prefs;
 
-    private static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
+    protected static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -51,17 +51,6 @@ public class StatsWidget extends AppWidgetProvider {
         IntentFilter filter = new IntentFilter();
         filter.addAction(BCAST_CONFIGCHANGED);
         context.getApplicationContext().registerReceiver(mBroadcastReceiver, filter);
-    }
-
-
-    @Override
-    public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
-    }
-
-    @Override
-    public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
     }
 
     @Override
@@ -113,12 +102,28 @@ public class StatsWidget extends AppWidgetProvider {
         } else {
             statsLayout = R.layout.stats_widget_no_dividers;
         }
-        int appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_DEFAULT)));
-        int getColor = mPrefs.getInt(Settings.BACKGROUND_COLOR_PREFERENCE, Settings.BACKGROUND_COLOR_DEFAULT);
+        boolean appsNoByWidgetSize = mPrefs.getBoolean(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE, Settings.APPS_BY_WIDGET_SIZE_DEFAULT);
+        int appsNo;
+        Log.d("Apphangar", "minHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT));
+        Log.d("Apphangar", "maxHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
+        if (appsNoByWidgetSize) {
+            appsNo = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) - 15) / 35);
+            Log.d("Apphangar", "appsNoByWidgetSize=true, appsNo=" + appsNo);
+        } else {
+            appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_DEFAULT)));
+        }
+
         if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_LS_DEFAULT)));
+            if (appsNoByWidgetSize) {
+                appsNo = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) - 15) / 35);
+                Log.d("Apphangar", "Landscape! appsNoByWidgetSize=true, appsNo=" + appsNo);
+            } else {
+                appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_LS_DEFAULT)));
+            }
             Log.d("Apphangar", "LANDSCAPE");
         }
+
+        int getColor = mPrefs.getInt(Settings.BACKGROUND_COLOR_PREFERENCE, Settings.BACKGROUND_COLOR_DEFAULT);
 
         RemoteViews views = new RemoteViews(context.getPackageName(), statsLayout);
         PackageManager pkgm = context.getPackageManager();
@@ -150,7 +155,7 @@ public class StatsWidget extends AppWidgetProvider {
 
             if (task.getBlacklisted()) { continue; }
             if (count >= appsNo) {
-                if (count == 10) { break; }
+                if (count == 12) { break; }
                 views.setViewVisibility(appID, View.GONE);
                 count++;
                 continue;
@@ -185,8 +190,9 @@ public class StatsWidget extends AppWidgetProvider {
             } else {
                 barColor = 0xFFFF4444;
             }
-            int[] colors = new int[]{barColor, Math.round(secondsColor * 2.55f), 0x00000000, Math.round((100-secondsColor) * 2.55f)};
+            int[] colors = new int[]{barColor, Tools.dpToPx(context, secondsColor-1), 0x00000000, Tools.dpToPx(mContext, 100-secondsColor)};
             Log.d("Apphangar", "BarDrawable: " + colors[0] + ", " + colors[1] + ", " + colors[2] + ", " + colors[3]);
+            Log.d("Apphangar", "bar1 dp: " + Tools.pxToDp(context, secondsColor * 2.55f));
             Drawable sd = new BarDrawable(colors);
             Bitmap bmpIcon2 = drawableToBitmap(sd);
             views.setImageViewBitmap(imgID, bmpIcon2);
@@ -228,7 +234,6 @@ public class StatsWidget extends AppWidgetProvider {
                         StatsWidget.this.onReceive(context, new Intent());
                     }
                 }
-                // updateAppWidget(mContext, appWidgetManager, thisWidget);
 
             }
         }

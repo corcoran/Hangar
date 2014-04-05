@@ -22,4 +22,8 @@ public class UpdatingListPreference extends ListPreference
         super.setValue(value);
         notifyChanged();
     }
+    public void goDefault(String string) {
+        super.setSummary(string);
+        super.setValue(super.getValue());
+    }
 }

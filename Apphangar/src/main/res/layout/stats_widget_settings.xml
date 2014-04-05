@@ -3,31 +3,50 @@
     android:layout_height="fill_parent"
     android:layout_width="fill_parent">
 
-    <ca.mimic.apphangar.UpdatingListPreference
-        android:key="stats_widget_appsno_preference"
-        android:title="@string/title_stats_widget_appsno_preference"
-        android:summary="@string/summary_stats_widget_appsno_preference"
-        android:entries="@array/entries_stats_widget_appsno_preference"
-        android:entryValues="@array/entries_stats_widget_appsno_preference"
-        android:dialogTitle="@string/dialog_appsno_preference" />
+    <PreferenceCategory
+        android:title="@string/appsno_category">
 
-    <ca.mimic.apphangar.UpdatingListPreference
-        android:key="stats_widget_appsno_ls_preference"
-        android:title="@string/title_stats_widget_appsno_ls_preference"
-        android:summary="@string/summary_stats_widget_appsno_ls_preference"
-        android:entries="@array/entries_stats_widget_appsno_ls_preference"
-        android:entryValues="@array/entries_stats_widget_appsno_ls_preference"
-        android:dialogTitle="@string/dialog_appsno_preference" />
+        <SwitchPreference
+            android:key="apps_by_widget_size_preference"
+            android:title="@string/title_apps_by_widget_size_preference"
+            android:summary="@string/summary_apps_by_widget_size_preference"
+            android:disableDependentsState="true" />
 
-    <CheckBoxPreference
-        android:key="divider_preference"
-        android:title="@string/title_divider_preference"
-        android:summary="@string/summary_divider_preference" />
+        <ca.mimic.apphangar.UpdatingListPreference
+            android:key="stats_widget_appsno_preference"
+            android:title="@string/title_stats_widget_appsno_preference"
+            android:summary="@string/summary_stats_widget_appsno_preference"
+            android:entries="@array/entries_stats_widget_appsno_preference"
+            android:entryValues="@array/entries_stats_widget_appsno_preference"
+            android:dialogTitle="@string/dialog_appsno_preference"
+            android:dependency="apps_by_widget_size_preference" />
 
-    <net.margaritov.preference.colorpicker.ColorPickerPreference
-        android:key="background_color_preference"
-        android:title="@string/title_background_color_preference"
-        android:defaultValue="0x00000000"
-        alphaSlider="true" />
+        <ca.mimic.apphangar.UpdatingListPreference
+            android:key="stats_widget_appsno_ls_preference"
+            android:title="@string/title_stats_widget_appsno_ls_preference"
+            android:summary="@string/summary_stats_widget_appsno_ls_preference"
+            android:entries="@array/entries_stats_widget_appsno_ls_preference"
+            android:entryValues="@array/entries_stats_widget_appsno_ls_preference"
+            android:dialogTitle="@string/dialog_appsno_preference"
+            android:dependency="apps_by_widget_size_preference" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/aesthetics_category">
+
+        <CheckBoxPreference
+            android:key="divider_preference"
+            android:title="@string/title_divider_preference"
+            android:summary="@string/summary_divider_preference" />
+
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+            android:key="background_color_preference"
+            android:title="@string/title_background_color_preference"
+            android:defaultValue="0x00000000"
+            alphaSlider="true" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>
 

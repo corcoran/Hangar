@@ -120,11 +120,21 @@
     <string name="reconfigure_button_name">Save widget preferences</string>
     <string name="reconfigure_reminder">You can modify the widget settings at any time from the Hangar Settings menu</string>
 
-    <string name="title_stats_widget_appsno_preference">Number of apps</string>
+    <string name="automatic_appsno">Handled automatically</string>
+
+    <string name="appsno_category">Number of apps</string>
+
+    <string name="title_apps_by_widget_size_preference">Automatic</string>
+    <string name="summary_apps_by_widget_size_preference">Populate by available space</string>
+
+    <string name="aesthetics_category">Aesthetics</string>
+
+    <string name="title_stats_widget_appsno_preference">Portrait</string>
     <string name="summary_stats_widget_appsno_preference">Showing up to a maximum of %s apps</string>
     <string name="dialog_stats_widget_appsno_preference">Choose no. of apps to show</string>
 
     <string-array name="entries_stats_widget_appsno_preference">
+        <item>2</item>
         <item>3</item>
         <item>4</item>
         <item>5</item>
@@ -137,11 +147,13 @@
         <item>12</item>
     </string-array>
 
-    <string name="title_stats_widget_appsno_ls_preference">Number of apps in landscape</string>
+    <string name="title_stats_widget_appsno_ls_preference">Landscape</string>
     <string name="summary_stats_widget_appsno_ls_preference">Showing up to a maximum of %s apps</string>
     <string name="dialog_stats_widget_appsno_ls_preference">Choose no. of apps to show (landscape)</string>
 
     <string-array name="entries_stats_widget_appsno_ls_preference">
+        <item>1</item>
+        <item>2</item>
         <item>3</item>
         <item>4</item>
         <item>5</item>
