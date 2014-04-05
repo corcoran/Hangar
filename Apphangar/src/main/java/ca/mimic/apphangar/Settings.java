@@ -97,7 +97,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int PRIORITY_DEFAULT = 2;
     final static int PRIORITY_BOTTOM = -2;
     final static int ICON_COLOR_DEFAULT = 0xffffffff;
-    final static int BACKGROUND_COLOR_DEFAULT = 0x00000000;
+    final static int BACKGROUND_COLOR_DEFAULT = 0x5e000000;
     final static int STATS_WIDGET_APPSNO_DEFAULT = 6;
     final static int STATS_WIDGET_APPSNO_LS_DEFAULT = 3;
 
