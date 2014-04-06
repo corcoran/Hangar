@@ -9,6 +9,7 @@
     android:showDividers="none"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +17,9 @@
         android:focusable="true"
         android:clickable="true"
         android:visibility="gone"
+        android:tag="portrait"
         android:id="@+id/appCont1">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -31,8 +34,10 @@
                 android:id="@+id/appName1"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="5dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
                 android:id="@+id/barImg1"
                 android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
@@ -77,8 +82,10 @@
                 android:id="@+id/appName2"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="5dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
                 android:id="@+id/barImg2"
                 android:layout_marginTop="6dp"
                 android:layout_marginLeft="10dp"
@@ -123,7 +130,7 @@
                 android:id="@+id/appName3"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:id="@+id/barImg3"
                 android:layout_marginTop="6dp"
@@ -169,7 +176,7 @@
                 android:id="@+id/appName4"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:id="@+id/barImg4"
                 android:layout_marginTop="6dp"
@@ -215,7 +222,7 @@
                 android:id="@+id/appName5"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:id="@+id/barImg5"
                 android:layout_marginTop="6dp"
@@ -261,7 +268,7 @@
                 android:id="@+id/appName6"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:id="@+id/barImg6"
                 android:layout_marginTop="6dp"
@@ -307,7 +314,7 @@
                 android:id="@+id/appName7"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:id="@+id/barImg7"
                 android:layout_marginTop="6dp"
@@ -353,7 +360,7 @@
                 android:id="@+id/appName8"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:id="@+id/barImg8"
                 android:layout_marginTop="6dp"
@@ -399,7 +406,7 @@
                 android:id="@+id/appName9"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:id="@+id/barImg9"
                 android:layout_marginTop="6dp"
@@ -445,7 +452,7 @@
                 android:id="@+id/appName10"
                 android:textSize="14sp"/>
             <ImageView
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:id="@+id/barImg10"
                 android:layout_marginTop="6dp"
@@ -562,3 +569,4 @@
             android:layout_marginTop="1dp" />
     </LinearLayout>
 </LinearLayout>
+
