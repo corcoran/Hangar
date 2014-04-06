@@ -103,10 +103,13 @@ public class StatsWidget extends AppWidgetProvider {
         SharedPreferences mPrefs = prefs.prefsGet();
 
         int statsLayout;
+        int itemHeight;
         if (mPrefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT)) {
             statsLayout = R.layout.stats_widget;
+            itemHeight = 36;
         } else {
             statsLayout = R.layout.stats_widget_no_dividers;
+            itemHeight = 35; // Not as large w/o dividers
         }
         boolean appsNoByWidgetSize = mPrefs.getBoolean(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE, Settings.APPS_BY_WIDGET_SIZE_DEFAULT);
         int appsNo;
@@ -114,8 +117,8 @@ public class StatsWidget extends AppWidgetProvider {
 
         Log.d("Apphangar", "minHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT));
         Log.d("Apphangar", "maxHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
-        appsNo = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) - 15) / 35);
-        appsNoLs = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) - 15) / 35);
+        appsNo = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) - 14) / itemHeight);
+        appsNoLs = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) - 14) / itemHeight);
 
         if (appsNoByWidgetSize && appsNo > 0) {
             Log.d("Apphangar", "appsNoByWidgetSize=true, appsNo=" + appsNo);
