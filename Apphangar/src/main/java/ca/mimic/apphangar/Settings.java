@@ -59,6 +59,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
     // private Context mContext;
 
     final static String TAG = "Apphangar";
+
+    final static String VERSION_CHECK = "version_check";
+
     final static String DIVIDER_PREFERENCE = "divider_preference";
     final static String APPSNO_PREFERENCE = "appsno_preference";
     final static String PRIORITY_PREFERENCE = "priority_preference";
