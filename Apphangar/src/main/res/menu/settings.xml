@@ -6,4 +6,9 @@
         android:title="@string/configure_stats_widget"
         android:orderInCategory="100"
         android:showAsAction="never" />
+
+    <item android:id="@+id/action_changelog"
+        android:title="@string/configure_changelog"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
 </menu>

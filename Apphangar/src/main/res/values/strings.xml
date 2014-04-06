@@ -112,6 +112,7 @@
     <string name="action_blacklist">Toggle blacklist</string>
     <string name="action_reset_stats">Reset stats</string>
     <string name="configure_stats_widget">Configure stats widget</string>
+    <string name="configure_changelog">See recent changes</string>
 
     <!-- ChangeLog -->
     <string-array name="versionNumbers">
