@@ -12,9 +12,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,7 +21,6 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import ca.mimic.apphangar.Settings.PrefsGet;
@@ -109,6 +106,7 @@ public class AppsWidget extends AppWidgetProvider {
         int getColor = mPrefs.getInt(Settings.BACKGROUND_COLOR_PREFERENCE, Settings.BACKGROUND_COLOR_DEFAULT);
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.apps_widget);
+        views.removeAllViews(R.id.viewCont);
         PackageManager pkgm = context.getPackageManager();
 
         views.setInt(R.id.taskRoot, "setBackgroundColor", getColor);
@@ -153,18 +151,29 @@ public class AppsWidget extends AppWidgetProvider {
         if (weightedRecents)
             taskList = Tools.reorderTasks(taskList, db, weightPriority);
 
+        RemoteViews row = new RemoteViews(context.getPackageName(), R.layout.apps_widget_row);
+
         int filledConts = 0;
+        int filledRows = 0;
         for (int i=0; i < taskList.size(); i++) {
             int resID = context.getResources().getIdentifier("imageButton" + (filledConts+1), "id", taskPackage);
             int contID = context.getResources().getIdentifier("imageCont" + (filledConts+1), "id", taskPackage);
 
-            if (filledConts == 9) {
-                // Log.d(TAG, "filledConts [" + filledConts + "] == maxButtons [" + maxButtons + "]");
-                break;
+            if (filledConts == 4) {
+                if (filledRows == 0) {
+                    filledConts = 0;
+                    filledRows += 1;
+                    views.addView(R.id.viewCont, row);
+                    row = new RemoteViews(context.getPackageName(), R.layout.apps_widget_row);
+                } else {
+                    views.addView(R.id.viewCont, row);
+                    // Log.d(TAG, "filledConts [" + filledConts + "] == maxButtons [" + maxButtons + "]");
+                    break;
+                }
             }
 
             filledConts += 1;
-            views.setViewVisibility(contID, View.VISIBLE);
+            row.setViewVisibility(contID, View.VISIBLE);
             Log.d(Settings.TAG, "Setting cont visible: " + filledConts + " [" + taskList.get(i).appName + "]");
 
             Drawable taskIcon, d;
@@ -184,7 +193,7 @@ public class AppsWidget extends AppWidgetProvider {
 //            }
 
             Bitmap bmpIcon = ((BitmapDrawable) d).getBitmap();
-            views.setImageViewBitmap(resID, bmpIcon);
+            row.setImageViewBitmap(resID, bmpIcon);
 
             Intent intent;
             PackageManager manager = context.getPackageManager();
@@ -193,13 +202,13 @@ public class AppsWidget extends AppWidgetProvider {
                 if (intent == null) {
                     Log.d(Settings.TAG, "Couldn't get intent for ["+ taskList.get(i).packageName +"] className:" + taskList.get(i).className);
                     filledConts --;
-                    views.setViewVisibility(contID, View.GONE);
+                    row.setViewVisibility(contID, View.GONE);
                     throw new PackageManager.NameNotFoundException();
                 }
                 intent.addCategory(Intent.CATEGORY_LAUNCHER);
                 intent.setAction("action" + (i));
                 PendingIntent activity = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-                views.setOnClickPendingIntent(contID, activity);
+                row.setOnClickPendingIntent(contID, activity);
             } catch (PackageManager.NameNotFoundException e) {
 
             }
