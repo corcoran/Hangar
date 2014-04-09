@@ -4,7 +4,6 @@
     android:minHeight="60dp"
     android:minWidth="90dp"
     android:resizeMode="vertical|horizontal"
-    android:previewImage="@drawable/ic_stats_widget_preview"
     android:updatePeriodMillis="0" >
 
 </appwidget-provider>

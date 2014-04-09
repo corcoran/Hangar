@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class AppsWidget extends AppWidgetProvider {
     protected static PrefsGet prefs;
 
     protected static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
+    protected static final int MAX_DB_LOOKUPS = 20;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -108,8 +110,6 @@ public class AppsWidget extends AppWidgetProvider {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.apps_widget);
         PackageManager pkgm = context.getPackageManager();
-        String packageName = context.getPackageName();
-        Intent intent;
 
         views.setInt(R.id.taskRoot, "setBackgroundColor", getColor);
 
@@ -117,86 +117,89 @@ public class AppsWidget extends AppWidgetProvider {
             db = new TasksDataSource(context);
             db.open();
         }
-        int highestSeconds = db.getHighestSeconds();
-        List<TasksModel> tasks = db.getAllTasks();
 
+        ArrayList<Tools.TaskInfo> taskList = new ArrayList<Tools.TaskInfo>();
+        List<TasksModel> tasks = db.getAllTasks(MAX_DB_LOOKUPS);
+
+        for (TasksModel taskM : tasks) {
+            String taskPackage = taskM.getPackageName();
+
+            if (isBlacklisted(taskPackage))
+                continue;
+
+            Tools.TaskInfo dbTask = new Tools.TaskInfo();
+            dbTask.appName = taskM.getName();
+            dbTask.packageName = taskPackage;
+            dbTask.className = taskM.getClassName();
+            dbTask.launches = taskM.getLaunches();
+            dbTask.totalseconds = taskM.getSeconds();
+
+            try {
+                pkgm.getApplicationInfo(dbTask.packageName, 0);
+            } catch (PackageManager.NameNotFoundException e) {
+                db.deleteTask(taskM);
+                continue;
+            }
+
+            taskList.add(dbTask);
+        }
+
+        String taskPackage = context.getPackageName();
+
+        boolean weightedRecents = mPrefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
+                Settings.WEIGHTED_RECENTS_DEFAULT);
         int weightPriority = Integer.parseInt(mPrefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
                 Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
+        if (weightedRecents)
+            taskList = Tools.reorderTasks(taskList, db, weightPriority);
 
-        Collections.sort(tasks, new Settings().new TasksComparator("seconds"));
+        int filledConts = 0;
+        for (int i=0; i < taskList.size(); i++) {
+            int resID = context.getResources().getIdentifier("imageButton" + (filledConts+1), "id", taskPackage);
+            int contID = context.getResources().getIdentifier("imageCont" + (filledConts+1), "id", taskPackage);
 
-        int count = 0;
-        for (TasksModel task : tasks) {
-            int appID = context.getResources().getIdentifier("appCont" + (count + 1), "id",
-                    packageName);
-            int iconID = context.getResources().getIdentifier("iconCont" + (count + 1), "id",
-                    packageName);
-            int labelID = context.getResources().getIdentifier("appName" + (count + 1), "id",
-                    packageName);
-            int imgID = context.getResources().getIdentifier("barImg" + (count + 1), "id",
-                    packageName);
-            int statsID = context.getResources().getIdentifier("statsCont" + (count + 1), "id",
-                    packageName);
-
-            if (task.getBlacklisted()) { continue; }
-            if (count >= appsNo) {
-                if (count == 12) { break; }
-                views.setViewVisibility(appID, View.GONE);
-                count++;
-                continue;
+            if (filledConts == 9) {
+                // Log.d(TAG, "filledConts [" + filledConts + "] == maxButtons [" + maxButtons + "]");
+                break;
             }
 
-            Drawable taskIcon;
+            filledConts += 1;
+            views.setViewVisibility(contID, View.VISIBLE);
+            Log.d(Settings.TAG, "Setting cont visible: " + filledConts + " [" + taskList.get(i).appName + "]");
+
+            Drawable taskIcon, d;
             try {
-                ApplicationInfo appInfo = pkgm.getApplicationInfo(task.getPackageName(), 0);
+                ApplicationInfo appInfo = pkgm.getApplicationInfo(taskList.get(i).packageName, 0);
                 taskIcon = appInfo.loadIcon(pkgm);
             } catch (Exception e) {
+                Log.d(Settings.TAG, "loadicon exception: " + e);
+                taskList.remove(i);
                 continue;
             }
 
-            count++;
+//            if (isColorized) {
+//                d = new BitmapDrawable(ColorHelper.getColoredBitmap(taskIcon, getColor));
+//            } else {
+              d = taskIcon;
+//            }
 
-            Bitmap bmpIcon = ((BitmapDrawable) taskIcon).getBitmap();
-            views.setImageViewBitmap(iconID, bmpIcon);
-            views.setTextViewText(labelID, task.getName());
+            Bitmap bmpIcon = ((BitmapDrawable) d).getBitmap();
+            views.setImageViewBitmap(resID, bmpIcon);
 
-            // int maxWidth = dpToPx(250) - dpToPx(32+14+14); // ImageView + Margin? + Stats text?
-            float secondsRatio = (float) task.getSeconds() / highestSeconds;
-            int barColor;
-            int secondsColor = (Math.round(secondsRatio * 100));
-            if (secondsColor >= 80 ) {
-                barColor = 0xFF34B5E2;
-            } else if (secondsColor >= 60) {
-                barColor = 0xFFAA66CC;
-            } else if (secondsColor >= 40) {
-                barColor = 0xFF74C353;
-            } else if (secondsColor >= 20) {
-                barColor = 0xFFFFBB33;
-            } else {
-                barColor = 0xFFFF4444;
-            }
-            int[] colors = new int[]{barColor, Tools.dpToPx(context, secondsColor-1), 0x00000000, Tools.dpToPx(mContext, 100-secondsColor)};
-            Log.d("Apphangar", "BarDrawable: " + colors[0] + ", " + colors[1] + ", " + colors[2] + ", " + colors[3]);
-            Log.d("Apphangar", "bar1 dp: " + Tools.pxToDp(context, secondsColor * 2.55f));
-            Drawable sd = new BarDrawable(colors);
-            Bitmap bmpIcon2 = drawableToBitmap(sd);
-            views.setImageViewBitmap(imgID, bmpIcon2);
-
-            int[] statsTime = new Settings().splitToComponentTimes(task.getSeconds());
-            String statsString = ((statsTime[0] > 0) ? statsTime[0] + "h " : "") + ((statsTime[1] > 0) ? statsTime[1] + "m " : "") + ((statsTime[2] > 0) ? statsTime[2] + "s " : "");
-            views.setTextViewText(statsID, statsString);
-
+            Intent intent;
+            PackageManager manager = context.getPackageManager();
             try {
-                intent = pkgm.getLaunchIntentForPackage(task.getPackageName());
+                intent = manager.getLaunchIntentForPackage(taskList.get(i).packageName);
                 if (intent == null) {
-                    count --;
+                    Log.d(Settings.TAG, "Couldn't get intent for ["+ taskList.get(i).packageName +"] className:" + taskList.get(i).className);
+                    filledConts --;
+                    views.setViewVisibility(contID, View.GONE);
                     throw new PackageManager.NameNotFoundException();
                 }
                 intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                intent.setAction("action" + (count));
-                PendingIntent activity = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-                views.setOnClickPendingIntent(appID, activity);
-                views.setViewVisibility(appID, View.VISIBLE);
+                intent.setAction("action" + (i));
+                PendingIntent activity = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                views.setOnClickPendingIntent(contID, activity);
             } catch (PackageManager.NameNotFoundException e) {
 
             }
@@ -204,6 +207,16 @@ public class AppsWidget extends AppWidgetProvider {
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
+
+    protected static boolean isBlacklisted(String packageName) {
+        for (String blTask : Tools.getBlacklisted(mContext, db)) {
+            if (packageName.equals(blTask)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent myIntent) {

@@ -150,11 +150,7 @@ public class StatsWidget extends AppWidgetProvider {
         int highestSeconds = db.getHighestSeconds();
         List<TasksModel> tasks = db.getAllTasks();
 
-        int weightPriority = Integer.parseInt(mPrefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
-                Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
-
-        Comparator tComp = new Tools.TaskComparator("seconds", weightPriority);
-        Collections.sort(tasks, tComp);
+        Collections.sort(tasks, new Tools.TasksModelComparator("seconds"));
 
         int count = 0;
         for (TasksModel task : tasks) {

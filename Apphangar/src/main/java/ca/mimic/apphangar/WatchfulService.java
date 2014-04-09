@@ -126,7 +126,7 @@ public class WatchfulService extends Service {
     }
 
     protected boolean isBlacklisted(String packageName) {
-        for (String blTask : getBlacklisted()) {
+        for (String blTask : Tools.getBlacklisted(getApplicationContext(), db)) {
             if (packageName.equals(blTask)) {
                 return true;
             }
@@ -300,19 +300,6 @@ public class WatchfulService extends Service {
             db.createTask(newInfo.appName, newInfo.packageName, newInfo.className, dateFormatter.format(date));
             return 1;
         }
-    }
-    public ArrayList<String> getBlacklisted() {
-        ArrayList<String> blPNames = new ArrayList<String>();
-        List<TasksModel> blTasks = db.getBlacklisted();
-        for (TasksModel task : blTasks) {
-            blPNames.add(task.getPackageName());
-        }
-        blPNames.add("com.android.systemui");
-        blPNames.add("com.android.phone");
-        blPNames.add(getPackageName());
-        blPNames.add("com.android.settings");
-        blPNames.add("com.android.packageinstaller");
-        return blPNames;
     }
     public void destroyNotification() {
         // topPackage = null;

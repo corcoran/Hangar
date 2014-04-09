@@ -12,6 +12,7 @@ import android.util.TypedValue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class Tools {
     protected static String getLauncher(Context context) {
@@ -82,6 +83,26 @@ public class Tools {
         return null;
     }
 
+    protected static class TasksModelComparator implements Comparator<TasksModel> {
+        String mType = "seconds";
+        TasksModelComparator(String type) {
+            mType = type;
+        }
+        @Override
+        public int compare(TasksModel t1, TasksModel t2) {
+            Integer o1 = 0;
+            Integer o2 = 0;
+            if (mType.equals("seconds")) {
+                o1 = t1.getSeconds();
+                o2 = t2.getSeconds();
+            }
+            int firstCompare = o2.compareTo(o1);
+            if (firstCompare == 0) {
+                return t1.getBlacklisted().compareTo(t2.getBlacklisted());
+            }
+            return firstCompare;
+        }
+    }
     protected static class TaskComparator implements Comparator<TaskInfoOrder>
     {
         private String mType;
@@ -170,5 +191,19 @@ public class Tools {
             taskList.add(taskE.getOrig());
         }
         return taskList;
+    }
+
+    protected static ArrayList<String> getBlacklisted(Context context, TasksDataSource db) {
+        ArrayList<String> blPNames = new ArrayList<String>();
+        List<TasksModel> blTasks = db.getBlacklisted();
+        for (TasksModel task : blTasks) {
+            blPNames.add(task.getPackageName());
+        }
+        blPNames.add("com.android.systemui");
+        blPNames.add("com.android.phone");
+        blPNames.add(context.getPackageName());
+        blPNames.add("com.android.settings");
+        blPNames.add("com.android.packageinstaller");
+        return blPNames;
     }
 }

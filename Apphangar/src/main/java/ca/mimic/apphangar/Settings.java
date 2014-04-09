@@ -336,26 +336,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
         int[] ints = {hours , mins , secs};
         return ints;
     }
-   public class TasksComparator implements Comparator<TasksModel> {
-        String mType = "seconds";
-        TasksComparator(String type) {
-            mType = type;
-        }
-        @Override
-        public int compare(TasksModel t1, TasksModel t2) {
-            Integer o1 = 0;
-            Integer o2 = 0;
-            if (mType.equals("seconds")) {
-                o1 = t1.getSeconds();
-                o2 = t2.getSeconds();
-            }
-            int firstCompare = o2.compareTo(o1);
-            if (firstCompare == 0) {
-                return t1.getBlacklisted().compareTo(t2.getBlacklisted());
-            }
-            return firstCompare;
-        }
-    }
     public class DrawTasks {
         public void drawTasks(View view) {
             final View v = view;
@@ -370,7 +350,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
                     int highestSeconds = db.getHighestSeconds();
                     List<TasksModel> tasks = db.getAllTasks();
-                    Collections.sort(tasks, new TasksComparator("seconds"));
+                    Collections.sort(tasks, new Tools.TasksModelComparator("seconds"));
 
                     Display display = getWindowManager().getDefaultDisplay();
 

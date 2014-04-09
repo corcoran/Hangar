@@ -45,18 +45,16 @@
             android:name="ca.mimic.apphangar.AppsWidget"
             android:icon="@drawable/ic_launcher"
             android:label="@string/apps_widget_name" >
-            <!--
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            -->
             <intent-filter>
                 <action android:name="android.intent.action.CONFIGURATION_CHANGED"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/statswidget" />
+                android:resource="@xml/appswidget" />
         </receiver>
 
         <activity
