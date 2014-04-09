@@ -6,7 +6,12 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Tools {
     protected static String getLauncher(Context context) {
@@ -40,4 +45,132 @@ public class Tools {
         mContext.sendBroadcast(i);
     }
 
+    protected static class TaskInfoOrder {
+        int launchOrder;
+        float launchScore;
+        int secondsOrder;
+        float secondsScore;
+        int placeOrder;
+
+        TaskInfo origTask;
+        TaskInfoOrder(TaskInfo task) {
+            origTask = task;
+        }
+        TaskInfo getOrig() {
+            return origTask;
+        }
+    }
+
+    protected static class TaskInfo {
+        protected String appName = "";
+        protected String packageName = "";
+        protected String className = "";
+        protected int launches = 0;
+        protected float order = 0;
+        protected int seconds = 0;
+        protected int totalseconds = 0;
+
+    }
+
+
+    protected static TaskInfo getTask(String packageName, ArrayList<TaskInfo> taskList) {
+        for (TaskInfo task : taskList) {
+            if (task.packageName.equals(packageName)) {
+                return task;
+            }
+        }
+        return null;
+    }
+
+    protected static class TaskComparator implements Comparator<TaskInfoOrder>
+    {
+        private String mType;
+        private int weightPriority;
+
+        public TaskComparator (String type){
+            this.mType = type;
+        }
+
+        public void setWeight(int newWeight) {
+            weightPriority = newWeight;
+        }
+        public int compare(TaskInfoOrder c1, TaskInfoOrder c2)
+        {
+            Float a1;
+            Float a2;
+            if (mType.equals("launch")) {
+                a1 = c1.launchScore;
+                a2 = c2.launchScore;
+            } else if (mType.equals("seconds")) {
+                a1 = c1.secondsScore;
+                a2 = c2.secondsScore;
+            } else {
+                switch (weightPriority) {
+                    case 1:
+                        a1 = (float) c1.secondsOrder + c1.launchOrder + (c1.placeOrder * 2);
+                        a2 = (float) c2.secondsOrder + c2.launchOrder + (c2.placeOrder * 2);
+                        break;
+                    case 2:
+                        a1 = (float) c1.secondsOrder + (c1.launchOrder * 2) + c1.placeOrder;
+                        a2 = (float) c2.secondsOrder + (c2.launchOrder * 2) + c2.placeOrder;
+                        break;
+                    case 3:
+                        a1 = (float) (c1.secondsOrder * 2) + c1.launchOrder + c1.placeOrder;
+                        a2 = (float) (c2.secondsOrder * 2) + c2.launchOrder + c2.placeOrder;
+                        break;
+                    default:
+                        a1 = (float) c1.secondsOrder + c1.launchOrder + c1.placeOrder;
+                        a2 = (float) c2.secondsOrder + c2.launchOrder + c2.placeOrder;
+                }
+            }
+
+            return a2.compareTo(a1);
+        }
+    }
+
+
+    protected static ArrayList<TaskInfo> reorderTasks(ArrayList<TaskInfo> taskList, TasksDataSource db) {
+        int highestSeconds = db.getHighestSeconds();
+        int highestLaunch = db.getHighestLaunch();
+        Log.d(Settings.TAG, "highest Launch [" + highestLaunch + "] Seconds [" + highestSeconds + "]");
+        int count = 1;
+        int subtractor = taskList.size() + 1;
+
+        ArrayList<TaskInfoOrder> taskListE = new ArrayList<TaskInfoOrder>();
+
+        for (TaskInfo task : taskList) {
+            TaskInfoOrder newTask = new TaskInfoOrder(task);
+
+            int taskSeconds = task.totalseconds > 0 ? task.totalseconds : 1;
+
+            newTask.launchScore = (float) task.launches / highestLaunch * 10;
+            newTask.placeOrder = subtractor - count;
+            newTask.secondsScore = (float) taskSeconds / highestSeconds * 10;
+
+            taskListE.add(newTask);
+
+            count ++;
+        }
+        Collections.sort(taskListE, new TaskComparator("launch"));
+        int c = 0;
+        for (int i=taskListE.size()-1; i >= 0; i--) {
+            taskListE.get(c).launchOrder = (i + 1);
+            c++;
+        }
+
+        c = 0;
+        Collections.sort(taskListE, new TaskComparator("seconds"));
+        for (int i=taskListE.size()-1; i >= 0; i--) {
+            taskListE.get(c).secondsOrder = (i + 1);
+            c++;
+        }
+
+        Collections.sort(taskListE, new TaskComparator("final"));
+        taskList.clear();
+        for (TaskInfoOrder taskE : taskListE) {
+            Log.d(Settings.TAG, "task[" + taskE.getOrig().appName + "] l[" + taskE.launchOrder + "] p[" + taskE.placeOrder + "] s[" + taskE.secondsOrder + "]");
+            taskList.add(taskE.getOrig());
+        }
+        return taskList;
+    }
 }

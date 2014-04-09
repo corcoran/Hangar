@@ -26,9 +26,8 @@ import java.util.Collections;
 import java.util.List;
 
 import ca.mimic.apphangar.Settings.PrefsGet;
-import ca.mimic.apphangar.Tools.TaskComparator;
 
-public class StatsWidget extends AppWidgetProvider {
+public class AppsWidget extends AppWidgetProvider {
 
     protected static TasksDataSource db;
     protected static Context mContext;
@@ -39,13 +38,7 @@ public class StatsWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Log.d("Apphangar", "onUpdate");
-        // There may be multiple widgets active, so update all of them
         mContext = context;
-        // final int N = appWidgetIds.length;
-        // for (int i=0; i<N; i++) {
-        //     Bundle options=appWidgetManager.getAppWidgetOptions(appWidgetIds[i]);
-        //     updateAppWidget(context, appWidgetManager, appWidgetIds[i], options);
-        // }
         IntentFilter filter = new IntentFilter();
         filter.addAction(BCAST_CONFIGCHANGED);
         context.getApplicationContext().registerReceiver(mBroadcastReceiver, filter);
@@ -63,7 +56,7 @@ public class StatsWidget extends AppWidgetProvider {
 
         AppWidgetManager mgr = AppWidgetManager.getInstance(context);
 
-        int[] ids = mgr.getAppWidgetIds(new ComponentName(context, StatsWidget.class));
+        int[] ids = mgr.getAppWidgetIds(new ComponentName(context, AppsWidget.class));
 
         for(int id : ids) {
             Log.d("Apphangar", "per id: " + id);
@@ -74,22 +67,8 @@ public class StatsWidget extends AppWidgetProvider {
                 e.printStackTrace();
                 Log.d("Apphangar", "NPE onReceive");
             }
-            // mgr.notifyAppWidgetViewDataChanged(id, R.id.taskRoot);
         }
         super.onReceive(context, intent);
-    }
-
-    public static Bitmap drawableToBitmap (Drawable drawable) {
-        if (drawable instanceof BitmapDrawable) {
-            return ((BitmapDrawable)drawable).getBitmap();
-        }
-
-        Bitmap bitmap = Bitmap.createBitmap(Tools.dpToPx(mContext, 100), Tools.dpToPx(mContext, 5), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
@@ -100,43 +79,34 @@ public class StatsWidget extends AppWidgetProvider {
 
         SharedPreferences mPrefs = prefs.prefsGet();
 
-        int statsLayout;
-        int itemHeight;
-        if (mPrefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT)) {
-            statsLayout = R.layout.stats_widget;
-            itemHeight = 36;
-        } else {
-            statsLayout = R.layout.stats_widget_no_dividers;
-            itemHeight = 35; // Not as large w/o dividers
-        }
-        boolean appsNoByWidgetSize = mPrefs.getBoolean(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE, Settings.APPS_BY_WIDGET_SIZE_DEFAULT);
+        int itemHeight = 35;
+
+        // boolean appsNoByWidgetSize = mPrefs.getBoolean(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE, Settings.APPS_BY_WIDGET_SIZE_DEFAULT);
         int appsNo;
-        int appsNoLs;
 
         Log.d("Apphangar", "minHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT));
         Log.d("Apphangar", "maxHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
         appsNo = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) - 14) / itemHeight);
-        appsNoLs = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) - 14) / itemHeight);
 
-        if (appsNoByWidgetSize && appsNo > 0) {
-            Log.d("Apphangar", "appsNoByWidgetSize=true, appsNo=" + appsNo);
-        } else {
-            appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_DEFAULT)));
-        }
+//        if (appsNoByWidgetSize && appsNo > 0) {
+//            Log.d("Apphangar", "appsNoByWidgetSize=true, appsNo=" + appsNo);
+//        } else {
+//            appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_DEFAULT)));
+//        }
 
-        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            if (appsNoByWidgetSize && appsNoLs > 0) {
-                appsNo = appsNoLs;
-                Log.d("Apphangar", "Landscape! appsNoByWidgetSize=true, appsNo=" + appsNo);
-            } else {
-                appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_LS_DEFAULT)));
-            }
-            Log.d("Apphangar", "LANDSCAPE");
-        }
+//        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+//            if (appsNoByWidgetSize && appsNoLs > 0) {
+//                appsNo = appsNoLs;
+//                Log.d("Apphangar", "Landscape! appsNoByWidgetSize=true, appsNo=" + appsNo);
+//            } else {
+//                appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_LS_DEFAULT)));
+//            }
+//            Log.d("Apphangar", "LANDSCAPE");
+//        }
 
         int getColor = mPrefs.getInt(Settings.BACKGROUND_COLOR_PREFERENCE, Settings.BACKGROUND_COLOR_DEFAULT);
 
-        RemoteViews views = new RemoteViews(context.getPackageName(), statsLayout);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.apps_widget);
         PackageManager pkgm = context.getPackageManager();
         String packageName = context.getPackageName();
         Intent intent;
@@ -149,8 +119,11 @@ public class StatsWidget extends AppWidgetProvider {
         }
         int highestSeconds = db.getHighestSeconds();
         List<TasksModel> tasks = db.getAllTasks();
-        Tools.TaskComparator
-        Collections.sort(tasks, Tools.new TasksComparator("seconds"));
+
+        int weightPriority = Integer.parseInt(mPrefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
+                Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
+
+        Collections.sort(tasks, new Settings().new TasksComparator("seconds"));
 
         int count = 0;
         for (TasksModel task : tasks) {
@@ -243,7 +216,7 @@ public class StatsWidget extends AppWidgetProvider {
                     String taskPackage = task.getPackageName();
                     if (taskPackage.equals(Tools.getLauncher(context))) {
                         Log.d("Apphangar", "We're in the launcher changing orientation!");
-                        StatsWidget.this.onReceive(context, new Intent());
+                        AppsWidget.this.onReceive(context, new Intent());
                     }
                 }
 

@@ -4,7 +4,6 @@ import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -23,12 +22,13 @@ import android.widget.RemoteViews;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
+import ca.mimic.apphangar.Tools.TaskInfo;
 
 public class WatchfulService extends Service {
     String TAG = "Apphangar";
@@ -125,26 +125,6 @@ public class WatchfulService extends Service {
         super.onDestroy();
     }
 
-    public static class TaskInfo {
-        private String appName = "";
-        private String packageName = "";
-        private String className = "";
-        private int launches = 0;
-        private float order = 0;
-        private int seconds = 0;
-        private int totalseconds = 0;
-
-    }
-
-    public TaskInfo getTask(String packageName) {
-        for (TaskInfo task : taskList) {
-            if (task.packageName.equals(packageName)) {
-                return task;
-            }
-        }
-        return null;
-    }
-
     protected boolean isBlacklisted(String packageName) {
         for (String blTask : getBlacklisted()) {
             if (packageName.equals(blTask)) {
@@ -182,7 +162,7 @@ public class WatchfulService extends Service {
                 }
 
                 if (topPackage != null && topPackage.equals(taskPackage)) {
-                    TaskInfo runningTask = getTask(taskPackage);
+                    TaskInfo runningTask = Tools.getTask(taskPackage, taskList);
                     if (runningTask != null && pm.isScreenOn()) {
                         runningTask.seconds += LOOP_SECONDS;
                         Log.d(TAG, "Task [" + runningTask.appName + "] in fg [" + runningTask.seconds + "]s");
@@ -287,7 +267,7 @@ public class WatchfulService extends Service {
                 boolean isToggled = prefs.getBoolean(Settings.TOGGLE_PREFERENCE, Settings.TOGGLE_DEFAULT);
                 if (isToggled) {
                     if (weightedRecents)
-                        reorderTasks();
+                        taskList = Tools.reorderTasks(taskList, db);
                     createNotification();
                 }
             }
@@ -296,111 +276,6 @@ public class WatchfulService extends Service {
             e.printStackTrace();
         }
 
-    }
-
-    class TaskInfoOrder {
-        int launchOrder;
-        float launchScore;
-        int secondsOrder;
-        float secondsScore;
-        int placeOrder;
-
-        TaskInfo origTask;
-        TaskInfoOrder(TaskInfo task) {
-            origTask = task;
-        }
-        TaskInfo getOrig() {
-            return origTask;
-        }
-    }
-
-    class TaskComparator implements Comparator<TaskInfoOrder>
-    {
-        private String mType;
-
-        int weightPriority = Integer.parseInt(prefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
-                Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
-
-        public TaskComparator (String type){
-            this.mType = type;
-        }
-
-        public int compare(TaskInfoOrder c1, TaskInfoOrder c2)
-        {
-            Float a1;
-            Float a2;
-            if (mType.equals("launch")) {
-                a1 = c1.launchScore;
-                a2 = c2.launchScore;
-            } else if (mType.equals("seconds")) {
-                a1 = c1.secondsScore;
-                a2 = c2.secondsScore;
-            } else {
-                switch (weightPriority) {
-                    case 1:
-                        a1 = (float) c1.secondsOrder + c1.launchOrder + (c1.placeOrder * 2);
-                        a2 = (float) c2.secondsOrder + c2.launchOrder + (c2.placeOrder * 2);
-                        break;
-                    case 2:
-                        a1 = (float) c1.secondsOrder + (c1.launchOrder * 2) + c1.placeOrder;
-                        a2 = (float) c2.secondsOrder + (c2.launchOrder * 2) + c2.placeOrder;
-                        break;
-                    case 3:
-                        a1 = (float) (c1.secondsOrder * 2) + c1.launchOrder + c1.placeOrder;
-                        a2 = (float) (c2.secondsOrder * 2) + c2.launchOrder + c2.placeOrder;
-                        break;
-                    default:
-                        a1 = (float) c1.secondsOrder + c1.launchOrder + c1.placeOrder;
-                        a2 = (float) c2.secondsOrder + c2.launchOrder + c2.placeOrder;
-                }
-            }
-
-            return a2.compareTo(a1);
-        }
-    }
-
-    private void reorderTasks() {
-        int highestSeconds = db.getHighestSeconds();
-        int highestLaunch = db.getHighestLaunch();
-        Log.d(TAG, "highest Launch [" + highestLaunch + "] Seconds [" + highestSeconds + "]");
-        int count = 1;
-        int subtractor = taskList.size() + 1;
-
-        ArrayList<TaskInfoOrder> taskListE = new ArrayList<TaskInfoOrder>();
-
-        for (TaskInfo task : taskList) {
-            TaskInfoOrder newTask = new TaskInfoOrder(task);
-
-            int taskSeconds = task.totalseconds > 0 ? task.totalseconds : 1;
-
-            newTask.launchScore = (float) task.launches / highestLaunch * 10;
-            newTask.placeOrder = subtractor - count;
-            newTask.secondsScore = (float) taskSeconds / highestSeconds * 10;
-
-            taskListE.add(newTask);
-
-            count ++;
-        }
-        Collections.sort(taskListE, new TaskComparator("launch"));
-        int c = 0;
-        for (int i=taskListE.size()-1; i >= 0; i--) {
-            taskListE.get(c).launchOrder = (i + 1);
-            c++;
-        }
-
-        c = 0;
-        Collections.sort(taskListE, new TaskComparator("seconds"));
-        for (int i=taskListE.size()-1; i >= 0; i--) {
-            taskListE.get(c).secondsOrder = (i + 1);
-            c++;
-        }
-
-        Collections.sort(taskListE, new TaskComparator("final"));
-        taskList.clear();
-        for (TaskInfoOrder taskE : taskListE) {
-            Log.d(TAG, "task[" + taskE.getOrig().appName + "] l[" + taskE.launchOrder + "] p[" + taskE.placeOrder + "] s[" + taskE.secondsOrder + "]");
-            taskList.add(taskE.getOrig());
-        }
     }
 
     protected final Runnable scanApps = new Runnable(){
@@ -476,6 +351,9 @@ public class WatchfulService extends Service {
         boolean isColorized = prefs.getBoolean(Settings.COLORIZE_PREFERENCE, Settings.COLORIZE_DEFAULT);
         int getColor = prefs.getInt(Settings.ICON_COLOR_PREFERENCE, Settings.ICON_COLOR_DEFAULT);
 
+        Random r = new Random();
+        int pendingNum = r.nextInt(99 - 1 + 1) + 1;
+
         if (taskList.size() < realMaxButtons) {
             maxButtons = taskList.size();
         } else {
@@ -530,7 +408,7 @@ public class WatchfulService extends Service {
                 }
                 intent.addCategory(Intent.CATEGORY_LAUNCHER);
                 intent.setAction("action" + (i));
-                PendingIntent activity = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent activity = PendingIntent.getActivity(this, pendingNum, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                 customNotifView.setOnClickPendingIntent(contID, activity);
             } catch (PackageManager.NameNotFoundException e) {
 
