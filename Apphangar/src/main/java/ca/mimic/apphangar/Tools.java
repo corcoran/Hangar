@@ -87,12 +87,9 @@ public class Tools {
         private String mType;
         private int weightPriority;
 
-        public TaskComparator (String type){
+        public TaskComparator (String type, int weight){
             this.mType = type;
-        }
-
-        public void setWeight(int newWeight) {
-            weightPriority = newWeight;
+            this.weightPriority = weight;
         }
         public int compare(TaskInfoOrder c1, TaskInfoOrder c2)
         {
@@ -129,7 +126,7 @@ public class Tools {
     }
 
 
-    protected static ArrayList<TaskInfo> reorderTasks(ArrayList<TaskInfo> taskList, TasksDataSource db) {
+    protected static ArrayList<TaskInfo> reorderTasks(ArrayList<TaskInfo> taskList, TasksDataSource db, int weightPriority) {
         int highestSeconds = db.getHighestSeconds();
         int highestLaunch = db.getHighestLaunch();
         Log.d(Settings.TAG, "highest Launch [" + highestLaunch + "] Seconds [" + highestSeconds + "]");
@@ -151,7 +148,8 @@ public class Tools {
 
             count ++;
         }
-        Collections.sort(taskListE, new TaskComparator("launch"));
+
+        Collections.sort(taskListE, new TaskComparator("launch", weightPriority));
         int c = 0;
         for (int i=taskListE.size()-1; i >= 0; i--) {
             taskListE.get(c).launchOrder = (i + 1);
@@ -159,13 +157,13 @@ public class Tools {
         }
 
         c = 0;
-        Collections.sort(taskListE, new TaskComparator("seconds"));
+        Collections.sort(taskListE, new TaskComparator("seconds", weightPriority));
         for (int i=taskListE.size()-1; i >= 0; i--) {
             taskListE.get(c).secondsOrder = (i + 1);
             c++;
         }
 
-        Collections.sort(taskListE, new TaskComparator("final"));
+        Collections.sort(taskListE, new TaskComparator("final", weightPriority));
         taskList.clear();
         for (TaskInfoOrder taskE : taskListE) {
             Log.d(Settings.TAG, "task[" + taskE.getOrig().appName + "] l[" + taskE.launchOrder + "] p[" + taskE.placeOrder + "] s[" + taskE.secondsOrder + "]");

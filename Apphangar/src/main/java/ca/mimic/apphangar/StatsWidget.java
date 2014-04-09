@@ -23,10 +23,10 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import ca.mimic.apphangar.Settings.PrefsGet;
-import ca.mimic.apphangar.Tools.TaskComparator;
 
 public class StatsWidget extends AppWidgetProvider {
 
@@ -149,8 +149,12 @@ public class StatsWidget extends AppWidgetProvider {
         }
         int highestSeconds = db.getHighestSeconds();
         List<TasksModel> tasks = db.getAllTasks();
-        Tools.TaskComparator
-        Collections.sort(tasks, Tools.new TasksComparator("seconds"));
+
+        int weightPriority = Integer.parseInt(mPrefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
+                Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
+
+        Comparator tComp = new Tools.TaskComparator("seconds", weightPriority);
+        Collections.sort(tasks, tComp);
 
         int count = 0;
         for (TasksModel task : tasks) {

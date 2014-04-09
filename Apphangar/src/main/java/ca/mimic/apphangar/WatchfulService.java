@@ -265,9 +265,11 @@ public class WatchfulService extends Service {
                 boolean weightedRecents = prefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
                         Settings.WEIGHTED_RECENTS_DEFAULT);
                 boolean isToggled = prefs.getBoolean(Settings.TOGGLE_PREFERENCE, Settings.TOGGLE_DEFAULT);
+                int weightPriority = Integer.parseInt(prefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
+                        Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
                 if (isToggled) {
                     if (weightedRecents)
-                        taskList = Tools.reorderTasks(taskList, db);
+                        taskList = Tools.reorderTasks(taskList, db, weightPriority);
                     createNotification();
                 }
             }
