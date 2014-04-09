@@ -73,6 +73,7 @@
 
         <activity
             android:name=".ChangeLog"
+            android:parentActivityName="ca.mimic.apphangar.Settings"
             android:theme="@android:style/Theme.Holo">
         </activity>
     </application>

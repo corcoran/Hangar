@@ -1,5 +1,6 @@
 package ca.mimic.apphangar;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -8,6 +9,7 @@ import android.text.Html;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,6 +19,11 @@ public class ChangeLog extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.changelog);
+
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayUseLogoEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         LinearLayout v = (LinearLayout) findViewById(R.id.changeParent);
 
         String[] versionNumbers = getResources().getStringArray(R.array.versionNumbers);
@@ -58,12 +65,25 @@ public class ChangeLog extends Activity {
             v.addView(ll);
         }
     }
+    protected void launchSettings() {
+        Intent i = new Intent(this, Settings.class);
+        startActivityForResult(i, 0);
+        finish();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                launchSettings();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Intent i = new Intent(this, Settings.class);
-            startActivityForResult(i, 0);
-            finish();
+            launchSettings();
         }
         return super.onKeyDown(keyCode, event);
     }
