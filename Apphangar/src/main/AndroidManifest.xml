@@ -65,6 +65,14 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".AppsWidgetSettings"
+            android:theme="@android:style/Theme.Holo">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
         <service
             android:name="ca.mimic.apphangar.WatchfulService"
             android:exported="false"

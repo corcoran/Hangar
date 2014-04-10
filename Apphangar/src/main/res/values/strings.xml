@@ -151,7 +151,7 @@
     <string name="apps_widget_name">Apps Widget</string>
 
     <!-- Stats Widget -->
-    <string name="stats_widget_name">Hangar Stats Widget</string>
+    <string name="stats_widget_name">Stats Widget</string>
     <string name="title_background_color_preference">Background color</string>
     <string name="button_name">Place widget</string>
     <string name="reconfigure_button_name">Save widget preferences</string>
