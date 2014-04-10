@@ -128,7 +128,7 @@ public class AppsWidget extends AppWidgetProvider {
 
         ArrayList<Tools.TaskInfo> appList = new ArrayList<Tools.TaskInfo>();
 
-        int lookUpNum = appsNoH * appsNoW;
+        int lookUpNum = (appsNoH * appsNoW) + 3; // 3 = saftey buffer
         List<TasksModel> tasks = db.getAllTasks((lookUpNum < MAX_DB_LOOKUPS) ? MAX_DB_LOOKUPS : lookUpNum);
 
         for (TasksModel taskM : tasks) {
@@ -171,7 +171,7 @@ public class AppsWidget extends AppWidgetProvider {
         int filledRows = 1;
         for (int i=0; i < appList.size(); i++) {
 
-            if (filledConts == appsNoW) {
+            if (filledConts == appsNoW || i == (appList.size()-1)) {
                 filledConts = 0;
                 views.addView(R.id.viewCont, row);
                 if (filledRows < appsNoH) {
