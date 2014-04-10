@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -30,9 +31,10 @@ public class AppsWidget extends AppWidgetProvider {
     protected static TasksDataSource db;
     protected static Context mContext;
     protected static PrefsGet prefs;
+    protected static PrefsGet prefsSettings;
 
     protected static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
-    protected static final int MAX_DB_LOOKUPS = 20;
+    protected static final int MAX_DB_LOOKUPS = 12;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -75,17 +77,25 @@ public class AppsWidget extends AppWidgetProvider {
 
         Log.d("Apphangar", "updateAppWidget");
         prefs = new PrefsGet(context.getSharedPreferences("StatsWidget", Context.MODE_PRIVATE));
+        prefsSettings = new PrefsGet(context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS));
 
         SharedPreferences mPrefs = prefs.prefsGet();
+        SharedPreferences mPrefsSettings = prefsSettings.prefsGet();
 
-        int itemHeight = 35;
+        int itemHeight = 55;
+        int itemWidth = 55;
 
         // boolean appsNoByWidgetSize = mPrefs.getBoolean(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE, Settings.APPS_BY_WIDGET_SIZE_DEFAULT);
-        int appsNo;
+        int appsNoH;
+        int appsNoW;
 
-        Log.d("Apphangar", "minHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT));
-        Log.d("Apphangar", "maxHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
-        appsNo = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) - 14) / itemHeight);
+        Log.d(Settings.TAG, "jeff minHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT));
+        Log.d(Settings.TAG, "jeff maxHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
+        Log.d(Settings.TAG, "jeff minWidth: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH));
+        Log.d(Settings.TAG, "jeff maxWidth: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH));
+        appsNoH = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) - 10) / itemHeight);
+        appsNoW = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) - 10) / itemWidth);
+        Log.d(Settings.TAG, "jeff appsNoH: "  + appsNoH + " appsNoW: " + appsNoW);
 
 //        if (appsNoByWidgetSize && appsNo > 0) {
 //            Log.d("Apphangar", "appsNoByWidgetSize=true, appsNo=" + appsNo);
@@ -93,15 +103,17 @@ public class AppsWidget extends AppWidgetProvider {
 //            appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_DEFAULT)));
 //        }
 
-//        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-//            if (appsNoByWidgetSize && appsNoLs > 0) {
+        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            appsNoH = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) - 10) / itemHeight);
+            appsNoW = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) - 10) / itemWidth);
+//            if (appsNoByWidgetSize && appsNoW > 0) {
 //                appsNo = appsNoLs;
 //                Log.d("Apphangar", "Landscape! appsNoByWidgetSize=true, appsNo=" + appsNo);
 //            } else {
 //                appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_LS_DEFAULT)));
 //            }
-//            Log.d("Apphangar", "LANDSCAPE");
-//        }
+            Log.d("Apphangar", "LANDSCAPE");
+        }
 
         int getColor = mPrefs.getInt(Settings.BACKGROUND_COLOR_PREFERENCE, Settings.BACKGROUND_COLOR_DEFAULT);
 
@@ -109,15 +121,15 @@ public class AppsWidget extends AppWidgetProvider {
         views.removeAllViews(R.id.viewCont);
         PackageManager pkgm = context.getPackageManager();
 
-        views.setInt(R.id.taskRoot, "setBackgroundColor", getColor);
-
         if (db == null) {
             db = new TasksDataSource(context);
             db.open();
         }
 
-        ArrayList<Tools.TaskInfo> taskList = new ArrayList<Tools.TaskInfo>();
-        List<TasksModel> tasks = db.getAllTasks(MAX_DB_LOOKUPS);
+        ArrayList<Tools.TaskInfo> appList = new ArrayList<Tools.TaskInfo>();
+
+        int lookUpNum = appsNoH * appsNoW;
+        List<TasksModel> tasks = db.getAllTasks((lookUpNum < MAX_DB_LOOKUPS) ? MAX_DB_LOOKUPS : lookUpNum);
 
         for (TasksModel taskM : tasks) {
             String taskPackage = taskM.getPackageName();
@@ -131,7 +143,6 @@ public class AppsWidget extends AppWidgetProvider {
             dbTask.className = taskM.getClassName();
             dbTask.launches = taskM.getLaunches();
             dbTask.totalseconds = taskM.getSeconds();
-
             try {
                 pkgm.getApplicationInfo(dbTask.packageName, 0);
             } catch (PackageManager.NameNotFoundException e) {
@@ -139,50 +150,55 @@ public class AppsWidget extends AppWidgetProvider {
                 continue;
             }
 
-            taskList.add(dbTask);
+            appList.add(dbTask);
         }
 
         String taskPackage = context.getPackageName();
 
-        boolean weightedRecents = mPrefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
+        boolean weightedRecents = mPrefsSettings.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
                 Settings.WEIGHTED_RECENTS_DEFAULT);
-        int weightPriority = Integer.parseInt(mPrefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
+        int weightPriority = Integer.parseInt(mPrefsSettings.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
                 Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
-        if (weightedRecents)
-            taskList = Tools.reorderTasks(taskList, db, weightPriority);
+        if (weightedRecents) {
+            Log.d(Settings.TAG, " wP: " + weightPriority);
+            appList = Tools.reorderTasks(appList, db, weightPriority);
+        }
 
         RemoteViews row = new RemoteViews(context.getPackageName(), R.layout.apps_widget_row);
+        row.setInt(R.id.viewRow, "setBackgroundColor", getColor);
 
         int filledConts = 0;
-        int filledRows = 0;
-        for (int i=0; i < taskList.size(); i++) {
-            int resID = context.getResources().getIdentifier("imageButton" + (filledConts+1), "id", taskPackage);
-            int contID = context.getResources().getIdentifier("imageCont" + (filledConts+1), "id", taskPackage);
+        int filledRows = 1;
+        for (int i=0; i < appList.size(); i++) {
 
-            if (filledConts == 4) {
-                if (filledRows == 0) {
-                    filledConts = 0;
-                    filledRows += 1;
-                    views.addView(R.id.viewCont, row);
+            if (filledConts == appsNoW) {
+                filledConts = 0;
+                views.addView(R.id.viewCont, row);
+                if (filledRows < appsNoH) {
+                    filledRows++;
                     row = new RemoteViews(context.getPackageName(), R.layout.apps_widget_row);
+                    row.setInt(R.id.viewRow, "setBackgroundColor", getColor);
                 } else {
-                    views.addView(R.id.viewCont, row);
                     // Log.d(TAG, "filledConts [" + filledConts + "] == maxButtons [" + maxButtons + "]");
                     break;
                 }
             }
 
             filledConts += 1;
+
+            int resID = context.getResources().getIdentifier("imageButton" + (filledConts+1), "id", taskPackage);
+            int contID = context.getResources().getIdentifier("imageCont" + (filledConts+1), "id", taskPackage);
+
             row.setViewVisibility(contID, View.VISIBLE);
-            Log.d(Settings.TAG, "Setting cont visible: " + filledConts + " [" + taskList.get(i).appName + "]");
+            Log.d(Settings.TAG, "Setting cont visible: " + filledConts + " [" + appList.get(i).appName + "]");
 
             Drawable taskIcon, d;
             try {
-                ApplicationInfo appInfo = pkgm.getApplicationInfo(taskList.get(i).packageName, 0);
+                ApplicationInfo appInfo = pkgm.getApplicationInfo(appList.get(i).packageName, 0);
                 taskIcon = appInfo.loadIcon(pkgm);
             } catch (Exception e) {
                 Log.d(Settings.TAG, "loadicon exception: " + e);
-                taskList.remove(i);
+                appList.remove(i);
                 continue;
             }
 
@@ -198,9 +214,9 @@ public class AppsWidget extends AppWidgetProvider {
             Intent intent;
             PackageManager manager = context.getPackageManager();
             try {
-                intent = manager.getLaunchIntentForPackage(taskList.get(i).packageName);
+                intent = manager.getLaunchIntentForPackage(appList.get(i).packageName);
                 if (intent == null) {
-                    Log.d(Settings.TAG, "Couldn't get intent for ["+ taskList.get(i).packageName +"] className:" + taskList.get(i).className);
+                    Log.d(Settings.TAG, "Couldn't get intent for ["+ appList.get(i).packageName +"] className:" + appList.get(i).className);
                     filledConts --;
                     row.setViewVisibility(contID, View.GONE);
                     throw new PackageManager.NameNotFoundException();

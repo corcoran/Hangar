@@ -44,6 +44,10 @@ public class Tools {
         Intent i = new Intent(mContext, StatsWidget.class);
         i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         mContext.sendBroadcast(i);
+
+        i = new Intent(mContext, AppsWidget.class);
+        i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        mContext.sendBroadcast(i);
     }
 
     protected static class TaskInfoOrder {
@@ -110,7 +114,7 @@ public class Tools {
 
         public TaskComparator (String type, int weight){
             this.mType = type;
-            this.weightPriority = weight;
+            weightPriority = weight;
         }
         public int compare(TaskInfoOrder c1, TaskInfoOrder c2)
         {
