@@ -286,8 +286,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_stats_widget_settings) {
             startActivity(new Intent(mContext, StatsWidgetSettings.class));
+            return true;
+        } else if (id == R.id.action_apps_widget_settings) {
+            startActivity(new Intent(mContext, AppsWidgetSettings.class));
             return true;
         } else if (id == R.id.action_changelog) {
             startActivityForResult(new Intent(mContext, ChangeLog.class), 0);

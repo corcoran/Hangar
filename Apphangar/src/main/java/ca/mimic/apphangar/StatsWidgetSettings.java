@@ -70,7 +70,7 @@ public class StatsWidgetSettings extends PreferenceActivity {
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             v.setLayoutParams(params);
 
-            LinearLayout footer = (LinearLayout) inflater.inflate(R.layout.stats_widget_footer, v, false);
+            LinearLayout footer = (LinearLayout) inflater.inflate(R.layout.widget_footer, v, false);
             footer.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT));
             Button createButton = (Button) footer.findViewById(R.id.placementButton);
             if (extras == null) {

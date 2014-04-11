@@ -4,7 +4,7 @@
     android:layout_width="fill_parent">
 
     <PreferenceCategory
-        android:title="@string/aesthetics_config">
+        android:title="@string/appsno_category">
 
         <SwitchPreference
             android:key="apps_by_widget_size_preference"

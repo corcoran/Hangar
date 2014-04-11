@@ -40,7 +40,7 @@ public class AppsWidgetSettings extends PreferenceActivity {
         mContext = getApplicationContext();
         extras = getIntent().getExtras();
 
-        setTitle(R.string.stats_widget_name);
+        setTitle(R.string.apps_widget_name);
         setResult(RESULT_CANCELED);
         getFragmentManager().beginTransaction().replace(android.R.id.content, new StatsWidgetFragment().newInstance()).commit();
 
@@ -73,7 +73,7 @@ public class AppsWidgetSettings extends PreferenceActivity {
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             v.setLayoutParams(params);
 
-            LinearLayout footer = (LinearLayout) inflater.inflate(R.layout.stats_widget_footer, v, false);
+            LinearLayout footer = (LinearLayout) inflater.inflate(R.layout.widget_footer, v, false);
             footer.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT));
             Button createButton = (Button) footer.findViewById(R.id.placementButton);
             if (extras == null) {
@@ -123,7 +123,7 @@ public class AppsWidgetSettings extends PreferenceActivity {
         public void onCreate(final Bundle savedInstanceState)
         {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.layout.stats_widget_settings);
+            addPreferencesFromResource(R.layout.apps_widget_settings);
             int defaultAppsNo = WIDGET_3X3_DEFAULT_APPSNO;
             int defaultAppsNoLs = WIDGET_3X3_DEFAULT_APPSNO_LS;
 
