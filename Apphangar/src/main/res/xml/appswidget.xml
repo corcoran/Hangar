@@ -3,6 +3,7 @@
     android:initialLayout="@layout/apps_widget_row"
     android:minHeight="60dp"
     android:minWidth="90dp"
+    android:configure="ca.mimic.apphangar.AppsWidgetSettings"
     android:resizeMode="vertical|horizontal"
     android:updatePeriodMillis="0" >
 

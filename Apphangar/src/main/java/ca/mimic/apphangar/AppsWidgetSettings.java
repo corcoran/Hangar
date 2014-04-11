@@ -50,11 +50,14 @@ public class AppsWidgetSettings extends PreferenceActivity {
     }
     public static class StatsWidgetFragment extends PreferenceFragment {
 
-        CheckBoxPreference divider_preference;
+        CheckBoxPreference weighted_recents_preference;
+        CheckBoxPreference colorize_preference;
+        ColorPickerPreference icon_color_preference;
         ColorPickerPreference background_color_preference;
         SwitchPreference apps_by_widget_size_preference;
         UpdatingListPreference appnos_preference;
         UpdatingListPreference appnos_ls_preference;
+        UpdatingListPreference weight_priority_preference;
 
         public static StatsWidgetFragment newInstance() {
             return new StatsWidgetFragment();
@@ -104,12 +107,16 @@ public class AppsWidgetSettings extends PreferenceActivity {
         }
         public void savePrefs() {
             final SharedPreferences.Editor mEditor = prefs.editorGet();
-            mEditor.putBoolean(Settings.DIVIDER_PREFERENCE, divider_preference.isChecked());
+            mEditor.putBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE, weighted_recents_preference.isChecked());
+            mEditor.putBoolean(Settings.COLORIZE_PREFERENCE, colorize_preference.isChecked());
+            mEditor.putString(Settings.WEIGHT_PRIORITY_PREFERENCE, weight_priority_preference.getValue());
             mEditor.putBoolean(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE, apps_by_widget_size_preference.isChecked());
             mEditor.putString(Settings.STATS_WIDGET_APPSNO_PREFERENCE, appnos_preference.getValue());
             mEditor.putString(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE, appnos_ls_preference.getValue());
             int intHex = ColorPickerPreference.convertToColorInt(String.valueOf(background_color_preference.getSummary()));
             mEditor.putInt(Settings.BACKGROUND_COLOR_PREFERENCE, intHex);
+            int intHex2 = ColorPickerPreference.convertToColorInt(String.valueOf(icon_color_preference.getSummary()));
+            mEditor.putInt(Settings.ICON_COLOR_PREFERENCE, intHex2);
             mEditor.apply();
         }
         @Override
@@ -121,10 +128,6 @@ public class AppsWidgetSettings extends PreferenceActivity {
             int defaultAppsNoLs = WIDGET_3X3_DEFAULT_APPSNO_LS;
 
             SharedPreferences mPrefs = prefs.prefsGet();
-
-            divider_preference = (CheckBoxPreference)findPreference(Settings.DIVIDER_PREFERENCE);
-            divider_preference.setChecked(mPrefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT));
-            divider_preference.setOnPreferenceChangeListener(changeListener);
 
             apps_by_widget_size_preference = (SwitchPreference)findPreference(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE);
             apps_by_widget_size_preference.setChecked(mPrefs.getBoolean(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE, Settings.APPS_BY_WIDGET_SIZE_DEFAULT));
@@ -151,6 +154,24 @@ public class AppsWidgetSettings extends PreferenceActivity {
             if (apps_by_widget_size_preference.isChecked()) {
                 appnos_ls_preference.setSummary(R.string.automatic_appsno);
             }
+
+            weighted_recents_preference = (CheckBoxPreference)findPreference(Settings.WEIGHTED_RECENTS_PREFERENCE);
+            weighted_recents_preference.setChecked(mPrefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE, Settings.WEIGHTED_RECENTS_DEFAULT));
+            weighted_recents_preference.setOnPreferenceChangeListener(changeListener);
+
+            weight_priority_preference = (UpdatingListPreference)findPreference(Settings.WEIGHT_PRIORITY_PREFERENCE);
+            weight_priority_preference.setValue(mPrefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE, Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
+            weight_priority_preference.setOnPreferenceChangeListener(changeListener);
+
+            colorize_preference = (CheckBoxPreference)findPreference(Settings.COLORIZE_PREFERENCE);
+            colorize_preference.setChecked(mPrefs.getBoolean(Settings.COLORIZE_PREFERENCE, Settings.COLORIZE_DEFAULT));
+            colorize_preference.setOnPreferenceChangeListener(changeListener);
+
+            icon_color_preference = (ColorPickerPreference) findPreference(Settings.ICON_COLOR_PREFERENCE);
+            int intColor2 = mPrefs.getInt(Settings.ICON_COLOR_PREFERENCE, Settings.ICON_COLOR_DEFAULT);
+            String hexColor2 = String.format("#%08x", (intColor2));
+            icon_color_preference.setSummary(hexColor2);
+            icon_color_preference.setOnPreferenceChangeListener(changeListener);
         }
         Preference.OnPreferenceChangeListener changeListener = new Preference.OnPreferenceChangeListener() {
             @Override
@@ -170,6 +191,9 @@ public class AppsWidgetSettings extends PreferenceActivity {
                     appnos_preference.goDefault(String.format(getResources().getString(R.string.summary_stats_widget_appsno_preference), (String) newValue));
                 } else if (preference.getKey().equals(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE)) {
                     appnos_ls_preference.goDefault(String.format(getResources().getString(R.string.summary_stats_widget_appsno_ls_preference), (String) newValue));
+                } else if (preference.getKey().equals(Settings.ICON_COLOR_PREFERENCE)) {
+                    String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String.valueOf(newValue)));
+                    preference.setSummary(hex);
                 }
                 return true;
             }
