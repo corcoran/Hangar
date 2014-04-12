@@ -63,6 +63,16 @@ public class ColorPickerPreference
 		init(context, attrs);
 	}
 
+    @Override
+    public void setSummary(CharSequence summary) {
+        super.setSummary(summary);
+        try {
+            mValue = convertToColorInt((String) summary);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 	@Override
 	protected Object onGetDefaultValue(TypedArray a, int index) {
 		return a.getColor(index, Color.BLACK);
@@ -150,7 +160,7 @@ public class ColorPickerPreference
 		showDialog(null);
 		return false;
 	}
-	
+
 	protected void showDialog(Bundle state) {
 		mDialog = new ColorPickerDialog(getContext(), mValue);
 		mDialog.setOnColorChangedListener(this);
