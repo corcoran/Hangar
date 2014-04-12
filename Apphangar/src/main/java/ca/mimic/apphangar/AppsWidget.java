@@ -34,6 +34,9 @@ public class AppsWidget extends AppWidgetProvider {
 
     protected static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
     protected static final int MAX_DB_LOOKUPS = 12;
+    protected static final int ICON_ROW_BUFFER = 10;
+    protected static final int ICON_ROW_HEIGHT = 28; // 40 for small?
+    protected static final int ICON_ROW_WIDTH = 28;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -79,8 +82,8 @@ public class AppsWidget extends AppWidgetProvider {
 
         SharedPreferences mPrefs = prefs.prefsGet();
 
-        int itemHeight = 55;
-        int itemWidth = 55;
+        int itemHeight = ICON_ROW_HEIGHT;
+        int itemWidth = ICON_ROW_WIDTH;
 
         boolean appsNoByWidgetSize = mPrefs.getBoolean(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE, Settings.APPS_BY_WIDGET_SIZE_DEFAULT);
         int appsNoH;
@@ -91,8 +94,8 @@ public class AppsWidget extends AppWidgetProvider {
         Log.d(Settings.TAG, "jeff maxHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
         Log.d(Settings.TAG, "jeff minWidth: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH));
         Log.d(Settings.TAG, "jeff maxWidth: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH));
-        appsNoH = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) - 10) / itemHeight);
-        appsNoW = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) - 10) / itemWidth);
+        appsNoH = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) - ICON_ROW_BUFFER) / itemHeight);
+        appsNoW = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) - ICON_ROW_BUFFER) / itemWidth);
         Log.d(Settings.TAG, "jeff appsNoH: "  + appsNoH + " appsNoW: " + appsNoW);
 
         if (appsNoH == 0) {
@@ -101,12 +104,12 @@ public class AppsWidget extends AppWidgetProvider {
         }
 
         if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            appsNoH = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) - 10) / itemHeight);
+            appsNoH = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) - ICON_ROW_BUFFER) / itemHeight);
             if (appsNoH == 0) {
                 appsNoH = 1;
                 autoHeight = false;
             }
-            appsNoW = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) - 10) / itemWidth);
+            appsNoW = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) - ICON_ROW_BUFFER) / itemWidth);
             if (appsNoByWidgetSize && appsNoW > 0) {
                 Log.d("Apphangar", "Landscape! appsNoByWidgetSize=true, appsNo=" + appsNoW);
             } else {
