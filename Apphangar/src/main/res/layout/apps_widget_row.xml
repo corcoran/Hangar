@@ -186,4 +186,41 @@
             android:background="#00000000"
             android:id="@+id/imageButton10" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:background="?android:selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:gravity="center"
+        android:visibility="gone"
+        android:id="@+id/imageCont11">
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:id="@+id/imageButton11" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:background="?android:selectableItemBackground"
+        android:focusable="true"
+        android:clickable="true"
+        android:gravity="center"
+        android:visibility="gone"
+        android:id="@+id/imageCont12">
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:id="@+id/imageButton12" />
+    </LinearLayout>
+
 </LinearLayout>
