@@ -91,6 +91,7 @@ public class AppsWidget extends AppWidgetProvider {
         SharedPreferences mPrefs = prefs.prefsGet();
 
         int rowLayout = R.layout.apps_widget_row;
+        int itemLayout = R.layout.apps_widget_item;
 
         int itemHeight = ICON_MEDIUM_HEIGHT;
         int itemWidth = ICON_MEDIUM_WIDTH;
@@ -225,17 +226,14 @@ public class AppsWidget extends AppWidgetProvider {
         int filledConts = 0;
         int filledRows = 1;
         for (int i=0; i < appList.size(); i++) {
+            RemoteViews item = new RemoteViews(context.getPackageName(), itemLayout);
 
             if (filledConts == appsNoW || i == (appList.size()-1)) {
                 views.addView(R.id.viewCont, row);
                 if (filledRows < appsNoH && filledConts < origWidth) {
                     row = new RemoteViews(context.getPackageName(), rowLayout);
                     row.setInt(R.id.viewRow, "setBackgroundColor", getBackgroundColor);
-//                    if (autoHeight && !appsNoByWidgetSize) {
-//                        leftoverWidth -= appsNoW;
-//                        appsNoW = (int) Math.ceil((double) leftoverWidth / (appsNoH - filledRows));
-//                        Log.d(Settings.TAG, "autoHeight true, appsNoW=" + appsNoW);
-//                    }
+
                     filledConts = 0;
                     filledRows++;
                 } else {
@@ -246,15 +244,16 @@ public class AppsWidget extends AppWidgetProvider {
 
             filledConts += 1;
 
-            int resID = context.getResources().getIdentifier("imageButton" + (filledConts), "id", taskPackage);
-            int contID = context.getResources().getIdentifier("imageCont" + (filledConts), "id", taskPackage);
+            int resID = context.getResources().getIdentifier("imageButton", "id", taskPackage);
+            int contID = context.getResources().getIdentifier("imageCont", "id", taskPackage);
 
             if (i >= origWidth) {
-                row.setViewVisibility(contID, View.INVISIBLE);
+                item.setViewVisibility(contID, View.INVISIBLE);
+                row.addView(R.id.viewRow, item);
                 continue;
             }
 
-            row.setViewVisibility(contID, View.VISIBLE);
+            // item.setViewVisibility(contID, View.VISIBLE);
             Log.d(Settings.TAG, "Setting cont visible: " + filledConts + " [" + appList.get(i).appName + "]");
 
             Drawable taskIcon, d;
@@ -274,7 +273,7 @@ public class AppsWidget extends AppWidgetProvider {
             }
 
             Bitmap bmpIcon = ((BitmapDrawable) d).getBitmap();
-            row.setImageViewBitmap(resID, bmpIcon);
+            item.setImageViewBitmap(resID, bmpIcon);
 
             Intent intent;
             PackageManager manager = context.getPackageManager();
@@ -283,16 +282,17 @@ public class AppsWidget extends AppWidgetProvider {
                 if (intent == null) {
                     Log.d(Settings.TAG, "Couldn't get intent for ["+ appList.get(i).packageName +"] className:" + appList.get(i).className);
                     filledConts --;
-                    row.setViewVisibility(contID, View.GONE);
+                    // item.setViewVisibility(contID, View.GONE);
                     throw new PackageManager.NameNotFoundException();
                 }
                 intent.addCategory(Intent.CATEGORY_LAUNCHER);
                 intent.setAction("action" + (i));
                 PendingIntent activity = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-                row.setOnClickPendingIntent(contID, activity);
+                item.setOnClickPendingIntent(contID, activity);
             } catch (PackageManager.NameNotFoundException e) {
 
             }
+            row.addView(R.id.viewRow, item);
         }
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
