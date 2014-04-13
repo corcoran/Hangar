@@ -16,8 +16,8 @@
             android:key="stats_widget_appsno_preference"
             android:title="@string/title_stats_widget_appsno_preference"
             android:summary="@string/summary_stats_widget_appsno_preference"
-            android:entries="@array/entries_stats_widget_appsno_preference"
-            android:entryValues="@array/entries_stats_widget_appsno_preference"
+            android:entries="@array/entries_apps_widget_appsno_preference"
+            android:entryValues="@array/entries_apps_widget_appsno_preference"
             android:dialogTitle="@string/dialog_appsno_preference"
             android:dependency="apps_by_widget_size_preference" />
 
@@ -25,8 +25,8 @@
             android:key="stats_widget_appsno_ls_preference"
             android:title="@string/title_stats_widget_appsno_ls_preference"
             android:summary="@string/summary_stats_widget_appsno_ls_preference"
-            android:entries="@array/entries_stats_widget_appsno_ls_preference"
-            android:entryValues="@array/entries_stats_widget_appsno_ls_preference"
+            android:entries="@array/entries_apps_widget_appsno_preference"
+            android:entryValues="@array/entries_apps_widget_appsno_preference"
             android:dialogTitle="@string/dialog_appsno_preference"
             android:dependency="apps_by_widget_size_preference" />
 
