@@ -73,6 +73,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String STATS_WIDGET_APPSNO_PREFERENCE = "stats_widget_appsno_preference";
     final static String STATS_WIDGET_APPSNO_LS_PREFERENCE = "stats_widget_appsno_ls_preference";
     final static String APPS_BY_WIDGET_SIZE_PREFERENCE = "apps_by_widget_size_preference";
+    final static String ICON_SIZE_PREFERENCE = "icon_size_preference";
 
 
     protected static View appsView;
@@ -110,6 +111,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String STATUSBAR_ICON_TRANSPARENT = "**transparent**";
     final static String STATUSBAR_ICON_NONE = "**none**";
     final static String STATUSBAR_ICON_DEFAULT = STATUSBAR_ICON_WHITE_WARM;
+
+    final static int ICON_SIZE_DEFAULT = 1;
 
     final static int SERVICE_RUN_SCAN = 0;
     final static int SERVICE_DESTROY_NOTIFICATIONS = 1;

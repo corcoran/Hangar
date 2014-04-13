@@ -58,6 +58,7 @@ public class AppsWidgetSettings extends PreferenceActivity {
         UpdatingListPreference appnos_preference;
         UpdatingListPreference appnos_ls_preference;
         UpdatingListPreference weight_priority_preference;
+        UpdatingListPreference icon_size_preference;
 
         public static StatsWidgetFragment newInstance() {
             return new StatsWidgetFragment();
@@ -117,6 +118,7 @@ public class AppsWidgetSettings extends PreferenceActivity {
             mEditor.putInt(Settings.BACKGROUND_COLOR_PREFERENCE, intHex);
             int intHex2 = ColorPickerPreference.convertToColorInt(String.valueOf(icon_color_preference.getSummary()));
             mEditor.putInt(Settings.ICON_COLOR_PREFERENCE, intHex2);
+            mEditor.putString(Settings.ICON_SIZE_PREFERENCE, icon_size_preference.getValue());
             mEditor.apply();
         }
         @Override
@@ -172,6 +174,10 @@ public class AppsWidgetSettings extends PreferenceActivity {
             String hexColor2 = String.format("#%08x", (intColor2));
             icon_color_preference.setSummary(hexColor2);
             icon_color_preference.setOnPreferenceChangeListener(changeListener);
+
+            icon_size_preference = (UpdatingListPreference)findPreference(Settings.ICON_SIZE_PREFERENCE);
+            icon_size_preference.setValue(mPrefs.getString(Settings.ICON_SIZE_PREFERENCE, Integer.toString(Settings.ICON_SIZE_DEFAULT)));
+            icon_size_preference.setOnPreferenceChangeListener(changeListener);
         }
         Preference.OnPreferenceChangeListener changeListener = new Preference.OnPreferenceChangeListener() {
             @Override
@@ -194,6 +200,8 @@ public class AppsWidgetSettings extends PreferenceActivity {
                 } else if (preference.getKey().equals(Settings.ICON_COLOR_PREFERENCE)) {
                     String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String.valueOf(newValue)));
                     preference.setSummary(hex);
+                } else if (preference.getKey().equals(Settings.ICON_SIZE_PREFERENCE)) {
+                    appnos_preference.goDefault(String.format(getResources().getString(R.string.summary_icon_size_preference), (String) newValue));
                 }
                 return true;
             }

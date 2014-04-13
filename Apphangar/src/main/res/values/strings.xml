@@ -149,10 +149,24 @@
     </string-array>
 
     <!-- Apps Widget -->
-    <string name="apps_widget_name">Apps Widget</string>
+    <string name="apps_widget_name">Hangar Apps Widget</string>
+    <string name="title_icon_size_preference">Icon size</string>
+    <string name="summary_icon_size_preference">%s</string>
+
+    <string-array name="entries_icon_size_preference">
+        <item>Small</item>
+        <item>Medium (default)</item>
+        <item>Large</item>
+    </string-array>
+
+    <string-array name="values_icon_size_preference">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 
     <!-- Stats Widget -->
-    <string name="stats_widget_name">Stats Widget</string>
+    <string name="stats_widget_name">Hangar Stats Widget</string>
     <string name="title_background_color_preference">Background color</string>
     <string name="button_name">Place widget</string>
     <string name="reconfigure_button_name">Save widget preferences</string>

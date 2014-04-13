@@ -33,10 +33,18 @@ public class AppsWidget extends AppWidgetProvider {
     protected static PrefsGet prefs;
 
     protected static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
+    protected static final int SMALL_ICONS = 0;
+    protected static final int LARGE_ICONS = 2;
+
     protected static final int MAX_DB_LOOKUPS = 12;
     protected static final int ICON_ROW_BUFFER = 10;
-    protected static final int ICON_ROW_HEIGHT = 28; // 40 for small?
-    protected static final int ICON_ROW_WIDTH = 28;
+
+    protected static final int ICON_SMALL_HEIGHT = 40;
+    protected static final int ICON_SMALL_WIDTH = 36;
+    protected static final int ICON_MEDIUM_HEIGHT = 55;
+    protected static final int ICON_MEDIUM_WIDTH = 50;
+    protected static final int ICON_LARGE_HEIGHT = 70;
+    protected static final int ICON_LARGE_WIDTH = 64;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -82,8 +90,26 @@ public class AppsWidget extends AppWidgetProvider {
 
         SharedPreferences mPrefs = prefs.prefsGet();
 
-        int itemHeight = ICON_ROW_HEIGHT;
-        int itemWidth = ICON_ROW_WIDTH;
+        int rowLayout = R.layout.apps_widget_row;
+
+        int itemHeight = ICON_MEDIUM_HEIGHT;
+        int itemWidth = ICON_MEDIUM_WIDTH;
+
+        int iconSize = Integer.parseInt(mPrefs.getString(Settings.ICON_SIZE_PREFERENCE, Integer.toString(Settings.ICON_SIZE_DEFAULT)));
+
+        // setSize
+        switch (iconSize) {
+            case SMALL_ICONS:
+                rowLayout = R.layout.apps_widget_row_small;
+                itemHeight = ICON_SMALL_HEIGHT;
+                itemWidth = ICON_SMALL_WIDTH;
+                break;
+            case LARGE_ICONS:
+                rowLayout = R.layout.apps_widget_row_large;
+                itemHeight = ICON_LARGE_HEIGHT;
+                itemWidth = ICON_LARGE_WIDTH;
+                break;
+        }
 
         boolean appsNoByWidgetSize = mPrefs.getBoolean(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE, Settings.APPS_BY_WIDGET_SIZE_DEFAULT);
         int appsNoH;
@@ -105,7 +131,14 @@ public class AppsWidget extends AppWidgetProvider {
 
         if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             appsNoH = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) - ICON_ROW_BUFFER) / itemHeight);
+            float widgetHeight = (options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) - ICON_ROW_BUFFER);
             if (appsNoH == 0) {
+                if (widgetHeight > 0) {
+                    // add setSize
+                    Log.d(Settings.TAG, "Widget height > 0 but < 1 for iconSize.  Setting small");
+                    rowLayout = R.layout.apps_widget_row_small;
+                    itemWidth = ICON_SMALL_WIDTH;
+                }
                 appsNoH = 1;
                 autoHeight = false;
             }
@@ -182,7 +215,7 @@ public class AppsWidget extends AppWidgetProvider {
             appList = Tools.reorderTasks(appList, db, weightPriority);
         }
 
-        RemoteViews row = new RemoteViews(context.getPackageName(), R.layout.apps_widget_row);
+        RemoteViews row = new RemoteViews(context.getPackageName(), rowLayout);
         row.setInt(R.id.viewRow, "setBackgroundColor", getBackgroundColor);
 
         if (autoHeight && !appsNoByWidgetSize) {
@@ -196,7 +229,7 @@ public class AppsWidget extends AppWidgetProvider {
             if (filledConts == appsNoW || i == (appList.size()-1)) {
                 views.addView(R.id.viewCont, row);
                 if (filledRows < appsNoH && filledConts < origWidth) {
-                    row = new RemoteViews(context.getPackageName(), R.layout.apps_widget_row);
+                    row = new RemoteViews(context.getPackageName(), rowLayout);
                     row.setInt(R.id.viewRow, "setBackgroundColor", getBackgroundColor);
 //                    if (autoHeight && !appsNoByWidgetSize) {
 //                        leftoverWidth -= appsNoW;
