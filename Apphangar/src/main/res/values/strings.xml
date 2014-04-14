@@ -117,6 +117,7 @@
 
     <!-- ChangeLog -->
     <string-array name="versionNumbers">
+        <item>1.14</item>
         <item>1.13</item>
         <item>1.12</item>
         <item>1.11</item>
@@ -124,6 +125,8 @@
     </string-array>
 
     <string-array name="versionSummaries">
+        <item>
+"    &#8226; [New!] Apps widget"</item>
         <item>
 "    &#8226; [New!] Changelog pop-up screen
     &#8226; [Fix!] 4.3 Navbar launcher size issue fixed

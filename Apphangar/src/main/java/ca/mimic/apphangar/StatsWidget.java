@@ -18,12 +18,10 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import ca.mimic.apphangar.Settings.PrefsGet;
@@ -38,7 +36,7 @@ public class StatsWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Log.d("Apphangar", "onUpdate");
+        Tools.HangarLog("onUpdate");
         // There may be multiple widgets active, so update all of them
         mContext = context;
         // final int N = appWidgetIds.length;
@@ -53,7 +51,7 @@ public class StatsWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("Apphangar", "onReceive");
+        Tools.HangarLog("onReceive");
         if (mContext == null) {
             mContext = context;
             IntentFilter filter = new IntentFilter();
@@ -66,13 +64,13 @@ public class StatsWidget extends AppWidgetProvider {
         int[] ids = mgr.getAppWidgetIds(new ComponentName(context, StatsWidget.class));
 
         for(int id : ids) {
-            Log.d("Apphangar", "per id: " + id);
+            Tools.HangarLog("per id: " + id);
             try {
                 Bundle options=mgr.getAppWidgetOptions(id);
                 updateAppWidget(context, mgr, id, options);
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                Log.d("Apphangar", "NPE onReceive");
+                Tools.HangarLog("NPE onReceive");
             }
             // mgr.notifyAppWidgetViewDataChanged(id, R.id.taskRoot);
         }
@@ -95,7 +93,7 @@ public class StatsWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
             int appWidgetId, Bundle options) {
 
-        Log.d("Apphangar", "updateAppWidget");
+        Tools.HangarLog("updateAppWidget");
         prefs = new PrefsGet(context.getSharedPreferences("StatsWidget", Context.MODE_PRIVATE));
 
         SharedPreferences mPrefs = prefs.prefsGet();
@@ -113,13 +111,13 @@ public class StatsWidget extends AppWidgetProvider {
         int appsNo;
         int appsNoLs;
 
-        Log.d("Apphangar", "minHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT));
-        Log.d("Apphangar", "maxHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
+        Tools.HangarLog("minHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT));
+        Tools.HangarLog("maxHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
         appsNo = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) - 14) / itemHeight);
         appsNoLs = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) - 14) / itemHeight);
 
         if (appsNoByWidgetSize && appsNo > 0) {
-            Log.d("Apphangar", "appsNoByWidgetSize=true, appsNo=" + appsNo);
+            Tools.HangarLog("appsNoByWidgetSize=true, appsNo=" + appsNo);
         } else {
             appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_DEFAULT)));
         }
@@ -127,11 +125,11 @@ public class StatsWidget extends AppWidgetProvider {
         if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             if (appsNoByWidgetSize && appsNoLs > 0) {
                 appsNo = appsNoLs;
-                Log.d("Apphangar", "Landscape! appsNoByWidgetSize=true, appsNo=" + appsNo);
+                Tools.HangarLog("Landscape! appsNoByWidgetSize=true, appsNo=" + appsNo);
             } else {
                 appsNo = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_LS_DEFAULT)));
             }
-            Log.d("Apphangar", "LANDSCAPE");
+            Tools.HangarLog("LANDSCAPE");
         }
 
         int getColor = mPrefs.getInt(Settings.BACKGROUND_COLOR_PREFERENCE, Settings.BACKGROUND_COLOR_DEFAULT);
@@ -203,8 +201,8 @@ public class StatsWidget extends AppWidgetProvider {
                 barColor = 0xFFFF4444;
             }
             int[] colors = new int[]{barColor, Tools.dpToPx(context, secondsColor-1), 0x00000000, Tools.dpToPx(mContext, 100-secondsColor)};
-            Log.d("Apphangar", "BarDrawable: " + colors[0] + ", " + colors[1] + ", " + colors[2] + ", " + colors[3]);
-            Log.d("Apphangar", "bar1 dp: " + Tools.pxToDp(context, secondsColor * 2.55f));
+            Tools.HangarLog("BarDrawable: " + colors[0] + ", " + colors[1] + ", " + colors[2] + ", " + colors[3]);
+            Tools.HangarLog("bar1 dp: " + Tools.pxToDp(context, secondsColor * 2.55f));
             Drawable sd = new BarDrawable(colors);
             Bitmap bmpIcon2 = drawableToBitmap(sd);
             views.setImageViewBitmap(imgID, bmpIcon2);
@@ -242,7 +240,7 @@ public class StatsWidget extends AppWidgetProvider {
                     ComponentName task = recentTasks.get(0).baseActivity;
                     String taskPackage = task.getPackageName();
                     if (taskPackage.equals(Tools.getLauncher(context))) {
-                        Log.d("Apphangar", "We're in the launcher changing orientation!");
+                        Tools.HangarLog("We're in the launcher changing orientation!");
                         StatsWidget.this.onReceive(context, new Intent());
                     }
                 }

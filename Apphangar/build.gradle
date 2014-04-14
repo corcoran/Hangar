@@ -1,3 +1,7 @@
+import com.android.builder.DefaultManifestParser
+
+def manifestParser = new DefaultManifestParser()
+
 buildscript {
     repositories {
         mavenCentral()
@@ -7,6 +11,7 @@ buildscript {
     }
 }
 apply plugin: 'android'
+apply from: 'sign.gradle';
 
 repositories {
     mavenCentral()
@@ -15,15 +20,22 @@ repositories {
 android {
     compileSdkVersion 19
     buildToolsVersion '19.0.3'
-
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 19
     }
+    lintOptions {
+        abortOnError false
+    }
     buildTypes {
         release {
-            runProguard false
+            runProguard true
             proguardFile getDefaultProguardFile('proguard-android.txt')
+            applicationVariants.all { variant ->
+                def file = variant.outputFile
+                variant.outputFile = new File(file.parent, "Hangar.apk".replace(".apk", "-" + manifestParser.getVersionName(android.sourceSets.main.manifest.srcFile) + ".apk"))
+            }
+            debuggable false
         }
     }
     productFlavors {
@@ -31,6 +43,7 @@ android {
             proguardFile 'proguard-rules.txt'
         }
     }
+
 }
 
 dependencies {

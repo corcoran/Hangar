@@ -17,7 +17,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -37,18 +36,18 @@ public class AppsWidget extends AppWidgetProvider {
     protected static final int LARGE_ICONS = 2;
 
     protected static final int MAX_DB_LOOKUPS = 12;
-    protected static final int ICON_ROW_BUFFER = 10;
+    protected static final int ICON_ROW_BUFFER = 0;
 
     protected static final int ICON_SMALL_HEIGHT = 40;
     protected static final int ICON_SMALL_WIDTH = 36;
-    protected static final int ICON_MEDIUM_HEIGHT = 55;
+    protected static final int ICON_MEDIUM_HEIGHT = 54;
     protected static final int ICON_MEDIUM_WIDTH = 50;
     protected static final int ICON_LARGE_HEIGHT = 70;
     protected static final int ICON_LARGE_WIDTH = 64;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Log.d("Apphangar", "onUpdate");
+        Tools.HangarLog("onUpdate");
         mContext = context;
         IntentFilter filter = new IntentFilter();
         filter.addAction(BCAST_CONFIGCHANGED);
@@ -57,7 +56,7 @@ public class AppsWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("Apphangar", "onReceive");
+        Tools.HangarLog("onReceive");
         if (mContext == null) {
             mContext = context;
             IntentFilter filter = new IntentFilter();
@@ -70,13 +69,13 @@ public class AppsWidget extends AppWidgetProvider {
         int[] ids = mgr.getAppWidgetIds(new ComponentName(context, AppsWidget.class));
 
         for(int id : ids) {
-            Log.d("Apphangar", "per id: " + id);
+            Tools.HangarLog("per id: " + id);
             try {
                 Bundle options=mgr.getAppWidgetOptions(id);
                 updateAppWidget(context, mgr, id, options);
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                Log.d("Apphangar", "NPE onReceive");
+                Tools.HangarLog("NPE onReceive");
             }
         }
         super.onReceive(context, intent);
@@ -85,7 +84,7 @@ public class AppsWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
             int appWidgetId, Bundle options) {
 
-        Log.d("Apphangar", "updateAppWidget");
+        Tools.HangarLog("updateAppWidget");
         prefs = new PrefsGet(context.getSharedPreferences("AppsWidget", Context.MODE_PRIVATE));
 
         SharedPreferences mPrefs = prefs.prefsGet();
@@ -117,13 +116,13 @@ public class AppsWidget extends AppWidgetProvider {
         int appsNoW;
         boolean autoHeight = true;
 
-        Log.d(Settings.TAG, "jeff minHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT));
-        Log.d(Settings.TAG, "jeff maxHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
-        Log.d(Settings.TAG, "jeff minWidth: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH));
-        Log.d(Settings.TAG, "jeff maxWidth: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH));
+        Tools.HangarLog("jeff minHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT));
+        Tools.HangarLog("jeff maxHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
+        Tools.HangarLog("jeff minWidth: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH));
+        Tools.HangarLog("jeff maxWidth: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH));
         appsNoH = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) - ICON_ROW_BUFFER) / itemHeight);
         appsNoW = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) - ICON_ROW_BUFFER) / itemWidth);
-        Log.d(Settings.TAG, "jeff appsNoH: "  + appsNoH + " appsNoW: " + appsNoW);
+        Tools.HangarLog("jeff appsNoH: " + appsNoH + " appsNoW: " + appsNoW);
 
         if (appsNoH == 0) {
             appsNoH = 1;
@@ -136,7 +135,7 @@ public class AppsWidget extends AppWidgetProvider {
             if (appsNoH == 0) {
                 if (widgetHeight > 0) {
                     // add setSize
-                    Log.d(Settings.TAG, "Widget height > 0 but < 1 for iconSize.  Setting small");
+                    Tools.HangarLog("Widget height > 0 but < 1 for iconSize.  Setting small");
                     rowLayout = R.layout.apps_widget_row_small;
                     itemWidth = ICON_SMALL_WIDTH;
                 }
@@ -145,14 +144,14 @@ public class AppsWidget extends AppWidgetProvider {
             }
             appsNoW = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) - ICON_ROW_BUFFER) / itemWidth);
             if (appsNoByWidgetSize && appsNoW > 0) {
-                Log.d("Apphangar", "Landscape! appsNoByWidgetSize=true, appsNo=" + appsNoW);
+                Tools.HangarLog("Landscape! appsNoByWidgetSize=true, appsNo=" + appsNoW);
             } else {
                 appsNoW = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_LS_DEFAULT)));
             }
-            Log.d("Apphangar", "LANDSCAPE");
+            Tools.HangarLog("LANDSCAPE");
         } else {
             if (appsNoByWidgetSize && appsNoW > 0) {
-                Log.d("Apphangar", "appsNoByWidgetSize=true, appsNo=" + appsNoH);
+                Tools.HangarLog("appsNoByWidgetSize=true, appsNo=" + appsNoH);
             } else {
                 appsNoW = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_DEFAULT)));
             }
@@ -172,12 +171,13 @@ public class AppsWidget extends AppWidgetProvider {
 
         ArrayList<Tools.TaskInfo> appList = new ArrayList<Tools.TaskInfo>();
 
-        int origWidth = (appsNoH * appsNoW);
-        int lookUpNum = origWidth + 3; // 3 = saftey buffer
+        int gridSize = (appsNoH * appsNoW);
+        int numOfIcons = (appsNoH * appsNoW);
+        int lookUpNum = numOfIcons + 3; // 3 = saftey buffer
 
         if (autoHeight && !appsNoByWidgetSize) {
             // Manual app # is selected.  Icons are split automatically from height.
-            origWidth = appsNoW;
+            numOfIcons = appsNoW;
             lookUpNum = appsNoW + 3;
         }
         List<TasksModel> tasks = db.getAllTasks((lookUpNum < MAX_DB_LOOKUPS) ? MAX_DB_LOOKUPS : lookUpNum);
@@ -200,6 +200,14 @@ public class AppsWidget extends AppWidgetProvider {
                 db.deleteTask(taskM);
                 continue;
             }
+            try {
+                Intent intent = pkgm.getLaunchIntentForPackage(taskPackage);
+                if (intent == null)
+                    throw new PackageManager.NameNotFoundException();
+
+            } catch (PackageManager.NameNotFoundException e) {
+                db.deleteTask(taskM);
+            }
 
             appList.add(dbTask);
         }
@@ -212,7 +220,7 @@ public class AppsWidget extends AppWidgetProvider {
         int weightPriority = Integer.parseInt(mPrefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
                 Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
         if (weightedRecents) {
-            Log.d(Settings.TAG, " wP: " + weightPriority);
+            Tools.HangarLog(" wP: " + weightPriority);
             appList = Tools.reorderTasks(appList, db, weightPriority);
         }
 
@@ -221,16 +229,18 @@ public class AppsWidget extends AppWidgetProvider {
 
         if (autoHeight && !appsNoByWidgetSize) {
             appsNoW = (int) Math.ceil((double) appsNoW / appsNoH);
-            Log.d(Settings.TAG, "autoHeight true (start), appsNoW=" + appsNoW);
+            Tools.HangarLog("autoHeight true (start), appsNoW=" + appsNoW);
         }
         int filledConts = 0;
         int filledRows = 1;
-        for (int i=0; i < appList.size(); i++) {
+        Tools.HangarLog("appsNoW: " + appsNoW + " appList.size(): " + appList.size() + " numOfIcons: " + numOfIcons);
+        for (int i=0; i <= gridSize; i++) {
             RemoteViews item = new RemoteViews(context.getPackageName(), itemLayout);
 
-            if (filledConts == appsNoW || i == (appList.size()-1)) {
+            if (filledConts == appsNoW || i == (gridSize)) {
+                Tools.HangarLog("i: " + i + " filledConts: " + filledConts);
                 views.addView(R.id.viewCont, row);
-                if (filledRows < appsNoH && filledConts < origWidth) {
+                if (filledRows < appsNoH && (filledConts < numOfIcons && appList.size() > i)) {
                     row = new RemoteViews(context.getPackageName(), rowLayout);
                     row.setInt(R.id.viewRow, "setBackgroundColor", getBackgroundColor);
 
@@ -247,22 +257,21 @@ public class AppsWidget extends AppWidgetProvider {
             int resID = context.getResources().getIdentifier("imageButton", "id", taskPackage);
             int contID = context.getResources().getIdentifier("imageCont", "id", taskPackage);
 
-            if (i >= origWidth) {
+            if (i >= numOfIcons || i >= appList.size()) {
                 item.setViewVisibility(contID, View.INVISIBLE);
                 row.addView(R.id.viewRow, item);
                 continue;
             }
 
             // item.setViewVisibility(contID, View.VISIBLE);
-            Log.d(Settings.TAG, "Setting cont visible: " + filledConts + " [" + appList.get(i).appName + "]");
+            Tools.HangarLog("Setting cont visible: " + filledConts + " [" + appList.get(i).appName + "]");
 
             Drawable taskIcon, d;
             try {
                 ApplicationInfo appInfo = pkgm.getApplicationInfo(appList.get(i).packageName, 0);
                 taskIcon = appInfo.loadIcon(pkgm);
             } catch (Exception e) {
-                Log.d(Settings.TAG, "loadicon exception: " + e);
-                appList.remove(i);
+                Tools.HangarLog("loadicon exception: " + e);
                 continue;
             }
 
@@ -280,9 +289,10 @@ public class AppsWidget extends AppWidgetProvider {
             try {
                 intent = manager.getLaunchIntentForPackage(appList.get(i).packageName);
                 if (intent == null) {
-                    Log.d(Settings.TAG, "Couldn't get intent for ["+ appList.get(i).packageName +"] className:" + appList.get(i).className);
+                    Tools.HangarLog("Couldn't get intent for [" + appList.get(i).packageName + "] className:" + appList.get(i).className);
                     filledConts --;
-                    // item.setViewVisibility(contID, View.GONE);
+                    item.setViewVisibility(contID, View.GONE);
+                    row.addView(R.id.viewRow, item);
                     throw new PackageManager.NameNotFoundException();
                 }
                 intent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -290,6 +300,8 @@ public class AppsWidget extends AppWidgetProvider {
                 PendingIntent activity = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                 item.setOnClickPendingIntent(contID, activity);
             } catch (PackageManager.NameNotFoundException e) {
+                // grow numOfIcons since we're skipping this package.
+                numOfIcons++;
 
             }
             row.addView(R.id.viewRow, item);
@@ -318,7 +330,7 @@ public class AppsWidget extends AppWidgetProvider {
                     ComponentName task = recentTasks.get(0).baseActivity;
                     String taskPackage = task.getPackageName();
                     if (taskPackage.equals(Tools.getLauncher(context))) {
-                        Log.d("Apphangar", "We're in the launcher changing orientation!");
+                        Tools.HangarLog("We're in the launcher changing orientation!");
                         AppsWidget.this.onReceive(context, new Intent());
                     }
                 }

@@ -16,7 +16,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -31,11 +30,11 @@ import java.util.Random;
 import ca.mimic.apphangar.Tools.TaskInfo;
 
 public class WatchfulService extends Service {
-    String TAG = "Apphangar";
 
     TasksDataSource db;
 
     SharedPreferences prefs;
+    PackageManager pkgm;
     PowerManager pm;
 
     ArrayList<TaskInfo> taskList = new ArrayList<TaskInfo>();
@@ -85,7 +84,7 @@ public class WatchfulService extends Service {
             db = new TasksDataSource(this);
             db.open();
         }
-        Log.d(TAG, "starting up..");
+        Tools.HangarLog("starting up.. ");
 
         prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
         // prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -108,9 +107,10 @@ public class WatchfulService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "Getting prefs");
+        Tools.HangarLog("Getting prefs");
         prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
         // prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        pkgm = getApplicationContext().getPackageManager();
         launcherPackage = Tools.getLauncher(getApplicationContext());
         handler.removeCallbacks(scanApps);
         handler.post(scanApps);
@@ -119,13 +119,21 @@ public class WatchfulService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy service..");
+        Tools.HangarLog("onDestroy service..");
         handler.removeCallbacks(scanApps);
         db.close();
         super.onDestroy();
     }
 
-    protected boolean isBlacklisted(String packageName) {
+    protected boolean isBlacklistedOrBad(String packageName) {
+        try {
+            Intent intent = pkgm.getLaunchIntentForPackage(packageName);
+            if (intent == null)
+                throw new PackageManager.NameNotFoundException();
+
+        } catch (PackageManager.NameNotFoundException e) {
+            return true;
+        }
         for (String blTask : Tools.getBlacklisted(getApplicationContext(), db)) {
             if (packageName.equals(blTask)) {
                 return true;
@@ -140,7 +148,6 @@ public class WatchfulService extends Service {
             final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
             final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(MAX_RUNNING_TASKS);
 
-            PackageManager pkgm = getApplicationContext().getPackageManager();
             pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
             if (recentTasks.size() > 0) {
@@ -151,7 +158,7 @@ public class WatchfulService extends Service {
                 if (launcherPackage != null && taskPackage.equals(launcherPackage)) {
                     if (!topPackage.equals(taskPackage)) {
                         // First time in launcher?  Update the widget!
-                        Log.d(TAG, "Found launcher -- Calling updateWidget!");
+                        Tools.HangarLog("Found launcher -- Calling updateWidget!");
                         Tools.updateWidget(getApplicationContext());
                     }
                     topPackage = taskPackage;
@@ -165,9 +172,9 @@ public class WatchfulService extends Service {
                     TaskInfo runningTask = Tools.getTask(taskPackage, taskList);
                     if (runningTask != null && pm.isScreenOn()) {
                         runningTask.seconds += LOOP_SECONDS;
-                        Log.d(TAG, "Task [" + runningTask.appName + "] in fg [" + runningTask.seconds + "]s");
+                        Tools.HangarLog("Task [" + runningTask.appName + "] in fg [" + runningTask.seconds + "]s");
                         if (runningTask.seconds >= LOOP_SECONDS * 5) {
-                            Log.d(TAG, "Dumping task [" + runningTask.appName + "] to DB [" + runningTask.seconds + "]s");
+                            Tools.HangarLog("Dumping task [" + runningTask.appName + "] to DB [" + runningTask.seconds + "]s");
                             db.addSeconds(taskPackage, runningTask.seconds);
                             runningTask.totalseconds += runningTask.seconds;
                             runningTask.seconds = 0;
@@ -186,7 +193,7 @@ public class WatchfulService extends Service {
                     if (taskPackage.equals(topPackage))
                         continue;
 
-                    if (isBlacklisted(taskPackage))
+                    if (isBlacklistedOrBad(taskPackage))
                         continue;
 
                     boolean skipTask = false;
@@ -211,7 +218,7 @@ public class WatchfulService extends Service {
                         continue;
                     }
 
-                    Log.d(TAG, "Adding to taskList [" + dbTask.appName + "] [" + dbTask.launches + "] [" + dbTask.totalseconds + "]s");
+                    Tools.HangarLog("Adding to taskList [" + dbTask.appName + "] [" + dbTask.launches + "] [" + dbTask.totalseconds + "]s");
                     taskList.add(dbTask);
                 }
             }
@@ -223,7 +230,7 @@ public class WatchfulService extends Service {
                 String taskPackage = task.getPackageName();
 
                 ApplicationInfo appInfo = pkgm.getApplicationInfo(taskPackage, 0);
-                if (isBlacklisted(taskPackage))
+                if (isBlacklistedOrBad(taskPackage))
                     continue;
 
                 TaskInfo newInfo = new TaskInfo();
@@ -236,19 +243,19 @@ public class WatchfulService extends Service {
                     newInfo.launches = launches;
                     newInfo.totalseconds = db.getSeconds(newInfo.packageName);
 
-                    Log.d(TAG, "Launches [" + newInfo.appName + "] [" + launches + "]");
+                    Tools.HangarLog("Launches [" + newInfo.appName + "] [" + launches + "]");
                     taskList.add(0, newInfo);
-                    Log.d(TAG, "Added [" + newInfo.appName + "] to taskList.  Size=[" + taskList.size() + "]");
-                    Log.d(TAG, "Just adding latest item to taskList");
+                    Tools.HangarLog("Added [" + newInfo.appName + "] to taskList.  Size=[" + taskList.size() + "]");
+                    Tools.HangarLog("Just adding latest item to taskList");
                     for (int j=1; j < taskList.size(); j++) {
                         if (taskList.get(j).packageName.equals(taskList.get(0).packageName)) {
-                            // Log.d(TAG, "Duplicate task found at [" + j + "] -- removing..");
+                            // Tools.HangarLog("Duplicate task found at [" + j + "] -- removing..");
                             taskList.remove(j);
                         }
                     }
                     break;
                 } else if (origSize == 0) {
-                    if (isBlacklisted(newInfo.packageName)) {
+                    if (isBlacklistedOrBad(newInfo.packageName)) {
                         continue;
                     }
 
@@ -273,7 +280,7 @@ public class WatchfulService extends Service {
 
     protected final Runnable scanApps = new Runnable(){
         public void run(){
-            // Log.d(TAG, "scanApps running..");
+            // Tools.HangarLog("scanApps running..");
             buildTasks();
             handler.postDelayed(this, LOOP_SECONDS * 1000);
         }
@@ -281,13 +288,13 @@ public class WatchfulService extends Service {
     public int updateOrAdd(TaskInfo newInfo) {
         int rows = db.updateTaskTimestamp(newInfo.packageName);
         if (rows > 0) {
-            Log.d(TAG, "Updated task [" + newInfo.appName + "] with new Timestamp");
+            Tools.HangarLog("Updated task [" + newInfo.appName + "] with new Timestamp");
 
             return db.increaseLaunch(newInfo.packageName);
         } else {
             Date date = new Date();
             SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Log.d(TAG, "Added task [" + newInfo.appName + "] to database date=[" + dateFormatter.format(date) + "]");
+            Tools.HangarLog("Added task [" + newInfo.appName + "] to database date=[" + dateFormatter.format(date) + "]");
             db.createTask(newInfo.appName, newInfo.packageName, newInfo.className, dateFormatter.format(date));
             return 1;
         }
@@ -295,7 +302,7 @@ public class WatchfulService extends Service {
     public void destroyNotification() {
         // topPackage = null;
         // handler.removeCallbacks(scanApps);
-        Log.d(TAG, "DESTROY");
+        Tools.HangarLog("DESTROY");
         stopForeground(true);
         // NotificationManager NotificationManager = (NotificationManager)
         //         getSystemService(Context.NOTIFICATION_SERVICE);
@@ -303,7 +310,7 @@ public class WatchfulService extends Service {
 
     }
     protected void clearContainers(RemoteViews customNotifView, int start, Context mContext) {
-        Log.d(TAG, "Clearing containers " + start + "-" + TOTAL_CONTAINERS);
+        Tools.HangarLog("Clearing containers " + start + "-" + TOTAL_CONTAINERS);
         for (int i=start; i < TOTAL_CONTAINERS; i++) {
             int contID = getResources().getIdentifier("imageCont" + (i + 1), "id", mContext.getPackageName());
             customNotifView.setViewVisibility(contID, View.GONE);
@@ -327,7 +334,6 @@ public class WatchfulService extends Service {
     public void createNotification() {
         // prefs = this.getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS);
         // Not a fun hack.  No way around it until they let you do getInt for setShowDividers!
-        PackageManager pkgm = getApplicationContext().getPackageManager();
         RemoteViews customNotifView;
         String taskPackage = this.getPackageName();
 
@@ -356,7 +362,7 @@ public class WatchfulService extends Service {
         if (maxButtons < TOTAL_CONTAINERS)
             clearContainers(customNotifView, maxButtons, getApplicationContext());
 
-        Log.d(TAG, "taskList.size(): " + taskList.size() + " realmaxbuttons: " + realMaxButtons + " maxbuttons: " + maxButtons);
+        Tools.HangarLog("taskList.size(): " + taskList.size() + " realmaxbuttons: " + realMaxButtons + " maxbuttons: " + maxButtons);
         int filledConts = 0;
 
         for (int i=0; i < taskList.size(); i++) {
@@ -364,7 +370,7 @@ public class WatchfulService extends Service {
             int contID = getResources().getIdentifier("imageCont" + (filledConts+1), "id", taskPackage);
 
             if (filledConts == maxButtons) {
-                // Log.d(TAG, "filledConts [" + filledConts + "] == maxButtons [" + maxButtons + "]");
+                // Tools.HangarLog("filledConts [" + filledConts + "] == maxButtons [" + maxButtons + "]");
                 break;
             }
 
@@ -394,7 +400,7 @@ public class WatchfulService extends Service {
             try {
                 intent = manager.getLaunchIntentForPackage(taskList.get(i).packageName);
                 if (intent == null) {
-                    Log.d(TAG, "Couldn't get intent for ["+ taskList.get(i).packageName +"] className:" + taskList.get(i).className);
+                    Tools.HangarLog("Couldn't get intent for ["+ taskList.get(i).packageName +"] className:" + taskList.get(i).className);
                     filledConts --;
                     customNotifView.setViewVisibility(contID, View.GONE);
                     throw new PackageManager.NameNotFoundException();

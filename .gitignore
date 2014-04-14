@@ -5,3 +5,4 @@
 .idea/libraries/*
 Apphangar/Apphangar-Apphangar.apk
 .idea/gradle.xml
+Apphangar/sign.gradle

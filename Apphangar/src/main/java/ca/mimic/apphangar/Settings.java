@@ -55,8 +55,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
     private static TasksDataSource db;
     // private Context mContext;
 
-    final static String TAG = "Apphangar";
-
     final static String VERSION_CHECK = "version_check";
 
     final static String DIVIDER_PREFERENCE = "divider_preference";
@@ -450,14 +448,14 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
                         try {
                             PackageManager pm = getApplicationContext().getPackageManager();
-                            // Log.d(TAG, "Trying to grab AppInfo class[" + task.getClassName()+ "] package[" + task.getPackageName() + "]");
+                            // Tools.HangarLog("Trying to grab AppInfo class[" + task.getClassName()+ "] package[" + task.getPackageName() + "]");
                             ComponentName componentTask = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
                             ApplicationInfo appInfo = pm.getApplicationInfo(componentTask.getPackageName(), 0);
 
                             taskName.setText(task.getName());
                             taskIcon.setImageDrawable(appInfo.loadIcon(pm));
                         } catch (Exception e) {
-                            Log.d(TAG, "Could not find Application info for [" + task.getName() + "]");
+                            Tools.HangarLog("Could not find Application info for [" + task.getName() + "]");
                             continue;
                         }
 
@@ -490,7 +488,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         float adjustedWidth = maxWidth * secondsRatio;
                         barContLayout.width = Math.round(adjustedWidth);
 
-                        // Log.d(TAG, "Blacklisted? [" + task.getBlacklisted() + "]");
+                        // Tools.HangarLog("Blacklisted? [" + task.getBlacklisted() + "]");
                         if (task.getBlacklisted()) {
                             fadeTask(taskRL, taskName);
                         }
@@ -599,7 +597,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         Preference.OnPreferenceChangeListener changeListener = new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(final Preference preference, Object newValue) {
-                Log.d(TAG, "onPreferenceChange pref.getKey=[" + preference.getKey() + "] newValue=[" + newValue + "]");
+                Tools.HangarLog("onPreferenceChange pref.getKey=[" + preference.getKey() + "] newValue=[" + newValue + "]");
 
                 final SharedPreferences prefs2 = prefs.prefsGet();
                 final SharedPreferences.Editor editor = prefs.editorGet();

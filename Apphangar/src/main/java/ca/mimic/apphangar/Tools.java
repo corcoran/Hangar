@@ -15,6 +15,13 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Tools {
+    final static String TAG = "Apphangar";
+
+    protected static void HangarLog(String message) {
+        if (BuildConfig.BUILD_TYPE.equals("debug"))
+            Log.d(TAG, message);
+    }
+
     protected static String getLauncher(Context context) {
         final Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
@@ -154,7 +161,7 @@ public class Tools {
     protected static ArrayList<TaskInfo> reorderTasks(ArrayList<TaskInfo> taskList, TasksDataSource db, int weightPriority) {
         int highestSeconds = db.getHighestSeconds();
         int highestLaunch = db.getHighestLaunch();
-        Log.d(Settings.TAG, "highest Launch [" + highestLaunch + "] Seconds [" + highestSeconds + "]");
+        HangarLog("highest Launch [" + highestLaunch + "] Seconds [" + highestSeconds + "]");
         int count = 1;
         int subtractor = taskList.size() + 1;
 
@@ -191,7 +198,7 @@ public class Tools {
         Collections.sort(taskListE, new TaskComparator("final", weightPriority));
         taskList.clear();
         for (TaskInfoOrder taskE : taskListE) {
-            Log.d(Settings.TAG, "task[" + taskE.getOrig().appName + "] l[" + taskE.launchOrder + "] p[" + taskE.placeOrder + "] s[" + taskE.secondsOrder + "]");
+            HangarLog("task[" + taskE.getOrig().appName + "] l[" + taskE.launchOrder + "] p[" + taskE.placeOrder + "] s[" + taskE.secondsOrder + "]");
             taskList.add(taskE.getOrig());
         }
         return taskList;

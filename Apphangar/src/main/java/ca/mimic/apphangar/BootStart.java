@@ -13,12 +13,12 @@ public class BootStart extends BroadcastReceiver {
         prefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
 
         if (prefs.getBoolean(Settings.BOOT_PREFERENCE, Settings.BOOT_DEFAULT)) {
-            Log.d(Settings.TAG, "Starting WatchfulService on boot");
+            Tools.HangarLog("Starting WatchfulService on boot");
 
             Intent intent = new Intent(context, WatchfulService.class);
             context.startService(intent);
         } else {
-            Log.d(Settings.TAG, "Start on boot [" + prefs.getBoolean(Settings.BOOT_PREFERENCE, Settings.BOOT_DEFAULT)  + "] or Notification disabled [" + prefs.getBoolean(Settings.TOGGLE_PREFERENCE, Settings.TOGGLE_DEFAULT) + "]");
+            Tools.HangarLog("Start on boot [" + prefs.getBoolean(Settings.BOOT_PREFERENCE, Settings.BOOT_DEFAULT)  + "] or Notification disabled [" + prefs.getBoolean(Settings.TOGGLE_PREFERENCE, Settings.TOGGLE_DEFAULT) + "]");
         }
     }
 }

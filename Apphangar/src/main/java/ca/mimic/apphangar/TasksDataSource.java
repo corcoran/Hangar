@@ -12,7 +12,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class TasksDataSource {
 
@@ -54,7 +53,7 @@ public class TasksDataSource {
             cursor.close();
             return newTasks;
         } catch (ParseException e) {
-            Log.d("Apphangar", "createTask timestamp parse error [" + e + "]");
+            Tools.HangarLog("createTask timestamp parse error [" + e + "]");
         }
 
         return null;
@@ -69,7 +68,7 @@ public class TasksDataSource {
                     + Tasks.COLUMN_ID + " = " + id);
             return task.getSeconds() + seconds;
         } catch (Exception e) {
-            Log.d(Settings.TAG, "Exception for addSeconds [" + name + "]");
+            Tools.HangarLog("Exception for addSeconds [" + name + "]");
             e.printStackTrace();
         }
         return 0;
@@ -92,7 +91,7 @@ public class TasksDataSource {
                     + Tasks.COLUMN_ID + " = " + id);
             return task.getLaunches() + 1;
         } catch (Exception e) {
-            Log.d(Settings.TAG, "Exception for increaseLaunch [" + name + "]");
+            Tools.HangarLog("Exception for increaseLaunch [" + name + "]");
         }
         return 0;
     }
@@ -102,16 +101,16 @@ public class TasksDataSource {
         //        allColumns, Tasks.COLUMN_SECONDS + " = (SELECT MAX(seconds))",
         //        null, null, null, null);
         Cursor cursor = database.query(Tasks.TABLE_TASKS, new String [] {"MAX(" + Tasks.COLUMN_SECONDS + ")"}, Tasks.COLUMN_BLACKLISTED + " = " + 0, null, null, null, null);
-        // Log.d("Apphangar", "getHighestSeconds cursor:" + cursor.getInt(0));
+        // Tools.HangarLog("getHighestSeconds cursor:" + cursor.getInt(0));
         try {
             while (cursor.moveToFirst()) {
                 return cursor.getInt(0);
                 //TasksModel task = cursorToTasks(cursor);
-                //Log.d("Apphangar", "highest Seconds [" + task.getName() + "] s[" + task.getSeconds() + "]");
+                //Tools.HangarLog("highest Seconds [" + task.getName() + "] s[" + task.getSeconds() + "]");
                 //return task.getSeconds();
             }
         //} catch (ParseException e) {
-        //    Log.d("Apphangar", "getHighestSeconds parse error [" + e + "]");
+        //    Tools.HangarLog("getHighestSeconds parse error [" + e + "]");
         } finally {
             cursor.close();
         }
@@ -146,7 +145,7 @@ public class TasksDataSource {
                 return task;
             }
         } catch (ParseException e) {
-            Log.d("Apphangar", "getTask parse error [" + e + "]");
+            Tools.HangarLog("getTask parse error [" + e + "]");
         } finally {
             cursor.close();
         }
@@ -182,7 +181,7 @@ public class TasksDataSource {
                 tasks.add(task);
                 cursor.moveToNext();
             } catch (ParseException e) {
-                Log.d("Apphangar", "blacklistTask parse error [" + e + "]");
+                Tools.HangarLog("blacklistTask parse error [" + e + "]");
             }
         }
         // make sure to close the cursor
@@ -213,7 +212,7 @@ public class TasksDataSource {
                 tasks.add(task);
                 cursor.moveToNext();
             } catch (ParseException e) {
-                Log.d("Apphangar", "getAllTasks parse error [" + e + "]");
+                Tools.HangarLog("getAllTasks parse error [" + e + "]");
             }
         }
         // make sure to close the cursor
