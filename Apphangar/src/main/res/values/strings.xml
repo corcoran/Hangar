@@ -117,16 +117,19 @@
 
     <!-- ChangeLog -->
     <string-array name="versionNumbers">
-        <item>1.14</item>
-        <item>1.13</item>
-        <item>1.12</item>
-        <item>1.11</item>
-        <item>1.10</item>
+        <item>1.14 (Apr 14th)</item>
+        <item>1.13 (Apr 6th)</item>
+        <item>1.12 (Apr 5th)</item>
+        <item>1.11 (Apr 2nd)</item>
+        <item>1.10 (Apr 1st)</item>
     </string-array>
 
     <string-array name="versionSummaries">
         <item>
-"    &#8226; [New!] Apps widget"</item>
+"    &#8226; [New!] Apps widget
+    &#8226; Removed debug logging
+    &#8226; Removed debug logging
+            "</item>
         <item>
 "    &#8226; [New!] Changelog pop-up screen
     &#8226; [Fix!] 4.3 Navbar launcher size issue fixed

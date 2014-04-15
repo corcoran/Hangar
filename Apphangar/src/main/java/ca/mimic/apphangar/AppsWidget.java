@@ -116,13 +116,13 @@ public class AppsWidget extends AppWidgetProvider {
         int appsNoW;
         boolean autoHeight = true;
 
-        Tools.HangarLog("jeff minHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT));
-        Tools.HangarLog("jeff maxHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
-        Tools.HangarLog("jeff minWidth: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH));
-        Tools.HangarLog("jeff maxWidth: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH));
+        Tools.HangarLog("minHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT));
+        Tools.HangarLog("maxHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
+        Tools.HangarLog("minWidth: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH));
+        Tools.HangarLog("maxWidth: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH));
         appsNoH = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) - ICON_ROW_BUFFER) / itemHeight);
         appsNoW = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) - ICON_ROW_BUFFER) / itemWidth);
-        Tools.HangarLog("jeff appsNoH: " + appsNoH + " appsNoW: " + appsNoW);
+        Tools.HangarLog("appsNoH: " + appsNoH + " appsNoW: " + appsNoW);
 
         if (appsNoH == 0) {
             appsNoH = 1;
