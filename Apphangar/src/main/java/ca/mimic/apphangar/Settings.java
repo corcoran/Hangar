@@ -133,15 +133,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         prefs = new PrefsGet(getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS));
 
         if (showChangelog(prefs)) {
-            ChangeLog changelog = new ChangeLog();
-            View mChg = changelog.getView();
-            mChg.refreshDrawableState();
-            new AlertDialog.Builder(Settings.this)
-                    .setTitle(R.string.changelog_title)
-                    .setIcon(R.drawable.ic_launcher)
-                    .setView(mChg)
-                    .setPositiveButton(R.string.changelog_accept_button, null)
-                    .show();
+            launchChangelog();
         }
         // SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         // startService(new Intent(this, WatchfulService.class));
@@ -223,6 +215,18 @@ public class Settings extends Activity implements ActionBar.TabListener {
         super.onDestroy();
     }
 
+    protected void launchChangelog() {
+        ChangeLog changelog = new ChangeLog(this);
+        View mChg = changelog.getView();
+        mChg.refreshDrawableState();
+        new AlertDialog.Builder(Settings.this)
+                .setTitle(R.string.changelog_title)
+                .setIcon(R.drawable.ic_launcher)
+                .setView(mChg)
+                .setPositiveButton(R.string.changelog_accept_button, null)
+                .show();
+    }
+
     ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className,
                                        IBinder binder) {
@@ -255,57 +259,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
             mEditor.putString(Settings.VERSION_CHECK, hangarVersion);
             mEditor.apply();
             return true;
-        }
-    }
-    protected class ChangeLog {
-        ChangeLog() {
-        }
-        public View getView() {
-            Context context = getApplicationContext();
-            LayoutInflater inflater = getLayoutInflater();
-            View mChangeLog = inflater.inflate(R.layout.changelog, null);
-            LinearLayout mChangeLogRoot = (LinearLayout) mChangeLog.findViewById(R.id.changeParent);
-
-            String[] versionNumbers = getResources().getStringArray(R.array.versionNumbers);
-            String[] versionSummaries = getResources().getStringArray(R.array.versionSummaries);
-
-            for (int i = 0; i < versionNumbers.length; i++) {
-                String version = versionNumbers[i];
-                String summary = versionSummaries[i];
-
-                LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                llp.topMargin = Tools.dpToPx(context, 10);
-                llp.leftMargin = Tools.dpToPx(context, 10);
-                LinearLayout ll = new LinearLayout(context);
-                ll.setOrientation(LinearLayout.VERTICAL);
-
-                ll.setLayoutParams(llp);
-
-                LinearLayout.LayoutParams llttv = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
-                llttv.bottomMargin = Tools.dpToPx(context, 2);
-                TextView titletv = new TextView(context);
-                titletv.setLayoutParams(llttv);
-                titletv.setText(version);
-                titletv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                titletv.setTypeface(null, Typeface.BOLD);
-                titletv.setGravity(Gravity.CENTER_VERTICAL);
-                titletv.setSingleLine();
-
-                LinearLayout.LayoutParams llstv = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
-                TextView summarytv = new TextView(context);
-                llstv.bottomMargin = Tools.dpToPx(context, 8);
-                summarytv.setLayoutParams(llstv);
-                summarytv.setGravity(Gravity.CENTER_VERTICAL);
-
-                summarytv.setText(summary);
-                summarytv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-
-                ll.addView(titletv);
-                ll.addView(summarytv);
-                mChangeLogRoot.addView(ll);
-            }
-            mChangeLog.invalidate();
-            return mChangeLog;
         }
     }
     protected static class ServiceCall  {
@@ -376,8 +329,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
             startActivity(new Intent(mContext, AppsWidgetSettings.class));
             return true;
         } else if (id == R.id.action_changelog) {
-            startActivityForResult(new Intent(mContext, ChangeLog.class), 0);
-            finish();
+            launchChangelog();
             return true;
         }
         return super.onOptionsItemSelected(item);
