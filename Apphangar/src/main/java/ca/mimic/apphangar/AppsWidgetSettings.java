@@ -200,8 +200,6 @@ public class AppsWidgetSettings extends PreferenceActivity {
                 } else if (preference.getKey().equals(Settings.ICON_COLOR_PREFERENCE)) {
                     String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String.valueOf(newValue)));
                     preference.setSummary(hex);
-                } else if (preference.getKey().equals(Settings.ICON_SIZE_PREFERENCE)) {
-                    icon_size_preference.goDefault(String.format(getResources().getString(R.string.summary_icon_size_preference), (String) newValue));
                 }
                 return true;
             }
