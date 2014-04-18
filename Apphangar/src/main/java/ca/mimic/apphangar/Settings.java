@@ -33,6 +33,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +43,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
@@ -130,6 +132,17 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
         prefs = new PrefsGet(getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS));
 
+        if (showChangelog(prefs)) {
+            ChangeLog changelog = new ChangeLog();
+            View mChg = changelog.getView();
+            mChg.refreshDrawableState();
+            new AlertDialog.Builder(Settings.this)
+                    .setTitle(R.string.changelog_title)
+                    .setIcon(R.drawable.ic_launcher)
+                    .setView(mChg)
+                    .setPositiveButton(R.string.changelog_accept_button, null)
+                    .show();
+        }
         // SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         // startService(new Intent(this, WatchfulService.class));
 
@@ -223,6 +236,78 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
     };
 
+    protected boolean showChangelog(PrefsGet prefs) {
+        SharedPreferences mPrefs = prefs.prefsGet();
+        SharedPreferences.Editor mEditor = prefs.editorGet();
+
+        String hangarVersion = null;
+        try {
+            hangarVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            String[] versionArray = hangarVersion.split("\\."); // Only get major.minor
+            hangarVersion = versionArray[0] + "." + versionArray[1];
+        } catch (PackageManager.NameNotFoundException e) {}
+
+        String whichVersion = mPrefs.getString(Settings.VERSION_CHECK, null);
+
+        if (whichVersion != null && whichVersion.equals(hangarVersion)) {
+            return false;
+        } else {
+            mEditor.putString(Settings.VERSION_CHECK, hangarVersion);
+            mEditor.apply();
+            return true;
+        }
+    }
+    protected class ChangeLog {
+        ChangeLog() {
+        }
+        public View getView() {
+            Context context = getApplicationContext();
+            LayoutInflater inflater = getLayoutInflater();
+            View mChangeLog = inflater.inflate(R.layout.changelog, null);
+            LinearLayout mChangeLogRoot = (LinearLayout) mChangeLog.findViewById(R.id.changeParent);
+
+            String[] versionNumbers = getResources().getStringArray(R.array.versionNumbers);
+            String[] versionSummaries = getResources().getStringArray(R.array.versionSummaries);
+
+            for (int i = 0; i < versionNumbers.length; i++) {
+                String version = versionNumbers[i];
+                String summary = versionSummaries[i];
+
+                LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                llp.topMargin = Tools.dpToPx(context, 10);
+                llp.leftMargin = Tools.dpToPx(context, 10);
+                LinearLayout ll = new LinearLayout(context);
+                ll.setOrientation(LinearLayout.VERTICAL);
+
+                ll.setLayoutParams(llp);
+
+                LinearLayout.LayoutParams llttv = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+                llttv.bottomMargin = Tools.dpToPx(context, 2);
+                TextView titletv = new TextView(context);
+                titletv.setLayoutParams(llttv);
+                titletv.setText(version);
+                titletv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                titletv.setTypeface(null, Typeface.BOLD);
+                titletv.setGravity(Gravity.CENTER_VERTICAL);
+                titletv.setSingleLine();
+
+                LinearLayout.LayoutParams llstv = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+                TextView summarytv = new TextView(context);
+                llstv.bottomMargin = Tools.dpToPx(context, 8);
+                summarytv.setLayoutParams(llstv);
+                summarytv.setGravity(Gravity.CENTER_VERTICAL);
+
+                summarytv.setText(summary);
+                summarytv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+
+                ll.addView(titletv);
+                ll.addView(summarytv);
+                mChangeLogRoot.addView(ll);
+            }
+            mChangeLog.invalidate();
+            return mChangeLog;
+        }
+    }
     protected static class ServiceCall  {
         Context mContext;
         ServiceConnection mConnection;
