@@ -237,9 +237,11 @@ public class AppsWidget extends AppWidgetProvider {
         for (int i=0; i <= gridSize; i++) {
             RemoteViews item = new RemoteViews(context.getPackageName(), itemLayout);
 
-            if (filledConts == appsNoW || i == (gridSize)) {
+            if (filledConts == appsNoW || (i == gridSize)) {
                 Tools.HangarLog("i: " + i + " filledConts: " + filledConts);
                 views.addView(R.id.viewCont, row);
+                if (i >= numOfIcons && !appsNoByWidgetSize)
+                    break;
                 if (filledRows < appsNoH && (filledConts < numOfIcons && appList.size() > i)) {
                     row = new RemoteViews(context.getPackageName(), rowLayout);
                     row.setInt(R.id.viewRow, "setBackgroundColor", getBackgroundColor);
@@ -247,7 +249,6 @@ public class AppsWidget extends AppWidgetProvider {
                     filledConts = 0;
                     filledRows++;
                 } else {
-                    // Log.d(TAG, "filledConts [" + filledConts + "] == maxButtons [" + maxButtons + "]");
                     break;
                 }
             }

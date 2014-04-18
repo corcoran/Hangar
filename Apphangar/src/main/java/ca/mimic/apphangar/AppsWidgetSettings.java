@@ -25,8 +25,8 @@ import ca.mimic.apphangar.Settings.PrefsGet;
 
 public class AppsWidgetSettings extends PreferenceActivity {
 
-    final static int WIDGET_3X3_DEFAULT_APPSNO = 6;
-    final static int WIDGET_3X3_DEFAULT_APPSNO_LS = 3;
+    final static int APPS_WIDGET_DEFAULT_APPSNO = 4;
+    final static int APPS_WIDGET_DEFAULT_APPSNO_LS = 9;
 
     static PrefsGet prefs;
     static Context mContext;
@@ -126,8 +126,8 @@ public class AppsWidgetSettings extends PreferenceActivity {
         {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.layout.apps_widget_settings);
-            int defaultAppsNo = WIDGET_3X3_DEFAULT_APPSNO;
-            int defaultAppsNoLs = WIDGET_3X3_DEFAULT_APPSNO_LS;
+            int defaultAppsNo = APPS_WIDGET_DEFAULT_APPSNO;
+            int defaultAppsNoLs = APPS_WIDGET_DEFAULT_APPSNO_LS;
 
             SharedPreferences mPrefs = prefs.prefsGet();
 
@@ -201,7 +201,7 @@ public class AppsWidgetSettings extends PreferenceActivity {
                     String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String.valueOf(newValue)));
                     preference.setSummary(hex);
                 } else if (preference.getKey().equals(Settings.ICON_SIZE_PREFERENCE)) {
-                    appnos_preference.goDefault(String.format(getResources().getString(R.string.summary_icon_size_preference), (String) newValue));
+                    icon_size_preference.goDefault(String.format(getResources().getString(R.string.summary_icon_size_preference), (String) newValue));
                 }
                 return true;
             }
