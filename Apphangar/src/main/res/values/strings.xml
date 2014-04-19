@@ -282,7 +282,7 @@
 
     <string-array name="entries_alignment_preference">
         <item>Top</item>
-        <item>Middle (default)</item>
+        <item>Center (default)</item>
         <item>Bottom</item>
     </string-array>
 
