@@ -127,7 +127,6 @@ public class WatchfulService extends Service {
     }
 
     protected void buildReorderAndLaunch(boolean isToggled) {
-        Tools.HangarLog("buildReorderAndLaunch: isToggled: " + isToggled);
         if (isToggled) {
             ArrayList<Tools.TaskInfo> taskList;
             taskList = Tools.buildTaskList(getApplicationContext(), db, TASKLIST_QUEUE_SIZE);
