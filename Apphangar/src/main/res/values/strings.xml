@@ -276,4 +276,19 @@
         <item>11</item>
         <item>12</item>
     </string-array>
+
+    <string name="title_alignment_preference">Widget vertical alignment</string>
+    <string name="summary_alignment_preference">%s</string>
+
+    <string-array name="entries_alignment_preference">
+        <item>Top</item>
+        <item>Middle (default)</item>
+        <item>Bottom</item>
+    </string-array>
+
+    <string-array name="values_alignment_preference">
+        <item>48</item>
+        <item>16</item>
+        <item>80</item>
+    </string-array>
 </resources>

@@ -46,6 +46,14 @@
             android:defaultValue="0x00000000"
             alphaSlider="true" />
 
+        <ca.mimic.apphangar.UpdatingListPreference
+            android:key="alignment_preference"
+            android:title="@string/title_alignment_preference"
+            android:summary="@string/summary_alignment_preference"
+            android:entries="@array/entries_alignment_preference"
+            android:entryValues="@array/values_alignment_preference"
+            android:dialogTitle="@string/title_alignment_preference" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

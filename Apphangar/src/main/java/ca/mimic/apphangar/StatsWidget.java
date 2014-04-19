@@ -135,11 +135,13 @@ public class StatsWidget extends AppWidgetProvider {
         int getColor = mPrefs.getInt(Settings.BACKGROUND_COLOR_PREFERENCE, Settings.BACKGROUND_COLOR_DEFAULT);
 
         RemoteViews views = new RemoteViews(context.getPackageName(), statsLayout);
+        int mGravity = Integer.parseInt(mPrefs.getString(Settings.ALIGNMENT_PREFERENCE, Integer.toString(Settings.ALIGNMENT_DEFAULT)));
+        views.setInt(R.id.taskRoot, "setGravity", mGravity);
+        views.removeAllViews(R.id.taskRoot);
+
         PackageManager pkgm = context.getPackageManager();
         String packageName = context.getPackageName();
         Intent intent;
-
-        views.setInt(R.id.taskRoot, "setBackgroundColor", getColor);
 
         if (db == null) {
             db = new TasksDataSource(context);
@@ -152,23 +154,28 @@ public class StatsWidget extends AppWidgetProvider {
 
         int count = 0;
         for (TasksModel task : tasks) {
-            int appID = context.getResources().getIdentifier("appCont" + (count + 1), "id",
-                    packageName);
-            int iconID = context.getResources().getIdentifier("iconCont" + (count + 1), "id",
-                    packageName);
-            int labelID = context.getResources().getIdentifier("appName" + (count + 1), "id",
-                    packageName);
-            int imgID = context.getResources().getIdentifier("barImg" + (count + 1), "id",
-                    packageName);
-            int statsID = context.getResources().getIdentifier("statsCont" + (count + 1), "id",
-                    packageName);
+            RemoteViews row = new RemoteViews(context.getPackageName(), R.layout.stats_widget_row);
+
+            int topPadding = 0;
+            int bottomPadding = 0;
+
+            if (count == 0)
+                topPadding = Tools.dpToPx(context, 6);
+            if (count == (appsNo-1))
+                bottomPadding = Tools.dpToPx(context, 6);
+
+            row.setViewPadding(R.id.appCont, 0, topPadding, 0, bottomPadding);
+
+            int appID = context.getResources().getIdentifier("appCont", "id", packageName);
+            int iconID = context.getResources().getIdentifier("iconCont", "id", packageName);
+            int labelID = context.getResources().getIdentifier("appName", "id", packageName);
+            int imgID = context.getResources().getIdentifier("barImg", "id", packageName);
+            int statsID = context.getResources().getIdentifier("statsCont", "id", packageName);
 
             if (task.getBlacklisted()) { continue; }
             if (count >= appsNo) {
-                if (count == 12) { break; }
-                views.setViewVisibility(appID, View.GONE);
-                count++;
-                continue;
+                Tools.HangarLog("count: " + count + " appsNo: " + appsNo);
+                break;
             }
 
             Drawable taskIcon;
@@ -182,8 +189,8 @@ public class StatsWidget extends AppWidgetProvider {
             count++;
 
             Bitmap bmpIcon = ((BitmapDrawable) taskIcon).getBitmap();
-            views.setImageViewBitmap(iconID, bmpIcon);
-            views.setTextViewText(labelID, task.getName());
+            row.setImageViewBitmap(iconID, bmpIcon);
+            row.setTextViewText(labelID, task.getName());
 
             // int maxWidth = dpToPx(250) - dpToPx(32+14+14); // ImageView + Margin? + Stats text?
             float secondsRatio = (float) task.getSeconds() / highestSeconds;
@@ -205,11 +212,11 @@ public class StatsWidget extends AppWidgetProvider {
             Tools.HangarLog("bar1 dp: " + Tools.pxToDp(context, secondsColor * 2.55f));
             Drawable sd = new BarDrawable(colors);
             Bitmap bmpIcon2 = drawableToBitmap(sd);
-            views.setImageViewBitmap(imgID, bmpIcon2);
+            row.setImageViewBitmap(imgID, bmpIcon2);
 
             int[] statsTime = new Settings().splitToComponentTimes(task.getSeconds());
             String statsString = ((statsTime[0] > 0) ? statsTime[0] + "h " : "") + ((statsTime[1] > 0) ? statsTime[1] + "m " : "") + ((statsTime[2] > 0) ? statsTime[2] + "s " : "");
-            views.setTextViewText(statsID, statsString);
+            row.setTextViewText(statsID, statsString);
 
             try {
                 intent = pkgm.getLaunchIntentForPackage(task.getPackageName());
@@ -220,11 +227,14 @@ public class StatsWidget extends AppWidgetProvider {
                 intent.addCategory(Intent.CATEGORY_LAUNCHER);
                 intent.setAction("action" + (count));
                 PendingIntent activity = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-                views.setOnClickPendingIntent(appID, activity);
-                views.setViewVisibility(appID, View.VISIBLE);
+                row.setOnClickPendingIntent(appID, activity);
+                row.setViewVisibility(appID, View.VISIBLE);
             } catch (PackageManager.NameNotFoundException e) {
 
             }
+
+            row.setInt(R.id.appCont, "setBackgroundColor", getColor);
+            views.addView(R.id.taskRoot, row);
         }
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

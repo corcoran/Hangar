@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ca.mimic.apphangar"
     android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
-    android:versionCode="17"
-    android:versionName="1.14.2" >
+    android:versionCode="18"
+    android:versionName="1.14.3" >
 
     <uses-sdk
         android:minSdkVersion="16"

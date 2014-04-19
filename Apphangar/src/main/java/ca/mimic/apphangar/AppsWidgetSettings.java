@@ -59,6 +59,7 @@ public class AppsWidgetSettings extends PreferenceActivity {
         UpdatingListPreference appnos_ls_preference;
         UpdatingListPreference weight_priority_preference;
         UpdatingListPreference icon_size_preference;
+        UpdatingListPreference alignment_preference;
 
         public static StatsWidgetFragment newInstance() {
             return new StatsWidgetFragment();
@@ -119,6 +120,7 @@ public class AppsWidgetSettings extends PreferenceActivity {
             int intHex2 = ColorPickerPreference.convertToColorInt(String.valueOf(icon_color_preference.getSummary()));
             mEditor.putInt(Settings.ICON_COLOR_PREFERENCE, intHex2);
             mEditor.putString(Settings.ICON_SIZE_PREFERENCE, icon_size_preference.getValue());
+            mEditor.putString(Settings.ALIGNMENT_PREFERENCE, alignment_preference.getValue());
             mEditor.apply();
         }
         @Override
@@ -178,6 +180,11 @@ public class AppsWidgetSettings extends PreferenceActivity {
             icon_size_preference = (UpdatingListPreference)findPreference(Settings.ICON_SIZE_PREFERENCE);
             icon_size_preference.setValue(mPrefs.getString(Settings.ICON_SIZE_PREFERENCE, Integer.toString(Settings.ICON_SIZE_DEFAULT)));
             icon_size_preference.setOnPreferenceChangeListener(changeListener);
+
+            alignment_preference = (UpdatingListPreference)findPreference(Settings.ALIGNMENT_PREFERENCE);
+            alignment_preference.setValue(mPrefs.getString(Settings.ALIGNMENT_PREFERENCE,
+                    Integer.toString(Settings.ALIGNMENT_DEFAULT)));
+            alignment_preference.setOnPreferenceChangeListener(changeListener);
         }
         Preference.OnPreferenceChangeListener changeListener = new Preference.OnPreferenceChangeListener() {
             @Override

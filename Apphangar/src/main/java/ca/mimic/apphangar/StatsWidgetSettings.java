@@ -55,6 +55,7 @@ public class StatsWidgetSettings extends PreferenceActivity {
         SwitchPreference apps_by_widget_size_preference;
         UpdatingListPreference appnos_preference;
         UpdatingListPreference appnos_ls_preference;
+        UpdatingListPreference alignment_preference;
 
         public static StatsWidgetFragment newInstance() {
             return new StatsWidgetFragment();
@@ -110,6 +111,7 @@ public class StatsWidgetSettings extends PreferenceActivity {
             mEditor.putString(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE, appnos_ls_preference.getValue());
             int intHex = ColorPickerPreference.convertToColorInt(String.valueOf(background_color_preference.getSummary()));
             mEditor.putInt(Settings.BACKGROUND_COLOR_PREFERENCE, intHex);
+            mEditor.putString(Settings.ALIGNMENT_PREFERENCE, alignment_preference.getValue());
             mEditor.apply();
         }
         @Override
@@ -151,6 +153,11 @@ public class StatsWidgetSettings extends PreferenceActivity {
             if (apps_by_widget_size_preference.isChecked()) {
                 appnos_ls_preference.setSummary(R.string.automatic_appsno);
             }
+
+            alignment_preference = (UpdatingListPreference)findPreference(Settings.ALIGNMENT_PREFERENCE);
+            alignment_preference.setValue(mPrefs.getString(Settings.ALIGNMENT_PREFERENCE,
+                    Integer.toString(Settings.ALIGNMENT_DEFAULT)));
+            alignment_preference.setOnPreferenceChangeListener(changeListener);
         }
         Preference.OnPreferenceChangeListener changeListener = new Preference.OnPreferenceChangeListener() {
             @Override

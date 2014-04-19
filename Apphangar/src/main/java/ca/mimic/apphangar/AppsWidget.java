@@ -161,6 +161,10 @@ public class AppsWidget extends AppWidgetProvider {
         int getColor = mPrefs.getInt(Settings.ICON_COLOR_PREFERENCE, Settings.ICON_COLOR_DEFAULT);
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.apps_widget);
+
+        int mGravity = Integer.parseInt(mPrefs.getString(Settings.ALIGNMENT_PREFERENCE, Integer.toString(Settings.ALIGNMENT_DEFAULT)));
+        views.setInt(R.id.viewCont, "setGravity", mGravity);
+
         views.removeAllViews(R.id.viewCont);
         PackageManager pkgm = context.getPackageManager();
 

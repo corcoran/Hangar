@@ -30,10 +30,8 @@ import android.preference.SwitchPreference;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,7 +41,6 @@ import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
@@ -74,6 +71,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String STATS_WIDGET_APPSNO_LS_PREFERENCE = "stats_widget_appsno_ls_preference";
     final static String APPS_BY_WIDGET_SIZE_PREFERENCE = "apps_by_widget_size_preference";
     final static String ICON_SIZE_PREFERENCE = "icon_size_preference";
+    final static String ALIGNMENT_PREFERENCE = "alignment_preference";
 
 
     protected static View appsView;
@@ -101,6 +99,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int BACKGROUND_COLOR_DEFAULT = 0x5e000000;
     final static int STATS_WIDGET_APPSNO_DEFAULT = 6;
     final static int STATS_WIDGET_APPSNO_LS_DEFAULT = 3;
+    final static int ALIGNMENT_DEFAULT = 16; // 16 is middle
 
     final static String STATUSBAR_ICON_WHITE_WARM = "**white_warm**";
     final static String STATUSBAR_ICON_WHITE_COLD = "**white_cold**";
