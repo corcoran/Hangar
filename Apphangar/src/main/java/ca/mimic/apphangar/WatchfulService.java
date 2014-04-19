@@ -37,14 +37,16 @@ public class WatchfulService extends Service {
     PackageManager pkgm;
     PowerManager pm;
 
-    ArrayList<TaskInfo> taskList = new ArrayList<TaskInfo>();
-    String topPackage = null;
+    // ArrayList<TaskInfo> taskList = new ArrayList<TaskInfo>();
+    TaskInfo runningTask;
     String launcherPackage = null;
 
     int MAX_RUNNING_TASKS = 20;
     int TASKLIST_QUEUE_SIZE = 12;
     int TOTAL_CONTAINERS = 9;
     int LOOP_SECONDS = 3;
+
+    boolean isNotificationRunning;
 
     Map<String, Integer> iconMap;
 
@@ -55,8 +57,7 @@ public class WatchfulService extends Service {
         return new IWatchfulService.Stub() {
             @Override
             public void clearTasks() {
-                topPackage = null;
-                taskList.clear();
+                runningTask = null;
             }
             @Override
             public void runScan() {
@@ -125,26 +126,20 @@ public class WatchfulService extends Service {
         super.onDestroy();
     }
 
-    protected boolean isBlacklistedOrBad(String packageName) {
-        try {
-            Intent intent = pkgm.getLaunchIntentForPackage(packageName);
-            if (intent == null)
-                throw new PackageManager.NameNotFoundException();
-
-        } catch (PackageManager.NameNotFoundException e) {
-            return true;
+    protected void buildReorderAndLaunch(boolean isToggled) {
+        Tools.HangarLog("buildReorderAndLaunch: isToggled: " + isToggled);
+        if (isToggled) {
+            ArrayList<Tools.TaskInfo> taskList;
+            taskList = Tools.buildTaskList(getApplicationContext(), db, TASKLIST_QUEUE_SIZE);
+            reorderAndLaunch(taskList);
         }
-        for (String blTask : Tools.getBlacklisted(getApplicationContext(), db)) {
-            if (packageName.equals(blTask)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     protected void buildTasks() {
         // prefs = getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS);
         try {
+            boolean isToggled = prefs.getBoolean(Settings.TOGGLE_PREFERENCE, Settings.TOGGLE_DEFAULT);
+
             final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
             final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(MAX_RUNNING_TASKS);
 
@@ -156,25 +151,28 @@ public class WatchfulService extends Service {
                 String taskPackage = task.getPackageName();
 
                 if (launcherPackage != null && taskPackage.equals(launcherPackage)) {
-                    if (!topPackage.equals(taskPackage)) {
+                    if (runningTask == null || !runningTask.packageName.equals(taskPackage)) {
                         // First time in launcher?  Update the widget!
                         Tools.HangarLog("Found launcher -- Calling updateWidget!");
                         Tools.updateWidget(getApplicationContext());
+                        runningTask = new TaskInfo(taskPackage);
+
+                        buildReorderAndLaunch(isToggled);
                     }
-                    topPackage = taskPackage;
                     return;
                 }
-                if (taskClass.equals("com.android.internal.app.ResolverActivity")) {
+                if (taskClass.equals("com.android.internal.app.ResolverActivity") ||
+                        Tools.isBlacklistedOrBad(taskPackage, getApplicationContext(), db)) {
+                    buildReorderAndLaunch(isToggled & !isNotificationRunning);
                     return;
                 }
 
-                if (topPackage != null && topPackage.equals(taskPackage)) {
-                    TaskInfo runningTask = Tools.getTask(taskPackage, taskList);
-                    if (runningTask != null && pm.isScreenOn()) {
+                if (runningTask != null && runningTask.packageName.equals(taskPackage)) {
+                    if (pm.isScreenOn()) {
                         runningTask.seconds += LOOP_SECONDS;
-                        Tools.HangarLog("Task [" + runningTask.appName + "] in fg [" + runningTask.seconds + "]s");
+                        Tools.HangarLog("Task [" + runningTask.packageName + "] in fg [" + runningTask.seconds + "]s");
                         if (runningTask.seconds >= LOOP_SECONDS * 5) {
-                            Tools.HangarLog("Dumping task [" + runningTask.appName + "] to DB [" + runningTask.seconds + "]s");
+                            Tools.HangarLog("Dumping task [" + runningTask.packageName + "] to DB [" + runningTask.seconds + "]s");
                             db.addSeconds(taskPackage, runningTask.seconds);
                             runningTask.totalseconds += runningTask.seconds;
                             runningTask.seconds = 0;
@@ -182,95 +180,19 @@ public class WatchfulService extends Service {
                     }
                     return;
                 }
-                topPackage = taskPackage;
-            }
-
-            if (taskList.size() < TASKLIST_QUEUE_SIZE) {
-                List<TasksModel> tasks = db.getAllTasks(TASKLIST_QUEUE_SIZE);
-
-                for (TasksModel taskM : tasks) {
-                    String taskPackage = taskM.getPackageName();
-                    if (taskPackage.equals(topPackage))
-                        continue;
-
-                    if (isBlacklistedOrBad(taskPackage))
-                        continue;
-
-                    boolean skipTask = false;
-                    for (TaskInfo taskL : taskList) {
-                        if (taskPackage.equals(taskL.packageName))
-                            skipTask = true;
-                    }
-                    if (skipTask)
-                        continue;
-
-                    TaskInfo dbTask = new TaskInfo();
-                    dbTask.appName = taskM.getName();
-                    dbTask.packageName = taskPackage;
-                    dbTask.className = taskM.getClassName();
-                    dbTask.launches = taskM.getLaunches();
-                    dbTask.totalseconds = taskM.getSeconds();
-
-                    try {
-                        pkgm.getApplicationInfo(dbTask.packageName, 0);
-                    } catch (PackageManager.NameNotFoundException e) {
-                        db.deleteTask(taskM);
-                        continue;
-                    }
-
-                    Tools.HangarLog("Adding to taskList [" + dbTask.appName + "] [" + dbTask.launches + "] [" + dbTask.totalseconds + "]s");
-                    taskList.add(dbTask);
+                runningTask = new TaskInfo(taskPackage);
+                runningTask.className = taskClass;
+                runningTask.packageName = taskPackage;
+                try {
+                    ApplicationInfo appInfo = pkgm.getApplicationInfo(taskPackage, 0);
+                    runningTask.appName = appInfo.loadLabel(pkgm).toString();
+                } catch (NullPointerException e) {
+                    Tools.HangarLog("NPE taskPackage: " + taskPackage);
+                    e.printStackTrace();
                 }
+                updateOrAdd(runningTask);
             }
-
-            int origSize = taskList.size();
-
-            for (int i = 0; i < recentTasks.size(); i++) {
-                ComponentName task = recentTasks.get(i).baseActivity;
-                String taskPackage = task.getPackageName();
-
-                ApplicationInfo appInfo = pkgm.getApplicationInfo(taskPackage, 0);
-                if (isBlacklistedOrBad(taskPackage))
-                    continue;
-
-                TaskInfo newInfo = new TaskInfo();
-                newInfo.appName = appInfo.loadLabel(pkgm).toString();
-                newInfo.packageName = taskPackage;
-                newInfo.className = task.getClassName();
-
-                if (i == 0 && origSize > 0) {
-                    int launches = updateOrAdd(newInfo);
-                    newInfo.launches = launches;
-                    newInfo.totalseconds = db.getSeconds(newInfo.packageName);
-
-                    Tools.HangarLog("Launches [" + newInfo.appName + "] [" + launches + "]");
-                    taskList.add(0, newInfo);
-                    Tools.HangarLog("Added [" + newInfo.appName + "] to taskList.  Size=[" + taskList.size() + "]");
-                    Tools.HangarLog("Just adding latest item to taskList");
-                    for (int j=1; j < taskList.size(); j++) {
-                        if (taskList.get(j).packageName.equals(taskList.get(0).packageName)) {
-                            // Tools.HangarLog("Duplicate task found at [" + j + "] -- removing..");
-                            taskList.remove(j);
-                        }
-                    }
-                    break;
-                } else if (origSize == 0) {
-                    if (isBlacklistedOrBad(newInfo.packageName)) {
-                        continue;
-                    }
-
-                    if (newInfo.packageName.equals(launcherPackage) ||
-                            newInfo.className.equals("com.android.internal.app.ResolverActivity")) {
-                        continue;
-                    }
-                    // No database?  Let's create from memory..
-                    updateOrAdd(newInfo);
-                    taskList.add(newInfo);
-                }
-            }
-            if (taskList.size() > 0) {
-                reorderAndLaunch();
-            }
+            buildReorderAndLaunch(isToggled);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -303,6 +225,7 @@ public class WatchfulService extends Service {
         // topPackage = null;
         // handler.removeCallbacks(scanApps);
         Tools.HangarLog("DESTROY");
+        isNotificationRunning = false;
         stopForeground(true);
         // NotificationManager NotificationManager = (NotificationManager)
         //         getSystemService(Context.NOTIFICATION_SERVICE);
@@ -318,7 +241,7 @@ public class WatchfulService extends Service {
 
     }
 
-    protected void reorderAndLaunch() {
+    protected void reorderAndLaunch(ArrayList<Tools.TaskInfo> taskList) {
         boolean weightedRecents = prefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
                 Settings.WEIGHTED_RECENTS_DEFAULT);
         boolean isToggled = prefs.getBoolean(Settings.TOGGLE_PREFERENCE, Settings.TOGGLE_DEFAULT);
@@ -327,11 +250,11 @@ public class WatchfulService extends Service {
         if (isToggled) {
             if (weightedRecents)
                 taskList = Tools.reorderTasks(taskList, db, weightPriority);
-            createNotification();
+            createNotification(taskList);
         }
     }
 
-    public void createNotification() {
+    public void createNotification(ArrayList<Tools.TaskInfo> taskList) {
         // prefs = this.getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS);
         // Not a fun hack.  No way around it until they let you do getInt for setShowDividers!
         RemoteViews customNotifView;
@@ -430,6 +353,7 @@ public class WatchfulService extends Service {
                 .setPriority(setPriority)
                 .build();
         startForeground(1337, notification);
+        isNotificationRunning = true;
         //NotificationManager NotificationManager = (NotificationManager)
         //        getSystemService(Context.NOTIFICATION_SERVICE);
         //NotificationManager.notify(0, notification);

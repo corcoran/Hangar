@@ -120,6 +120,7 @@
     <string name="changelog_accept_button">Continue</string>
 
     <string-array name="versionNumbers">
+        <item>1.15 (Apr 19th)</item>
         <item>1.14 (Apr 14th)</item>
         <item>1.13 (Apr 6th)</item>
         <item>1.12 (Apr 5th)</item>
@@ -128,6 +129,11 @@
     </string-array>
 
     <string-array name="versionSummaries">
+        <item>
+"    &#8226; [Fix!] No longer crashes on boot
+    &#8226; [Fix!] Notification properly loads on boot
+    &#8226; Apps widget now 4x1 by default
+    &#8226; Refactored recent app sort code"</item>
         <item>
 "    &#8226; [New!] Apps widget
     &#8226; Removed debug logging"</item>

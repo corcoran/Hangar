@@ -146,14 +146,14 @@ public class AppsWidget extends AppWidgetProvider {
             if (appsNoByWidgetSize && appsNoW > 0) {
                 Tools.HangarLog("Landscape! appsNoByWidgetSize=true, appsNo=" + appsNoW);
             } else {
-                appsNoW = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_LS_DEFAULT)));
+                appsNoW = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE, Integer.toString(Settings.APPS_WIDGET_APPSNO_LS_DEFAULT)));
             }
             Tools.HangarLog("LANDSCAPE");
         } else {
             if (appsNoByWidgetSize && appsNoW > 0) {
                 Tools.HangarLog("appsNoByWidgetSize=true, appsNo=" + appsNoH);
             } else {
-                appsNoW = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_PREFERENCE, Integer.toString(Settings.STATS_WIDGET_APPSNO_DEFAULT)));
+                appsNoW = Integer.parseInt(mPrefs.getString(Settings.STATS_WIDGET_APPSNO_PREFERENCE, Integer.toString(Settings.APPS_WIDGET_APPSNO_DEFAULT)));
             }
         }
 
@@ -166,14 +166,13 @@ public class AppsWidget extends AppWidgetProvider {
         views.setInt(R.id.viewCont, "setGravity", mGravity);
 
         views.removeAllViews(R.id.viewCont);
+        appWidgetManager.updateAppWidget(appWidgetId, views);
         PackageManager pkgm = context.getPackageManager();
 
         if (db == null) {
             db = new TasksDataSource(context);
             db.open();
         }
-
-        ArrayList<Tools.TaskInfo> appList = new ArrayList<Tools.TaskInfo>();
 
         int gridSize = (appsNoH * appsNoW);
         int numOfIcons = (appsNoH * appsNoW);
@@ -184,37 +183,10 @@ public class AppsWidget extends AppWidgetProvider {
             numOfIcons = appsNoW;
             lookUpNum = appsNoW + 3;
         }
-        List<TasksModel> tasks = db.getAllTasks((lookUpNum < MAX_DB_LOOKUPS) ? MAX_DB_LOOKUPS : lookUpNum);
 
-        for (TasksModel taskM : tasks) {
-            String taskPackage = taskM.getPackageName();
+        int queueSize = (lookUpNum < MAX_DB_LOOKUPS) ? MAX_DB_LOOKUPS : lookUpNum;
 
-            if (isBlacklisted(taskPackage))
-                continue;
-
-            Tools.TaskInfo dbTask = new Tools.TaskInfo();
-            dbTask.appName = taskM.getName();
-            dbTask.packageName = taskPackage;
-            dbTask.className = taskM.getClassName();
-            dbTask.launches = taskM.getLaunches();
-            dbTask.totalseconds = taskM.getSeconds();
-            try {
-                pkgm.getApplicationInfo(dbTask.packageName, 0);
-            } catch (PackageManager.NameNotFoundException e) {
-                db.deleteTask(taskM);
-                continue;
-            }
-            try {
-                Intent intent = pkgm.getLaunchIntentForPackage(taskPackage);
-                if (intent == null)
-                    throw new PackageManager.NameNotFoundException();
-
-            } catch (PackageManager.NameNotFoundException e) {
-                db.deleteTask(taskM);
-            }
-
-            appList.add(dbTask);
-        }
+        ArrayList<Tools.TaskInfo> appList = Tools.buildTaskList(context, db, queueSize);
 
         String taskPackage = context.getPackageName();
 

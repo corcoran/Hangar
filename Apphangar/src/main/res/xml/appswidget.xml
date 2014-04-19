@@ -2,7 +2,7 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialLayout="@layout/apps_widget_row"
     android:minHeight="60dp"
-    android:minWidth="180dp"
+    android:minWidth="240dp"
     android:configure="ca.mimic.apphangar.AppsWidgetSettings"
     android:resizeMode="vertical|horizontal"
     android:previewImage="@drawable/ic_apps_widget_preview"

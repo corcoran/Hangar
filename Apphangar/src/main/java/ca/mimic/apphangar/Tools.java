@@ -3,6 +3,7 @@ package ca.mimic.apphangar;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
@@ -82,6 +83,9 @@ public class Tools {
         protected int seconds = 0;
         protected int totalseconds = 0;
 
+        TaskInfo (String string) {
+            packageName = string;
+        }
     }
 
 
@@ -216,5 +220,53 @@ public class Tools {
         blPNames.add("com.android.settings");
         blPNames.add("com.android.packageinstaller");
         return blPNames;
+    }
+
+    protected static boolean isBlacklistedOrBad(String packageName, Context context, TasksDataSource db) {
+        try {
+            PackageManager pkgm = context.getPackageManager();
+            Intent intent = pkgm.getLaunchIntentForPackage(packageName);
+            if (intent == null)
+                throw new PackageManager.NameNotFoundException();
+
+        } catch (PackageManager.NameNotFoundException e) {
+            return true;
+        }
+        for (String blTask : Tools.getBlacklisted(context, db)) {
+            if (packageName.equals(blTask)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected static ArrayList<Tools.TaskInfo> buildTaskList(Context context, TasksDataSource db, int queueSize) {
+        ArrayList<Tools.TaskInfo> taskList = new ArrayList<Tools.TaskInfo>();
+        List<TasksModel> tasks = db.getAllTasks(queueSize);
+
+        for (TasksModel taskM : tasks) {
+            String taskPackage = taskM.getPackageName();
+
+            if (isBlacklistedOrBad(taskPackage, context, db))
+                continue;
+
+            Tools.TaskInfo dbTask = new Tools.TaskInfo(taskPackage);
+            dbTask.appName = taskM.getName();
+            dbTask.className = taskM.getClassName();
+            dbTask.launches = taskM.getLaunches();
+            dbTask.totalseconds = taskM.getSeconds();
+
+            try {
+                PackageManager pkgm = context.getPackageManager();
+                pkgm.getApplicationInfo(taskPackage, 0);
+            } catch (PackageManager.NameNotFoundException e) {
+                db.deleteTask(taskM);
+                continue;
+            }
+            Tools.HangarLog("Adding to taskList [" + dbTask.appName + "] [" + dbTask.launches + "] [" + dbTask.totalseconds + "]s");
+
+            taskList.add(dbTask);
+        }
+        return taskList;
     }
 }

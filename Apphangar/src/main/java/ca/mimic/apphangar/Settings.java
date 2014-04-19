@@ -99,6 +99,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int BACKGROUND_COLOR_DEFAULT = 0x5e000000;
     final static int STATS_WIDGET_APPSNO_DEFAULT = 6;
     final static int STATS_WIDGET_APPSNO_LS_DEFAULT = 3;
+    final static int APPS_WIDGET_APPSNO_DEFAULT = 6;
+    final static int APPS_WIDGET_APPSNO_LS_DEFAULT = 13;
     final static int ALIGNMENT_DEFAULT = 16; // 16 is middle
 
     final static String STATUSBAR_ICON_WHITE_WARM = "**white_warm**";
