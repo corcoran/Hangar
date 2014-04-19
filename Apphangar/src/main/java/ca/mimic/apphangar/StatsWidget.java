@@ -166,7 +166,7 @@ public class StatsWidget extends AppWidgetProvider {
 
             row.setViewPadding(R.id.appCont, 0, topPadding, 0, bottomPadding);
 
-            int appID = context.getResources().getIdentifier("appCont", "id", packageName);
+            int clickID = context.getResources().getIdentifier("clickCont", "id", packageName);
             int iconID = context.getResources().getIdentifier("iconCont", "id", packageName);
             int labelID = context.getResources().getIdentifier("appName", "id", packageName);
             int imgID = context.getResources().getIdentifier("barImg", "id", packageName);
@@ -227,8 +227,7 @@ public class StatsWidget extends AppWidgetProvider {
                 intent.addCategory(Intent.CATEGORY_LAUNCHER);
                 intent.setAction("action" + (count));
                 PendingIntent activity = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-                row.setOnClickPendingIntent(appID, activity);
-                row.setViewVisibility(appID, View.VISIBLE);
+                row.setOnClickPendingIntent(clickID, activity);
             } catch (PackageManager.NameNotFoundException e) {
 
             }
