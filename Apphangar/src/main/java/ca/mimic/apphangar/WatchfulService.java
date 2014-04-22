@@ -37,14 +37,13 @@ public class WatchfulService extends Service {
     PackageManager pkgm;
     PowerManager pm;
 
-    // ArrayList<TaskInfo> taskList = new ArrayList<TaskInfo>();
     TaskInfo runningTask;
     String launcherPackage = null;
 
-    int MAX_RUNNING_TASKS = 20;
-    int TASKLIST_QUEUE_SIZE = 12;
-    int TOTAL_CONTAINERS = 9;
-    int LOOP_SECONDS = 3;
+    final int MAX_RUNNING_TASKS = 20;
+    final int TASKLIST_QUEUE_SIZE = 12;
+    final int TOTAL_CONTAINERS = 9;
+    final int LOOP_SECONDS = 3;
 
     boolean isNotificationRunning;
 
@@ -74,10 +73,6 @@ public class WatchfulService extends Service {
         };
     }
 
-    // This is the object that receives interactions from clients.  See
-    // RemoteService for a more complete example.
-    // private final IBinder mBinder = new WatchfulBinder();
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -88,7 +83,6 @@ public class WatchfulService extends Service {
         Tools.HangarLog("starting up.. ");
 
         prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
-        // prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
         iconMap = new HashMap<String, Integer>();
@@ -110,7 +104,6 @@ public class WatchfulService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Tools.HangarLog("Getting prefs");
         prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
-        // prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         pkgm = getApplicationContext().getPackageManager();
         launcherPackage = Tools.getLauncher(getApplicationContext());
         handler.removeCallbacks(scanApps);
@@ -135,25 +128,26 @@ public class WatchfulService extends Service {
     }
 
     protected void buildTasks() {
-        // prefs = getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS);
         try {
             boolean isToggled = prefs.getBoolean(Settings.TOGGLE_PREFERENCE, Settings.TOGGLE_DEFAULT);
 
             final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
             final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(MAX_RUNNING_TASKS);
+            final Context mContext = getApplicationContext();
 
             pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
-            if (recentTasks.size() > 0) {
+            if (recentTasks != null && recentTasks.size() > 0) {
                 ComponentName task = recentTasks.get(0).baseActivity;
                 String taskClass = task.getClassName();
                 String taskPackage = task.getPackageName();
 
-                if (launcherPackage != null && taskPackage.equals(launcherPackage)) {
+                if (launcherPackage != null && taskPackage != null &&
+                        taskPackage.equals(launcherPackage)) {
                     if (runningTask == null || !runningTask.packageName.equals(taskPackage)) {
                         // First time in launcher?  Update the widget!
                         Tools.HangarLog("Found launcher -- Calling updateWidget!");
-                        Tools.updateWidget(getApplicationContext());
+                        Tools.updateWidget(mContext);
                         runningTask = new TaskInfo(taskPackage);
 
                         buildReorderAndLaunch(isToggled);
@@ -161,7 +155,7 @@ public class WatchfulService extends Service {
                     return;
                 }
                 if (taskClass.equals("com.android.internal.app.ResolverActivity") ||
-                        Tools.isBlacklistedOrBad(taskPackage, getApplicationContext(), db)) {
+                        Tools.isBlacklistedOrBad(taskPackage, mContext, db)) {
                     buildReorderAndLaunch(isToggled & !isNotificationRunning);
                     return;
                 }
@@ -220,17 +214,13 @@ public class WatchfulService extends Service {
             return 1;
         }
     }
+
     public void destroyNotification() {
-        // topPackage = null;
-        // handler.removeCallbacks(scanApps);
         Tools.HangarLog("DESTROY");
         isNotificationRunning = false;
         stopForeground(true);
-        // NotificationManager NotificationManager = (NotificationManager)
-        //         getSystemService(Context.NOTIFICATION_SERVICE);
-        // NotificationManager.cancel(1337);
-
     }
+
     protected void clearContainers(RemoteViews customNotifView, int start, Context mContext) {
         Tools.HangarLog("Clearing containers " + start + "-" + TOTAL_CONTAINERS);
         for (int i=start; i < TOTAL_CONTAINERS; i++) {
@@ -254,10 +244,10 @@ public class WatchfulService extends Service {
     }
 
     public void createNotification(ArrayList<Tools.TaskInfo> taskList) {
-        // prefs = this.getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS);
         // Not a fun hack.  No way around it until they let you do getInt for setShowDividers!
         RemoteViews customNotifView;
         String taskPackage = this.getPackageName();
+        Context mContext = getApplicationContext();
 
         int rootID = prefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT) ?
                 getResources().getIdentifier("notification", "layout", taskPackage) :
@@ -282,29 +272,27 @@ public class WatchfulService extends Service {
         }
           
         if (maxButtons < TOTAL_CONTAINERS)
-            clearContainers(customNotifView, maxButtons, getApplicationContext());
+            clearContainers(customNotifView, maxButtons, mContext);
 
         Tools.HangarLog("taskList.size(): " + taskList.size() + " realmaxbuttons: " + realMaxButtons + " maxbuttons: " + maxButtons);
         int filledConts = 0;
 
         for (int i=0; i < taskList.size(); i++) {
-            int resID = getResources().getIdentifier("imageButton" + (filledConts+1), "id", taskPackage);
-            int contID = getResources().getIdentifier("imageCont" + (filledConts+1), "id", taskPackage);
+            int resID = getResources().getIdentifier("imageButton", "id", taskPackage);
+            int contID = getResources().getIdentifier("imageCont", "id", taskPackage);
 
             if (filledConts == maxButtons) {
-                // Tools.HangarLog("filledConts [" + filledConts + "] == maxButtons [" + maxButtons + "]");
                 break;
             }
 
-            filledConts += 1;
-            customNotifView.setViewVisibility(contID, View.VISIBLE);
+            RemoteViews item = new RemoteViews(WatchfulService.this.getPackageName(),
+                    R.layout.notification_item);
 
             Drawable taskIcon, d;
             try {
                 ApplicationInfo appInfo = pkgm.getApplicationInfo(taskList.get(i).packageName, 0);
                 taskIcon = appInfo.loadIcon(pkgm);
             } catch (Exception e) {
-                taskList.remove(i);
                 continue;
             }
 
@@ -315,7 +303,7 @@ public class WatchfulService extends Service {
             }
 
             Bitmap bmpIcon = ((BitmapDrawable) d).getBitmap();
-            customNotifView.setImageViewBitmap(resID, bmpIcon);
+            item.setImageViewBitmap(resID, bmpIcon);
 
             Intent intent;
             PackageManager manager = getPackageManager();
@@ -323,17 +311,19 @@ public class WatchfulService extends Service {
                 intent = manager.getLaunchIntentForPackage(taskList.get(i).packageName);
                 if (intent == null) {
                     Tools.HangarLog("Couldn't get intent for ["+ taskList.get(i).packageName +"] className:" + taskList.get(i).className);
-                    filledConts --;
-                    customNotifView.setViewVisibility(contID, View.GONE);
                     throw new PackageManager.NameNotFoundException();
                 }
                 intent.addCategory(Intent.CATEGORY_LAUNCHER);
                 intent.setAction("action" + (i));
-                PendingIntent activity = PendingIntent.getActivity(this, pendingNum, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-                customNotifView.setOnClickPendingIntent(contID, activity);
+                PendingIntent activity = PendingIntent.getActivity(this, pendingNum, intent,
+                        PendingIntent.FLAG_CANCEL_CURRENT);
+                item.setOnClickPendingIntent(contID, activity);
             } catch (PackageManager.NameNotFoundException e) {
-
+                continue;
             }
+
+            filledConts += 1;
+            customNotifView.addView(R.id.notifContainer, item);
         }
 
         String mIcon = prefs.getString(Settings.STATUSBAR_ICON_PREFERENCE, Settings.STATUSBAR_ICON_DEFAULT);
@@ -344,8 +334,8 @@ public class WatchfulService extends Service {
         }
 
         Notification notification = new Notification.Builder(WatchfulService.this).
-                setContentTitle("Notification title")
-                .setContentText("Notification content")
+                setContentTitle(getResources().getString(R.string.app_name))
+                .setContentText(getResources().getString(R.string.app_name))
                 .setSmallIcon(smallIcon)
                 .setContent(customNotifView)
                 .setOngoing(true)
@@ -353,8 +343,5 @@ public class WatchfulService extends Service {
                 .build();
         startForeground(1337, notification);
         isNotificationRunning = true;
-        //NotificationManager NotificationManager = (NotificationManager)
-        //        getSystemService(Context.NOTIFICATION_SERVICE);
-        //NotificationManager.notify(0, notification);
     }
 }

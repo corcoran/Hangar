@@ -287,15 +287,6 @@ public class AppsWidget extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
-    protected static boolean isBlacklisted(String packageName) {
-        for (String blTask : Tools.getBlacklisted(mContext, db)) {
-            if (packageName.equals(blTask)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent myIntent) {
