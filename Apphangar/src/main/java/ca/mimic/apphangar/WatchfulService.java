@@ -2,7 +2,6 @@ package ca.mimic.apphangar;
 
 import android.app.ActivityManager;
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,13 +9,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import java.text.SimpleDateFormat;
@@ -25,7 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import ca.mimic.apphangar.Tools.TaskInfo;
 
@@ -221,15 +215,6 @@ public class WatchfulService extends Service {
         stopForeground(true);
     }
 
-    protected void clearContainers(RemoteViews customNotifView, int start, Context mContext) {
-        Tools.HangarLog("Clearing containers " + start + "-" + TOTAL_CONTAINERS);
-        for (int i=start; i < TOTAL_CONTAINERS; i++) {
-            int contID = getResources().getIdentifier("imageCont" + (i + 1), "id", mContext.getPackageName());
-            customNotifView.setViewVisibility(contID, View.GONE);
-        }
-
-    }
-
     protected void reorderAndLaunch(ArrayList<Tools.TaskInfo> taskList) {
         boolean weightedRecents = prefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
                 Settings.WEIGHTED_RECENTS_DEFAULT);
@@ -245,87 +230,47 @@ public class WatchfulService extends Service {
 
     public void createNotification(ArrayList<Tools.TaskInfo> taskList) {
         // Not a fun hack.  No way around it until they let you do getInt for setShowDividers!
-        RemoteViews customNotifView;
         String taskPackage = this.getPackageName();
         Context mContext = getApplicationContext();
 
         int rootID = prefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT) ?
                 getResources().getIdentifier("notification", "layout", taskPackage) :
                 getResources().getIdentifier("notification_no_dividers", "layout", taskPackage);
+        int resID = getResources().getIdentifier("imageButton", "id", taskPackage);
+        int contID = getResources().getIdentifier("imageCont", "id", taskPackage);
 
-        customNotifView = new RemoteViews(WatchfulService.this.getPackageName(),
-                rootID);
+        // Create new NotificationBar row
+        NotificationBar notificationBar = new NotificationBar(taskPackage, rootID, resID, contID);
+        notificationBar.setPrefs(prefs);
+        notificationBar.setContext(mContext);
 
         int maxButtons;
-        int realMaxButtons = Integer.parseInt(prefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.APPSNO_DEFAULT)));
+        int userMaxButtons = Integer.parseInt(prefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.APPSNO_DEFAULT)));
         int setPriority = Integer.parseInt(prefs.getString(Settings.PRIORITY_PREFERENCE, Integer.toString(Settings.PRIORITY_DEFAULT)));
-        boolean isColorized = prefs.getBoolean(Settings.COLORIZE_PREFERENCE, Settings.COLORIZE_DEFAULT);
-        int getColor = prefs.getInt(Settings.ICON_COLOR_PREFERENCE, Settings.ICON_COLOR_DEFAULT);
 
-        Random r = new Random();
-        int pendingNum = r.nextInt(99 - 1 + 1) + 1;
-
-        if (taskList.size() < realMaxButtons) {
+        if (taskList.size() < userMaxButtons) {
             maxButtons = taskList.size();
         } else {
-            maxButtons = realMaxButtons;
+            maxButtons = userMaxButtons;
         }
           
-        if (maxButtons < TOTAL_CONTAINERS)
-            clearContainers(customNotifView, maxButtons, mContext);
-
-        Tools.HangarLog("taskList.size(): " + taskList.size() + " realmaxbuttons: " + realMaxButtons + " maxbuttons: " + maxButtons);
+        Tools.HangarLog("taskList.size(): " + taskList.size() + " realmaxbuttons: " + userMaxButtons + " maxbuttons: " + maxButtons);
         int filledConts = 0;
+        // customNotifView.removeAllViews(R.id.notifContainer);
 
         for (int i=0; i < taskList.size(); i++) {
-            int resID = getResources().getIdentifier("imageButton", "id", taskPackage);
-            int contID = getResources().getIdentifier("imageCont", "id", taskPackage);
-
             if (filledConts == maxButtons) {
                 break;
             }
 
-            RemoteViews item = new RemoteViews(WatchfulService.this.getPackageName(),
-                    R.layout.notification_item);
-
-            Drawable taskIcon, d;
-            try {
-                ApplicationInfo appInfo = pkgm.getApplicationInfo(taskList.get(i).packageName, 0);
-                taskIcon = appInfo.loadIcon(pkgm);
-            } catch (Exception e) {
-                continue;
-            }
-
-            if (isColorized) {
-                d = new BitmapDrawable(ColorHelper.getColoredBitmap(taskIcon, getColor));
-            } else {
-                d = taskIcon;
-            }
-
-            Bitmap bmpIcon = ((BitmapDrawable) d).getBitmap();
-            item.setImageViewBitmap(resID, bmpIcon);
-
-            Intent intent;
-            PackageManager manager = getPackageManager();
-            try {
-                intent = manager.getLaunchIntentForPackage(taskList.get(i).packageName);
-                if (intent == null) {
-                    Tools.HangarLog("Couldn't get intent for ["+ taskList.get(i).packageName +"] className:" + taskList.get(i).className);
-                    throw new PackageManager.NameNotFoundException();
-                }
-                intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                intent.setAction("action" + (i));
-                PendingIntent activity = PendingIntent.getActivity(this, pendingNum, intent,
-                        PendingIntent.FLAG_CANCEL_CURRENT);
-                item.setOnClickPendingIntent(contID, activity);
-            } catch (PackageManager.NameNotFoundException e) {
-                continue;
-            }
-
-            filledConts += 1;
-            customNotifView.addView(R.id.notifContainer, item);
+            if (notificationBar.newItem(taskList.get(i), i))
+                filledConts++;
         }
 
+        // get notificationBar view
+        RemoteViews customNotifView = notificationBar.getView();
+
+        // Set statusbar icon
         String mIcon = prefs.getString(Settings.STATUSBAR_ICON_PREFERENCE, Settings.STATUSBAR_ICON_DEFAULT);
         int smallIcon = iconMap.get(Settings.STATUSBAR_ICON_WHITE_WARM);
         try {
