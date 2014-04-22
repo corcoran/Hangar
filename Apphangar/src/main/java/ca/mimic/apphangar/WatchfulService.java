@@ -256,7 +256,6 @@ public class WatchfulService extends Service {
           
         Tools.HangarLog("taskList.size(): " + taskList.size() + " realmaxbuttons: " + userMaxButtons + " maxbuttons: " + maxButtons);
         int filledConts = 0;
-        // customNotifView.removeAllViews(R.id.notifContainer);
 
         for (int i=0; i < taskList.size(); i++) {
             if (filledConts == maxButtons) {

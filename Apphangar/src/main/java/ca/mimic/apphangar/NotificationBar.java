@@ -33,6 +33,7 @@ public class NotificationBar {
         mContID = contID;
 
         customNotifView = new RemoteViews(mTaskPackage, rootID);
+        customNotifView.removeAllViews(R.id.notifContainer);
 
         // Generate random number for pendingIntent
         Random r = new Random();
