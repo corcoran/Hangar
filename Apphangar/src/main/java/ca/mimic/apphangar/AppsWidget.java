@@ -1,7 +1,6 @@
 package ca.mimic.apphangar;
 
 import android.app.ActivityManager;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.BroadcastReceiver;
@@ -10,12 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -158,7 +152,6 @@ public class AppsWidget extends AppWidgetProvider {
         }
 
         int getBackgroundColor = mPrefs.getInt(Settings.BACKGROUND_COLOR_PREFERENCE, Settings.BACKGROUND_COLOR_DEFAULT);
-        int getColor = mPrefs.getInt(Settings.ICON_COLOR_PREFERENCE, Settings.ICON_COLOR_DEFAULT);
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.apps_widget);
 
@@ -167,7 +160,6 @@ public class AppsWidget extends AppWidgetProvider {
 
         views.removeAllViews(R.id.viewCont);
         appWidgetManager.updateAppWidget(appWidgetId, views);
-        PackageManager pkgm = context.getPackageManager();
 
         if (db == null) {
             db = new TasksDataSource(context);
@@ -190,7 +182,6 @@ public class AppsWidget extends AppWidgetProvider {
 
         String taskPackage = context.getPackageName();
 
-        boolean isColorized = mPrefs.getBoolean(Settings.COLORIZE_PREFERENCE, Settings.COLORIZE_DEFAULT);
         boolean weightedRecents = mPrefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
                 Settings.WEIGHTED_RECENTS_DEFAULT);
         int weightPriority = Integer.parseInt(mPrefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
@@ -199,8 +190,15 @@ public class AppsWidget extends AppWidgetProvider {
             appList = Tools.reorderTasks(appList, db, weightPriority);
         }
 
-        RemoteViews row = new RemoteViews(context.getPackageName(), rowLayout);
-        row.setInt(R.id.viewRow, "setBackgroundColor", getBackgroundColor);
+        int imageButtonLayout = context.getResources().getIdentifier("imageButton", "id", taskPackage);
+        int imageContLayout = context.getResources().getIdentifier("imageCont", "id", taskPackage);
+
+        AppDrawer appDrawer = new AppDrawer(taskPackage);
+        appDrawer.createRow(rowLayout, R.id.viewRow);
+        appDrawer.setImageLayouts(imageButtonLayout, imageContLayout);
+        appDrawer.setPrefs(mPrefs);
+        appDrawer.setContext(mContext);
+        appDrawer.setRowBackgroundColor(getBackgroundColor);
 
         if (autoHeight && !appsNoByWidgetSize) {
             appsNoW = (int) Math.ceil((double) appsNoW / appsNoH);
@@ -208,18 +206,20 @@ public class AppsWidget extends AppWidgetProvider {
         }
         int filledConts = 0;
         int filledRows = 1;
+
         Tools.HangarLog("appsNoW: " + appsNoW + " appList.size(): " + appList.size() + " numOfIcons: " + numOfIcons);
+
         for (int i=0; i <= gridSize; i++) {
-            RemoteViews item = new RemoteViews(context.getPackageName(), itemLayout);
+            boolean newItem = appDrawer.newItem(appList.get(i), itemLayout, i);
 
             if (filledConts == appsNoW || i == gridSize) {
                 Tools.HangarLog("i: " + i + " filledConts: " + filledConts);
-                views.addView(R.id.viewCont, row);
+                views.addView(R.id.viewCont, appDrawer.getRow());
                 if (i >= numOfIcons && !appsNoByWidgetSize)
                     break;
                 if (filledRows < appsNoH && (filledConts < numOfIcons && appList.size() > i)) {
-                    row = new RemoteViews(context.getPackageName(), rowLayout);
-                    row.setInt(R.id.viewRow, "setBackgroundColor", getBackgroundColor);
+                    appDrawer.createRow(rowLayout, R.id.viewRow);
+                    appDrawer.setRowBackgroundColor(getBackgroundColor);
 
                     filledConts = 0;
                     filledRows++;
@@ -228,57 +228,20 @@ public class AppsWidget extends AppWidgetProvider {
                 }
             }
 
+            if (!newItem) {
+                numOfIcons++;
+                continue;
+            }
+
             filledConts += 1;
 
-            int resID = context.getResources().getIdentifier("imageButton", "id", taskPackage);
-            int contID = context.getResources().getIdentifier("imageCont", "id", taskPackage);
-
             if (i >= numOfIcons || i >= appList.size()) {
-                item.setViewVisibility(contID, View.INVISIBLE);
-                row.addView(R.id.viewRow, item);
+                appDrawer.setItemVisibility(View.INVISIBLE);
+                appDrawer.addItem();
                 continue;
             }
 
-            // item.setViewVisibility(contID, View.VISIBLE);
-            Tools.HangarLog("Setting cont visible: " + filledConts + " [" + appList.get(i).appName + "]");
-
-            Drawable taskIcon, d;
-            try {
-                ApplicationInfo appInfo = pkgm.getApplicationInfo(appList.get(i).packageName, 0);
-                taskIcon = appInfo.loadIcon(pkgm);
-            } catch (Exception e) {
-                Tools.HangarLog("loadicon exception: " + e);
-                continue;
-            }
-
-            if (isColorized) {
-                d = new BitmapDrawable(ColorHelper.getColoredBitmap(taskIcon, getColor));
-            } else {
-                d = taskIcon;
-            }
-
-            Bitmap bmpIcon = ((BitmapDrawable) d).getBitmap();
-            item.setImageViewBitmap(resID, bmpIcon);
-
-            Intent intent;
-            PackageManager manager = context.getPackageManager();
-            try {
-                intent = manager.getLaunchIntentForPackage(appList.get(i).packageName);
-                if (intent == null) {
-                    Tools.HangarLog("Couldn't get intent for [" + appList.get(i).packageName + "] className:" + appList.get(i).className);
-                    filledConts --;
-                    throw new PackageManager.NameNotFoundException();
-                }
-                intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                intent.setAction("action" + (i));
-                PendingIntent activity = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-                item.setOnClickPendingIntent(contID, activity);
-            } catch (PackageManager.NameNotFoundException e) {
-                // grow numOfIcons since we're skipping this package.
-                numOfIcons++;
-
-            }
-            row.addView(R.id.viewRow, item);
+            appDrawer.addItem();
         }
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

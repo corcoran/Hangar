@@ -29,8 +29,11 @@ public class AppDrawer {
     String mTaskPackage;
 
 
-    AppDrawer(String packageName, int rowLayout, int rowId) {
+    AppDrawer(String packageName) {
         mTaskPackage = packageName;
+    }
+
+    protected void createRow(int rowLayout, int rowId) {
         mRowId = rowId;
 
         mRowView = new RemoteViews(mTaskPackage, rowLayout);
@@ -105,7 +108,7 @@ public class AppDrawer {
     protected void setItemVisibility(int visibility) {
         mLastItem.setViewVisibility(mImageContLayout, visibility);
     }
-    protected RemoteViews getView() {
+    protected RemoteViews getRow() {
         return mRowView;
     }
 }

@@ -240,7 +240,8 @@ public class WatchfulService extends Service {
         int imageContLayout = getResources().getIdentifier("imageCont", "id", taskPackage);
 
         // Create new AppDrawer row
-        AppDrawer appDrawer = new AppDrawer(taskPackage, rowLayout, R.id.notifContainer);
+        AppDrawer appDrawer = new AppDrawer(taskPackage);
+        appDrawer.createRow(rowLayout, R.id.notifContainer);
         appDrawer.setImageLayouts(imageButtonLayout, imageContLayout);
         appDrawer.setPrefs(prefs);
         appDrawer.setContext(mContext);
@@ -270,7 +271,7 @@ public class WatchfulService extends Service {
         }
 
         // get appDrawer view
-        RemoteViews customNotifView = appDrawer.getView();
+        RemoteViews customNotifView = appDrawer.getRow();
 
         // Set statusbar icon
         String mIcon = prefs.getString(Settings.STATUSBAR_ICON_PREFERENCE, Settings.STATUSBAR_ICON_DEFAULT);
