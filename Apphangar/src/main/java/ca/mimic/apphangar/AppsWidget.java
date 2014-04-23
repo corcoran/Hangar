@@ -196,7 +196,6 @@ public class AppsWidget extends AppWidgetProvider {
         int weightPriority = Integer.parseInt(mPrefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
                 Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
         if (weightedRecents) {
-            Tools.HangarLog(" wP: " + weightPriority);
             appList = Tools.reorderTasks(appList, db, weightPriority);
         }
 
@@ -268,8 +267,6 @@ public class AppsWidget extends AppWidgetProvider {
                 if (intent == null) {
                     Tools.HangarLog("Couldn't get intent for [" + appList.get(i).packageName + "] className:" + appList.get(i).className);
                     filledConts --;
-                    item.setViewVisibility(contID, View.GONE);
-                    row.addView(R.id.viewRow, item);
                     throw new PackageManager.NameNotFoundException();
                 }
                 intent.addCategory(Intent.CATEGORY_LAUNCHER);

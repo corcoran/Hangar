@@ -233,16 +233,17 @@ public class WatchfulService extends Service {
         String taskPackage = this.getPackageName();
         Context mContext = getApplicationContext();
 
-        int rootID = prefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT) ?
+        int rowLayout = prefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT) ?
                 getResources().getIdentifier("notification", "layout", taskPackage) :
                 getResources().getIdentifier("notification_no_dividers", "layout", taskPackage);
-        int resID = getResources().getIdentifier("imageButton", "id", taskPackage);
-        int contID = getResources().getIdentifier("imageCont", "id", taskPackage);
+        int imageButtonLayout = getResources().getIdentifier("imageButton", "id", taskPackage);
+        int imageContLayout = getResources().getIdentifier("imageCont", "id", taskPackage);
 
-        // Create new NotificationBar row
-        NotificationBar notificationBar = new NotificationBar(taskPackage, rootID, resID, contID);
-        notificationBar.setPrefs(prefs);
-        notificationBar.setContext(mContext);
+        // Create new AppDrawer row
+        AppDrawer appDrawer = new AppDrawer(taskPackage, rowLayout, R.id.notifContainer);
+        appDrawer.setImageLayouts(imageButtonLayout, imageContLayout);
+        appDrawer.setPrefs(prefs);
+        appDrawer.setContext(mContext);
 
         int maxButtons;
         int userMaxButtons = Integer.parseInt(prefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.APPSNO_DEFAULT)));
@@ -262,12 +263,14 @@ public class WatchfulService extends Service {
                 break;
             }
 
-            if (notificationBar.newItem(taskList.get(i), i))
+            if (appDrawer.newItem(taskList.get(i), R.layout.notification_item, i)) {
+                appDrawer.addItem();
                 filledConts++;
+            }
         }
 
-        // get notificationBar view
-        RemoteViews customNotifView = notificationBar.getView();
+        // get appDrawer view
+        RemoteViews customNotifView = appDrawer.getView();
 
         // Set statusbar icon
         String mIcon = prefs.getString(Settings.STATUSBAR_ICON_PREFERENCE, Settings.STATUSBAR_ICON_DEFAULT);

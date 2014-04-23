@@ -13,45 +13,54 @@ import android.widget.RemoteViews;
 
 import java.util.Random;
 
-public class NotificationBar {
+public class AppDrawer {
     Context mContext;
-    RemoteViews customNotifView;
+    RemoteViews mRowView;
+    RemoteViews mLastItem;
 
     boolean isColorized;
     int getColor;
 
-    int mResID;
-    int mContID;
+    int mImageButtonLayout;
+    int mImageContLayout;
+    int mRowId;
 
     int pendingNum;
     String mTaskPackage;
 
 
-    NotificationBar(String packageName, int rootID, int resID, int contID) {
+    AppDrawer(String packageName, int rowLayout, int rowId) {
         mTaskPackage = packageName;
-        mResID = resID;
-        mContID = contID;
+        mRowId = rowId;
 
-        customNotifView = new RemoteViews(mTaskPackage, rootID);
-        customNotifView.removeAllViews(R.id.notifContainer);
+        mRowView = new RemoteViews(mTaskPackage, rowLayout);
+        mRowView.removeAllViews(mRowId);
 
         // Generate random number for pendingIntent
         Random r = new Random();
         pendingNum = r.nextInt(99 - 1 + 1) + 1;
     }
 
+    protected void setImageLayouts(int imageButtonLayout, int imageContLayout) {
+        mImageButtonLayout = imageButtonLayout;
+        mImageContLayout = imageContLayout;
+    }
+
     public void setContext(Context context) {
         mContext = context;
     }
+    protected void setRowBackgroundColor(int color) {
+        mRowView.setInt(mRowId, "setBackgroundColor", color);
+    }
 
     protected void setPrefs(SharedPreferences prefs) {
-        // set Prefs for items
+        // set Prefs for mLastItems
         isColorized = prefs.getBoolean(Settings.COLORIZE_PREFERENCE, Settings.COLORIZE_DEFAULT);
         getColor = prefs.getInt(Settings.ICON_COLOR_PREFERENCE, Settings.ICON_COLOR_DEFAULT);
     }
 
-    protected boolean newItem(Tools.TaskInfo taskItem, int count) {
-        RemoteViews item = new RemoteViews(mTaskPackage, R.layout.notification_item);
+    protected boolean newItem(Tools.TaskInfo taskItem, int mLastItemLayout, int count) {
+        mLastItem = new RemoteViews(mTaskPackage, mLastItemLayout);
 
         Drawable taskIcon, d;
         PackageManager pkgm;
@@ -70,7 +79,7 @@ public class NotificationBar {
         }
 
         Bitmap bmpIcon = ((BitmapDrawable) d).getBitmap();
-        item.setImageViewBitmap(mResID, bmpIcon);
+        mLastItem.setImageViewBitmap(mImageButtonLayout, bmpIcon);
 
         Intent intent;
         try {
@@ -83,15 +92,20 @@ public class NotificationBar {
             intent.setAction("action" + (count));
             PendingIntent activity = PendingIntent.getActivity(mContext, pendingNum, intent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
-            item.setOnClickPendingIntent(mContID, activity);
+            mLastItem.setOnClickPendingIntent(mImageContLayout, activity);
         } catch (PackageManager.NameNotFoundException e) {
             return false;
         }
 
-        customNotifView.addView(R.id.notifContainer, item);
         return true;
     }
+    protected void addItem() {
+        mRowView.addView(mRowId, mLastItem);
+    }
+    protected void setItemVisibility(int visibility) {
+        mLastItem.setViewVisibility(mImageContLayout, visibility);
+    }
     protected RemoteViews getView() {
-        return customNotifView;
+        return mRowView;
     }
 }
