@@ -64,6 +64,10 @@ public class AppDrawer {
 
     protected boolean newItem(Tools.TaskInfo taskItem, int mLastItemLayout, int count) {
         mLastItem = new RemoteViews(mTaskPackage, mLastItemLayout);
+        if (taskItem.packageName == null) {
+            // Dummy invisible item
+            return true;
+        }
 
         Drawable taskIcon, d;
         PackageManager pkgm;

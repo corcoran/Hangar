@@ -34,11 +34,12 @@ public class AppsWidgetSettings extends PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         prefs = new PrefsGet(getSharedPreferences("AppsWidget", Context.MODE_PRIVATE));
 
         mContext = getApplicationContext();
         extras = getIntent().getExtras();
+
+        super.onCreate(savedInstanceState);
 
         setTitle(R.string.apps_widget_name);
         setResult(RESULT_CANCELED);

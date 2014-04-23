@@ -216,7 +216,6 @@ public class AppsWidget extends AppWidgetProvider {
         Tools.HangarLog("appsNoW: " + appsNoW + " appList.size(): " + appList.size() + " numOfIcons: " + numOfIcons);
 
         for (int i=0; i <= gridSize; i++) {
-            boolean newItem = appDrawer.newItem(appList.get(i), itemLayout, i);
 
             if (filledConts == appsNoW || i == gridSize) {
                 Tools.HangarLog("i: " + i + " filledConts: " + filledConts);
@@ -233,6 +232,15 @@ public class AppsWidget extends AppWidgetProvider {
                     break;
                 }
             }
+
+            Tools.TaskInfo newItemTask;
+            if (i >= appList.size()) {
+                newItemTask = new Tools.TaskInfo(null);
+            } else {
+                newItemTask = appList.get(i);
+            }
+
+            boolean newItem = appDrawer.newItem(newItemTask, itemLayout, i);
 
             if (!newItem) {
                 numOfIcons++;
