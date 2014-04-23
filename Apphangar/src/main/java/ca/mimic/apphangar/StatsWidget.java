@@ -37,13 +37,13 @@ public class StatsWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Tools.HangarLog("onUpdate");
-        // There may be multiple widgets active, so update all of them
         mContext = context;
-        // final int N = appWidgetIds.length;
-        // for (int i=0; i<N; i++) {
-        //     Bundle options=appWidgetManager.getAppWidgetOptions(appWidgetIds[i]);
-        //     updateAppWidget(context, appWidgetManager, appWidgetIds[i], options);
-        // }
+
+        // (re?)start service.  This is specifically so if hangar gets updated the service
+        // is restarted
+        Intent intent = new Intent(context, WatchfulService.class);
+        context.startService(intent);
+
         IntentFilter filter = new IntentFilter();
         filter.addAction(BCAST_CONFIGCHANGED);
         context.getApplicationContext().registerReceiver(mBroadcastReceiver, filter);
@@ -209,7 +209,6 @@ public class StatsWidget extends AppWidgetProvider {
             }
             int[] colors = new int[]{barColor, Tools.dpToPx(context, secondsColor-1), 0x00000000, Tools.dpToPx(mContext, 100-secondsColor)};
             Tools.HangarLog("BarDrawable: " + colors[0] + ", " + colors[1] + ", " + colors[2] + ", " + colors[3]);
-            Tools.HangarLog("bar1 dp: " + Tools.pxToDp(context, secondsColor * 2.55f));
             Drawable sd = new BarDrawable(colors);
             Bitmap bmpIcon2 = drawableToBitmap(sd);
             row.setImageViewBitmap(imgID, bmpIcon2);

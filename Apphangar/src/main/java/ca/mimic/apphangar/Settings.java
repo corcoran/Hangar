@@ -254,6 +254,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
         String whichVersion = mPrefs.getString(Settings.VERSION_CHECK, null);
 
+        Tools.HangarLog("savedVer: " + whichVersion + " hangarVersion: " + hangarVersion);
         if (whichVersion != null && whichVersion.equals(hangarVersion)) {
             return false;
         } else {

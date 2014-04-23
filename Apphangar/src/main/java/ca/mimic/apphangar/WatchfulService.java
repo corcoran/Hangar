@@ -73,6 +73,8 @@ public class WatchfulService extends Service {
         if (db == null) {
             db = new TasksDataSource(this);
             db.open();
+        } else {
+            return;
         }
         Tools.HangarLog("starting up.. ");
 

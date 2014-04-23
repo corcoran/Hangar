@@ -43,6 +43,12 @@ public class AppsWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Tools.HangarLog("onUpdate");
         mContext = context;
+
+        // (re?)start service.  This is specifically so if hangar gets updated the service
+        // is restarted
+        Intent intent = new Intent(context, WatchfulService.class);
+        context.startService(intent);
+
         IntentFilter filter = new IntentFilter();
         filter.addAction(BCAST_CONFIGCHANGED);
         context.getApplicationContext().registerReceiver(mBroadcastReceiver, filter);
