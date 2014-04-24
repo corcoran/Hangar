@@ -136,8 +136,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
         if (showChangelog(prefs)) {
             launchChangelog();
         }
-        // SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        // startService(new Intent(this, WatchfulService.class));
 
         if (db == null) {
             db = new TasksDataSource(this);
@@ -224,7 +222,28 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 .setTitle(R.string.changelog_title)
                 .setIcon(R.drawable.ic_launcher)
                 .setView(mChg)
+                .setNegativeButton(R.string.changelog_donate_button,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            launchDonate();
+
+                            dialog.dismiss();
+                        }
+
+                    })
                 .setPositiveButton(R.string.changelog_accept_button, null)
+                .show();
+    }
+
+    protected void launchDonate() {
+        Donate donate = new Donate(this);
+        View mDonate = donate.getView();
+        mDonate.refreshDrawableState();
+        new AlertDialog.Builder(Settings.this)
+                .setTitle(R.string.donate_title)
+                .setIcon(R.drawable.ic_launcher)
+                .setView(mDonate)
+                .setPositiveButton(R.string.donate_accept_button, null)
                 .show();
     }
 

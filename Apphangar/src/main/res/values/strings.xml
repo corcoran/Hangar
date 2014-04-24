@@ -117,7 +117,15 @@
 
     <!-- Changelog -->
     <string name="changelog_title">Hangar Changes</string>
+    <string name="changelog_donate_button">Donate</string>
     <string name="changelog_accept_button">Continue</string>
+
+    <!-- Donate -->
+    <string name="donate_title">Want to buy me a beer?</string>
+    <string name="donate_head">Donations are always appreciated and helpful to fund the future development of this and other apps.  If you find this app useful or appreciate the work that has gone into it feel free to reach out and let me know!</string>
+    <string name="donate_google">Google Play</string>
+    <string name="donate_paypal">Paypal</string>
+    <string name="donate_accept_button">Thank you!</string>
 
     <string-array name="versionNumbers">
         <item>1.15 (Apr 23th)</item>
