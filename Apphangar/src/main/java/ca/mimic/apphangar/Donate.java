@@ -1,24 +1,153 @@
 package ca.mimic.apphangar;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentSender;
+import android.content.ServiceConnection;
+import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.android.vending.billing.IInAppBillingService;
+
+import java.util.ArrayList;
+import java.util.ServiceConfigurationError;
 
 public class Donate {
     Context context;
+    Context mSettingsContext;
+
+    IInAppBillingService mService;
+    ServiceConnection mServiceConn;
+    ArrayList<PendingIntent> pIntents;
+    AlertDialog mAlert;
 
     Donate(Context donateContext) {
         context = donateContext;
+        pIntents = new ArrayList<PendingIntent>();
+
+        mServiceConn = new ServiceConnection() {
+            public void onServiceDisconnected(ComponentName name) {
+                mService = null;
+            }
+
+            public void onServiceConnected(ComponentName name,
+                                           IBinder service) {
+                mService = IInAppBillingService.Stub.asInterface(service);
+                for (int i=1;i<=3;i++) {
+                    pIntents.add(getIntent(i));
+                }
+            }
+
+        };
     }
-    protected View getView() {
+
+    protected void bindServiceConn() {
+        context.bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND"),
+                mServiceConn, Context.BIND_AUTO_CREATE);
+    }
+
+    protected void unbindServiceConn() {
+        context.unbindService(mServiceConn);
+    }
+
+    protected void launchBilling(Context context, PendingIntent pendingIntent) {
+        try {
+            Tools.HangarLog("launchBilling!");
+            ((Activity) context).startIntentSenderForResult(pendingIntent.getIntentSender(),
+                    1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0),
+                    Integer.valueOf(0));
+            mAlert.cancel();
+        } catch (IntentSender.SendIntentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    protected View getView(Context settingsContext) {
+        mSettingsContext = settingsContext;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         View mDonate = inflater.inflate(R.layout.donate, null);
+
+        TextView mJoinUsText = (TextView) mDonate.findViewById(R.id.donate_join_us);
+        mJoinUsText.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+
+        LinearLayout mJoinUsCont = (LinearLayout) mJoinUsText.getParent();
+        mJoinUsCont.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(context.getResources().getString(R.string.donate_googleplus_url)));
+                context.startActivity(i);
+            }
+        });
+
+        final Spinner mDonateSpinner = (Spinner) mDonate.findViewById(R.id.donate_spinner);
+        Button mDonateButton = (Button) mDonate.findViewById(R.id.donate_google);
+        mDonateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int spinnerPos = mDonateSpinner.getSelectedItemPosition();
+                Tools.HangarLog("spinnerPos: " + spinnerPos);
+                final PendingIntent pendingIntent = pIntents.get(spinnerPos);
+                launchBilling(mSettingsContext, pendingIntent);
+            }
+        });
+
+        Button mPaypalButton = (Button) mDonate.findViewById(R.id.donate_paypal);
+        mPaypalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(Uri.decode(context.getResources().getString(R.string.donate_paypal_url))));
+                Settings.launchedPaypal(true);
+                mAlert.cancel();
+                context.startActivity(i);
+            }
+        });
+
         return mDonate;
+    }
+
+    protected void setAlert(AlertDialog alert) {
+        mAlert = alert;
+    }
+
+    protected PendingIntent getIntent(int num) {
+        try {
+            Tools.HangarLog("getIntent: " + num);
+            if (mService == null) {
+                Tools.HangarLog("mService is null!");
+                return null;
+            }
+
+            Bundle buyIntentBundle = mService.getBuyIntent(3, context.getPackageName(),
+                    "donate_" + num, "inapp", null);
+            Tools.HangarLog("buyIntentBundle: " + buyIntentBundle);
+            PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+
+            return pendingIntent;
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 

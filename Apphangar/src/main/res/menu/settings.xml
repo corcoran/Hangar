@@ -16,4 +16,9 @@
         android:title="@string/configure_changelog"
         android:orderInCategory="100"
         android:showAsAction="never" />
+
+    <item android:id="@+id/action_donate"
+        android:title="@string/configure_donate"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
 </menu>

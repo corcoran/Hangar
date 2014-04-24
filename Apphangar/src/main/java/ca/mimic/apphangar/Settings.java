@@ -10,10 +10,12 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -42,8 +44,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.vending.billing.IInAppBillingService;
 
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Settings extends Activity implements ActionBar.TabListener {
 
@@ -76,6 +84,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
     protected static View appsView;
     protected static boolean isBound = false;
+    protected static boolean mLaunchedPaypal = false;
     boolean newStart;
 
     static PrefsGet prefs;
@@ -197,6 +206,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
     @Override
     protected void onResume() {
         super.onResume();
+        Tools.HangarLog("onREsume Settings!");
+        if (mLaunchedPaypal) {
+            mLaunchedPaypal = false;
+            launchThanks();
+        }
         myService.watchHelper(START_SERVICE);
     }
 
@@ -212,6 +226,43 @@ public class Settings extends Activity implements ActionBar.TabListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Tools.HangarLog("ResultCode: " + resultCode + "RequestCode: " + requestCode + "Intent: " + data);
+        if (requestCode == 1001) {
+            int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
+            String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
+
+            if (responseCode == 0) {
+                try {
+                    JSONObject jo = new JSONObject(purchaseData);
+                    String sku = jo.getString("productId");
+                    Tools.HangarLog("It werked! productId: " + sku);
+                    launchThanks();
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                if (requestCode > 1) {
+                    Tools.HangarLog("Not user's fault, tried to purchase but bailed.");
+                    Toast.makeText(mContext, getResources().getString(R.string.donate_try_paypal),
+                            Toast.LENGTH_LONG).show();
+                }
+                launchDonate();
+            }
+        }
+    }
+
+    protected static void launchedPaypal(boolean launched) {
+        mLaunchedPaypal = launched;
+        Tools.HangarLog("launchedPaypal: " + launched);
+    }
+
+    protected void launchThanks() {
+        Toast.makeText(getApplicationContext(), "Thank you for donating!", Toast.LENGTH_LONG).show();
     }
 
     protected void launchChangelog() {
@@ -236,15 +287,23 @@ public class Settings extends Activity implements ActionBar.TabListener {
     }
 
     protected void launchDonate() {
-        Donate donate = new Donate(this);
-        View mDonate = donate.getView();
+        final Donate donate = new Donate(this);
+        donate.bindServiceConn();
+        View mDonate = donate.getView(mContext);
         mDonate.refreshDrawableState();
-        new AlertDialog.Builder(Settings.this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this)
                 .setTitle(R.string.donate_title)
                 .setIcon(R.drawable.ic_launcher)
                 .setView(mDonate)
-                .setPositiveButton(R.string.donate_accept_button, null)
-                .show();
+                .setPositiveButton(R.string.donate_accept_button, null);
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            public void onDismiss(DialogInterface dialog) {
+                donate.unbindServiceConn();
+            }
+         });
+
+        AlertDialog alert = builder.show();
+        donate.setAlert(alert);
     }
 
     ServiceConnection mConnection = new ServiceConnection() {
@@ -351,6 +410,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
             return true;
         } else if (id == R.id.action_changelog) {
             launchChangelog();
+            return true;
+        } else if (id == R.id.action_donate) {
+            launchDonate();
             return true;
         }
         return super.onOptionsItemSelected(item);
