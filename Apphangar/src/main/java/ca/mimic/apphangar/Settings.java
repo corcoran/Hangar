@@ -161,6 +161,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
+        actionBar.setTitle(R.string.title_activity_settings);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
