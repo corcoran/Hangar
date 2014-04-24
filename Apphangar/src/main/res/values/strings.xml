@@ -116,28 +116,34 @@
     <string name="configure_changelog">See recent changes</string>
     <string name="configure_donate">Donate</string>
 
-    <!-- Changelog -->
-    <string name="changelog_title">Hangar Changes</string>
-    <string name="changelog_donate_button">Show thanks</string>
-    <string name="changelog_accept_button">Continue</string>
-
     <!-- Donate -->
     <string name="donate_title">Want to buy me a beer?</string>
-    <string name="donate_head">Donations are always appreciated and helpful in funding the future development of this and other apps.\n\nIf you find Hangar useful and want to show thanks for the work that has gone into it feel free to leave a review reflecting your experience with the app, or if you\'re in a generous mood, you can donate using <b>Google Play</b> or <b>Paypal</b> below.</string>
+    <string name="donate_head">Donations are always appreciated and helpful in funding the future development of this and other apps.\n\nIf you find Hangar useful and want to show thanks for the work that has gone into it, feel free to leave a review reflecting your experience with the app, or if you\'re in a generous mood, you can donate using <b>Google Play</b> or <b>PayPal</b> below.</string>
     <string name="donate_title_google">Google Play</string>
-    <string name="donate_title_paypal">Paypal</string>
+    <string name="donate_title_paypal">PayPal</string>
     <string name="donate_google">Donate with Google</string>
-    <string name="donate_paypal">Donate with Paypal</string>
+    <string name="donate_paypal">Donate with PayPal</string>
     <string name="donate_join_us">Join us on Google+</string>
     <string name="donate_accept_button">"Keep on keepin' on"</string>
     <string-array name="entries_google_donate">
         <item>$1 (USD)</item>
         <item>$2 (USD)</item>
         <item>$3 (USD)</item>
+        <item>$4 (USD)</item>
+        <item>$5 (USD)</item>
     </string-array>
     <string name="donate_googleplus_url">https://plus.google.com/communities/117722899904055747117</string>
     <string name="donate_paypal_url" formatted="false">https://www.paypal.com/cgi-bin/webscr?cmd=_donations%26business=8M2WWALSUHQUW%26lc=CA%26item_name=Hangar%26currency_code=USD%26bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted</string>
-    <string name="donate_try_paypal">"Hm.. looks like Google Play didn't like that.  Maybe try Paypal instead?"</string>
+    <string name="donate_try_paypal">"Hm.. looks like Google Play didn't like that.  Maybe try PayPal instead?"</string>
+    <string name="donate_thanks_title">Thank you!</string>
+    <string name="donate_thanks_continue">Back to Hangar</string>
+    <string name="donate_thanks">"Your contribution to the development of Hangar is much appreciated! The Android community is made better by people like you who support and motivate developers."</string>
+    <string name="donate_thanks_paypal">"Hangar doesn't know if an actual donation was made using PayPal, since we just sent you off to a paypal link via your favorite browser.  However we're going to thank you regardless for your continued use and support! :)"</string>
+
+    <!-- Changelog -->
+    <string name="changelog_title">Hangar Changes</string>
+    <string name="changelog_donate_button">Show thanks</string>
+    <string name="changelog_accept_button">Continue</string>
 
     <string-array name="versionNumbers">
         <item>1.15 (Apr 23th)</item>

@@ -129,6 +129,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int SERVICE_BUILD_TASKS = 2;
     final static int SERVICE_CLEAR_TASKS = 3;
 
+    final static int THANK_YOU_GOOGLE = 0;
+    final static int THANK_YOU_PAYPAL = 1;
+
     final static int START_SERVICE = 0;
     final static int STOP_SERVICE = 1;
     static DrawTasks drawT;
@@ -209,7 +212,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         Tools.HangarLog("onREsume Settings!");
         if (mLaunchedPaypal) {
             mLaunchedPaypal = false;
-            launchThanks();
+            launchThanks(THANK_YOU_PAYPAL);
         }
         myService.watchHelper(START_SERVICE);
     }
@@ -240,7 +243,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     JSONObject jo = new JSONObject(purchaseData);
                     String sku = jo.getString("productId");
                     Tools.HangarLog("It werked! productId: " + sku);
-                    launchThanks();
+                    launchThanks(THANK_YOU_GOOGLE);
                 }
                 catch (JSONException e) {
                     e.printStackTrace();
@@ -261,8 +264,20 @@ public class Settings extends Activity implements ActionBar.TabListener {
         Tools.HangarLog("launchedPaypal: " + launched);
     }
 
-    protected void launchThanks() {
-        Toast.makeText(getApplicationContext(), "Thank you for donating!", Toast.LENGTH_LONG).show();
+    protected void launchThanks(int which) {
+        String thankYouMsg = getResources().getString(R.string.donate_thanks);
+        if (which == THANK_YOU_PAYPAL)
+                thankYouMsg += "\n\n" + getResources().getString(R.string.donate_thanks_paypal);
+
+        AlertDialog alert = new AlertDialog.Builder(Settings.this)
+                .setTitle(R.string.donate_thanks_title)
+                .setIcon(R.drawable.ic_launcher)
+                .setMessage(thankYouMsg)
+                .setPositiveButton(R.string.donate_thanks_continue, null)
+                .show();
+
+        TextView msgTxt = (TextView) alert.findViewById(android.R.id.message);
+        msgTxt.setTextSize(Tools.dpToPx(mContext, 7));
     }
 
     protected void launchChangelog() {

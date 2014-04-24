@@ -5,21 +5,16 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -28,7 +23,6 @@ import android.widget.TextView;
 import com.android.vending.billing.IInAppBillingService;
 
 import java.util.ArrayList;
-import java.util.ServiceConfigurationError;
 
 public class Donate {
     Context context;
@@ -38,6 +32,7 @@ public class Donate {
     ServiceConnection mServiceConn;
     ArrayList<PendingIntent> pIntents;
     AlertDialog mAlert;
+    View mDonate;
 
     Donate(Context donateContext) {
         context = donateContext;
@@ -51,9 +46,6 @@ public class Donate {
             public void onServiceConnected(ComponentName name,
                                            IBinder service) {
                 mService = IInAppBillingService.Stub.asInterface(service);
-                for (int i=1;i<=3;i++) {
-                    pIntents.add(getIntent(i));
-                }
             }
 
         };
@@ -84,7 +76,7 @@ public class Donate {
     protected View getView(Context settingsContext) {
         mSettingsContext = settingsContext;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-        View mDonate = inflater.inflate(R.layout.donate, null);
+        mDonate = inflater.inflate(R.layout.donate, null);
 
         TextView mJoinUsText = (TextView) mDonate.findViewById(R.id.donate_join_us);
         mJoinUsText.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
@@ -99,15 +91,13 @@ public class Donate {
             }
         });
 
-        final Spinner mDonateSpinner = (Spinner) mDonate.findViewById(R.id.donate_spinner);
-        Button mDonateButton = (Button) mDonate.findViewById(R.id.donate_google);
+        final Button mDonateButton = (Button) mDonate.findViewById(R.id.donate_google);
         mDonateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int spinnerPos = mDonateSpinner.getSelectedItemPosition();
-                Tools.HangarLog("spinnerPos: " + spinnerPos);
-                final PendingIntent pendingIntent = pIntents.get(spinnerPos);
-                launchBilling(mSettingsContext, pendingIntent);
+                Spinner mDonateSpinner = (Spinner) mDonate.findViewById(R.id.donate_spinner);
+                int spinnerPos = mDonateSpinner.getSelectedItemPosition() + 1;
+                launchBilling(mSettingsContext, getIntent(spinnerPos));
             }
         });
 
@@ -138,8 +128,9 @@ public class Donate {
                 return null;
             }
 
+            String sku = "donate_" + num;
             Bundle buyIntentBundle = mService.getBuyIntent(3, context.getPackageName(),
-                    "donate_" + num, "inapp", null);
+                    sku, "inapp", null);
             Tools.HangarLog("buyIntentBundle: " + buyIntentBundle);
             PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
 
