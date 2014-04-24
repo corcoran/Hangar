@@ -278,7 +278,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 .show();
 
         TextView msgTxt = (TextView) alert.findViewById(android.R.id.message);
-        msgTxt.setTextSize(Tools.dpToPx(mContext, 7));
+        msgTxt.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
     }
 
     protected void launchChangelog() {
