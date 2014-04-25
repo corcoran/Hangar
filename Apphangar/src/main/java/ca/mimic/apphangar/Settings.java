@@ -250,7 +250,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     e.printStackTrace();
                 }
             } else {
-                if (requestCode > 1) {
+                if (responseCode > 1) {
                     Tools.HangarLog("Not user's fault, tried to purchase but bailed.");
                     Toast.makeText(mContext, getResources().getString(R.string.donate_try_paypal),
                             Toast.LENGTH_LONG).show();
