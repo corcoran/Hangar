@@ -119,8 +119,39 @@ public class WatchfulService extends Service {
         if (isToggled) {
             ArrayList<Tools.TaskInfo> taskList;
             taskList = Tools.buildTaskList(getApplicationContext(), db, TASKLIST_QUEUE_SIZE);
+            if (taskList.size() == 0) {
+                buildBaseTasks();
+                taskList = Tools.buildTaskList(getApplicationContext(), db, TASKLIST_QUEUE_SIZE);
+            }
             reorderAndLaunch(taskList);
         }
+    }
+
+    protected void buildBaseTasks() {
+        // taskList is blank!  Populating db from apps in memory.
+        final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(MAX_RUNNING_TASKS);
+        if (recentTasks != null && recentTasks.size() > 0) {
+            ComponentName task = recentTasks.get(0).baseActivity;
+            String taskClass = task.getClassName();
+            String taskPackage = task.getPackageName();
+
+            buildTaskInfo(taskClass, taskPackage);
+        }
+    }
+
+    protected void buildTaskInfo(String className, String packageName) {
+        runningTask = new TaskInfo(packageName);
+        runningTask.className = className;
+        try {
+            ApplicationInfo appInfo = pkgm.getApplicationInfo(packageName, 0);
+            runningTask.appName = appInfo.loadLabel(pkgm).toString();
+            updateOrAdd(runningTask);
+        } catch (Exception e) {
+            Tools.HangarLog("NPE taskPackage: " + packageName);
+            e.printStackTrace();
+        }
+
     }
 
     protected void buildTasks() {
@@ -169,17 +200,7 @@ public class WatchfulService extends Service {
                     }
                     return;
                 }
-                runningTask = new TaskInfo(taskPackage);
-                runningTask.className = taskClass;
-                runningTask.packageName = taskPackage;
-                try {
-                    ApplicationInfo appInfo = pkgm.getApplicationInfo(taskPackage, 0);
-                    runningTask.appName = appInfo.loadLabel(pkgm).toString();
-                } catch (NullPointerException e) {
-                    Tools.HangarLog("NPE taskPackage: " + taskPackage);
-                    e.printStackTrace();
-                }
-                updateOrAdd(runningTask);
+                buildTaskInfo(taskClass, taskPackage);
             }
             buildReorderAndLaunch(isToggled);
         }
