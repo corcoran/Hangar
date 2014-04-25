@@ -132,15 +132,24 @@ public class WatchfulService extends Service {
         final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(MAX_RUNNING_TASKS);
         if (recentTasks != null && recentTasks.size() > 0) {
-            ComponentName task = recentTasks.get(0).baseActivity;
-            String taskClass = task.getClassName();
-            String taskPackage = task.getPackageName();
+            for (ActivityManager.RunningTaskInfo recentTask : recentTasks) {
+                ComponentName task = recentTask.baseActivity;
+                try {
+                    String taskClass = task.getClassName();
+                    String taskPackage = task.getPackageName();
 
-            buildTaskInfo(taskClass, taskPackage);
+                    buildTaskInfo(taskClass, taskPackage);
+                } catch (NullPointerException e) { }
+            }
         }
     }
 
     protected void buildTaskInfo(String className, String packageName) {
+        if (className.equals("com.android.internal.app.ResolverActivity") ||
+                Tools.isBlacklistedOrBad(packageName, getApplicationContext(), db) ||
+                packageName.equals(launcherPackage)) {
+            return;
+        }
         runningTask = new TaskInfo(packageName);
         runningTask.className = className;
         try {
