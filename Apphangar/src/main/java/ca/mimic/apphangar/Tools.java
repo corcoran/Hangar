@@ -130,7 +130,6 @@ public class Tools {
             Float calNum = num / 8f;
             baseRecency = (calNum < 2.5) ? 2.5f : calNum;
             numToCompare = baseRecency + 1.5f;
-            HangarLog("num: " + num + " calNum: " + calNum + " baseRecency: " + baseRecency + " numToCompare: " + numToCompare);
         }
         public int compare(TaskInfoOrder c1, TaskInfoOrder c2)
         {
@@ -169,10 +168,9 @@ public class Tools {
     }
 
 
-    protected static ArrayList<TaskInfo> reorderTasks(ArrayList<TaskInfo> taskList, TasksDataSource db, int weightPriority) {
+    protected static ArrayList<TaskInfo> reorderTasks(ArrayList<TaskInfo> taskList, TasksDataSource db, int weightPriority, boolean widget) {
         int highestSeconds = db.getHighestSeconds();
         int highestLaunch = db.getHighestLaunch();
-        HangarLog("highest Launch [" + highestLaunch + "] Seconds [" + highestSeconds + "]");
         int count = 1;
         int subtractor = taskList.size() + 1;
 
@@ -208,13 +206,19 @@ public class Tools {
 
         Collections.sort(taskListE, new TaskComparator("final", weightPriority, taskList.size()));
         taskList.clear();
+        int order = 1;
         for (TaskInfoOrder taskE : taskListE) {
-            HangarLog("task[" + taskE.getOrig().appName + "] l[" + taskE.launchOrder + "] p[" + taskE.placeOrder + "] s[" + taskE.secondsOrder + "]");
+            HangarLog("reorder weightedPriority: " + weightPriority + " widget: " + widget + " task[" + taskE.getOrig().appName + "] l[" + taskE.launchOrder + "] p[" + taskE.placeOrder + "] s[" + taskE.secondsOrder + "]");
             taskList.add(taskE.getOrig());
+            db.setOrder(taskE.getOrig().packageName, order, widget);
+            order++;
         }
         return taskList;
     }
 
+    protected static ArrayList<TaskInfo> reorderTasks(ArrayList<TaskInfo> taskList, TasksDataSource db, int weightPriority) {
+        return reorderTasks(taskList, db, weightPriority, false);
+    }
     protected static ArrayList<String> getBlacklisted(Context context, TasksDataSource db) {
         ArrayList<String> blPNames = new ArrayList<String>();
         List<TasksModel> blTasks = db.getBlacklisted();
@@ -247,9 +251,17 @@ public class Tools {
         return false;
     }
 
-    protected static ArrayList<Tools.TaskInfo> buildTaskList(Context context, TasksDataSource db, int queueSize) {
+    protected static ArrayList<Tools.TaskInfo> buildTaskList(Context context, TasksDataSource db,
+                                                             int queueSize, boolean weighted,
+                                                             boolean widget) {
         ArrayList<Tools.TaskInfo> taskList = new ArrayList<Tools.TaskInfo>();
-        List<TasksModel> tasks = db.getAllTasks(queueSize);
+        List<TasksModel> tasks;
+        if (weighted) {
+            HangarLog("getOrderedTasks queueSize: " + queueSize);
+            tasks = db.getOrderedTasks(queueSize, widget);
+        } else {
+            tasks = db.getAllTasks(queueSize);
+        }
 
         for (TasksModel taskM : tasks) {
             String taskPackage = taskM.getPackageName();
@@ -270,10 +282,12 @@ public class Tools {
                 db.deleteTask(taskM);
                 continue;
             }
-            Tools.HangarLog("Adding to taskList [" + dbTask.appName + "] [" + dbTask.launches + "] [" + dbTask.totalseconds + "]s");
 
             taskList.add(dbTask);
         }
         return taskList;
+    }
+    protected static ArrayList<Tools.TaskInfo> buildTaskList(Context context, TasksDataSource db, int queueSize) {
+        return buildTaskList(context, db, queueSize, false, false);
     }
 }

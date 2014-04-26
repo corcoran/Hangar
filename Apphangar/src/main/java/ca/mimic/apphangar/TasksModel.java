@@ -10,6 +10,8 @@ public class TasksModel {
     private String classname;
     private int seconds;
     private int launches;
+    private int order;
+    private int widget_order;
     private Timestamp timestamp;
     private Boolean blacklisted;
 
@@ -72,6 +74,14 @@ public class TasksModel {
     public Boolean getBlacklisted() { return blacklisted; }
 
     public void setBlacklisted(Boolean blacklisted) { this.blacklisted = blacklisted; }
+
+    public void setOrder(int order) { this.order = order; }
+
+    public int getOrder() { return order; }
+
+    public void setWidgetOrder(int widget_order) { this.widget_order = widget_order; }
+
+    public int getWidgetOrder() { return widget_order; }
 
     // Will be used by the ArrayAdapter in the ListView
     @Override

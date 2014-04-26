@@ -25,7 +25,6 @@ public class AppsWidget extends AppWidgetProvider {
     protected static Context mContext;
     protected static PrefsGet prefs;
 
-    protected static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
     protected static final int SMALL_ICONS = 0;
     protected static final int MEDIUM_ICONS = 1;
     protected static final int LARGE_ICONS = 2;
@@ -49,22 +48,13 @@ public class AppsWidget extends AppWidgetProvider {
         // is restarted
         Intent intent = new Intent(context, WatchfulService.class);
         context.startService(intent);
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BCAST_CONFIGCHANGED);
-        context.getApplicationContext().registerReceiver(mBroadcastReceiver, filter);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Tools.HangarLog("onReceive");
-        if (mContext == null) {
+        if (mContext == null)
             mContext = context;
-
-            IntentFilter filter = new IntentFilter();
-            filter.addAction(BCAST_CONFIGCHANGED);
-            context.getApplicationContext().registerReceiver(mBroadcastReceiver, filter);
-        }
 
         AppWidgetManager mgr = AppWidgetManager.getInstance(context);
 
@@ -207,17 +197,11 @@ public class AppsWidget extends AppWidgetProvider {
         }
         int queueSize = (Math.ceil(numOfIcons * 1.2f)) < 14 ? 14 : (int) Math.ceil(numOfIcons * 1.2f);
 
-        ArrayList<Tools.TaskInfo> appList = Tools.buildTaskList(context, db, queueSize);
-
         String taskPackage = context.getPackageName();
 
         boolean weightedRecents = mPrefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
                 Settings.WEIGHTED_RECENTS_DEFAULT);
-        int weightPriority = Integer.parseInt(mPrefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
-                Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
-        if (weightedRecents) {
-            appList = Tools.reorderTasks(appList, db, weightPriority);
-        }
+        ArrayList<Tools.TaskInfo> appList = Tools.buildTaskList(context, db, queueSize, weightedRecents, true);
 
         int imageButtonLayout = context.getResources().getIdentifier("imageButton", "id", taskPackage);
         int imageContLayout = context.getResources().getIdentifier("imageCont", "id", taskPackage);
@@ -286,25 +270,6 @@ public class AppsWidget extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
-    public BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent myIntent) {
-
-            if ( myIntent.getAction().equals( BCAST_CONFIGCHANGED ) ) {
-                final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-                final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(1);
-                if (recentTasks.size() > 0) {
-                    ComponentName task = recentTasks.get(0).baseActivity;
-                    String taskPackage = task.getPackageName();
-                    if (taskPackage.equals(Tools.getLauncher(context))) {
-                        Tools.HangarLog("We're in the launcher changing orientation!");
-                        AppsWidget.this.onReceive(context, new Intent());
-                    }
-                }
-
-            }
-        }
-    };
 }
 
 

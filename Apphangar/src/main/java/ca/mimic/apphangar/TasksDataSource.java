@@ -20,7 +20,7 @@ public class TasksDataSource {
     private Tasks dbHelper;
     private String[] allColumns = { Tasks.COLUMN_ID,
             Tasks.COLUMN_NAME, Tasks.COLUMN_PACKAGENAME,
-            Tasks.COLUMN_CLASSNAME, Tasks.COLUMN_SECONDS, Tasks.COLUMN_TIMESTAMP, Tasks.COLUMN_BLACKLISTED, Tasks.COLUMN_LAUNCHES };
+            Tasks.COLUMN_CLASSNAME, Tasks.COLUMN_SECONDS, Tasks.COLUMN_TIMESTAMP, Tasks.COLUMN_BLACKLISTED, Tasks.COLUMN_LAUNCHES, Tasks.COLUMN_ORDER, Tasks.COLUMN_WIDGET_ORDER };
 
     public TasksDataSource(Context context) {
         dbHelper = new Tasks(context);
@@ -193,16 +193,34 @@ public class TasksDataSource {
         ContentValues args = new ContentValues();
         Date date = new Date();
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        args.put("timestamp", dateFormatter.format(date));
+        args.put(Tasks.COLUMN_TIMESTAMP, dateFormatter.format(date));
         return database.update(Tasks.TABLE_TASKS, args, Tasks.COLUMN_PACKAGENAME
                 + " = '" + name + "'", null);
     }
 
-    public int updateOrder(String name, int order) {
+    public int setOrder(String name, int order, boolean widget) {
         ContentValues args = new ContentValues();
-        args.put("timestamp", dateFormatter.format(date));
+        if (widget) {
+            args.put(Tasks.COLUMN_WIDGET_ORDER, order);
+        } else {
+            args.put(Tasks.COLUMN_ORDER, order);
+        }
         return database.update(Tasks.TABLE_TASKS, args, Tasks.COLUMN_PACKAGENAME
                 + " = '" + name + "'", null);
+    }
+
+    public int setOrder(String name, int order) {
+        return setOrder(name, order, false);
+    }
+
+    public void blankOrder(boolean widget) {
+        ContentValues args = new ContentValues();
+        if (widget) {
+            args.put(Tasks.COLUMN_WIDGET_ORDER, 0);
+        } else {
+            args.put(Tasks.COLUMN_ORDER, 0);
+        }
+        database.update(Tasks.TABLE_TASKS, args, null, null);
     }
 
     public List<TasksModel> getAllTasks(int limit) {
@@ -228,6 +246,43 @@ public class TasksDataSource {
         return tasks;
     }
 
+    public List<TasksModel> getOrderedTasks(int limit, boolean widget) {
+        List<TasksModel> tasks = new ArrayList<TasksModel>();
+
+        Cursor cursor;
+        if (widget) {
+            cursor = database.query(Tasks.TABLE_TASKS,
+                    allColumns, Tasks.COLUMN_WIDGET_ORDER + " > 0 or (" +
+                        Tasks.COLUMN_WIDGET_ORDER + " = 0 and " +
+                        Tasks.COLUMN_ORDER + " > 0)" +
+                        (limit == 0 ? null : " and " + Tasks.COLUMN_BLACKLISTED + " = " + 0),
+                    null, null, null, Tasks.COLUMN_WIDGET_ORDER + ", " + Tasks.COLUMN_ORDER,
+                    limit == 0 ? null : Integer.toString(limit));
+        } else {
+            cursor = database.query(Tasks.TABLE_TASKS,
+                    allColumns, Tasks.COLUMN_ORDER + " > 0" + (limit == 0 ? null : " and " + Tasks.COLUMN_BLACKLISTED + " = " + 0),
+                    null, null, null, Tasks.COLUMN_ORDER,
+                    limit == 0 ? null : Integer.toString(limit));
+        }
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            try {
+                TasksModel task = cursorToTasks(cursor);
+                tasks.add(task);
+                cursor.moveToNext();
+            } catch (ParseException e) {
+                Tools.HangarLog("getOrderedTasks parse error [" + e + "]");
+            }
+        }
+        // make sure to close the cursor
+        cursor.close();
+        return tasks;
+    }
+
+    public List<TasksModel> getOrderedTasks(int limit) {
+        return getOrderedTasks(limit, false);
+    }
     public List<TasksModel> getAllTasks() {
         return getAllTasks(0);
     }
@@ -244,6 +299,8 @@ public class TasksDataSource {
         task.setTimestamp(ts);
         task.setBlacklisted(cursor.getInt(6) == 1);
         task.setLaunches(cursor.getInt(7));
+        task.setOrder(cursor.getInt(8));
+        task.setWidgetOrder(cursor.getInt(9));
         return task;
     }
 }

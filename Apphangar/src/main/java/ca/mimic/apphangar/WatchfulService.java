@@ -3,9 +3,11 @@ package ca.mimic.apphangar;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -28,6 +30,7 @@ public class WatchfulService extends Service {
     TasksDataSource db;
 
     SharedPreferences prefs;
+    SharedPreferences widgetPrefs;
     PackageManager pkgm;
     PowerManager pm;
 
@@ -36,8 +39,10 @@ public class WatchfulService extends Service {
     int numOfApps;
 
     final int MAX_RUNNING_TASKS = 20;
-    final int TASKLIST_QUEUE_SIZE = 14;
+    final int TASKLIST_QUEUE_SIZE = 40;
     final int LOOP_SECONDS = 3;
+
+    protected static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
 
     boolean isNotificationRunning;
 
@@ -79,6 +84,12 @@ public class WatchfulService extends Service {
         Tools.HangarLog("starting up.. ");
 
         prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
+        widgetPrefs = getSharedPreferences("AppsWidget", Context.MODE_MULTI_PROCESS);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BCAST_CONFIGCHANGED);
+        registerReceiver(mBroadcastReceiver, filter);
+
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
         iconMap = new HashMap<String, Integer>();
@@ -100,9 +111,15 @@ public class WatchfulService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Tools.HangarLog("Getting prefs");
         prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
-        pkgm = getApplicationContext().getPackageManager();
+        widgetPrefs = getSharedPreferences("AppsWidget", Context.MODE_MULTI_PROCESS);
+        pkgm = getPackageManager();
         launcherPackage = Tools.getLauncher(getApplicationContext());
         numOfApps = Integer.parseInt(prefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.APPSNO_DEFAULT)));
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BCAST_CONFIGCHANGED);
+        registerReceiver(mBroadcastReceiver, filter);
+
         handler.removeCallbacks(scanApps);
         handler.post(scanApps);
         return START_STICKY;
@@ -248,17 +265,32 @@ public class WatchfulService extends Service {
         stopForeground(true);
     }
 
+    protected void reorderWidgetTasks(boolean wR, int wP) {
+        boolean weightedRecents = widgetPrefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
+                Settings.WEIGHTED_RECENTS_DEFAULT);
+        int weightPriority = Integer.parseInt(widgetPrefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
+                Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
+        Tools.HangarLog("reorderWidgetTasks wR: " + wR + " wP: " + wP + " weightPriority: " + weightPriority + " weightedRecents: " + weightedRecents);
+        if ((weightedRecents && !wR) || (weightedRecents && wP != weightPriority)) {
+            ArrayList<Tools.TaskInfo> appList = Tools.buildTaskList(getApplicationContext(), db, TASKLIST_QUEUE_SIZE);
+            Tools.reorderTasks(appList, db, weightPriority, true);
+        } else {
+            db.blankOrder(true);
+        }
+    }
+
     protected void reorderAndLaunch(ArrayList<Tools.TaskInfo> taskList) {
         boolean weightedRecents = prefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
                 Settings.WEIGHTED_RECENTS_DEFAULT);
         boolean isToggled = prefs.getBoolean(Settings.TOGGLE_PREFERENCE, Settings.TOGGLE_DEFAULT);
         int weightPriority = Integer.parseInt(prefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
                 Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
-        if (isToggled) {
-            if (weightedRecents)
-                taskList = Tools.reorderTasks(taskList, db, weightPriority);
-            createNotification(taskList);
+        if (weightedRecents) {
+            taskList = Tools.reorderTasks(taskList, db, weightPriority);
         }
+        if (isToggled)
+            createNotification(taskList);
+        reorderWidgetTasks(weightedRecents, weightPriority);
     }
 
     public void createNotification(ArrayList<Tools.TaskInfo> taskList) {
@@ -324,4 +356,16 @@ public class WatchfulService extends Service {
         startForeground(1337, notification);
         isNotificationRunning = true;
     }
+
+    public BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() != null && intent.getAction().equals(BCAST_CONFIGCHANGED)) {
+                Tools.HangarLog("runningTask: " + runningTask.packageName + " launcherPackage: " + launcherPackage);
+                if (runningTask.packageName.equals(launcherPackage)) {
+                    Tools.updateWidget(context);
+                }
+            }
+        }
+    };
 }

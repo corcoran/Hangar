@@ -32,8 +32,6 @@ public class StatsWidget extends AppWidgetProvider {
     protected static Context mContext;
     protected static PrefsGet prefs;
 
-    protected static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
-
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Tools.HangarLog("onUpdate");
@@ -43,21 +41,13 @@ public class StatsWidget extends AppWidgetProvider {
         // is restarted
         Intent intent = new Intent(context, WatchfulService.class);
         context.startService(intent);
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BCAST_CONFIGCHANGED);
-        context.getApplicationContext().registerReceiver(mBroadcastReceiver, filter);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Tools.HangarLog("onReceive");
-        if (mContext == null) {
+        if (mContext == null)
             mContext = context;
-            IntentFilter filter = new IntentFilter();
-            filter.addAction(BCAST_CONFIGCHANGED);
-            context.getApplicationContext().registerReceiver(mBroadcastReceiver, filter);
-        }
 
         AppWidgetManager mgr = AppWidgetManager.getInstance(context);
 
@@ -237,25 +227,6 @@ public class StatsWidget extends AppWidgetProvider {
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
-    public BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent myIntent) {
-
-            if ( myIntent.getAction().equals( BCAST_CONFIGCHANGED ) ) {
-                final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-                final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(1);
-                if (recentTasks.size() > 0) {
-                    ComponentName task = recentTasks.get(0).baseActivity;
-                    String taskPackage = task.getPackageName();
-                    if (taskPackage.equals(Tools.getLauncher(context))) {
-                        Tools.HangarLog("We're in the launcher changing orientation!");
-                        StatsWidget.this.onReceive(context, new Intent());
-                    }
-                }
-
-            }
-        }
-    };
 }
 
 
