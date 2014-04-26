@@ -112,6 +112,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int APPS_WIDGET_APPSNO_LS_DEFAULT = 13;
     final static int ALIGNMENT_DEFAULT = 16; // 16 is middle
 
+    final static int TASKLIST_QUEUE_LIMIT = 40;
+    final static int TASKLIST_QUEUE_SIZE = 35;
+    final static int APPLIST_QUEUE_SIZE = 14;
+
     final static String STATUSBAR_ICON_WHITE_WARM = "**white_warm**";
     final static String STATUSBAR_ICON_WHITE_COLD = "**white_cold**";
     final static String STATUSBAR_ICON_WHITE_BLUE = "**white_blue**";

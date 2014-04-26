@@ -256,12 +256,12 @@ public class TasksDataSource {
                         Tasks.COLUMN_WIDGET_ORDER + " = 0 and " +
                         Tasks.COLUMN_ORDER + " > 0)" +
                         (limit == 0 ? null : " and " + Tasks.COLUMN_BLACKLISTED + " = " + 0),
-                    null, null, null, Tasks.COLUMN_WIDGET_ORDER + ", " + Tasks.COLUMN_ORDER,
+                    null, null, null, Tasks.COLUMN_WIDGET_ORDER + " desc, " + Tasks.COLUMN_ORDER + " desc",
                     limit == 0 ? null : Integer.toString(limit));
         } else {
             cursor = database.query(Tasks.TABLE_TASKS,
                     allColumns, Tasks.COLUMN_ORDER + " > 0" + (limit == 0 ? null : " and " + Tasks.COLUMN_BLACKLISTED + " = " + 0),
-                    null, null, null, Tasks.COLUMN_ORDER,
+                    null, null, null, Tasks.COLUMN_ORDER + " desc",
                     limit == 0 ? null : Integer.toString(limit));
         }
 

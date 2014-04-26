@@ -89,6 +89,12 @@ public class AppsWidgetSettings extends PreferenceActivity {
                 public void onClick(View v) {
                     int mAppWidgetId;
                     savePrefs();
+
+                    TasksDataSource db = new TasksDataSource(mContext);
+                    db.open();
+                    Tools.reorderWidgetTasks(db, mContext);
+                    db.close();
+
                     if (extras != null) {
                         mAppWidgetId = extras.getInt(
                                 AppWidgetManager.EXTRA_APPWIDGET_ID,

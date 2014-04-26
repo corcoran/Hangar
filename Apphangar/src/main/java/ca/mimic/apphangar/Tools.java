@@ -3,6 +3,7 @@ package ca.mimic.apphangar;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -127,9 +128,11 @@ public class Tools {
         public TaskComparator (String type, int weight, int num){
             mType = type;
             weightPriority = weight;
-            Float calNum = num / 8f;
+            Float calNum = num / 10f;
             baseRecency = (calNum < 2.5) ? 2.5f : calNum;
             numToCompare = baseRecency + 1.5f;
+            HangarLog("num: " + num + " calNum: " + calNum + " baseRecency: " + baseRecency + " numToCompare: " + numToCompare);
+
         }
         public int compare(TaskInfoOrder c1, TaskInfoOrder c2)
         {
@@ -168,7 +171,7 @@ public class Tools {
     }
 
 
-    protected static ArrayList<TaskInfo> reorderTasks(ArrayList<TaskInfo> taskList, TasksDataSource db, int weightPriority, boolean widget) {
+    protected ArrayList<TaskInfo> reorderTasks(ArrayList<TaskInfo> taskList, TasksDataSource db, int weightPriority, boolean widget) {
         int highestSeconds = db.getHighestSeconds();
         int highestLaunch = db.getHighestLaunch();
         int count = 1;
@@ -206,19 +209,44 @@ public class Tools {
 
         Collections.sort(taskListE, new TaskComparator("final", weightPriority, taskList.size()));
         taskList.clear();
-        int order = 1;
+        int order = taskListE.size();
+        db.blankOrder(widget);
         for (TaskInfoOrder taskE : taskListE) {
             HangarLog("reorder weightedPriority: " + weightPriority + " widget: " + widget + " task[" + taskE.getOrig().appName + "] l[" + taskE.launchOrder + "] p[" + taskE.placeOrder + "] s[" + taskE.secondsOrder + "]");
             taskList.add(taskE.getOrig());
             db.setOrder(taskE.getOrig().packageName, order, widget);
-            order++;
+            order--;
         }
         return taskList;
     }
 
-    protected static ArrayList<TaskInfo> reorderTasks(ArrayList<TaskInfo> taskList, TasksDataSource db, int weightPriority) {
+    protected ArrayList<TaskInfo> reorderTasks(ArrayList<TaskInfo> taskList, TasksDataSource db, int weightPriority) {
         return reorderTasks(taskList, db, weightPriority, false);
     }
+
+    protected static void reorderWidgetTasks(TasksDataSource db, Context context) {
+        SharedPreferences settingsPrefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS);
+        SharedPreferences widgetPrefs = context.getSharedPreferences("AppsWidget", Context.MODE_MULTI_PROCESS);
+
+        boolean weightedRecents = widgetPrefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
+                Settings.WEIGHTED_RECENTS_DEFAULT);
+        int weightPriority = Integer.parseInt(widgetPrefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
+                Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
+
+        boolean wR = settingsPrefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
+                Settings.WEIGHTED_RECENTS_DEFAULT);
+        int wP = Integer.parseInt(settingsPrefs.getString(Settings.WEIGHT_PRIORITY_PREFERENCE,
+                Integer.toString(Settings.WEIGHT_PRIORITY_DEFAULT)));
+
+        HangarLog("reorderWidgetTasks wR: " + wR + " wP: " + wP + " weightPriority: " + weightPriority + " weightedRecents: " + weightedRecents);
+        if ((weightedRecents && !wR) || (weightedRecents && wP != weightPriority)) {
+            ArrayList<TaskInfo> appList = buildTaskList(context, db, Settings.TASKLIST_QUEUE_LIMIT);
+            new Tools().reorderTasks(appList, db, weightPriority, true);
+        } else {
+            db.blankOrder(true);
+        }
+    }
+
     protected static ArrayList<String> getBlacklisted(Context context, TasksDataSource db) {
         ArrayList<String> blPNames = new ArrayList<String>();
         List<TasksModel> blTasks = db.getBlacklisted();

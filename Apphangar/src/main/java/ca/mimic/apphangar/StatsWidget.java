@@ -1,14 +1,11 @@
 package ca.mimic.apphangar;
 
-import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -18,7 +15,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import java.util.Collections;
@@ -34,7 +30,7 @@ public class StatsWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Tools.HangarLog("onUpdate");
+        Tools.HangarLog("onUpdate [" + this.getClass().getCanonicalName() + "]");
         mContext = context;
 
         // (re?)start service.  This is specifically so if hangar gets updated the service
@@ -45,7 +41,7 @@ public class StatsWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Tools.HangarLog("onReceive");
+        Tools.HangarLog("onReceive [" + this.getClass().getCanonicalName() + "]");
         if (mContext == null)
             mContext = context;
 
@@ -198,7 +194,6 @@ public class StatsWidget extends AppWidgetProvider {
                 barColor = 0xFFFF4444;
             }
             int[] colors = new int[]{barColor, Tools.dpToPx(context, secondsColor-1), 0x00000000, Tools.dpToPx(mContext, 100-secondsColor)};
-            Tools.HangarLog("BarDrawable: " + colors[0] + ", " + colors[1] + ", " + colors[2] + ", " + colors[3]);
             Drawable sd = new BarDrawable(colors);
             Bitmap bmpIcon2 = drawableToBitmap(sd);
             row.setImageViewBitmap(imgID, bmpIcon2);

@@ -1,13 +1,10 @@
 package ca.mimic.apphangar;
 
-import android.app.ActivityManager;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,7 +12,6 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ca.mimic.apphangar.Settings.PrefsGet;
 
@@ -41,7 +37,7 @@ public class AppsWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Tools.HangarLog("onUpdate");
+        Tools.HangarLog("onUpdate [" + this.getClass().getCanonicalName() + "]");
         mContext = context;
 
         // (re?)start service.  This is specifically so if hangar gets updated the service
@@ -52,7 +48,7 @@ public class AppsWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Tools.HangarLog("onReceive");
+        Tools.HangarLog("onReceive [" + this.getClass().getCanonicalName() + "]");
         if (mContext == null)
             mContext = context;
 
@@ -189,13 +185,13 @@ public class AppsWidget extends AppWidgetProvider {
 
         int gridSize = (appsNoH * appsNoW);
         // numOfIcons should not exceed 35 (CPU reasons, etc)
-        int numOfIcons = (appsNoH * appsNoW > 35) ? 35 : (appsNoH * appsNoW);
+        int numOfIcons = (appsNoH * appsNoW > Settings.TASKLIST_QUEUE_SIZE) ? Settings.TASKLIST_QUEUE_SIZE : (appsNoH * appsNoW);
 
         if (autoHeight && !appsNoByWidgetSize) {
             // Manual app # is selected.  Icons are split automatically from height.
             numOfIcons = appsNoW;
         }
-        int queueSize = (Math.ceil(numOfIcons * 1.2f)) < 14 ? 14 : (int) Math.ceil(numOfIcons * 1.2f);
+        int queueSize = (Math.ceil(numOfIcons * 1.2f)) < Settings.APPLIST_QUEUE_SIZE ? Settings.APPLIST_QUEUE_SIZE : (int) Math.ceil(numOfIcons * 1.2f);
 
         String taskPackage = context.getPackageName();
 
