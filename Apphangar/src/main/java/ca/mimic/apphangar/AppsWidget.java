@@ -149,7 +149,6 @@ public class AppsWidget extends AppWidgetProvider {
                         Tools.HangarLog("Widget height > 0 but < 1 for iconSize.  Setting lower size");
                         rowLayout = R.layout.apps_widget_row;
                         itemWidth = ICON_MEDIUM_WIDTH;
-                        mGravity = Settings.ALIGNMENT_DEFAULT;
                     }
                 }
                 // Are we medium (either originally or via the above if?
@@ -160,6 +159,7 @@ public class AppsWidget extends AppWidgetProvider {
                         Tools.HangarLog("Widget height > 0 but < 1 for iconSize.  Setting lower size");
                         rowLayout = R.layout.apps_widget_row_small;
                         itemWidth = ICON_SMALL_WIDTH;
+                        // Get rid of the alignment wonkiness when forcing small icons
                         mGravity = Settings.ALIGNMENT_DEFAULT;
                     }
                 }
