@@ -16,6 +16,7 @@ public class Tasks extends SQLiteOpenHelper {
     public static final String COLUMN_LAUNCHES = "launches";
     public static final String COLUMN_TIMESTAMP = "timestamp";
     public static final String COLUMN_BLACKLISTED = "blacklisted";
+    public static final String COLUMN_ORDER = "order";
 
     private static final String DATABASE_NAME = "tasks.db";
     private static final int DATABASE_VERSION = 5;

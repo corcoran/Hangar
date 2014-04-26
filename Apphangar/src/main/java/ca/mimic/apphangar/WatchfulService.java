@@ -187,7 +187,7 @@ public class WatchfulService extends Service {
                         Tools.updateWidget(mContext);
                         runningTask = new TaskInfo(taskPackage);
 
-                        buildReorderAndLaunch(isToggled);
+                        buildReorderAndLaunch(isToggled & !isNotificationRunning);
                     }
                     return;
                 }

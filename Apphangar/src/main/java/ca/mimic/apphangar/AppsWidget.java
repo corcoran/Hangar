@@ -60,6 +60,7 @@ public class AppsWidget extends AppWidgetProvider {
         Tools.HangarLog("onReceive");
         if (mContext == null) {
             mContext = context;
+
             IntentFilter filter = new IntentFilter();
             filter.addAction(BCAST_CONFIGCHANGED);
             context.getApplicationContext().registerReceiver(mBroadcastReceiver, filter);

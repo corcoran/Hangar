@@ -197,6 +197,14 @@ public class TasksDataSource {
         return database.update(Tasks.TABLE_TASKS, args, Tasks.COLUMN_PACKAGENAME
                 + " = '" + name + "'", null);
     }
+
+    public int updateOrder(String name, int order) {
+        ContentValues args = new ContentValues();
+        args.put("timestamp", dateFormatter.format(date));
+        return database.update(Tasks.TABLE_TASKS, args, Tasks.COLUMN_PACKAGENAME
+                + " = '" + name + "'", null);
+    }
+
     public List<TasksModel> getAllTasks(int limit) {
         List<TasksModel> tasks = new ArrayList<TasksModel>();
 

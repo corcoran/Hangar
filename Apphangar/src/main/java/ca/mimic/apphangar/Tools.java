@@ -79,7 +79,6 @@ public class Tools {
         protected String packageName = "";
         protected String className = "";
         protected int launches = 0;
-        protected float order = 0;
         protected int seconds = 0;
         protected int totalseconds = 0;
 
