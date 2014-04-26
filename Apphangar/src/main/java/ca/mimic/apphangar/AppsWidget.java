@@ -27,6 +27,7 @@ public class AppsWidget extends AppWidgetProvider {
 
     protected static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
     protected static final int SMALL_ICONS = 0;
+    protected static final int MEDIUM_ICONS = 1;
     protected static final int LARGE_ICONS = 2;
 
     protected static final int MAX_DB_LOOKUPS = 12;
@@ -81,6 +82,10 @@ public class AppsWidget extends AppWidgetProvider {
         super.onReceive(context, intent);
     }
 
+    static int findDimensions(int widgetDimension, int itemDimension) {
+        return (int) Math.floor(widgetDimension / itemDimension);
+    }
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
             int appWidgetId, Bundle options) {
 
@@ -96,6 +101,7 @@ public class AppsWidget extends AppWidgetProvider {
         int itemWidth = ICON_MEDIUM_WIDTH;
 
         int iconSize = Integer.parseInt(mPrefs.getString(Settings.ICON_SIZE_PREFERENCE, Integer.toString(Settings.ICON_SIZE_DEFAULT)));
+        int mGravity = Integer.parseInt(mPrefs.getString(Settings.ALIGNMENT_PREFERENCE, Integer.toString(Settings.ALIGNMENT_DEFAULT)));
 
         // setSize
         switch (iconSize) {
@@ -120,8 +126,8 @@ public class AppsWidget extends AppWidgetProvider {
         Tools.HangarLog("maxHeight: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT));
         Tools.HangarLog("minWidth: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH));
         Tools.HangarLog("maxWidth: " + options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH));
-        appsNoH = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) - ICON_ROW_BUFFER) / itemHeight);
-        appsNoW = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) - ICON_ROW_BUFFER) / itemWidth);
+        appsNoH = findDimensions(options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT), itemHeight);
+        appsNoW = findDimensions(options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH), itemWidth);
         Tools.HangarLog("appsNoH: " + appsNoH + " appsNoW: " + appsNoW);
 
         if (appsNoH == 0) {
@@ -130,19 +136,41 @@ public class AppsWidget extends AppWidgetProvider {
         }
 
         if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            appsNoH = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) - ICON_ROW_BUFFER) / itemHeight);
-            float widgetHeight = (options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT) - ICON_ROW_BUFFER);
-            if (appsNoH == 0) {
-                if (widgetHeight > 0) {
-                    // add setSize
-                    Tools.HangarLog("Widget height > 0 but < 1 for iconSize.  Setting small");
-                    rowLayout = R.layout.apps_widget_row_small;
-                    itemWidth = ICON_SMALL_WIDTH;
+            float widgetHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+
+            appsNoH = findDimensions((int) widgetHeight, itemHeight);
+            int origWidgetHeight = appsNoH;
+
+            if (iconSize > SMALL_ICONS) {
+                if (iconSize == LARGE_ICONS) {
+                    appsNoH = findDimensions(options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT), itemHeight);
+
+                    if (appsNoH == 0 && widgetHeight > 0) {
+                        Tools.HangarLog("Widget height > 0 but < 1 for iconSize.  Setting lower size");
+                        rowLayout = R.layout.apps_widget_row;
+                        itemWidth = ICON_MEDIUM_WIDTH;
+                        mGravity = Settings.ALIGNMENT_DEFAULT;
+                    }
                 }
+                // Are we medium (either originally or via the above if?
+                if (itemWidth == ICON_MEDIUM_WIDTH) {
+                    appsNoH = findDimensions(options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT), ICON_MEDIUM_HEIGHT);
+
+                    if (appsNoH == 0 && widgetHeight > 0) {
+                        Tools.HangarLog("Widget height > 0 but < 1 for iconSize.  Setting lower size");
+                        rowLayout = R.layout.apps_widget_row_small;
+                        itemWidth = ICON_SMALL_WIDTH;
+                        mGravity = Settings.ALIGNMENT_DEFAULT;
+                    }
+                }
+            }
+
+            if (origWidgetHeight == 0) {
                 appsNoH = 1;
                 autoHeight = false;
             }
-            appsNoW = (int) Math.floor((options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) - ICON_ROW_BUFFER) / itemWidth);
+
+            appsNoW = findDimensions(options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH), itemWidth);
             if (appsNoByWidgetSize && appsNoW > 0) {
                 Tools.HangarLog("Landscape! appsNoByWidgetSize=true, appsNo=" + appsNoW);
             } else {
@@ -161,11 +189,7 @@ public class AppsWidget extends AppWidgetProvider {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.apps_widget);
 
-        int mGravity = Integer.parseInt(mPrefs.getString(Settings.ALIGNMENT_PREFERENCE, Integer.toString(Settings.ALIGNMENT_DEFAULT)));
         views.setInt(R.id.viewCont, "setGravity", mGravity);
-
-        views.removeAllViews(R.id.viewCont);
-        appWidgetManager.updateAppWidget(appWidgetId, views);
 
         if (db == null) {
             db = new TasksDataSource(context);
@@ -173,16 +197,14 @@ public class AppsWidget extends AppWidgetProvider {
         }
 
         int gridSize = (appsNoH * appsNoW);
-        int numOfIcons = (appsNoH * appsNoW);
-        int lookUpNum = numOfIcons + 3; // 3 = saftey buffer
+        // numOfIcons should not exceed 35 (CPU reasons, etc)
+        int numOfIcons = (appsNoH * appsNoW > 35) ? 35 : (appsNoH * appsNoW);
 
         if (autoHeight && !appsNoByWidgetSize) {
             // Manual app # is selected.  Icons are split automatically from height.
             numOfIcons = appsNoW;
-            lookUpNum = appsNoW + 3;
         }
-
-        int queueSize = (lookUpNum < MAX_DB_LOOKUPS) ? MAX_DB_LOOKUPS : lookUpNum;
+        int queueSize = (Math.ceil(numOfIcons * 1.2f)) < 14 ? 14 : (int) Math.ceil(numOfIcons * 1.2f);
 
         ArrayList<Tools.TaskInfo> appList = Tools.buildTaskList(context, db, queueSize);
 
@@ -215,14 +237,16 @@ public class AppsWidget extends AppWidgetProvider {
 
         Tools.HangarLog("appsNoW: " + appsNoW + " appList.size(): " + appList.size() + " numOfIcons: " + numOfIcons);
 
-        for (int i=0; i <= gridSize; i++) {
+        views.removeAllViews(R.id.viewCont);
 
+        for (int i=0; i <= gridSize; i++) {
             if (filledConts == appsNoW || i == gridSize) {
                 Tools.HangarLog("i: " + i + " filledConts: " + filledConts);
                 views.addView(R.id.viewCont, appDrawer.getRow());
                 if (i >= numOfIcons && !appsNoByWidgetSize)
                     break;
-                if (filledRows < appsNoH && (filledConts < numOfIcons && appList.size() > i)) {
+                boolean lineBreak = (appsNoByWidgetSize && appList.size() > i) || (!appsNoByWidgetSize && numOfIcons > i);
+                if (filledRows < appsNoH && filledConts < numOfIcons && lineBreak) {
                     appDrawer.createRow(rowLayout, R.id.viewRow);
                     appDrawer.setRowBackgroundColor(getBackgroundColor);
 

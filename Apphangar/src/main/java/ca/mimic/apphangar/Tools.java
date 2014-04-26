@@ -122,15 +122,23 @@ public class Tools {
     {
         private String mType;
         private int weightPriority;
+        private Float numToCompare;
+        private Float baseRecency;
 
-        public TaskComparator (String type, int weight){
-            this.mType = type;
+        public TaskComparator (String type, int weight, int num){
+            mType = type;
             weightPriority = weight;
+            Float calNum = num / 8f;
+            baseRecency = (calNum < 2.5) ? 2.5f : calNum;
+            numToCompare = baseRecency + 1.5f;
+            HangarLog("num: " + num + " calNum: " + calNum + " baseRecency: " + baseRecency + " numToCompare: " + numToCompare);
         }
         public int compare(TaskInfoOrder c1, TaskInfoOrder c2)
         {
             Float a1;
             Float a2;
+            Float c1p = c1.placeOrder * baseRecency;
+            Float c2p = c2.placeOrder * baseRecency;
             if (mType.equals("launch")) {
                 a1 = c1.launchScore;
                 a2 = c2.launchScore;
@@ -140,20 +148,20 @@ public class Tools {
             } else {
                 switch (weightPriority) {
                     case 1:
-                        a1 = (float) c1.secondsOrder + c1.launchOrder + (c1.placeOrder * 2);
-                        a2 = (float) c2.secondsOrder + c2.launchOrder + (c2.placeOrder * 2);
+                        a1 = (float) c1.secondsOrder + c1.launchOrder + c1.placeOrder * numToCompare;
+                        a2 = (float) c2.secondsOrder + c2.launchOrder + c2.placeOrder * numToCompare;
                         break;
                     case 2:
-                        a1 = (float) c1.secondsOrder + (c1.launchOrder * 2) + c1.placeOrder;
-                        a2 = (float) c2.secondsOrder + (c2.launchOrder * 2) + c2.placeOrder;
+                        a1 = (float) c1.secondsOrder + (c1.launchOrder * numToCompare) + c1p;
+                        a2 = (float) c2.secondsOrder + (c2.launchOrder * numToCompare) + c2p;
                         break;
                     case 3:
-                        a1 = (float) (c1.secondsOrder * 2) + c1.launchOrder + c1.placeOrder;
-                        a2 = (float) (c2.secondsOrder * 2) + c2.launchOrder + c2.placeOrder;
+                        a1 = (c1.secondsOrder * numToCompare) + c1.launchOrder + c1p;
+                        a2 = (c2.secondsOrder * numToCompare) + c2.launchOrder + c2p;
                         break;
                     default:
-                        a1 = (float) c1.secondsOrder + c1.launchOrder + c1.placeOrder;
-                        a2 = (float) c2.secondsOrder + c2.launchOrder + c2.placeOrder;
+                        a1 = (float) c1.secondsOrder + c1.launchOrder + c1p;
+                        a2 = (float) c2.secondsOrder + c2.launchOrder + c2p;
                 }
             }
 
@@ -185,7 +193,7 @@ public class Tools {
             count ++;
         }
 
-        Collections.sort(taskListE, new TaskComparator("launch", weightPriority));
+        Collections.sort(taskListE, new TaskComparator("launch", weightPriority, taskList.size()));
         int c = 0;
         for (int i=taskListE.size()-1; i >= 0; i--) {
             taskListE.get(c).launchOrder = (i + 1);
@@ -193,13 +201,13 @@ public class Tools {
         }
 
         c = 0;
-        Collections.sort(taskListE, new TaskComparator("seconds", weightPriority));
+        Collections.sort(taskListE, new TaskComparator("seconds", weightPriority, taskList.size()));
         for (int i=taskListE.size()-1; i >= 0; i--) {
             taskListE.get(c).secondsOrder = (i + 1);
             c++;
         }
 
-        Collections.sort(taskListE, new TaskComparator("final", weightPriority));
+        Collections.sort(taskListE, new TaskComparator("final", weightPriority, taskList.size()));
         taskList.clear();
         for (TaskInfoOrder taskE : taskListE) {
             HangarLog("task[" + taskE.getOrig().appName + "] l[" + taskE.launchOrder + "] p[" + taskE.placeOrder + "] s[" + taskE.secondsOrder + "]");

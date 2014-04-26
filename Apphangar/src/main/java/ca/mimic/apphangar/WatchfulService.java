@@ -33,10 +33,10 @@ public class WatchfulService extends Service {
 
     TaskInfo runningTask;
     String launcherPackage = null;
+    int numOfApps;
 
     final int MAX_RUNNING_TASKS = 20;
-    final int TASKLIST_QUEUE_SIZE = 12;
-    final int TOTAL_CONTAINERS = 9;
+    final int TASKLIST_QUEUE_SIZE = 14;
     final int LOOP_SECONDS = 3;
 
     boolean isNotificationRunning;
@@ -102,6 +102,7 @@ public class WatchfulService extends Service {
         prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
         pkgm = getApplicationContext().getPackageManager();
         launcherPackage = Tools.getLauncher(getApplicationContext());
+        numOfApps = Integer.parseInt(prefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.APPSNO_DEFAULT)));
         handler.removeCallbacks(scanApps);
         handler.post(scanApps);
         return START_STICKY;
@@ -279,16 +280,15 @@ public class WatchfulService extends Service {
         appDrawer.setContext(mContext);
 
         int maxButtons;
-        int userMaxButtons = Integer.parseInt(prefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.APPSNO_DEFAULT)));
         int setPriority = Integer.parseInt(prefs.getString(Settings.PRIORITY_PREFERENCE, Integer.toString(Settings.PRIORITY_DEFAULT)));
 
-        if (taskList.size() < userMaxButtons) {
+        if (taskList.size() < numOfApps) {
             maxButtons = taskList.size();
         } else {
-            maxButtons = userMaxButtons;
+            maxButtons = numOfApps;
         }
           
-        Tools.HangarLog("taskList.size(): " + taskList.size() + " realmaxbuttons: " + userMaxButtons + " maxbuttons: " + maxButtons);
+        Tools.HangarLog("taskList.size(): " + taskList.size() + " realmaxbuttons: " + numOfApps + " maxbuttons: " + maxButtons);
         int filledConts = 0;
 
         for (int i=0; i < taskList.size(); i++) {
