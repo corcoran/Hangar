@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.widget.RemoteViews;
 
 import java.util.Random;
@@ -71,22 +72,26 @@ public class AppDrawer {
 
         Drawable taskIcon, d;
         PackageManager pkgm;
+        Uri uri = null;
         try {
             pkgm = mContext.getPackageManager();
             ApplicationInfo appInfo = pkgm.getApplicationInfo(taskItem.packageName, 0);
             taskIcon = appInfo.loadIcon(pkgm);
+            if(appInfo.icon != 0) {
+                uri = Uri.parse("android.resource://" + taskItem.packageName + "/" + appInfo.icon);
+            }
         } catch (Exception e) {
             return false;
         }
 
         if (isColorized) {
             d = new BitmapDrawable(ColorHelper.getColoredBitmap(taskIcon, getColor));
+            Bitmap bmpIcon = ((BitmapDrawable) d).getBitmap();
+            int size = Tools.dpToPx(mContext, 128);
+            mLastItem.setImageViewBitmap(mImageButtonLayout, Bitmap.createScaledBitmap(bmpIcon, size, size, false));
         } else {
-            d = taskIcon;
+            mLastItem.setImageViewUri(mImageButtonLayout, uri);
         }
-
-        Bitmap bmpIcon = ((BitmapDrawable) d).getBitmap();
-        mLastItem.setImageViewBitmap(mImageButtonLayout, bmpIcon);
 
         Intent intent;
         try {

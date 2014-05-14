@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 
@@ -164,18 +165,23 @@ public class StatsWidget extends AppWidgetProvider {
                 break;
             }
 
-            Drawable taskIcon;
+            // Drawable taskIcon;
+            Uri uri = null;
             try {
                 ApplicationInfo appInfo = pkgm.getApplicationInfo(task.getPackageName(), 0);
-                taskIcon = appInfo.loadIcon(pkgm);
+                if(appInfo.icon != 0) {
+                    uri = Uri.parse("android.resource://" + task.getPackageName() + "/" + appInfo.icon);
+                }
+                // taskIcon = appInfo.loadIcon(pkgm);
             } catch (Exception e) {
                 continue;
             }
 
             count++;
 
-            Bitmap bmpIcon = ((BitmapDrawable) taskIcon).getBitmap();
-            row.setImageViewBitmap(iconID, bmpIcon);
+            // Bitmap bmpIcon = ((BitmapDrawable) taskIcon).getBitmap();
+            // row.setImageViewBitmap(iconID, bmpIcon);
+            row.setImageViewUri(iconID, uri);
             row.setTextViewText(labelID, task.getName());
 
             // int maxWidth = dpToPx(250) - dpToPx(32+14+14); // ImageView + Margin? + Stats text?
