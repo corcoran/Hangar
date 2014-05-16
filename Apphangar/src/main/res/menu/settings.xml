@@ -21,4 +21,9 @@
         android:title="@string/configure_donate"
         android:orderInCategory="100"
         android:showAsAction="never" />
+
+    <item android:id="@+id/action_license"
+        android:title="@string/configure_license"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
 </menu>

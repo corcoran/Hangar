@@ -115,6 +115,7 @@
     <string name="configure_stats_widget">Configure stats widget</string>
     <string name="configure_changelog">See recent changes</string>
     <string name="configure_donate">Donate</string>
+    <string name="configure_license">License</string>
 
     <!-- Donate -->
     <string name="donate_title">Want to buy me a beer?</string>
@@ -140,12 +141,20 @@
     <string name="donate_thanks">"Your contribution to the development of Hangar is much appreciated! The Android community is made better by people like you who support and motivate developers."</string>
     <string name="donate_thanks_paypal">"Hangar doesn't know if an actual donation was made using PayPal, since we just sent you off to a paypal link via your favorite browser.  However we're going to thank you regardless for your continued use and support! :)"</string>
 
+    <!-- License -->
+    <string name="license_title">License and Source</string>
+    <string name="license_head">Hangar is licensed under the GPLv3 from the Free Software Foundation and is Copyright © 2014 Jeff Corcoran.\n\nUnder the GPL license, Hangar is available free of charge as long as the use of Hangar adheres to the terms of the GPL license.\n\nUsers may download the software for free, and modify, integrate and distribute it. However, GPL users must abide by the rules of the GPL, which stipulate that if a work based on Hangar is redistributed, the complete source code for this work must also be open and available for redistribution under the terms of the GPL.\n\nSee the GPL and the FAQ of the Free Software Foundation for more details.</string>
+    <string name="license_view_source">Visit Hangar on Github</string>
+    <string name="license_github_url">https://github.com/corcoran/Hangar</string>
+    <string name="license_accept_button">Continue</string>
+
     <!-- Changelog -->
     <string name="changelog_title">Hangar Changes</string>
     <string name="changelog_donate_button">Show thanks</string>
     <string name="changelog_accept_button">Continue</string>
 
     <string-array name="versionNumbers">
+        <item>2.0 (May 16th)</item>
         <item>1.15 (Apr 23th)</item>
         <item>1.14 (Apr 14th)</item>
         <item>1.13 (Apr 6th)</item>
@@ -155,6 +164,11 @@
     </string-array>
 
     <string-array name="versionSummaries">
+        <item>
+"    &#8226; [Fix!] Apps widget resize crash fixed
+    &#8226; Big refactor of code
+    &#8226; Added donation/license sections
+    &#8226; Version bump to 2.0"</item>
         <item>
 "    &#8226; [Fix!] No longer crashes on boot
     &#8226; [Fix!] Notification properly loads on boot

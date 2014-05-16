@@ -1,3 +1,23 @@
+/*
+ * Copyright © 2014 Jeff Corcoran
+ *
+ * This file is part of Hangar.
+ *
+ * Hangar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Hangar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Hangar.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package ca.mimic.apphangar;
 
 import java.util.Collections;
@@ -306,6 +326,18 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 .show();
     }
 
+    protected void launchLicense() {
+        License license = new License(this);
+        View mLicense = license.getView();
+        mLicense.refreshDrawableState();
+        new AlertDialog.Builder(Settings.this)
+                .setTitle(R.string.license_title)
+                .setIcon(R.drawable.ic_launcher)
+                .setView(mLicense)
+                .setPositiveButton(R.string.license_accept_button, null)
+                .show();
+    }
+
     protected void launchDonate() {
         final Donate donate = new Donate(this);
         donate.bindServiceConn();
@@ -433,6 +465,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
             return true;
         } else if (id == R.id.action_donate) {
             launchDonate();
+            return true;
+        } else if (id == R.id.action_license) {
+            launchLicense();
             return true;
         }
         return super.onOptionsItemSelected(item);
