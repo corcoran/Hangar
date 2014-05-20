@@ -11,7 +11,10 @@ buildscript {
     }
 }
 apply plugin: 'android'
-apply from: 'sign.gradle';
+if(new File('Apphangar/sign.gradle').exists() || new File('sign.gradle').exists()) {
+    // Put your signingConfigs in sign.gradle
+    apply from: 'sign.gradle'
+}
 
 repositories {
     mavenCentral()
@@ -31,14 +34,20 @@ android {
         release {
             runProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            applicationVariants.all { variant ->
-                def file = variant.outputFile
-                variant.outputFile = new File(file.parent, "Hangar.apk".replace(".apk", "-" + manifestParser.getVersionName(android.sourceSets.main.manifest.srcFile) + ".apk"))
-            }
-            debuggable false
-            zipAlign true
+        }
+        applicationVariants.all { variant ->
+            appendVersionNameVersionCode(variant, defaultConfig, manifestParser)
         }
     }
+}
+
+def appendVersionNameVersionCode(variant, defaultConfig, manifestParser) {
+    def versionName = manifestParser.getVersionName(android.sourceSets.main.manifest.srcFile)
+    if(variant.buildType.name == android.buildTypes.debug.name) {
+        versionName += "-debug"
+    }
+    def file = variant.outputFile
+    variant.outputFile = new File(file.parent, "Hangar.apk".replace(".apk", "-" + versionName + ".apk"))
 }
 
 dependencies {

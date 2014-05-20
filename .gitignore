@@ -1,8 +1,8 @@
 .gradle
-/local.properties
-/.idea/workspace.xml
+local.properties
+.idea
 .DS_Store
-.idea/libraries/*
 Apphangar/Apphangar-Apphangar.apk
-.idea/gradle.xml
 Apphangar/sign.gradle
+Apphangar/build
+*.iml
