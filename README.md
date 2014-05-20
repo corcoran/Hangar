@@ -18,16 +18,21 @@ Screenshots
 ================
 
 Notification drawer shortcuts:
-![Notification drawer shortcuts](http://mimic.ca/~jeff/hangar/Hangar_1_notif.png)
+
+  ![Notification drawer shortcuts](http://mimic.ca/~jeff/hangar/Hangar_1_notif.png)
 
 Stats widget:
-![Stats widget](http://mimic.ca/~jeff/hangar/Hangar_2_stats_widget.png)
+
+  ![Stats widget](http://mimic.ca/~jeff/hangar/Hangar_2_stats_widget.png)
 
 Apps widget:
-![Apps widget](http://mimic.ca/~jeff/hangar/Hangar_3_apps_widget.png)
+
+  ![Apps widget](http://mimic.ca/~jeff/hangar/Hangar_3_apps_widget.png)
 
 Settings:
-![Settings](http://mimic.ca/~jeff/hangar/Hangar_settings.png)
+
+  ![Settings](http://mimic.ca/~jeff/hangar/Hangar_settings.png)
+
 
 Play Store
 ================
