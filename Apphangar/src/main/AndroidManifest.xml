@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ca.mimic.apphangar"
     android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
-    android:versionCode="29"
-    android:versionName="2.0" >
+    android:versionCode="30"
+    android:versionName="2.0.1" >
 
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -30,14 +30,13 @@
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.CONFIGURATION_CHANGED"/>
+                <action android:name="android.intent.action.CONFIGURATION_CHANGED" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/statswidget" />
         </receiver>
-
         <receiver
             android:name="ca.mimic.apphangar.AppsWidget"
             android:icon="@drawable/ic_launcher"
@@ -46,7 +45,7 @@
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.CONFIGURATION_CHANGED"/>
+                <action android:name="android.intent.action.CONFIGURATION_CHANGED" />
             </intent-filter>
 
             <meta-data
@@ -55,18 +54,17 @@
         </receiver>
 
         <activity
-            android:name=".StatsWidgetSettings"
-            android:theme="@android:style/Theme.Holo">
+            android:name="ca.mimic.apphangar.StatsWidgetSettings"
+            android:theme="@android:style/Theme.Holo" >
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".AppsWidgetSettings"
-            android:theme="@android:style/Theme.Holo">
+            android:name="ca.mimic.apphangar.AppsWidgetSettings"
+            android:theme="@android:style/Theme.Holo" >
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
@@ -77,15 +75,24 @@
         </service>
 
         <activity
-            android:name=".Settings"
-            android:label="@string/app_name"
+            android:name="ca.mimic.apphangar.Settings"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
             android:theme="@android:style/Theme.Holo" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="ca.mimic.apphangar.Instructions"
+            android:label="Hangar Instructions"
+            android:parentActivityName="ca.mimic.apphangar.Settings"
+            android:theme="@android:style/Theme.Holo" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="Settings" />
         </activity>
     </application>
 

@@ -52,5 +52,5 @@ def appendVersionNameVersionCode(variant, defaultConfig, manifestParser) {
 
 dependencies {
     compile 'com.android.support:support-v4:19.0.0'
-    compile 'com.android.support:support-v13:+'
+    compile 'com.android.support:support-v13:19.+'
 }

@@ -30,12 +30,10 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -65,8 +63,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.vending.billing.IInAppBillingService;
 
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
 
@@ -169,6 +165,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
         prefs = new PrefsGet(getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS));
 
+        mContext = this;
+
         if (showChangelog(prefs)) {
             launchChangelog();
         }
@@ -177,7 +175,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
             db = new TasksDataSource(this);
             db.open();
         }
-        mContext = this;
 
         drawT = new DrawTasks();
         myService = new ServiceCall(mContext);
@@ -358,6 +355,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
         donate.setAlert(alert);
     }
 
+    protected void launchInstructions() {
+        startActivity(new Intent(mContext, Instructions.class));
+    }
+
     ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className,
                                        IBinder binder) {
@@ -385,12 +386,19 @@ public class Settings extends Activity implements ActionBar.TabListener {
         String whichVersion = mPrefs.getString(Settings.VERSION_CHECK, null);
 
         Tools.HangarLog("savedVer: " + whichVersion + " hangarVersion: " + hangarVersion);
-        if (whichVersion != null && whichVersion.equals(hangarVersion)) {
-            return false;
+        if (whichVersion != null) {
+            if (whichVersion.equals(hangarVersion)) {
+                return false;
+            } else {
+                mEditor.putString(Settings.VERSION_CHECK, hangarVersion);
+                mEditor.apply();
+                return true;
+            }
         } else {
             mEditor.putString(Settings.VERSION_CHECK, hangarVersion);
             mEditor.apply();
-            return true;
+            launchInstructions();
+            return false;
         }
     }
     protected static class ServiceCall  {
@@ -459,6 +467,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
             return true;
         } else if (id == R.id.action_apps_widget_settings) {
             startActivity(new Intent(mContext, AppsWidgetSettings.class));
+            return true;
+        } else if (id == R.id.action_instructions) {
+            launchInstructions();
             return true;
         } else if (id == R.id.action_changelog) {
             launchChangelog();

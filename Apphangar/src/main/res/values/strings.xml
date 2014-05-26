@@ -114,6 +114,7 @@
     <string name="configure_apps_widget">Configure apps widget</string>
     <string name="configure_stats_widget">Configure stats widget</string>
     <string name="configure_changelog">See recent changes</string>
+    <string name="configure_instructions">Instructions</string>
     <string name="configure_donate">Donate</string>
     <string name="configure_license">License</string>
 
@@ -323,4 +324,27 @@
         <item>16</item>
         <item>80</item>
     </string-array>
+
+    <!-- Instructions -->
+    <string name="instructions_1_1">"Welcome to Hangar!"</string>
+    <string name="instructions_1_2">"Now that Hangar is installed, it has added an <b>app shortcut bar</b> to your notification drawer.  It will also start monitoring the frequency and amount of time you spend in your apps."</string>
+    <string name="instructions_1_3">"As Hangar follows your daily usage, it will use this data to prioritize the apps you rely on most.  With every app you use, Hangar gets smarter and changes those shortcuts in real time to suit your needs."</string>
+    <string name="instructions_title_1">"Hangar\'s app shortcut bar in the notification drawer"</string>
+    <string name="instructions_1_swipe">Swipe to next page</string>
+
+    <string name="instructions_2_1">"Statistics"</string>
+    <string name="instructions_2_2">"Hangar also keeps track of your in-app usage!"</string>
+    <string name="instructions_title_2">Stats widget</string>
+    <string name="instructions_2_3">"You can check the stats under Hangar's <b>Apps tab</b> or by placing the <b>Stats widget</b> on your homescreen."</string>
+
+    <string name="instructions_3_1">"Customizations"</string>
+    <string name="instructions_3_2">"In addition to the default <b>notification drawer</b> app shortcut bar, you can add and customize a <b>widget</b> for launching apps.  Specify the color, size, quantity, background color and more."</string>
+    <string name="instructions_title_3">ex. 2 differently styled Apps widgets</string>
+    <string name="instructions_title_4">Blacklist and wipe stats</string>
+    <string name="instructions_3_3">"You can also <b>blacklist</b> apps and reset their statistics from the Hangar <b>Apps tab</b>."</string>
+
+    <string name="instructions_4_1">"Get started"</string>
+    <string name="instructions_4_2">"Hangar is a lightweight tool that makes launching apps convenient from anywhere in Android.\n\nTo enjoy the full benefits of this tool, it should have at least a day's worth of monitored app statistics to base its recommendations on.\n\nEnjoy and thank you for trying Hangar!"</string>
+    <string name="instructions_4_button">Configure Hangar</string>
+
 </resources>
