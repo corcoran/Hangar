@@ -155,6 +155,7 @@
     <string name="changelog_accept_button">Continue</string>
 
     <string-array name="versionNumbers">
+        <item>2.1 (May 29th)</item>
         <item>2.0 (May 16th)</item>
         <item>1.15 (Apr 23th)</item>
         <item>1.14 (Apr 14th)</item>
@@ -165,6 +166,9 @@
     </string-array>
 
     <string-array name="versionSummaries">
+        <item>
+"    &#8226; [Fix!] Crash in setting position/icon type
+    &#8226; Added Instructions</item>
         <item>
 "    &#8226; [Fix!] Apps widget resize crash fixed
     &#8226; Big refactor of code
