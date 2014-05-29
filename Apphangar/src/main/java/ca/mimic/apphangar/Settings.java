@@ -20,6 +20,7 @@
 
 package ca.mimic.apphangar;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -41,6 +42,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.preference.CheckBoxPreference;
@@ -74,6 +76,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     SectionsPagerAdapter mSectionsPagerAdapter;
 
     ViewPager mViewPager;
+    private static GetFragments mGetFragments;
     private static IWatchfulService s;
     private static TasksDataSource db;
     // private Context mContext;
@@ -106,8 +109,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
     static PrefsGet prefs;
     static Context mContext;
     static ServiceCall myService;
-    static PrefsFragment mBehaviorSettings;
-    static PrefsFragment mAppearanceSettings;
 
     final static boolean DIVIDER_DEFAULT = true;
     final static boolean TOGGLE_DEFAULT = true;
@@ -191,6 +192,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOffscreenPageLimit(3);
+
+        mGetFragments = new GetFragments();
+        mGetFragments.setFm(getFragmentManager());
+        mGetFragments.setVp(mViewPager);
 
         ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
             int pagePosition;
@@ -364,7 +369,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                        IBinder binder) {
             s = IWatchfulService.Stub.asInterface(binder);
             isBound = true;
-            new ServiceCall().execute(SERVICE_BUILD_TASKS);
+            myService.execute(SERVICE_BUILD_TASKS);
         }
 
         public void onServiceDisconnected(ComponentName className) {
@@ -525,16 +530,22 @@ public class Settings extends Activity implements ActionBar.TabListener {
     }
     public class DrawTasks {
         public void drawTasks(View view) {
-            final View v = view;
-            runOnUiThread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    Context mContext = getApplicationContext();
-                    LinearLayout taskRoot = (LinearLayout) v.findViewById(R.id.taskRoot);
-                    taskRoot.removeAllViews();
+            final LinearLayout taskRoot = (LinearLayout) view.findViewById(R.id.taskRoot);
+            final Context mContext = getApplicationContext();
 
+            new AsyncTask<Void, Void, ArrayList<LinearLayout>>() {
+                @Override
+                public void onPreExecute() {
+                }
+                @Override
+                public void onPostExecute(ArrayList<LinearLayout> linearLayouts) {
+                    taskRoot.removeAllViews();
+                    for (LinearLayout taskRL : linearLayouts) {
+                        taskRoot.addView(taskRL);
+                    }
+                }
+                @Override
+                public ArrayList<LinearLayout> doInBackground(Void... voidp) {
                     int highestSeconds = db.getHighestSeconds();
                     List<TasksModel> tasks = db.getAllTasks();
                     Collections.sort(tasks, new Tools.TasksModelComparator("seconds"));
@@ -549,19 +560,21 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         displayWidth = display.getWidth();
                     }
 
+                    ArrayList<LinearLayout> linearLayouts = new ArrayList<LinearLayout>();
+
                     for (TasksModel task : tasks) {
                         LinearLayout taskRL = new LinearLayout(getApplicationContext());
 
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
-                        params.topMargin = Tools.dpToPx(mContext,6);
+                        params.topMargin = Tools.dpToPx(mContext, 6);
                         taskRL.setLayoutParams(params);
                         taskRL.setTag(task);
                         taskRL.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(final View view) {
-                                final TasksModel task = (TasksModel)view.getTag();
-                                final TextView text = (TextView)view.findViewWithTag("text");
+                                final TasksModel task = (TasksModel) view.getTag();
+                                final TextView text = (TextView) view.findViewWithTag("text");
                                 PopupMenu popup = new PopupMenu(getApplicationContext(), view);
                                 popup.getMenuInflater().inflate(R.menu.app_action, popup.getMenu());
                                 PopupMenu.OnMenuItemClickListener menuAction = new PopupMenu.OnMenuItemClickListener() {
@@ -592,9 +605,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         TextView useStats = new TextView(mContext);
                         LinearLayout.LayoutParams useStatsParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
-                        useStatsParams.topMargin = Tools.dpToPx(mContext,30);
-                        useStatsParams.leftMargin = Tools.dpToPx(mContext,10);
-                        useStatsParams.rightMargin = Tools.dpToPx(mContext,4);
+                        useStatsParams.topMargin = Tools.dpToPx(mContext, 30);
+                        useStatsParams.leftMargin = Tools.dpToPx(mContext, 10);
+                        useStatsParams.rightMargin = Tools.dpToPx(mContext, 4);
                         useStats.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                         useStats.setTag("usestats");
                         useStats.setLayoutParams(useStatsParams);
@@ -609,8 +622,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         TextView taskName = new TextView(mContext);
                         LinearLayout.LayoutParams nameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-                        nameParams.leftMargin = Tools.dpToPx(mContext,10);
-                        nameParams.topMargin = Tools.dpToPx(mContext,4);
+                        nameParams.leftMargin = Tools.dpToPx(mContext, 10);
+                        nameParams.topMargin = Tools.dpToPx(mContext, 4);
                         taskName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
                         taskName.setTag("text");
                         taskName.setLayoutParams(nameParams);
@@ -618,18 +631,18 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         LinearLayout barCont = new LinearLayout(mContext);
                         LinearLayout.LayoutParams barContLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
-                        barContLayout.topMargin = Tools.dpToPx(mContext,10);
-                        barContLayout.leftMargin = Tools.dpToPx(mContext,10);
-                        barContLayout.height = Tools.dpToPx(mContext,5);
+                        barContLayout.topMargin = Tools.dpToPx(mContext, 10);
+                        barContLayout.leftMargin = Tools.dpToPx(mContext, 10);
+                        barContLayout.height = Tools.dpToPx(mContext, 5);
                         barCont.setLayoutParams(barContLayout);
 
                         ImageView taskIcon = new ImageView(mContext);
-                        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(Tools.dpToPx(mContext,46),
-                                Tools.dpToPx(mContext,46));
+                        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(Tools.dpToPx(mContext, 46),
+                                Tools.dpToPx(mContext, 46));
 
-                        iconParams.leftMargin = Tools.dpToPx(mContext,6);
-                        iconParams.rightMargin = Tools.dpToPx(mContext,6);
-                        iconParams.bottomMargin = Tools.dpToPx(mContext,6);
+                        iconParams.leftMargin = Tools.dpToPx(mContext, 6);
+                        iconParams.rightMargin = Tools.dpToPx(mContext, 6);
+                        iconParams.bottomMargin = Tools.dpToPx(mContext, 6);
                         taskIcon.setLayoutParams(iconParams);
 
                         try {
@@ -650,12 +663,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         taskRL.addView(textCont);
                         taskRL.addView(useStats);
                         taskRL.addView(taskIcon);
-                        taskRoot.addView(taskRL);
 
                         float secondsRatio = (float) task.getSeconds() / highestSeconds;
                         int barColor;
                         int secondsColor = (Math.round(secondsRatio * 100));
-                        if (secondsColor >= 80 ) {
+                        if (secondsColor >= 80) {
                             barColor = 0xFF34B5E2;
                         } else if (secondsColor >= 60) {
                             barColor = 0xFFAA66CC;
@@ -670,7 +682,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         String statsString = ((statsTime[0] > 0) ? statsTime[0] + "h " : "") + ((statsTime[1] > 0) ? statsTime[1] + "m " : "") + ((statsTime[2] > 0) ? statsTime[2] + "s " : "");
                         useStats.setText(statsString);
                         barCont.setBackgroundColor(barColor);
-                        int maxWidth = displayWidth - Tools.dpToPx(mContext,46+14+90);
+                        int maxWidth = displayWidth - Tools.dpToPx(mContext, 46 + 14 + 90);
                         float adjustedWidth = maxWidth * secondsRatio;
                         barContLayout.width = Math.round(adjustedWidth);
 
@@ -678,9 +690,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         if (task.getBlacklisted()) {
                             fadeTask(taskRL, taskName);
                         }
+                        linearLayouts.add(taskRL);
                     }
+                    return linearLayouts;
                 }
-            });
+            }.execute(null, null, null);
         }
     }
 
@@ -696,6 +710,23 @@ public class Settings extends Activity implements ActionBar.TabListener {
             return realPrefs.edit();
         }
     }
+
+    public static class GetFragments {
+        static ViewPager vp;
+        static FragmentManager fm;
+
+        public Fragment getFragmentByPosition(int pos) {
+            String tag = "android:switcher:" + vp.getId() + ":" + pos;
+            return fm.findFragmentByTag(tag);
+        }
+        public void setVp(ViewPager mViewPager) {
+            vp = mViewPager;
+        }
+        public void setFm(FragmentManager mFm) {
+            fm = mFm;
+        }
+    }
+
 
     public static class PrefsFragment extends PreferenceFragment {
         CheckBoxPreference divider_preference;
@@ -811,6 +842,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                     editor.putString(STATUSBAR_ICON_PREFERENCE, mStatusBarIcon);
                                     editor.putString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_BOTTOM));
                                     editor.apply();
+                                    PrefsFragment mBehaviorSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(0);
                                     mBehaviorSettings.priority_preference.setValue(Integer.toString(PRIORITY_BOTTOM));
                                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                                     myService.watchHelper(STOP_SERVICE);
@@ -863,6 +895,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 } else if (preference.getKey().equals(PRIORITY_PREFERENCE)) {
                     String mPriorityPreference = (String) newValue;
                     editor.putString(PRIORITY_PREFERENCE, mPriorityPreference);
+                    PrefsFragment mAppearanceSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(1);
                     if (!mPriorityPreference.equals(PRIORITY_BOTTOM) &&
                             mAppearanceSettings.statusbar_icon_preference.getValue().equals(STATUSBAR_ICON_NONE)) {
                         editor.putString(STATUSBAR_ICON_PREFERENCE, STATUSBAR_ICON_DEFAULT);
@@ -919,11 +952,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
         public Fragment getItem(final int position) {
             switch (position) {
                 case 0:
-                    mBehaviorSettings = PrefsFragment.newInstance(R.layout.behavior_settings);
-                    return mBehaviorSettings;
+                    return PrefsFragment.newInstance(R.layout.behavior_settings);
                 case 1:
-                    mAppearanceSettings = PrefsFragment.newInstance(R.layout.appearance_settings);
-                    return mAppearanceSettings;
+                    return PrefsFragment.newInstance(R.layout.appearance_settings);
                 default:
                     return AppsFragment.newInstance();
             }

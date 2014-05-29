@@ -150,6 +150,7 @@ public class WatchfulService extends Service {
         Tools.HangarLog("onDestroy service..");
         handler.removeCallbacks(scanApps);
         db.close();
+        unregisterReceiver(mBroadcastReceiver);
         super.onDestroy();
     }
 
@@ -202,59 +203,63 @@ public class WatchfulService extends Service {
     }
 
     protected void buildTasks() {
-        try {
-            boolean isToggled = prefs.getBoolean(Settings.TOGGLE_PREFERENCE, Settings.TOGGLE_DEFAULT);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    boolean isToggled = prefs.getBoolean(Settings.TOGGLE_PREFERENCE, Settings.TOGGLE_DEFAULT);
 
-            final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-            final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(MAX_RUNNING_TASKS);
-            final Context mContext = getApplicationContext();
+                    final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                    final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(MAX_RUNNING_TASKS);
+                    final Context mContext = getApplicationContext();
 
-            pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+                    pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
-            if (recentTasks != null && recentTasks.size() > 0) {
-                ComponentName task = recentTasks.get(0).baseActivity;
-                String taskClass = task.getClassName();
-                String taskPackage = task.getPackageName();
+                    if (recentTasks != null && recentTasks.size() > 0) {
+                        ComponentName task = recentTasks.get(0).baseActivity;
+                        String taskClass = task.getClassName();
+                        String taskPackage = task.getPackageName();
 
-                if (launcherPackage != null && taskPackage != null &&
-                        taskPackage.equals(launcherPackage)) {
-                    if (runningTask == null || !runningTask.packageName.equals(taskPackage)) {
-                        // First time in launcher?  Update the widget!
-                        Tools.HangarLog("Found launcher -- Calling updateWidget!");
-                        Tools.updateWidget(mContext);
-                        runningTask = new TaskInfo(taskPackage);
+                        if (launcherPackage != null && taskPackage != null &&
+                                taskPackage.equals(launcherPackage)) {
+                            if (runningTask == null || !runningTask.packageName.equals(taskPackage)) {
+                                // First time in launcher?  Update the widget!
+                                Tools.HangarLog("Found launcher -- Calling updateWidget!");
+                                Tools.updateWidget(mContext);
+                                runningTask = new TaskInfo(taskPackage);
 
-                        buildReorderAndLaunch(isToggled & !isNotificationRunning);
-                    }
-                    return;
-                }
-                if (taskClass.equals("com.android.internal.app.ResolverActivity") ||
-                        Tools.isBlacklistedOrBad(taskPackage, mContext, db)) {
-                    buildReorderAndLaunch(isToggled & !isNotificationRunning);
-                    return;
-                }
-
-                if (runningTask != null && runningTask.packageName.equals(taskPackage)) {
-                    if (pm.isScreenOn()) {
-                        runningTask.seconds += LOOP_SECONDS;
-                        Tools.HangarLog("Task [" + runningTask.packageName + "] in fg [" + runningTask.seconds + "]s");
-                        if (runningTask.seconds >= LOOP_SECONDS * 5) {
-                            Tools.HangarLog("Dumping task [" + runningTask.packageName + "] to DB [" + runningTask.seconds + "]s");
-                            db.addSeconds(taskPackage, runningTask.seconds);
-                            runningTask.totalseconds += runningTask.seconds;
-                            runningTask.seconds = 0;
+                                buildReorderAndLaunch(isToggled & !isNotificationRunning);
+                            }
+                            return;
                         }
-                    }
-                    return;
-                }
-                buildTaskInfo(taskClass, taskPackage);
-            }
-            buildReorderAndLaunch(isToggled);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+                        if (taskClass.equals("com.android.internal.app.ResolverActivity") ||
+                                Tools.isBlacklistedOrBad(taskPackage, mContext, db)) {
+                            buildReorderAndLaunch(isToggled & !isNotificationRunning);
+                            return;
+                        }
 
+                        if (runningTask != null && runningTask.packageName.equals(taskPackage)) {
+                            if (pm.isScreenOn()) {
+                                runningTask.seconds += LOOP_SECONDS;
+                                Tools.HangarLog("Task [" + runningTask.packageName + "] in fg [" + runningTask.seconds + "]s");
+                                if (runningTask.seconds >= LOOP_SECONDS * 5) {
+                                    Tools.HangarLog("Dumping task [" + runningTask.packageName + "] to DB [" + runningTask.seconds + "]s");
+                                    db.addSeconds(taskPackage, runningTask.seconds);
+                                    runningTask.totalseconds += runningTask.seconds;
+                                    runningTask.seconds = 0;
+                                }
+                            }
+                            return;
+                        }
+                        buildTaskInfo(taskClass, taskPackage);
+                    }
+                    buildReorderAndLaunch(isToggled);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        new Thread(runnable).start();
     }
 
     protected final Runnable scanApps = new Runnable(){
