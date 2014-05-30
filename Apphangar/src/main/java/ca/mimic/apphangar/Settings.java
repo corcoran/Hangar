@@ -256,6 +256,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        isBound = false;
     }
 
     @Override
@@ -374,6 +375,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
         public void onServiceDisconnected(ComponentName className) {
             s = null;
+            isBound = false;
         }
     };
 
