@@ -351,13 +351,12 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 .setIcon(R.drawable.ic_launcher)
                 .setView(mDonate)
                 .setPositiveButton(R.string.donate_accept_button, null);
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        AlertDialog alert = builder.show();
+        alert.setOnDismissListener(new AlertDialog.OnDismissListener() {
             public void onDismiss(DialogInterface dialog) {
                 donate.unbindServiceConn();
             }
-         });
-
-        AlertDialog alert = builder.show();
+        });
         donate.setAlert(alert);
     }
 
