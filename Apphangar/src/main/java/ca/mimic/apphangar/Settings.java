@@ -136,6 +136,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String STATUSBAR_ICON_WHITE_WARM = "**white_warm**";
     final static String STATUSBAR_ICON_WHITE_COLD = "**white_cold**";
     final static String STATUSBAR_ICON_WHITE_BLUE = "**white_blue**";
+    final static String STATUSBAR_ICON_WHITE = "**white**";
     final static String STATUSBAR_ICON_BLACK_WARM = "**black_warm**";
     final static String STATUSBAR_ICON_BLACK_COLD = "**black_cold**";
     final static String STATUSBAR_ICON_BLACK_BLUE = "**black_blue**";

@@ -73,6 +73,7 @@
         <item>Warm white icon (default)</item>
         <item>Cold white icon</item>
         <item>Blue white icon</item>
+        <item>All white icon</item>
         <item>Warm black icon</item>
         <item>Cold black icon</item>
         <item>Blue black icon</item>
@@ -83,6 +84,7 @@
         <item>**white_warm**</item>
         <item>**white_cold**</item>
         <item>**white_blue**</item>
+        <item>**white**</item>
         <item>**black_warm**</item>
         <item>**black_cold**</item>
         <item>**black_blue**</item>
