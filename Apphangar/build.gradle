@@ -1,4 +1,6 @@
-import com.android.builder.DefaultManifestParser
+import com.android.builder.core.DefaultManifestParser
+
+apply plugin: 'android'
 
 def manifestParser = new DefaultManifestParser()
 
@@ -7,10 +9,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.+'
+        classpath 'com.android.tools.build:gradle:0.11.+'
     }
 }
-apply plugin: 'android'
+
 if(new File('Apphangar/sign.gradle').exists() || new File('sign.gradle').exists()) {
     // Put your signingConfigs in sign.gradle
     apply from: 'sign.gradle'
@@ -22,7 +24,7 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.3'
+    buildToolsVersion '19.1.0'
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 19
@@ -51,6 +53,6 @@ def appendVersionNameVersionCode(variant, defaultConfig, manifestParser) {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:19.0.0'
+    compile 'com.android.support:support-v4:19.1.0'
     compile 'com.android.support:support-v13:19.+'
 }
