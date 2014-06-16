@@ -157,6 +157,7 @@
     <string name="changelog_accept_button">Continue</string>
 
     <string-array name="versionNumbers">
+        <item>2.2 (June 20th)</item>
         <item>2.1 (May 29th)</item>
         <item>2.0 (May 16th)</item>
         <item>1.15 (Apr 23th)</item>
@@ -169,8 +170,11 @@
 
     <string-array name="versionSummaries">
         <item>
+"    &#8226; [New!] Added all white icon
+    &#8226; Added full translations for Portuguese"</item>
+        <item>
 "    &#8226; [Fix!] Crash in setting position/icon type
-    &#8226; Added Instructions</item>
+    &#8226; Added Instructions"</item>
         <item>
 "    &#8226; [Fix!] Apps widget resize crash fixed
     &#8226; Big refactor of code
