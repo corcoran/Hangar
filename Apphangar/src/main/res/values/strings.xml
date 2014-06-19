@@ -171,7 +171,8 @@
     <string-array name="versionSummaries">
         <item>
 "    &#8226; [New!] Added all white icon
-    &#8226; Added full translations for Portuguese"</item>
+    &#8226; [Fix!] DB sync exception fixed
+    &#8226; Added full translations for Portuguese/Spanish"</item>
         <item>
 "    &#8226; [Fix!] Crash in setting position/icon type
     &#8226; Added Instructions"</item>
