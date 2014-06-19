@@ -270,7 +270,7 @@ public class WatchfulService extends Service {
             handler.postDelayed(this, LOOP_SECONDS * 1000);
         }
     };
-    public int updateOrAdd(TaskInfo newInfo) {
+    public synchronized int updateOrAdd(TaskInfo newInfo) {
         int rows = db.updateTaskTimestamp(newInfo.packageName);
         if (rows > 0) {
             Tools.HangarLog("Updated task [" + newInfo.appName + "] with new Timestamp");
