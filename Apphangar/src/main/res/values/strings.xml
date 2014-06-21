@@ -157,7 +157,7 @@
     <string name="changelog_accept_button">Continue</string>
 
     <string-array name="versionNumbers">
-        <item>2.2 (June 20th)</item>
+        <item>2.2 (June 22th)</item>
         <item>2.1 (May 29th)</item>
         <item>2.0 (May 16th)</item>
         <item>1.15 (Apr 23th)</item>
@@ -172,6 +172,8 @@
         <item>
 "    &#8226; [New!] Added all white icon
     &#8226; [Fix!] DB sync exception fixed
+    &#8226; [Fix!] Fix some apps not launching to main action
+    &#8226; Minimum Android version lowered to 4.1+
     &#8226; Added full translations for Portuguese/Spanish"</item>
         <item>
 "    &#8226; [Fix!] Crash in setting position/icon type

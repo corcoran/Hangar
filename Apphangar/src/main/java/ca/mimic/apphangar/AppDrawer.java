@@ -121,7 +121,7 @@ public class AppDrawer {
                 throw new PackageManager.NameNotFoundException();
             }
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            intent.setAction("action" + (count));
+            intent.setAction(Intent.ACTION_MAIN);
             PendingIntent activity = PendingIntent.getActivity(mContext, pendingNum, intent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
             mLastItem.setOnClickPendingIntent(mImageContLayout, activity);

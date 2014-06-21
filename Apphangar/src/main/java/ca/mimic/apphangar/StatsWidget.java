@@ -235,7 +235,7 @@ public class StatsWidget extends AppWidgetProvider {
                     throw new PackageManager.NameNotFoundException();
                 }
                 intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                intent.setAction("action" + (count));
+                intent.setAction(Intent.ACTION_MAIN);
                 PendingIntent activity = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                 row.setOnClickPendingIntent(clickID, activity);
             } catch (PackageManager.NameNotFoundException e) {
