@@ -20,7 +20,7 @@
     <item>Tempo de uso no Aplicativo</item>
   </string-array>
   <string name="title_priority_preference">Posição da Notificação</string>
-  <string name="summary_priority_preference">posição na gaveta de notificação %s</string>
+  <string name="summary_priority_preference">Posição na gaveta de notificação %s</string>
   <string name="dialog_priority_preference">Escolha uma posição</string>
   <string-array name="entries_priority_preference">
     <item>Topo</item>
@@ -66,13 +66,13 @@
   <string name="configure_donate">Doar</string>
   <string name="configure_license">Licença</string>
   <string name="donate_title">Quer me pagar uma cerveja?</string>
-  <string name="donate_head">As doações são sempre apreciadas e útil ao finaciar o desenvolvimento futuro deste e de outros apps.\n\nSe você achar o Hangar útil e quer mostrar agradecimento pelo trabalho que tem ido para isso, sinta-se livre para deixar um review, sobre sua experiência com o app, ou se você é generoso, você pode doar usando <b>Google Play</b> ou <b>PayPal</b> abaixo.</string>
+  <string name="donate_head">As doações são sempre apreciadas e útil ao finaciar o desenvolvimento futuro deste e de outros apps.\n\nSe você achar o Hangar útil e quer mostrar agradecimento pelo trabalho que tem ido para isso, sinta-se livre para deixar um review sobre sua experiência com o app, se você também é generoso doê usando <b>Google Play</b> ou <b>PayPal</b> abaixo.</string>
   <string name="donate_title_google">Google Play</string>
   <string name="donate_title_paypal">PayPal</string>
   <string name="donate_google">Doê com Google</string>
   <string name="donate_paypal">Doê com PayPal</string>
   <string name="donate_join_us">Junte-se a nós no Google+</string>
-  <string name="donate_accept_button">"Keep on keepin' on"</string>
+  <string name="donate_accept_button">"Voltar as Configurações do Hangar"</string>
   <string name="donate_try_paypal">"Hm... Parece que o Google Play não gostava disso.  Tentar com o PayPal em vez disso?"</string>
   <string name="donate_thanks_title">Obrigado!</string>
   <string name="donate_thanks_continue">Voltar ao Hangar</string>
@@ -115,19 +115,19 @@
     <item>Abaixo</item>
   </string-array>
   <string name="instructions_1_1">"Bem-vindo ao Hangar!"</string>
-  <string name="instructions_1_2">"Agora que o Hangar foi instalado, ele adicionou uma <b>barra de atalhos para Aplicativos</b> na sua gaveta de notificação.  Também vai começar a monitorar a freqüência e a quantidade de tempo que você usa cada um dos seus aplicativos."</string>
+  <string name="instructions_1_2">"Agora que o Hangar foi instalado, ele adicionou uma <b>barra de atalhos para Aplicativos</b> na sua gaveta de notificação.  Também vai começar a monitorar a frequência e a quantidade de tempo que você usa cada um dos seus aplicativos."</string>
   <string name="instructions_1_3">"Ao monitorar seu uso diário o Hangar usará esses dados para priorizar os apps que você mais usa. A cada aplicativo você usa, Hangar fica mais esperto e altera esses atalhos em tempo real atendendo às suas necessidades."</string>
-  <string name="instructions_title_1">"Barra de atalhos de app do Hangar na gaveta de notificação"</string>
+  <string name="instructions_title_1">"Barra de atalho de apps do Hangar na gaveta de notificação"</string>
   <string name="instructions_1_swipe">Deslize para a próxima pág.</string>
   <string name="instructions_2_1">"Estatísticas"</string>
-  <string name="instructions_2_2">"Hangar também monitora seu uso dentro do app!"</string>
+  <string name="instructions_2_2">"Hangar também monitora seu uso dentro de cada aplicativo!"</string>
   <string name="instructions_title_2">Widget de Estatísticas</string>
-  <string name="instructions_2_3">"Você pode verificar as estatísticas do Hangar em<b>Guia de Apps</b> ou colocando o <b>Stats widget</b> na sua homescreen."</string>
+  <string name="instructions_2_3">"Você pode verificar as estatísticas do Hangar em <b>Guia de Apps</b> ou colocando o <b>Widget de estatísticas</b> na sua homescreen."</string>
   <string name="instructions_3_1">"Customizações"</string>
   <string name="instructions_3_2">"Além da barra de atalhos padrão na <b>gaveta de notificação</b>, você pode adicionar e personalizar um <b>widget</b> para a inicialização de apps.  Especifique a cor, tamanho, quantidade, cor de fundo e muito mais."</string>
-  <string name="instructions_title_3">Ex. 2 Widgets estilizados diferentes</string>
+  <string name="instructions_title_3">Ex. 2 Widgets estilizados</string>
   <string name="instructions_title_4">Lista negra e resetar estatísticas</string>
-  <string name="instructions_3_3">"Você também pode adicionar apps na<b>lista negra</b> e resetar as estatísticas do Hangar na <b>Guia de Apps</b>."</string>
+  <string name="instructions_3_3">"Você também pode adicionar apps na <b>lista negra</b> e resetar as estatísticas do Hangar na <b>Guia de Apps</b>."</string>
   <string name="instructions_4_1">"Começar"</string>
   <string name="instructions_4_2">"Hangar é uma ferramenta leve que inicializa apps de qualquer lugar no Android.\n\nPara aproveitar todos os benefícios desta ferramenta, deve ter no mínimo um dia de monitoramento dos aplicativos, para  basear suas recomendações.\n\nAproveite e obrigado por usar o Hangar!"</string>
   <string name="instructions_4_button">Configurar o Hangar</string>

@@ -20,8 +20,8 @@
     <item>Tiempo de uso de la aplicación</item>
   </string-array>
   <string name="title_priority_preference">Posición de notificación</string>
-  <string name="summary_priority_preference">Posición N° %s en panel de notificaciones</string>
-  <string name="dialog_priority_preference">Elija una posición</string>
+  <string name="summary_priority_preference">Posición %s en panel de notificaciones</string>
+  <string name="dialog_priority_preference">Elegir una posición</string>
   <string-array name="entries_priority_preference">
     <item>Parte superior</item>
     <item>Normal</item>
@@ -31,8 +31,8 @@
   <string name="summary_appsno_preference">Muestra hasta un máximo de %s aplicaciones</string>
   <string name="dialog_appsno_preference">Seleccione número de aplicaciones visibles</string>
   <string name="title_statusbar_icon_preference">Icono de barra de estado</string>
-  <string name="dialog_statusbar_icon_preference">Seleccione el estilo del icono</string>
-  <string name="alert_title_statusbar_icon_preference">Para que sepas...</string>
+  <string name="dialog_statusbar_icon_preference">Seleccionar el estilo del icono</string>
+  <string name="alert_title_statusbar_icon_preference">Para que sepa...</string>
   <string name="alert_message_statusbar_icon_preference">Debido a las limitaciones de Android, la desactivación del icono de la barra de estado sólo es posible mediante la reducción de la prioridad de la notification.\n\nEs decir su barra Hangar estará en la parte inferior del panel de notificaciones.</string>
   <string-array name="entries_statusbar_icon_preference">
     <item>Icono blanco cálido (por defecto)</item>
@@ -62,11 +62,11 @@
   <string name="configure_apps_widget">Configurar widget de aplicaciones</string>
   <string name="configure_stats_widget">Configurar widget de estadísticas</string>
   <string name="configure_changelog">Ver los cambios recientes</string>
-  <string name="configure_instructions">instrucciones</string>
+  <string name="configure_instructions">Instrucciones</string>
   <string name="configure_donate">Donar</string>
   <string name="configure_license">Licencia</string>
-  <string name="donate_title">¿Me quiere comprar una cerveza?</string>
-  <string name="donate_head">Donaciones siempre son apreciadas y útiles para el futuro desarrollo de este y otros apps.\n\nSi usted encuentra que Hangar sea útil y quiere mostrar agradecimiento por el trabajo que se ha hacho en la creación del la app, no dude en dejar una opinion que refleja su experiencia con la aplicación, o si es generoso, usted puede donar usando <b>Google Play</b> o <b>PayPal</b>.</string>
+  <string name="donate_title">¿Me quiere invitar una cerveza?</string>
+  <string name="donate_head">Donaciones siempre son apreciadas y útiles para el futuro desarrollo de esta y otras apps.\n\nSi usted encuentra que Hangar sea útil y quiere mostrar agradecimiento por el trabajo que se ha hecho en la creación de la app, no dude en dejar una opinion que refleja su experiencia con la aplicación. Si se siente generoso, puede donar usando <b>Google Play</b> o <b>PayPal</b>.</string>
   <string name="donate_title_google">Google Play</string>
   <string name="donate_title_paypal">PayPal</string>
   <string name="donate_google">Donar con Google</string>
@@ -76,10 +76,10 @@
   <string name="donate_try_paypal">"Mmmm... Pasó algo raro con Google Play.  ¿Tal vez pruebe con PayPal?"</string>
   <string name="donate_thanks_title">¡Gracias!</string>
   <string name="donate_thanks_continue">Volver a Hangar</string>
-  <string name="donate_thanks">"Su contribución al desarrollo del Hangar se aprecia mucho! La comunidad Android se hace mejor por gente como usted que apoya y motiva a los desarrolladores."</string>
+  <string name="donate_thanks">"¡Su contribución al desarrollo de Hangar es muy apreciado! La comunidad Android se hace mejor por gente como usted que apoya y motiva a los desarrolladores."</string>
   <string name="donate_thanks_paypal">"Hangar no sabe si realmente se hizo una donación utilizando PayPal, ya que le enviamos a un enlace PayPal a través de tu navegador favorito.  Sin embargo vamos a agradecer su uso continuo y apoyo! :)"</string>
   <string name="license_title">Licencia y código fuente</string>
-  <string name="license_head">Hangar está licenciado bajo la licencia GPLv3 de la Free Software Foundation (Fundación para el sofware libre) y es Copyright © 2014 Jeff Corcoran.\n\nBajo la licencia GPL, Hangar está disponible de forma gratuita cuando el uso del Hangar se adhiere a los términos de la licencia GPL.\n\nLos usuarios pueden descargar el software de forma gratuita, modificarlo, integrarlo y distribuirlo. Sin embargo, los usuarios GPL deben acatar las reglas de la GPL, que estipulan que si un trabajo basado en Hangar se redistribuye, el código fuente completo de este trabajo también debe estar abierta y disponible para su redistribución bajo los términos de la GPL.\n\nVer la GPL y las preguntas frecuentes de la Free Software Foundation para obtener más detalles.</string>
+  <string name="license_head">Hangar está licenciado bajo la licencia GPLv3 de la Free Software Foundation (Fundación para el sofware libre) y es Copyright © 2014 Jeff Corcoran.\n\nBajo la licencia GPL, Hangar está disponible de forma gratuita cuando el uso del Hangar se adhiere a los términos de la licencia GPL.\n\nLos usuarios pueden descargar el software de forma gratuita, modificarlo, integrarlo y distribuirlo. Sin embargo, los usuarios GPL deben acatar las reglas de la GPL, que estipulan que si un trabajo basado en Hangar se redistribuye, el código fuente completo de este trabajo también debe estar abierto y disponible para su redistribución bajo los términos de la GPL.\n\nVer la GPL y las preguntas frecuentes de la Free Software Foundation para obtener más detalles.</string>
   <string name="license_view_source">Visite Hangar en Github</string>
   <string name="license_accept_button">Continuar</string>
   <string name="changelog_title">Cambios de Hangar</string>
@@ -104,23 +104,23 @@
   <string name="aesthetics_category">Estética</string>
   <string name="title_stats_widget_appsno_preference">Vertical</string>
   <string name="summary_stats_widget_appsno_preference">Muestra hasta un máximo de %s aplicaciones</string>
-  <string name="dialog_stats_widget_appsno_preference">Seleccione número de aplicaciones visibles</string>
+  <string name="dialog_stats_widget_appsno_preference">Seleccionar número de aplicaciones visibles</string>
   <string name="title_stats_widget_appsno_ls_preference">Horizontal</string>
   <string name="summary_stats_widget_appsno_ls_preference">Muestra hasta un máximo de %s aplicaciones</string>
-  <string name="dialog_stats_widget_appsno_ls_preference">Seleccione número de aplicaciones visibles (horizontal)</string>
+  <string name="dialog_stats_widget_appsno_ls_preference">Seleccionar número de aplicaciones visibles (horizontal)</string>
   <string name="title_alignment_preference">Alineación vertical del widget</string>
   <string-array name="entries_alignment_preference">
     <item>Parte superior</item>
     <item>Centro (por defecto)</item>
     <item>Parte inferior</item>
   </string-array>
-  <string name="instructions_1_1">"¡ Bienvenido a Hangar!"</string>
+  <string name="instructions_1_1">"¡Bienvenido a Hangar!"</string>
   <string name="instructions_1_2">"Hangar ha añadido una <b>barra de acceso directo a aplicaciones</b> a tu panel de notificaciones.  También se iniciará el monitoreo de la frecuencia y la cantidad de tiempo que pasas en tus aplicaciones."</string>
   <string name="instructions_1_3">"Hangar sigue su uso diario y utilizará esta información para priorizar las aplicaciones que más usa.  Con cada aplicación que utiliza, Hangar se vuelve más inteligente y cambia los accesos directos en tiempo real para satisfacer sus necesidades."</string>
   <string name="instructions_title_1">"Barra de acceso directo de aplicaciones de Hangar en el panel de notificaciones"</string>
   <string name="instructions_1_swipe">Pase a la siguiente página</string>
   <string name="instructions_2_1">"Estatísticas"</string>
-  <string name="instructions_2_2">"Hangar también monitorea su uso de aplicaciones!"</string>
+  <string name="instructions_2_2">"¡Hangar también monitorea su uso de aplicaciones!"</string>
   <string name="instructions_title_2">Widget de estadísticas</string>
   <string name="instructions_2_3">"Puede consultar las estadísticas bajo la <b>pestaña "Aplicaciones"</b> de Hangar o colocando el <b>widget de estadísticas</b> en tu pantalla de inicio."</string>
   <string name="instructions_3_1">"Personalizaciones"</string>
@@ -129,6 +129,6 @@
   <string name="instructions_title_4">Lista negra y borrado de estadísticas</string>
   <string name="instructions_3_3">"También puede agregar aplicaciones a la <b>lista negra</b> y restablecer sus estadísticas desde la <b>pestaña "Aplicaciones"</b> de Hangar."</string>
   <string name="instructions_4_1">"Comenzar"</string>
-  <string name="instructions_4_2">"Hangar es una herramienta ligera que hace conveniente el lanzamiento de aplicaciones desde cualquier lugar de Android.\n\nPara disfrutar de los beneficios de esta herramienta, se necesita al menos un día de estadísticas de aplicaciones monitoreados para preparar sus recomendaciones.\n\nDisfrutelo y gracias por probar Hangar!"</string>
+  <string name="instructions_4_2">"Hangar es una herramienta ligera que hace conveniente el lanzamiento de aplicaciones desde cualquier lugar de Android.\n\nPara disfrutar de los beneficios de esta herramienta, se necesita al menos un día de estadísticas de aplicaciones monitoreados para preparar sus recomendaciones.\n\n¡Disfrutelo y gracias por probar Hangar!"</string>
   <string name="instructions_4_button">Configurar Hangar</string>
 </resources>
