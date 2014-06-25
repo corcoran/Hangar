@@ -118,7 +118,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static boolean APPS_BY_WIDGET_SIZE_DEFAULT = true;
 
     final static int WEIGHT_PRIORITY_DEFAULT = 0;
-    final static int APPSNO_DEFAULT = 7;
+    final static int APPSNO_DEFAULT = 8;
     final static int PRIORITY_DEFAULT = 2;
     final static int PRIORITY_BOTTOM = -2;
     final static int ICON_COLOR_DEFAULT = 0xffffffff;
@@ -741,6 +741,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         UpdatingListPreference priority_preference;
         UpdatingListPreference weight_priority_preference;
         UpdatingListPreference statusbar_icon_preference;
+        UpdatingListPreference icon_size_preference;
 
         public static PrefsFragment newInstance(int prefLayout) {
             PrefsFragment fragment = new PrefsFragment();
@@ -786,6 +787,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 statusbar_icon_preference = (UpdatingListPreference)findPreference(STATUSBAR_ICON_PREFERENCE);
                 statusbar_icon_preference.setValue(prefs2.getString(STATUSBAR_ICON_PREFERENCE, STATUSBAR_ICON_DEFAULT));
                 statusbar_icon_preference.setOnPreferenceChangeListener(changeListener);
+
+                icon_size_preference = (UpdatingListPreference)findPreference(Settings.ICON_SIZE_PREFERENCE);
+                icon_size_preference.setValue(prefs2.getString(Settings.ICON_SIZE_PREFERENCE, Integer.toString(Settings.ICON_SIZE_DEFAULT)));
+                icon_size_preference.setOnPreferenceChangeListener(changeListener);
 
             } catch (NullPointerException e) {
             }
@@ -866,6 +871,12 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     preference.setSummary(hex);
                     int intHex = ColorPickerPreference.convertToColorInt(hex);
                     editor.putInt(ICON_COLOR_PREFERENCE, intHex);
+                    editor.apply();
+                    myService.execute(SERVICE_CLEAR_TASKS);
+                    myService.watchHelper(STOP_SERVICE);
+                    myService.watchHelper(START_SERVICE);
+                } else if (preference.getKey().equals(ICON_SIZE_PREFERENCE)) {
+                    editor.putString(Settings.ICON_SIZE_PREFERENCE, (String) newValue);
                     editor.apply();
                     myService.execute(SERVICE_CLEAR_TASKS);
                     myService.watchHelper(STOP_SERVICE);

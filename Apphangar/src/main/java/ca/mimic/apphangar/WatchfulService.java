@@ -62,6 +62,9 @@ public class WatchfulService extends Service {
     final int MAX_RUNNING_TASKS = 20;
     final int LOOP_SECONDS = 3;
 
+    final int ICON_SIZE_SMALL = 0;
+    final int ICON_SIZE_LARGE = 2;
+
     protected static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
 
     boolean isNotificationRunning;
@@ -341,12 +344,21 @@ public class WatchfulService extends Service {
         Tools.HangarLog("taskList.size(): " + taskList.size() + " realmaxbuttons: " + numOfApps + " maxbuttons: " + maxButtons);
         int filledConts = 0;
 
+        int iconSize = Integer.parseInt(prefs.getString(Settings.ICON_SIZE_PREFERENCE, Integer.toString(Settings.ICON_SIZE_DEFAULT)));
+        int itemLayout = R.layout.notification_item;
+
+        if (iconSize == ICON_SIZE_SMALL) {
+            itemLayout = R.layout.notification_item_small;
+        } else if (iconSize == ICON_SIZE_LARGE) {
+            itemLayout = R.layout.notification_item_large;
+        }
+
         for (int i=0; i < taskList.size(); i++) {
             if (filledConts == maxButtons) {
                 break;
             }
 
-            if (appDrawer.newItem(taskList.get(i), R.layout.notification_item, i)) {
+            if (appDrawer.newItem(taskList.get(i), itemLayout, i)) {
                 appDrawer.addItem();
                 filledConts++;
             }
