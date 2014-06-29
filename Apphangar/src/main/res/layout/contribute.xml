@@ -17,40 +17,153 @@
             android:padding="3dp"
             android:text="@string/contribute_google_title"
             android:background="#33999999"
+            android:layout_marginBottom="5dp"
             android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="6dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/contribute_google_text"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:background="?android:selectableItemBackground"
+                android:focusable="true"
+                android:clickable="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/google_play" />
+
+                <TextView
+                    android:id="@+id/contribute_google"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/contribute_google_link"
+                    android:layout_marginLeft="8dp"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/contribute_google_text"
-            android:textSize="14sp" />
+            android:padding="3dp"
+            android:text="@string/contribute_translate_title"
+            android:background="#33999999"
+            android:layout_marginBottom="5dp"
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:gravity="center_vertical"
-            android:background="?android:selectableItemBackground"
-            android:focusable="true"
-            android:clickable="true"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/google_play" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="6dp">
 
             <TextView
-                android:id="@+id/contribute_google"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/contribute_google_link"
-                android:layout_marginLeft="8dp"
-                android:textStyle="bold"
+                android:text="@string/contribute_translate_text"
                 android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:background="?android:selectableItemBackground"
+                android:focusable="true"
+                android:clickable="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/google_plus" />
+
+                <TextView
+                    android:id="@+id/contribute_translate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/contribute_translate_link"
+                    android:layout_marginLeft="8dp"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:text="@string/contribute_code_title"
+            android:background="#33999999"
+            android:layout_marginBottom="5dp"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="6dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/contribute_code_text"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:background="?android:selectableItemBackground"
+                android:focusable="true"
+                android:clickable="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/google_plus" />
+
+                <TextView
+                    android:id="@+id/contribute_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/contribute_code_link"
+                    android:layout_marginLeft="8dp"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

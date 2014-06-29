@@ -148,10 +148,22 @@
 
     <!-- Contribute -->
     <string name="contribute_title">Contribute to Hangar</string>
+
     <string name="contribute_google_title">Rate + Review</string>
-    <string name="contribute_google_text">"Higher ratings &amp; positive reviews help spread the word by promoting Hangar's rank in the Play store.  It's also the easiest and quickest way to contribute!</string>
-    <string name="contribute_google_link">Rate Hangar on Google Play</string>
+    <string name="contribute_google_text">"Higher ratings &amp; positive reviews help spread the word by promoting Hangar's rank in the Play store.  It's also the easiest and quickest way to contribute!"</string>
+    <string name="contribute_google_link">Rate on Google Play</string>
     <string name="contribute_google_url">https://github.com/corcoran/Hangar</string>
+
+    <string name="contribute_translate_title">Translate</string>
+    <string name="contribute_translate_text">"Hangar is used by people all over the world.  We use <u>crowdin</u> to let users translate the app into other languages."</string>
+    <string name="contribute_translate_link">Translate with Crowdin</string>
+    <string name="contribute_translate_url">https://crowdin.net/project/hangar</string>
+
+    <string name="contribute_code_title">Fix bugs, add features!</string>
+    <string name="contribute_code_text">"Hangar is completely open and free, licensed under the GPLv3.  Submitting patches and pull requests via github is encouraged and welcome."</string>
+    <string name="contribute_code_link">View project on Github</string>
+    <string name="contribute_code_url">https://github.com/corcoran/Hangar</string>
+
     <string name="contribute_accept_button">Continue</string>
 
     <!-- License -->
