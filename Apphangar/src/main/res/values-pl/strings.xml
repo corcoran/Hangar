@@ -11,4 +11,123 @@
   <string name="title_weight_category">Sortowanie i kolejność ikon</string>
   <string name="title_weighted_recents_preference">Sortowanie ważone</string>
   <string name="summary_weighted_recents_preference">Aplikacje posortowane po czasie i częstości użycia</string>
+  <string name="title_weight_priority_preference">Odchylenie wagi</string>
+  <string name="dialog_weight_priority_preference">Wybierz wartość wagi</string>
+  <string-array name="entries_weight_priority_preference">
+    <item>Domyślna</item>
+    <item>Czas od ostatniego uruchomienia</item>
+    <item>Liczba uruchomień</item>
+    <item>Czas spędzony w aplikacji</item>
+  </string-array>
+  <string name="title_priority_preference">Pozycja powiadomienia</string>
+  <string name="summary_priority_preference">%s pozycja w panelu powiadomień</string>
+  <string name="dialog_priority_preference">Wybierz pozycję</string>
+  <string-array name="entries_priority_preference">
+    <item>Góra</item>
+    <item>Domyślna</item>
+    <item>Dół (ukrywa ikonę paska statusu)</item>
+  </string-array>
+  <string name="title_appsno_preference">Liczba aplikacji</string>
+  <string name="summary_appsno_preference">Wyświetlanie maksymalnie %s aplikacji</string>
+  <string name="dialog_appsno_preference">Wybierz liczbę aplikacji do wyświetlenia</string>
+  <string name="title_statusbar_icon_preference">Ikona paska stanu</string>
+  <string name="dialog_statusbar_icon_preference">Wybierz styl ikony</string>
+  <string name="alert_title_statusbar_icon_preference">Do Twojej wiadomości...</string>
+  <string name="alert_message_statusbar_icon_preference">Z uwagi na ograniczenia Androida, ikonę można wyłączyć tylko poprzez obniżenie priorytetu powiadomienia.\n\nInnymi słowy, pasek Hangar znajdzie się na ostatniej pozycji w panelu powiadomień.</string>
+  <string-array name="entries_statusbar_icon_preference">
+    <item>Ikona w ciepłym odcieniu bieli (domyślna)</item>
+    <item>Ikona w chłodnymi odcieniu bieli</item>
+    <item>Białoniebieska ikona</item>
+    <item>Ikona w ciepłym odcieniu czerni</item>
+    <item>Ikona w chłodnym odcieniu czerni</item>
+    <item>Niebieskoczarna ikona</item>
+    <item>Przezroczysta ikona</item>
+    <item>Bez ikony</item>
+  </string-array>
+  <string name="title_divider_preference">Włącz separatory</string>
+  <string name="summary_divider_preference">Pokazuje separatory pomiędzy ikonami aplikacji</string>
+  <string name="title_colorize_preference">Koloruj ikony powiadomień</string>
+  <string name="summary_colorize_preference">Zmień kolory ikon powiadomień</string>
+  <string name="title_icon_color_preference">Kolor</string>
+  <string name="title_icon_color_category">Kolor ikony</string>
+  <string name="dialog_color_picker">Próbnik kolorów</string>
+  <string name="press_color_to_apply">Naciśnij na kolor poniżej aby zastosować</string>
+  <string name="hex">Wartość szesnastkowa:</string>
+  <string name="set">Wybierz</string>
+  <string name="color_default">Domyślna</string>
+  <string name="title_activity_stats_widget_settings">Ustawienia widżetu statystyk</string>
+  <string name="action_blacklist">Przełącz czarną listę</string>
+  <string name="action_reset_stats">Zresetuj statystyki</string>
+  <string name="configure_apps_widget">Skonfiguruj widżet aplikacji</string>
+  <string name="configure_stats_widget">Konfiguruj widżet statystyk</string>
+  <string name="configure_changelog">Pokaż ostatnie zmiany</string>
+  <string name="configure_instructions">Instrukcje</string>
+  <string name="configure_donate">Wspomóż</string>
+  <string name="configure_license">Licencja</string>
+  <string name="donate_title">Chcesz kupić mi piwo?</string>
+  <string name="donate_head">Darowizny są zawsze mile widziane i pomocne w finansowanie przyszłego rozwoju tej i innych aplikacji.\n\nJeśli uważasz, że Hangar jest przydatną aplikacją i chcesz podziękować za włożoną w nią pracę, możesz pozostawić recenzję odzwierciedlającą Twoje doświadczenia z aplikacji, lub jeśli jesteś w hojnym nastroju , możesz przekazać donację za pomocą <b>Google Play</b> lub <b>PayPal</b> poniżej.</string>
+  <string name="donate_title_google">Google Play</string>
+  <string name="donate_title_paypal">PayPal</string>
+  <string name="donate_google">Wspomóż przy pomocy Google</string>
+  <string name="donate_paypal">Wspomóż przy pomocy PayPal</string>
+  <string name="donate_join_us">Dołącz do społeczności Google+</string>
+  <string name="donate_accept_button">"Kontynuuj"</string>
+  <string name="donate_try_paypal">"Wygląda na to, że wystąpił drobny błąd Google Play. Może chcesz spróbować poprzez PayPal?"</string>
+  <string name="donate_thanks_title">Dziękuję!</string>
+  <string name="donate_thanks_continue">Wróc do Hangar</string>
+  <string name="donate_thanks">"Dziękuję za wsparcie rozwoju Hangar! Społeczność Androida może rozwijać się dzięki ludziom, który wspierają i motywują twórców aplikacji."</string>
+  <string name="donate_thanks_paypal">"Hangar nie wie, czy faktycznie dokonano darowizny za pomocą systemu PayPal, ponieważ aplikacja otworzyła jedynie link do PayPal w Twojej domyślnej przeglądarce. Niezależnie od tego, chcemy Ci podziękować za używanie aplikacji i jej wsparcie! :)"</string>
+  <string name="license_title">Licencja i źródła</string>
+  <string name="license_head">Hangar jest opublikowany na licencji GPLv3 z Free Software Foundation i jest Copyright © 2014 Jeff Corcoran.\n\nZgodnie z zasadami licencji GPL, Hangar jest dostępny za darmo bezpłatnie tak długo, jak stosowanie Hangar jest zgodne z warunkami licencji GPL.\n\nUżytkownicy mogą pobierać oprogramowanie za darmo, modyfikować je, integrować w swoich programach i rozpowszechniać. Użytkownicy GPL muszą przy tym przestrzegać zasad licencji GPL, które przewidują, że jeżeli dzieło oparte na Hangar jest rozpowszechniane, kompletne źródło kodu dla tej pracy również musi być otwarte i dostępne dla redystrybucji na warunkach GPL.\n\nSprawdż treść GPL i FAQ Fundacji Wolnego Oprogramowania, aby poznać więcej szczegółów.</string>
+  <string name="license_view_source">Odwiedź Hangar na Github</string>
+  <string name="license_accept_button">Kontynuuj</string>
+  <string name="changelog_title">Zmiany w Hangar</string>
+  <string name="changelog_donate_button">Okaż wsparcie</string>
+  <string name="changelog_accept_button">Kontynuuj</string>
+  <string name="apps_widget_name">Widżet aplikacji Hangar</string>
+  <string name="title_icon_size_preference">Rozmiar ikon</string>
+  <string-array name="entries_icon_size_preference">
+    <item>Małe</item>
+    <item>Średnie (domyślne)</item>
+    <item>Duże</item>
+  </string-array>
+  <string name="stats_widget_name">Widżet statystyk Hangar</string>
+  <string name="title_background_color_preference">Kolor tła</string>
+  <string name="button_name">Umieść widżet</string>
+  <string name="reconfigure_button_name">Zapisz ustawienia widżetu</string>
+  <string name="reconfigure_reminder">Można zmodyfikować ustawienia widżetu w dowolnym momencie w menu ustawień Hangar</string>
+  <string name="automatic_appsno">Obsługiwane automatycznie</string>
+  <string name="appsno_category">Liczba aplikacji</string>
+  <string name="title_apps_by_widget_size_preference">Automatycznie</string>
+  <string name="summary_apps_by_widget_size_preference">Wypełnij dostępne miejsce</string>
+  <string name="aesthetics_category">Wygląd</string>
+  <string name="title_stats_widget_appsno_preference">Pionowo</string>
+  <string name="summary_stats_widget_appsno_preference">Wyświetlanie maksymalnie %s aplikacji</string>
+  <string name="dialog_stats_widget_appsno_preference">Wybierz liczbę aplikacji do wyświetlenia</string>
+  <string name="title_stats_widget_appsno_ls_preference">Poziomo</string>
+  <string name="summary_stats_widget_appsno_ls_preference">Wyświetlanie maksymalnie %s aplikacji</string>
+  <string name="dialog_stats_widget_appsno_ls_preference">Wybierz liczbę aplikacji do pokazania (w trybie poziomym)</string>
+  <string name="title_alignment_preference">Wyrównanie widżetu w pionie</string>
+  <string-array name="entries_alignment_preference">
+    <item>Góra</item>
+    <item>Środek (domyślnie)</item>
+    <item>Dół</item>
+  </string-array>
+  <string name="instructions_1_1">"Witamy w Hangar!"</string>
+  <string name="instructions_1_2">"Teraz, gdy Hangar jest zainstalowany, w pasku powiadomień znajduje się dodatkowy <b>pasek skrótów do aplkacji</b>. Hangar rozpoczyna też monitorowanie częstotliwości uruchamiania i czasu spędzonego w aplikacjach."</string>
+  <string name="instructions_1_3">"Dzięki monitorowaniu tego, jak używasz aplikacji w ciągu Dnia, Hangar może wyświetlać skróty do tych aplikacji, które są dla Ciebie najważniejsze. Każde uruchomienie aplikacji pozwala Hangar uczyć się twoich nawyków użycia aplikacji i zmieniać wyświetlane skróty w czasie rzeczywistym tak, aby jak najlepiej odpowiadały Twoim potrzebom."</string>
+  <string name="instructions_title_1">"Pasek skrótów Hangar w panelu powiadomień"</string>
+  <string name="instructions_1_swipe">Przesuń palcem do następnej strony</string>
+  <string name="instructions_2_1">"Statystyki"</string>
+  <string name="instructions_2_2">"Hangar śledzi także twoje nawyki korzystania z aplikacji!"</string>
+  <string name="instructions_title_2">Widżet statystyk</string>
+  <string name="instructions_2_3">"Możesz sprawdzić statystyki na <b>karcie aplikacji</b> Hangar lub umieszczając <b>Widżet statystyk</b> na ekranie domowym."</string>
+  <string name="instructions_3_1">"Dostosowanie"</string>
+  <string name="instructions_3_2">"Poza domyślnym paskiem skrótów w <b>panelu powiadomień</b>, możesz dodać i skonfigurować <b>widżet</b>, z którego możesz uruchamiać aplikacji. Możesz określić, kolor, wielkość, liczbę ikon, kolor ich tła oraz inne parametry."</string>
+  <string name="instructions_title_3">np. dwa różnie skonfigurowane widżety aplikacji</string>
+  <string name="instructions_title_4">Czarna lista i czyszczenie statystyk</string>
+  <string name="instructions_3_3">"Możesz także dodać aplikacje do <b>Czarnej listy</b> i wyczyścić ich statystyki z <b>Zakładki aplikacji</b> w Hangar."</string>
+  <string name="instructions_4_1">"Wprowadzenie"</string>
+  <string name="instructions_4_2">"Hangar jest lekkim narzędziem, które sprawia, że uruchomienie aplikacji z dowolnego miejsca w systemie Android jest niezwykle wygodne.\n\nAby w pełni wykorzystać możliwości tego narzędzia, należy pozwolić mu zebrać statystyki uruchamianych aplikacji z co najmniej jednego dnia, co pozwoli na dokonywanie właściwych sugestii.\n\nDziękuję za wypróbowanie Hangar!"</string>
+  <string name="instructions_4_button">Skonfiguruj Hangar</string>
 </resources>
