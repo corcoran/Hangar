@@ -886,6 +886,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
                             }).show();
                         return true;
                     } else {
+                        PrefsFragment mBehaviorSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(0);
+                        if (mBehaviorSettings.priority_preference.getValue().equals(Integer.toString(PRIORITY_BOTTOM))) {
+                            editor.putString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_DEFAULT));
+                            mBehaviorSettings.priority_preference.setValue(Integer.toString(PRIORITY_DEFAULT));
+                        }
                         editor.putString(STATUSBAR_ICON_PREFERENCE, (String) newValue);
                         editor.apply();
                         myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
