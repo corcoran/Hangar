@@ -99,6 +99,7 @@ public class Donate {
         mDonate = inflater.inflate(R.layout.donate, null);
 
         TextView mJoinUsText = (TextView) mDonate.findViewById(R.id.donate_contribute);
+        mJoinUsText.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
         LinearLayout mJoinUsCont = (LinearLayout) mJoinUsText.getParent();
         mJoinUsCont.setOnClickListener(new View.OnClickListener() {

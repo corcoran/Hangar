@@ -42,6 +42,7 @@ public class Contribute {
         mContribute = inflater.inflate(R.layout.contribute, null);
 
         TextView mGoogle = (TextView) mContribute.findViewById(R.id.contribute_google);
+        mGoogle.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
         LinearLayout mGoogleCont = (LinearLayout) mGoogle.getParent();
         mGoogleCont.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +55,7 @@ public class Contribute {
         });
 
         TextView mGithub = (TextView) mContribute.findViewById(R.id.contribute_code);
+        mGithub.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
         LinearLayout mGithubCont = (LinearLayout) mGithub.getParent();
         mGithubCont.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +68,7 @@ public class Contribute {
         });
 
         TextView mCrowdin = (TextView) mContribute.findViewById(R.id.contribute_translate);
+        mCrowdin.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
         LinearLayout mCrowdinCont = (LinearLayout) mCrowdin.getParent();
         mCrowdinCont.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +81,7 @@ public class Contribute {
         });
 
         TextView mPlus = (TextView) mContribute.findViewById(R.id.contribute_plus);
+        mPlus.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
         LinearLayout mPlusCont = (LinearLayout) mPlus.getParent();
         mPlusCont.setOnClickListener(new View.OnClickListener() {
