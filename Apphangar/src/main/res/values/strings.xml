@@ -170,8 +170,8 @@
     <string name="contribute_plus_url">https://plus.google.com/communities/117722899904055747117</string>
 
     <string name="contributors_title">Special thanks to:</string>
-    <string name="contributors_list1">"Melissa Gregory\nDavid Cormier\nConor Anderson\nVinicius Domingues\nMario Sacquegna\n"</string>
-    <string name="contributors_list2">- Feedback &amp; support\n- French translations\n- Spanish translations\n- Portuguese translations\n- Italian translations</string>
+    <string name="contributors_list1">"Melissa Gregory\nDavid Cormier\nConor Anderson\nVinicius Domingues\nMario Sacquegna\nufoman"</string>
+    <string name="contributors_list2">- Feedback &amp; support\n- French translations\n- Spanish translations\n- Portuguese translations\n- Italian translations\n- Polish translations</string>
     <string name="contributors_list3">&lt;3 Bridget W, Jeff DeChambeau, Joel Burke, Jonathan Kagan, Derek Rauch, Griffin Millender &amp; Anthony King</string>
 
     <string name="contribute_accept_button">Continue</string>
@@ -203,51 +203,52 @@
 
     <string-array name="versionSummaries">
         <item>
-"    &#8226; [New!] Added all white icon
-    &#8226; [New!] Added small and large icons in notifications
-    &#8226; [Fix!] DB sync exception fixed
-    &#8226; [Fix!] Fix some apps not launching to main action
-    &#8226; Minimum Android version lowered to 4.1+
-    &#8226; Added full translations for Portuguese/Spanish"</item>
+"  &#8226; [New!] Added all white icon
+  &#8226; [New!] Small, medium &amp; large notification icons
+  &#8226; [New!] Contribute/Make Hangar better section!
+  &#8226; [Fix!] DB sync exception fixed
+  &#8226; [Fix!] Fix some apps not launching to main action
+  &#8226; Minimum Android requirement lowered to 4.1+
+  &#8226; Translations for Portuguese/Spanish/Italian/Polish"</item>
         <item>
-"    &#8226; [Fix!] Crash in setting position/icon type
-    &#8226; Added Instructions"</item>
+"  &#8226; [Fix!] Crash in setting position/icon type
+  &#8226; Added Instructions"</item>
         <item>
-"    &#8226; [Fix!] Apps widget resize crash fixed
-    &#8226; Big refactor of code
-    &#8226; Added donation/license sections
-    &#8226; Version bump to 2.0"</item>
+"  &#8226; [Fix!] Apps widget resize crash fixed
+  &#8226; Big refactor of code
+  &#8226; Added donation/license sections
+  &#8226; Version bump to 2.0"</item>
         <item>
-"    &#8226; [Fix!] No longer crashes on boot
-    &#8226; [Fix!] Notification properly loads on boot
-    &#8226; Apps widget now 4x1 by default
-    &#8226; Refactored recent app sort code
-    &#8226; Refactored appdrawer row/item creation"</item>
+"  &#8226; [Fix!] No longer crashes on boot
+  &#8226; [Fix!] Notification properly loads on boot
+  &#8226; Apps widget now 4x1 by default
+  &#8226; Refactored recent app sort code
+  &#8226; Refactored appdrawer row/item creation"</item>
         <item>
-"    &#8226; [New!] Apps widget
-    &#8226; Removed debug logging"</item>
+"  &#8226; [New!] Apps widget
+  &#8226; Removed debug logging"</item>
         <item>
-"    &#8226; [New!] Changelog pop-up screen
-    &#8226; [Fix!] 4.3 Navbar launcher size issue fixed
-    &#8226; Tweaked default widget background alpha
-    &#8226; [Fix!] Widget no longer stops updating
-    &#8226; [Fix!] No longer crashes on clean boot"</item>
+"  &#8226; [New!] Changelog pop-up screen
+  &#8226; [Fix!] 4.3 Navbar launcher size issue fixed
+  &#8226; Tweaked default widget background alpha
+  &#8226; [Fix!] Widget no longer stops updating
+  &#8226; [Fix!] No longer crashes on clean boot"</item>
         <item>
-"    &#8226; [New!] Auto-populate widget based on available size
-    &#8226; Cleaned up settings code
-    &#8226; Added setting for portrait/landscape # of apps
-    &#8226; Rotation properly redraws widgets
-    &#8226; Stats Widget bar/App bars now stretches properly
-    &#8226; [Fix!] Launcher detect and refresh works properly
-    &#8226; [Fix!] Blacklisted items no longer show up in widget"</item>
+"  &#8226; [New!] Auto-populate widget based on available size
+  &#8226; Cleaned up settings code
+  &#8226; Added setting for portrait/landscape # of apps
+  &#8226; Rotation properly redraws widgets
+  &#8226; Stats Widget bar/App bars now stretches properly
+  &#8226; [Fix!] Launcher detect and refresh works properly
+  &#8226; [Fix!] Blacklisted items no longer show up in widget"</item>
         <item>
-"    &#8226; Separate wipe-stats function
-    &#8226; Add menu option for reconfiguring widget
-    &#8226; New per-app menu pop-up in Settings"</item>
+"  &#8226; Separate wipe-stats function
+  &#8226; Add menu option for reconfiguring widget
+  &#8226; New per-app menu pop-up in Settings"</item>
         <item>
-"    &#8226; Added # of apps, background color, divider toggle
-    &#8226; [New!] Widget configuration page
-    &#8226; [New!] Added Stats widget"</item>
+"  &#8226; Added # of apps, background color, divider toggle
+  &#8226; [New!] Widget configuration page
+  &#8226; [New!] Added Stats widget"</item>
     </string-array>
 
     <!-- Apps Widget -->
