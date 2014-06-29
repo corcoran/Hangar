@@ -99,15 +99,12 @@ public class Donate {
         mDonate = inflater.inflate(R.layout.donate, null);
 
         TextView mJoinUsText = (TextView) mDonate.findViewById(R.id.donate_join_us);
-        mJoinUsText.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
         LinearLayout mJoinUsCont = (LinearLayout) mJoinUsText.getParent();
         mJoinUsCont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(context.getResources().getString(R.string.donate_googleplus_url)));
-                context.startActivity(i);
+                Settings.launchContribute(context);
             }
         });
 

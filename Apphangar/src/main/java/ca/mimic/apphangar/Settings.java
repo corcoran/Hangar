@@ -326,6 +326,15 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         }
 
                     })
+                .setNeutralButton(R.string.changelog_contribute_button,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                launchContribute(Settings.this);
+
+                                dialog.dismiss();
+                            }
+
+                        })
                 .setPositiveButton(R.string.changelog_accept_button, null)
                 .show();
     }
@@ -342,11 +351,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 .show();
     }
 
-    protected void launchContribute() {
-        Contribute contribute = new Contribute(this);
+    static protected void launchContribute(Context context) {
+        Contribute contribute = new Contribute(context);
         View mContribute = contribute.getView();
         mContribute.refreshDrawableState();
-        new AlertDialog.Builder(Settings.this)
+        new AlertDialog.Builder(context)
                 .setTitle(R.string.license_title)
                 .setIcon(R.drawable.ic_launcher)
                 .setView(mContribute)
@@ -500,7 +509,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
             launchLicense();
             return true;
         } else if (id == R.id.action_contribute) {
-            launchContribute();
+            launchContribute(Settings.this);
             return true;
         }
         return super.onOptionsItemSelected(item);

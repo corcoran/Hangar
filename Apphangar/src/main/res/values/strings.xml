@@ -120,16 +120,16 @@
     <string name="configure_instructions">Instructions</string>
     <string name="configure_donate">Donate</string>
     <string name="configure_license">License</string>
-    <string name="configure_contribute">Contribute</string>
+    <string name="configure_contribute">Contribute!</string>
 
     <!-- Donate -->
     <string name="donate_title">Want to buy me a beer?</string>
-    <string name="donate_head">Donations are always appreciated and helpful in funding the future development of this and other apps.\n\nIf you find Hangar useful and want to show thanks for the work that has gone into it, feel free to leave a review reflecting your experience with the app, or if you\'re in a generous mood, you can donate using <b>Google Play</b> or <b>PayPal</b> below.</string>
+    <string name="donate_head">Donations are always appreciated and helpful in funding the future development of this and other apps.\n\nIf you find Hangar useful and want to show thanks for the work that has gone into it, visit the Contribute section to see the many ways you can help, or if you\'re in a generous mood, you can donate using <b>Google Play</b> or <b>PayPal</b> below.</string>
     <string name="donate_title_google">Google Play</string>
     <string name="donate_title_paypal">PayPal</string>
     <string name="donate_google">Donate with Google</string>
     <string name="donate_paypal">Donate with PayPal</string>
-    <string name="donate_join_us">Join us on Google+</string>
+    <string name="donate_join_us">Contribute!</string>
     <string name="donate_accept_button">"Keep on keepin' on"</string>
     <string-array name="entries_google_donate">
         <item>$1 (USD)</item>
@@ -164,6 +164,16 @@
     <string name="contribute_code_link">View project on Github</string>
     <string name="contribute_code_url">https://github.com/corcoran/Hangar</string>
 
+    <string name="contribute_plus_title">Join the community</string>
+    <string name="contribute_plus_text">"Beta test, leave feedback, suggest features and be updated on the status of new development."</string>
+    <string name="contribute_plus_link">Join the Google Plus community</string>
+    <string name="contribute_plus_url">https://plus.google.com/communities/117722899904055747117</string>
+
+    <string name="contributors_title">Special thanks to:</string>
+    <string name="contributors_list1">"Melissa Gregory\nDavid Cormier\nConor Anderson\nVinicius Domingues\nMario Sacquegna\n"</string>
+    <string name="contributors_list2">Feedback &amp; support\nFrench translations\nSpanish translations\nPortuguese translations\nItalian translations</string>
+    <string name="contributors_list3">**Testers**</string>
+
     <string name="contribute_accept_button">Continue</string>
 
     <!-- License -->
@@ -176,6 +186,7 @@
     <!-- Changelog -->
     <string name="changelog_title">Hangar Changes</string>
     <string name="changelog_donate_button">Show thanks</string>
+    <string name="changelog_contribute_button">Contribute</string>
     <string name="changelog_accept_button">Continue</string>
 
     <string-array name="versionNumbers">
