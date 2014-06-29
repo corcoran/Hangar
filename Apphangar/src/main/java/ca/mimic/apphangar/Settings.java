@@ -342,6 +342,18 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 .show();
     }
 
+    protected void launchContribute() {
+        Contribute contribute = new Contribute(this);
+        View mContribute = contribute.getView();
+        mContribute.refreshDrawableState();
+        new AlertDialog.Builder(Settings.this)
+                .setTitle(R.string.license_title)
+                .setIcon(R.drawable.ic_launcher)
+                .setView(mContribute)
+                .setPositiveButton(R.string.contribute_accept_button, null)
+                .show();
+    }
+
     protected void launchDonate() {
         final Donate donate = new Donate(this);
         donate.bindServiceConn();
@@ -486,6 +498,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
             return true;
         } else if (id == R.id.action_license) {
             launchLicense();
+            return true;
+        } else if (id == R.id.action_contribute) {
+            launchContribute();
             return true;
         }
         return super.onOptionsItemSelected(item);
