@@ -356,7 +356,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         View mContribute = contribute.getView();
         mContribute.refreshDrawableState();
         new AlertDialog.Builder(context)
-                .setTitle(R.string.license_title)
+                .setTitle(R.string.contribute_title)
                 .setIcon(R.drawable.ic_launcher)
                 .setView(mContribute)
                 .setPositiveButton(R.string.contribute_accept_button, null)

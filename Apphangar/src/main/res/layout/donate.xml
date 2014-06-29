@@ -33,13 +33,13 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/google_plus" />
+                android:src="@drawable/ic_apps_warm" />
 
             <TextView
-                android:id="@+id/donate_join_us"
+                android:id="@+id/donate_contribute"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/donate_join_us"
+                android:text="@string/donate_contribute"
                 android:layout_marginLeft="8dp"
                 android:textStyle="bold"
                 android:textSize="14sp" />

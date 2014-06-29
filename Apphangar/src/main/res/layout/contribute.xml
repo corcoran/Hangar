@@ -102,7 +102,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/google_plus" />
+                    android:src="@drawable/crowdin" />
 
                 <TextView
                     android:id="@+id/contribute_translate"

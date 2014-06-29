@@ -116,20 +116,20 @@
     <string name="action_reset_stats">Reset stats</string>
     <string name="configure_apps_widget">Configure apps widget</string>
     <string name="configure_stats_widget">Configure stats widget</string>
-    <string name="configure_changelog">See recent changes</string>
+    <string name="configure_changelog">Recent changes</string>
     <string name="configure_instructions">Instructions</string>
     <string name="configure_donate">Donate</string>
     <string name="configure_license">License</string>
-    <string name="configure_contribute">Contribute!</string>
+    <string name="configure_contribute">Contribute</string>
 
     <!-- Donate -->
     <string name="donate_title">Want to buy me a beer?</string>
-    <string name="donate_head">Donations are always appreciated and helpful in funding the future development of this and other apps.\n\nIf you find Hangar useful and want to show thanks for the work that has gone into it, visit the Contribute section to see the many ways you can help, or if you\'re in a generous mood, you can donate using <b>Google Play</b> or <b>PayPal</b> below.</string>
+    <string name="donate_head">Donations are always appreciated and helpful in funding the future development of this and other apps.\n\nHowever, if you find Hangar useful and want to show thanks for the work that has gone into it, visit the Contribute section to see the many ways you can help.\n\nIf you\'re in a generous mood, you can donate using <b>Google Play</b> or <b>PayPal</b> below.</string>
     <string name="donate_title_google">Google Play</string>
     <string name="donate_title_paypal">PayPal</string>
     <string name="donate_google">Donate with Google</string>
     <string name="donate_paypal">Donate with PayPal</string>
-    <string name="donate_join_us">Contribute!</string>
+    <string name="donate_contribute">Make Hangar better!</string>
     <string name="donate_accept_button">"Keep on keepin' on"</string>
     <string-array name="entries_google_donate">
         <item>$1 (USD)</item>
@@ -152,10 +152,10 @@
     <string name="contribute_google_title">Rate + Review</string>
     <string name="contribute_google_text">"Higher ratings &amp; positive reviews help spread the word by promoting Hangar's rank in the Play store.  It's also the easiest and quickest way to contribute!"</string>
     <string name="contribute_google_link">Rate on Google Play</string>
-    <string name="contribute_google_url">https://github.com/corcoran/Hangar</string>
+    <string name="contribute_google_url">market://details?id=ca.mimic.apphangar</string>
 
     <string name="contribute_translate_title">Translate</string>
-    <string name="contribute_translate_text">"Hangar is used by people all over the world.  We use <u>crowdin</u> to let users translate the app into other languages."</string>
+    <string name="contribute_translate_text">"Hangar is used by people all over the world.  Crowin is a tool that lets users easily translate the app into their native language."</string>
     <string name="contribute_translate_link">Translate with Crowdin</string>
     <string name="contribute_translate_url">https://crowdin.net/project/hangar</string>
 
@@ -171,8 +171,8 @@
 
     <string name="contributors_title">Special thanks to:</string>
     <string name="contributors_list1">"Melissa Gregory\nDavid Cormier\nConor Anderson\nVinicius Domingues\nMario Sacquegna\n"</string>
-    <string name="contributors_list2">Feedback &amp; support\nFrench translations\nSpanish translations\nPortuguese translations\nItalian translations</string>
-    <string name="contributors_list3">**Testers**</string>
+    <string name="contributors_list2">- Feedback &amp; support\n- French translations\n- Spanish translations\n- Portuguese translations\n- Italian translations</string>
+    <string name="contributors_list3">&lt;3 Bridget W, Jeff DeChambeau, Joel Burke, Jonathan Kagan, Derek Rauch, Griffin Millender &amp; Anthony King</string>
 
     <string name="contribute_accept_button">Continue</string>
 
@@ -186,7 +186,7 @@
     <!-- Changelog -->
     <string name="changelog_title">Hangar Changes</string>
     <string name="changelog_donate_button">Show thanks</string>
-    <string name="changelog_contribute_button">Contribute</string>
+    <string name="changelog_contribute_button">Make Hangar better!</string>
     <string name="changelog_accept_button">Continue</string>
 
     <string-array name="versionNumbers">

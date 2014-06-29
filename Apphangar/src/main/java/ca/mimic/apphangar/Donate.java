@@ -98,7 +98,7 @@ public class Donate {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         mDonate = inflater.inflate(R.layout.donate, null);
 
-        TextView mJoinUsText = (TextView) mDonate.findViewById(R.id.donate_join_us);
+        TextView mJoinUsText = (TextView) mDonate.findViewById(R.id.donate_contribute);
 
         LinearLayout mJoinUsCont = (LinearLayout) mJoinUsText.getParent();
         mJoinUsCont.setOnClickListener(new View.OnClickListener() {
