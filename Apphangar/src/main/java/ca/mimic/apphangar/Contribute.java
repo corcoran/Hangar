@@ -41,7 +41,7 @@ public class Contribute {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         mContribute = inflater.inflate(R.layout.contribute, null);
 
-        TextView mViewSource = (TextView) mContribute.findViewById(R.id.contribute_google_link);
+        TextView mViewSource = (TextView) mContribute.findViewById(R.id.contribute_google);
         mViewSource.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
         LinearLayout mViewSourceCont = (LinearLayout) mViewSource.getParent();

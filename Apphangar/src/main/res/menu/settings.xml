@@ -17,6 +17,11 @@
         android:orderInCategory="100"
         android:showAsAction="never" />
 
+    <item android:id="@+id/action_contribute"
+        android:title="@string/configure_contribute"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+
     <item android:id="@+id/action_changelog"
         android:title="@string/configure_changelog"
         android:orderInCategory="100"

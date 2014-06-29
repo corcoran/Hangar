@@ -120,6 +120,7 @@
     <string name="configure_instructions">Instructions</string>
     <string name="configure_donate">Donate</string>
     <string name="configure_license">License</string>
+    <string name="configure_contribute">Contribute</string>
 
     <!-- Donate -->
     <string name="donate_title">Want to buy me a beer?</string>
