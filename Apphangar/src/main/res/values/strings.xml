@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Hangar</string>
+    <string name="app_name" translatable="false">Hangar</string>
     <string name="title_behavior">Behavior</string>
     <string name="title_appearance">Appearance</string>
     <string name="title_apps">Apps</string>
@@ -16,16 +16,21 @@
     <string name="title_weighted_recents_preference">Weighted sorting</string>
     <string name="summary_weighted_recents_preference">Apps sorted by most used and recency</string>
     <string name="title_weight_priority_preference">Weight bias</string>
-    <string name="summary_weight_priority_preference">%s</string>
+    <string name="summary_weight_priority_preference" translatable="false">%s</string>
     <string name="dialog_weight_priority_preference">Choose a weight</string>
 
-    <string-array name="entries_weight_priority_preference">
-        <item>Default</item>
-        <item>Recency</item>
-        <item>Number of launches</item>
-        <item>Time spent in app</item>
+    <string name="weight_priority_default">Default</string>
+    <string name="weight_priority_recency">Recency</string>
+    <string name="weight_priority_launches">Number of launches</string>
+    <string name="weight_priority_time">Time spent in app</string>
+
+    <string-array name="entries_weight_priority_preference" translatable="false">
+        <item>@string/weight_priority_default</item>
+        <item>@string/weight_priority_recency</item>
+        <item>@string/weight_priority_launches</item>
+        <item>@string/weight_priority_time</item>
     </string-array>
-    <string-array name="values_weight_priority_preference">
+    <string-array name="values_weight_priority_preference" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>
@@ -36,12 +41,16 @@
     <string name="summary_priority_preference">%s position in notification drawer</string>
     <string name="dialog_priority_preference">Choose a position</string>
 
-    <string-array name="entries_priority_preference">
-        <item>Top</item>
-        <item>Normal</item>
-        <item>Bottom (hides statusBar icon)</item>
+    <string name="priority_top">Top</string>
+    <string name="priority_normal">Normal</string>
+    <string name="priority_bottom">Bottom (hides statusBar icon)</string>
+
+    <string-array name="entries_priority_preference" translatable="false">
+        <item>@string/priority_top</item>
+        <item>@string/priority_normal</item>
+        <item>@string/priority_bottom</item>
     </string-array>
-    <string-array name="values_priority_preference">
+    <string-array name="values_priority_preference" translatable="false">
         <item>2</item>
         <item>0</item>
         <item>-2</item>
@@ -53,7 +62,7 @@
     <string name="summary_appsno_preference">Showing up to a maximum of %s apps</string>
     <string name="dialog_appsno_preference">Choose no. of apps to show</string>
 
-    <string-array name="entries_appsno_preference">
+    <string-array name="entries_appsno_preference" translatable="false">
         <item>3</item>
         <item>4</item>
         <item>5</item>
@@ -65,23 +74,33 @@
     </string-array>
 
     <string name="title_statusbar_icon_preference">Statusbar icon</string>
-    <string name="summary_statusbar_icon_preference">%s</string>
+    <string name="summary_statusbar_icon_preference" translatable="false">%s</string>
     <string name="dialog_statusbar_icon_preference">Choose an icon style</string>
     <string name="alert_title_statusbar_icon_preference">Just so you know..</string>
     <string name="alert_message_statusbar_icon_preference">Due to the limitations of Android, disabling the statusbar icon can only be done by lowering the priority of the notification.\n\nTL;DR Your Hangar bar will be at the bottom of the notification drawer.</string>
 
-    <string-array name="entries_statusbar_icon_preference">
-        <item>Warm white icon (default)</item>
-        <item>Cold white icon</item>
-        <item>Blue white icon</item>
-        <item>All white icon</item>
-        <item>Warm black icon</item>
-        <item>Cold black icon</item>
-        <item>Blue black icon</item>
-        <item>Transparent icon</item>
-        <item>No icon</item>
+    <string name="statusbar_icon_warm_white">Warm white icon (default)</string>
+    <string name="statusbar_icon_cold_white">Cold white icon</string>
+    <string name="statusbar_icon_blue_white">Blue white icon</string>
+    <string name="statusbar_icon_all_white">All white icon</string>
+    <string name="statusbar_icon_warm_black">Warm black icon</string>
+    <string name="statusbar_icon_cold_black">Cold black icon</string>
+    <string name="statusbar_icon_blue_black">Blue black icon</string>
+    <string name="statusbar_icon_transparent">Transparent</string>
+    <string name="statusbar_icon_none">No icon</string>
+
+    <string-array name="entries_statusbar_icon_preference" translatable="false">
+        <item>@string/statusbar_icon_warm_white</item>
+        <item>@string/statusbar_icon_cold_white</item>
+        <item>@string/statusbar_icon_blue_white</item>
+        <item>@string/statusbar_icon_all_white</item>
+        <item>@string/statusbar_icon_warm_black</item>
+        <item>@string/statusbar_icon_cold_black</item>
+        <item>@string/statusbar_icon_blue_black</item>
+        <item>@string/statusbar_icon_transparent</item>
+        <item>@string/statusbar_icon_none</item>
     </string-array>
-    <string-array name="values_statusbar_icon_preference">
+    <string-array name="values_statusbar_icon_preference" translatable="false">
         <item>**white_warm**</item>
         <item>**white_cold**</item>
         <item>**white_blue**</item>
@@ -103,10 +122,10 @@
     <!-- Color Picker -->
     <string name="dialog_color_picker">Color Picker</string>
     <string name="press_color_to_apply">Press on color below to apply</string>
-    <string name="arrow_right">→</string>
-    <string name="arrow_down">↓</string>
+    <string name="arrow_right" translatable="false">→</string>
+    <string name="arrow_down" translatable="false">↓</string>
     <string name="hex">Hex:</string>
-    <string name="hex_hint">#ff000000</string>
+    <string name="hex_hint" translatable="false">#ff000000</string>
     <string name="set">Set</string>
     <string name="color_default">Default</string>
     <string name="title_activity_stats_widget_settings">StatsWidget Settings</string>
@@ -131,15 +150,15 @@
     <string name="donate_paypal">Donate with PayPal</string>
     <string name="donate_contribute">Make Hangar better!</string>
     <string name="donate_accept_button">"Keep on keepin' on"</string>
-    <string-array name="entries_google_donate">
+    <string-array name="entries_google_donate" translatable="false">
         <item>$1 (USD)</item>
         <item>$2 (USD)</item>
         <item>$3 (USD)</item>
         <item>$4 (USD)</item>
         <item>$5 (USD)</item>
     </string-array>
-    <string name="donate_googleplus_url">https://plus.google.com/communities/117722899904055747117</string>
-    <string name="donate_paypal_url" formatted="false">https://www.paypal.com/cgi-bin/webscr?cmd=_donations%26business=8M2WWALSUHQUW%26lc=CA%26item_name=Hangar%26currency_code=USD%26bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted</string>
+    <string name="donate_googleplus_url" translatable="false">https://plus.google.com/communities/117722899904055747117</string>
+    <string name="donate_paypal_url" formatted="false" translatable="false">https://www.paypal.com/cgi-bin/webscr?cmd=_donations%26business=8M2WWALSUHQUW%26lc=CA%26item_name=Hangar%26currency_code=USD%26bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted</string>
     <string name="donate_try_paypal">"Hm.. looks like Google Play didn't like that.  Maybe try PayPal instead?"</string>
     <string name="donate_thanks_title">Thank you!</string>
     <string name="donate_thanks_continue">Back to Hangar</string>
@@ -152,27 +171,27 @@
     <string name="contribute_google_title">Rate + Review</string>
     <string name="contribute_google_text">"Higher ratings &amp; positive reviews help spread the word by promoting Hangar's rank in the Play store.  It's also the easiest and quickest way to contribute!"</string>
     <string name="contribute_google_link">Rate on Google Play</string>
-    <string name="contribute_google_url">market://details?id=ca.mimic.apphangar</string>
+    <string name="contribute_google_url" translatable="false">market://details?id=ca.mimic.apphangar</string>
 
     <string name="contribute_translate_title">Translate</string>
     <string name="contribute_translate_text">"Hangar is used by people all over the world.  Crowdin is a tool that lets users easily translate the app into their native language."</string>
     <string name="contribute_translate_link">Translate with Crowdin</string>
-    <string name="contribute_translate_url">https://crowdin.net/project/hangar</string>
+    <string name="contribute_translate_url" translatable="false">https://crowdin.net/project/hangar</string>
 
     <string name="contribute_code_title">Fix bugs, add features!</string>
     <string name="contribute_code_text">"Hangar is completely open and free, licensed under the GPLv3.  Submitting patches and pull requests via github is encouraged and welcome."</string>
     <string name="contribute_code_link">View project on Github</string>
-    <string name="contribute_code_url">https://github.com/corcoran/Hangar</string>
+    <string name="contribute_code_url" translatable="false">https://github.com/corcoran/Hangar</string>
 
     <string name="contribute_plus_title">Join the community</string>
     <string name="contribute_plus_text">"Beta test, leave feedback, suggest features and be updated on the status of new development."</string>
     <string name="contribute_plus_link">Join the Google Plus community</string>
-    <string name="contribute_plus_url">https://plus.google.com/communities/117722899904055747117</string>
+    <string name="contribute_plus_url" translatable="false">https://plus.google.com/communities/117722899904055747117</string>
 
     <string name="contributors_title">Special thanks</string>
-    <string name="contributors_list1">"Melissa Gregory\nDavid Cormier\nConor Anderson\nVinicius Domingues\nMario Sacquegna\nMichał Ostrowski (ufoman)"</string>
-    <string name="contributors_list2">- Feedback &amp; support\n- French translations\n- Spanish translations\n- Portuguese translations\n- Italian translations\n- Polish translations</string>
-    <string name="contributors_list3">&lt;3 Bridget W, Jeff DeChambeau, Joel Burke, Jonathan Kagan, Derek Rauch, Griffin Millender &amp; Anthony King</string>
+    <string name="contributors_list1" translatable="false">"Melissa Gregory\nDavid Cormier\nConor Anderson\nVinicius Domingues\nMario Sacquegna\nMichał Ostrowski (ufoman)"</string>
+    <string name="contributors_list2" translatable="false">- Feedback &amp; support\n- French translations\n- Spanish translations\n- Portuguese translations\n- Italian translations\n- Polish translations</string>
+    <string name="contributors_list3" translatable="false">&lt;3 Bridget W, Jeff DeChambeau, Joel Burke, Jonathan Kagan, Derek Rauch, Griffin Millender &amp; Anthony King</string>
 
     <string name="contribute_accept_button">Continue</string>
 
@@ -180,7 +199,7 @@
     <string name="license_title">License and Source</string>
     <string name="license_head">Hangar is licensed under the GPLv3 from the Free Software Foundation and is Copyright © 2014 Jeff Corcoran.\n\nUnder the GPL license, Hangar is available free of charge as long as the use of Hangar adheres to the terms of the GPL license.\n\nUsers may download the software for free, and modify, integrate and distribute it. However, GPL users must abide by the rules of the GPL, which stipulate that if a work based on Hangar is redistributed, the complete source code for this work must also be open and available for redistribution under the terms of the GPL.\n\nSee the GPL and the FAQ of the Free Software Foundation for more details.</string>
     <string name="license_view_source">Visit Hangar on Github</string>
-    <string name="license_github_url">https://github.com/corcoran/Hangar</string>
+    <string name="license_github_url" translatable="false">https://github.com/corcoran/Hangar</string>
     <string name="license_accept_button">Continue</string>
 
     <!-- Changelog -->
@@ -189,7 +208,7 @@
     <string name="changelog_contribute_button">Make Hangar better!</string>
     <string name="changelog_accept_button">Continue</string>
 
-    <string-array name="versionNumbers">
+    <string-array name="versionNumbers" translatable="false">
         <item>2.2 (June 30th)</item>
         <item>2.1 (May 29th)</item>
         <item>2.0 (May 16th)</item>
@@ -201,7 +220,7 @@
         <item>1.10 (Apr 1st)</item>
     </string-array>
 
-    <string-array name="versionSummaries">
+    <string-array name="versionSummaries" translatable="false">
         <item>
 "  &#8226; [New!] Added all white icon
   &#8226; [New!] Small, medium &amp; large notification icons
@@ -254,21 +273,25 @@
     <!-- Apps Widget -->
     <string name="apps_widget_name">Hangar Apps Widget</string>
     <string name="title_icon_size_preference">Icon size</string>
-    <string name="summary_icon_size_preference">%s</string>
+    <string name="summary_icon_size_preference" translatable="false">%s</string>
 
-    <string-array name="entries_icon_size_preference">
-        <item>Small</item>
-        <item>Medium (default)</item>
-        <item>Large</item>
+    <string name="icon_size_small">Small</string>
+    <string name="icon_size_medium">Medium (default)</string>
+    <string name="icon_size_large">Large</string>
+
+    <string-array name="entries_icon_size_preference" translatable="false">
+        <item>@string/icon_size_small</item>
+        <item>@string/icon_size_medium</item>
+        <item>@string/icon_size_large</item>
     </string-array>
 
-    <string-array name="values_icon_size_preference">
+    <string-array name="values_icon_size_preference" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>
     </string-array>
 
-    <string-array name="entries_apps_widget_appsno_preference">
+    <string-array name="entries_apps_widget_appsno_preference" translatable="false">
         <item>2</item>
         <item>3</item>
         <item>4</item>
@@ -325,7 +348,7 @@
     <string name="summary_stats_widget_appsno_preference">Showing up to a maximum of %s apps</string>
     <string name="dialog_stats_widget_appsno_preference">Choose no. of apps to show</string>
 
-    <string-array name="entries_stats_widget_appsno_preference">
+    <string-array name="entries_stats_widget_appsno_preference" translatable="false">
         <item>2</item>
         <item>3</item>
         <item>4</item>
@@ -343,7 +366,7 @@
     <string name="summary_stats_widget_appsno_ls_preference">Showing up to a maximum of %s apps</string>
     <string name="dialog_stats_widget_appsno_ls_preference">Choose no. of apps to show (landscape)</string>
 
-    <string-array name="entries_stats_widget_appsno_ls_preference">
+    <string-array name="entries_stats_widget_appsno_ls_preference" translatable="false">
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -359,15 +382,19 @@
     </string-array>
 
     <string name="title_alignment_preference">Widget vertical alignment</string>
-    <string name="summary_alignment_preference">%s</string>
+    <string name="summary_alignment_preference" translatable="false">%s</string>
 
-    <string-array name="entries_alignment_preference">
-        <item>Top</item>
-        <item>Center (default)</item>
-        <item>Bottom</item>
+    <string name="alignment_top">Top</string>
+    <string name="alignment_center">Center</string>
+    <string name="alignment_bottom">Bottom</string>
+
+    <string-array name="entries_alignment_preference" translatable="false">
+        <item>@string/alignment_top</item>
+        <item>@string/alignment_center</item>
+        <item>@string/alignment_bottom</item>
     </string-array>
 
-    <string-array name="values_alignment_preference">
+    <string-array name="values_alignment_preference" translatable="false">
         <item>48</item>
         <item>16</item>
         <item>80</item>

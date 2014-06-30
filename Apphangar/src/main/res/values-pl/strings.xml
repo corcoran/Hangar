@@ -13,20 +13,16 @@
   <string name="summary_weighted_recents_preference">Aplikacje posortowane po czasie i częstości użycia</string>
   <string name="title_weight_priority_preference">Odchylenie wagi</string>
   <string name="dialog_weight_priority_preference">Wybierz wartość wagi</string>
-  <string-array name="entries_weight_priority_preference">
-    <item>Domyślna</item>
-    <item>Czas od ostatniego uruchomienia</item>
-    <item>Liczba uruchomień</item>
-    <item>Czas spędzony w aplikacji</item>
-  </string-array>
+  <string name="weight_priority_default">Domyślna</string>
+  <string name="weight_priority_recency">Czas od ostatniego uruchomienia</string>
+  <string name="weight_priority_launches">Liczba uruchomień</string>
+  <string name="weight_priority_time">Czas spędzony w aplikacji</string>
   <string name="title_priority_preference">Pozycja powiadomienia</string>
   <string name="summary_priority_preference">%s pozycja w panelu powiadomień</string>
   <string name="dialog_priority_preference">Wybierz pozycję</string>
-  <string-array name="entries_priority_preference">
-    <item>Góra</item>
-    <item>Domyślna</item>
-    <item>Dół (ukrywa ikonę paska statusu)</item>
-  </string-array>
+  <string name="priority_top">Góra</string>
+  <string name="priority_normal">Domyślna</string>
+  <string name="priority_bottom">Dół (ukrywa ikonę paska statusu)</string>
   <string name="title_appsno_preference">Liczba aplikacji</string>
   <string name="summary_appsno_preference">Wyświetlanie maksymalnie %s aplikacji</string>
   <string name="dialog_appsno_preference">Wybierz liczbę aplikacji do wyświetlenia</string>
@@ -34,16 +30,14 @@
   <string name="dialog_statusbar_icon_preference">Wybierz styl ikony</string>
   <string name="alert_title_statusbar_icon_preference">Do Twojej wiadomości...</string>
   <string name="alert_message_statusbar_icon_preference">Z uwagi na ograniczenia Androida, ikonę można wyłączyć tylko poprzez obniżenie priorytetu powiadomienia.\n\nInnymi słowy, pasek Hangar znajdzie się na ostatniej pozycji w panelu powiadomień.</string>
-  <string-array name="entries_statusbar_icon_preference">
-    <item>Ikona w ciepłym odcieniu bieli (domyślna)</item>
-    <item>Ikona w chłodnymi odcieniu bieli</item>
-    <item>Białoniebieska ikona</item>
-    <item>Ikona w ciepłym odcieniu czerni</item>
-    <item>Ikona w chłodnym odcieniu czerni</item>
-    <item>Niebieskoczarna ikona</item>
-    <item>Przezroczysta ikona</item>
-    <item>Bez ikony</item>
-  </string-array>
+  <string name="statusbar_icon_warm_white">Ikona w ciepłym odcieniu bieli (domyślna)</string>
+  <string name="statusbar_icon_cold_white">Ikona w chłodnymi odcieniu bieli</string>
+  <string name="statusbar_icon_blue_white">Białoniebieska ikona</string>
+  <string name="statusbar_icon_warm_black">Ikona w ciepłym odcieniu czerni</string>
+  <string name="statusbar_icon_cold_black">Ikona w chłodnym odcieniu czerni</string>
+  <string name="statusbar_icon_blue_black">Niebieskoczarna ikona</string>
+  <string name="statusbar_icon_transparent">Przezroczysta ikona</string>
+  <string name="statusbar_icon_none">Bez ikony</string>
   <string name="title_divider_preference">Włącz separatory</string>
   <string name="summary_divider_preference">Pokazuje separatory pomiędzy ikonami aplikacji</string>
   <string name="title_colorize_preference">Koloruj ikony powiadomień</string>
@@ -54,7 +48,6 @@
   <string name="press_color_to_apply">Naciśnij na kolor poniżej aby zastosować</string>
   <string name="hex">Wartość szesnastkowa:</string>
   <string name="set">Wybierz</string>
-  <string name="color_default">Domyślna</string>
   <string name="title_activity_stats_widget_settings">Ustawienia widżetu statystyk</string>
   <string name="action_blacklist">Przełącz czarną listę</string>
   <string name="action_reset_stats">Zresetuj statystyki</string>
@@ -70,13 +63,13 @@
   <string name="donate_title_paypal">PayPal</string>
   <string name="donate_google">Wspomóż przy pomocy Google</string>
   <string name="donate_paypal">Wspomóż przy pomocy PayPal</string>
-  <string name="donate_join_us">Dołącz do społeczności Google+</string>
   <string name="donate_accept_button">"Kontynuuj"</string>
   <string name="donate_try_paypal">"Wygląda na to, że wystąpił drobny błąd Google Play. Może chcesz spróbować poprzez PayPal?"</string>
   <string name="donate_thanks_title">Dziękuję!</string>
   <string name="donate_thanks_continue">Wróc do Hangar</string>
   <string name="donate_thanks">"Dziękuję za wsparcie rozwoju Hangar! Społeczność Androida może rozwijać się dzięki ludziom, który wspierają i motywują twórców aplikacji."</string>
   <string name="donate_thanks_paypal">"Hangar nie wie, czy faktycznie dokonano darowizny za pomocą systemu PayPal, ponieważ aplikacja otworzyła jedynie link do PayPal w Twojej domyślnej przeglądarce. Niezależnie od tego, chcemy Ci podziękować za używanie aplikacji i jej wsparcie! :)"</string>
+  <string name="contribute_accept_button">Kontynuuj</string>
   <string name="license_title">Licencja i źródła</string>
   <string name="license_head">Hangar jest opublikowany na licencji GPLv3 z Free Software Foundation i jest Copyright © 2014 Jeff Corcoran.\n\nZgodnie z zasadami licencji GPL, Hangar jest dostępny za darmo bezpłatnie tak długo, jak stosowanie Hangar jest zgodne z warunkami licencji GPL.\n\nUżytkownicy mogą pobierać oprogramowanie za darmo, modyfikować je, integrować w swoich programach i rozpowszechniać. Użytkownicy GPL muszą przy tym przestrzegać zasad licencji GPL, które przewidują, że jeżeli dzieło oparte na Hangar jest rozpowszechniane, kompletne źródło kodu dla tej pracy również musi być otwarte i dostępne dla redystrybucji na warunkach GPL.\n\nSprawdż treść GPL i FAQ Fundacji Wolnego Oprogramowania, aby poznać więcej szczegółów.</string>
   <string name="license_view_source">Odwiedź Hangar na Github</string>
@@ -86,11 +79,9 @@
   <string name="changelog_accept_button">Kontynuuj</string>
   <string name="apps_widget_name">Widżet aplikacji Hangar</string>
   <string name="title_icon_size_preference">Rozmiar ikon</string>
-  <string-array name="entries_icon_size_preference">
-    <item>Małe</item>
-    <item>Średnie (domyślne)</item>
-    <item>Duże</item>
-  </string-array>
+  <string name="icon_size_small">Małe</string>
+  <string name="icon_size_medium">Średnie (domyślne)</string>
+  <string name="icon_size_large">Duże</string>
   <string name="stats_widget_name">Widżet statystyk Hangar</string>
   <string name="title_background_color_preference">Kolor tła</string>
   <string name="button_name">Umieść widżet</string>
@@ -108,11 +99,9 @@
   <string name="summary_stats_widget_appsno_ls_preference">Wyświetlanie maksymalnie %s aplikacji</string>
   <string name="dialog_stats_widget_appsno_ls_preference">Wybierz liczbę aplikacji do pokazania (w trybie poziomym)</string>
   <string name="title_alignment_preference">Wyrównanie widżetu w pionie</string>
-  <string-array name="entries_alignment_preference">
-    <item>Góra</item>
-    <item>Środek (domyślnie)</item>
-    <item>Dół</item>
-  </string-array>
+  <string name="alignment_top">Góra</string>
+  <string name="alignment_center">Środek (domyślnie)</string>
+  <string name="alignment_bottom">Dół</string>
   <string name="instructions_1_1">"Witamy w Hangar!"</string>
   <string name="instructions_1_2">"Teraz, gdy Hangar jest zainstalowany, w pasku powiadomień znajduje się dodatkowy <b>pasek skrótów do aplkacji</b>. Hangar rozpoczyna też monitorowanie częstotliwości uruchamiania i czasu spędzonego w aplikacjach."</string>
   <string name="instructions_1_3">"Dzięki monitorowaniu tego, jak używasz aplikacji w ciągu Dnia, Hangar może wyświetlać skróty do tych aplikacji, które są dla Ciebie najważniejsze. Każde uruchomienie aplikacji pozwala Hangar uczyć się twoich nawyków użycia aplikacji i zmieniać wyświetlane skróty w czasie rzeczywistym tak, aby jak najlepiej odpowiadały Twoim potrzebom."</string>

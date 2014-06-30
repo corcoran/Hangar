@@ -13,20 +13,16 @@
   <string name="summary_weighted_recents_preference">Aplicativos ordenados por mais usados e recentes</string>
   <string name="title_weight_priority_preference">Método</string>
   <string name="dialog_weight_priority_preference">Escolha um Método</string>
-  <string-array name="entries_weight_priority_preference">
-    <item>Padrão</item>
-    <item>Inicializações mais Recentes</item>
-    <item>Número de Inicializações</item>
-    <item>Tempo de uso no Aplicativo</item>
-  </string-array>
+  <string name="weight_priority_default">Padrão</string>
+  <string name="weight_priority_recency">Inicializações mais Recentes</string>
+  <string name="weight_priority_launches">Número de Inicializações</string>
+  <string name="weight_priority_time">Tempo de uso no Aplicativo</string>
   <string name="title_priority_preference">Posição da Notificação</string>
   <string name="summary_priority_preference">Posição na gaveta de notificação %s</string>
   <string name="dialog_priority_preference">Escolha uma posição</string>
-  <string-array name="entries_priority_preference">
-    <item>Topo</item>
-    <item>Normal</item>
-    <item>Abaixo (Esconde o ícone da StatusBar)</item>
-  </string-array>
+  <string name="priority_top">Topo</string>
+  <string name="priority_normal">Normal</string>
+  <string name="priority_bottom">Abaixo (Esconde o ícone da StatusBar)</string>
   <string name="title_appsno_preference">Número de aplicativos</string>
   <string name="summary_appsno_preference">Mostrando no máximo %s apps</string>
   <string name="dialog_appsno_preference">Escolha a quantidade de Apps</string>
@@ -34,17 +30,15 @@
   <string name="dialog_statusbar_icon_preference">Escolha o estilo do ícone</string>
   <string name="alert_title_statusbar_icon_preference">Só para você saber...</string>
   <string name="alert_message_statusbar_icon_preference">Devido às limitações do Android, desativar o ícone da barra de status só pode ser feito reduzindo a prioridade da notificatição.\n\nTL;DR seu Hangar bar estará no por ultimo da gaveta da notificação.</string>
-  <string-array name="entries_statusbar_icon_preference">
-    <item>Ícone warm white (padrão)</item>
-    <item>Ícone cold white</item>
-    <item>Ícone blue white</item>
-    <item>Ícone white</item>
-    <item>Ícone warm black</item>
-    <item>Ícone cold black</item>
-    <item>Ícone blue black</item>
-    <item>Ícone transparente</item>
-    <item>Sem Ícone</item>
-  </string-array>
+  <string name="statusbar_icon_warm_white">Ícone warm white (padrão)</string>
+  <string name="statusbar_icon_cold_white">Ícone cold white</string>
+  <string name="statusbar_icon_blue_white">Ícone blue white</string>
+  <string name="statusbar_icon_all_white">Ícone white</string>
+  <string name="statusbar_icon_warm_black">Ícone warm black</string>
+  <string name="statusbar_icon_cold_black">Ícone cold black</string>
+  <string name="statusbar_icon_blue_black">Ícone blue black</string>
+  <string name="statusbar_icon_transparent">Ícone transparente</string>
+  <string name="statusbar_icon_none">Sem Ícone</string>
   <string name="title_divider_preference">Mostrar divisor</string>
   <string name="summary_divider_preference">Mostrar divisor entre aplicativos</string>
   <string name="title_colorize_preference">Colorir ícones de notificação</string>
@@ -71,13 +65,14 @@
   <string name="donate_title_paypal">PayPal</string>
   <string name="donate_google">Doê com Google</string>
   <string name="donate_paypal">Doê com PayPal</string>
-  <string name="donate_join_us">Junte-se a nós no Google+</string>
   <string name="donate_accept_button">"Voltar as Configurações do Hangar"</string>
   <string name="donate_try_paypal">"Hm... Parece que o Google Play não gostava disso.  Tentar com o PayPal em vez disso?"</string>
   <string name="donate_thanks_title">Obrigado!</string>
   <string name="donate_thanks_continue">Voltar ao Hangar</string>
   <string name="donate_thanks">"Sua contribuição para o desenvolvimento do Hangar é muito apreciada! A comunidade Android é a melhor devido a pessoas como você que apoiam e motivam os desenvolvedores."</string>
   <string name="donate_thanks_paypal">"Hangar não sabe se uma doação realmente foi feita usando PayPal, pois lhe enviámos para um link paypal através do seu navegador favorito.  No entanto nós vamos te agradecer independentemente de seu uso contínuo e apoio! :)"</string>
+  <string name="contribute_translate_title">Traduzir</string>
+  <string name="contribute_accept_button">Continue</string>
   <string name="license_title">Licença e Fonte</string>
   <string name="license_head">Hangar é licenciado sob a GPLv3 da Free Software Foundation e é Copyright © 2014 Jeff Corcoran.\n\nSob a licença GPL, o Hangar está disponível livre de encargos, enquanto o uso do Hangar adere aos termos de licença.\n\nUsuários podem baixar o software gratuitamente e modificar, integrar e distribuí-lo. No entanto, os utilizadores GPL devem aceitar as regras da GPL, que estipula que, se um trabalho baseado no Hangar é redistribuído, o código-fonte completo para este trabalho também deve ser aberto e disponível para redistribuição.\n\nVeja os termos do GPL e o FAQ da Free Software Foundation para mais detalhes.</string>
   <string name="license_view_source">Visite o Hangar no Github</string>
@@ -87,11 +82,9 @@
   <string name="changelog_accept_button">Continue</string>
   <string name="apps_widget_name">Hangar Apps Widget</string>
   <string name="title_icon_size_preference">Tamanho dos ícones</string>
-  <string-array name="entries_icon_size_preference">
-    <item>Pequeno</item>
-    <item>Médio (padrão)</item>
-    <item>Grande</item>
-  </string-array>
+  <string name="icon_size_small">Pequeno</string>
+  <string name="icon_size_medium">Médio (padrão)</string>
+  <string name="icon_size_large">Grande</string>
   <string name="stats_widget_name">Hangar Stats Widget</string>
   <string name="title_background_color_preference">Cor de fundo</string>
   <string name="button_name">Coloque o widget</string>
@@ -109,11 +102,9 @@
   <string name="summary_stats_widget_appsno_ls_preference">Mostrando no máximo %s apps</string>
   <string name="dialog_stats_widget_appsno_ls_preference">Escolha o no. de apps no Hangar  (paisagem)</string>
   <string name="title_alignment_preference">Alinhamento vertical do widget</string>
-  <string-array name="entries_alignment_preference">
-    <item>Topo</item>
-    <item>Centro (padrão)</item>
-    <item>Abaixo</item>
-  </string-array>
+  <string name="alignment_top">Topo</string>
+  <string name="alignment_center">Centro (padrão)</string>
+  <string name="alignment_bottom">Abaixo</string>
   <string name="instructions_1_1">"Bem-vindo ao Hangar!"</string>
   <string name="instructions_1_2">"Agora que o Hangar foi instalado, ele adicionou uma <b>barra de atalhos para Aplicativos</b> na sua gaveta de notificação.  Também vai começar a monitorar a frequência e a quantidade de tempo que você usa cada um dos seus aplicativos."</string>
   <string name="instructions_1_3">"Ao monitorar seu uso diário o Hangar usará esses dados para priorizar os apps que você mais usa. A cada aplicativo você usa, Hangar fica mais esperto e altera esses atalhos em tempo real atendendo às suas necessidades."</string>
