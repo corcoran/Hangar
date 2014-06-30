@@ -30,6 +30,9 @@ You can't!  Again, though, this feature is under development.  Both theme packs 
 **Q: How do I remove the statusbar icon?**  
 You can change the position in the Settings => Behavior screen. If you select the bottom position, the icon goes away!  One limitation of Android is that on-going notifications require a notification icon in order to have TOP_PRIORITY as a notification.  As a workaround, I've added a number of icon choices (Settings => Appearance) which includes a Transparent icon.  That icon creates a transparent gap, of course, but it's the best you can do without lowering the priority.
 
+**Q: I can't install Hangar in my country!**  
+This is caused by Google limiting in-app purchase apps (which Hangar uses for donations) to exclude certain countries.  However, since Hangar is open source, you can always install it via F-Droid.  F-Droid is an open source app store that will automatically notify you and let you automatically install new versions when they come out. Go grab F-droid here: https://f-droid.org
+
 **Q: Will Hangar drain my battery?**  
 No!  It uses very little memory and very little CPU.  It also only runs while your phone is awake and does not hold wakelock.
 
