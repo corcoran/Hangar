@@ -155,7 +155,7 @@
     <string name="contribute_google_url">market://details?id=ca.mimic.apphangar</string>
 
     <string name="contribute_translate_title">Translate</string>
-    <string name="contribute_translate_text">"Hangar is used by people all over the world.  Crowin is a tool that lets users easily translate the app into their native language."</string>
+    <string name="contribute_translate_text">"Hangar is used by people all over the world.  Crowdin is a tool that lets users easily translate the app into their native language."</string>
     <string name="contribute_translate_link">Translate with Crowdin</string>
     <string name="contribute_translate_url">https://crowdin.net/project/hangar</string>
 
