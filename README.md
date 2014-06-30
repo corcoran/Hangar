@@ -118,6 +118,8 @@ Contributors
   </tr>
 </table>
 
+Want to help translate Hangar into your native language?  [Visit our project page on Crowdin](https://crowdin.net/project/hangar)
+
 Special thanks
 ================
 Bridget W, Jeff DeChambeau, Joel Burke, Jonathan Kagan, Derek Rauch, Griffin Millender &amp; Anthony King
