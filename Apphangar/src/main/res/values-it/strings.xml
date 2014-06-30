@@ -112,12 +112,12 @@
   <string name="instructions_2_1">"Statistiche"</string>
   <string name="instructions_2_2">"Hangar tiene traccia anche dell'utilizzo in-app!"</string>
   <string name="instructions_title_2">Widget statistiche</string>
-  <string name="instructions_2_3">"Puoi verificare le statistiche nella <b>Apps tab</b> di Hangar o piazzando  il <b>Widget statistiche</b> sulla tua home."</string>
+  <string name="instructions_2_3">"Puoi verificare le statistiche nella <b>Apps tab</b> di Hangar o piazzando il <b>Widget statistiche</b> sulla tua home."</string>
   <string name="instructions_3_1">"Personalizzazioni"</string>
   <string name="instructions_3_2">"In aggiunta alla barra icone dell' <b>area di notifica</b> predefinita, puoi aggiungere e personalizzare un <b>widget</b> per avviare le applicazioni.  Puoi indicare colore, dimensione, numero icone, colore di sfondo e altro."</string>
   <string name="instructions_title_3">es. 2 widget App di stile differente</string>
   <string name="instructions_title_4">Blacklist e pulisci statistiche</string>
-  <string name="instructions_3_3">"Tu puoi anche mettere in <b>blacklist</b> delle app e azzerare le statistiche dall' <b>Apps tab</b> di Hangar."</string>
+  <string name="instructions_3_3">"Tu puoi anche mettere in <b>blacklist</b> delle app e azzerare le statistiche dall\' <b>Apps tab</b> di Hangar."</string>
   <string name="instructions_4_1">"Per iniziare"</string>
   <string name="instructions_4_2">"Hangar è uno strumento veloce che facilita l'avvio delle app in qualsiasi situazione in Android.\n\nPer utilizzare al meglio questo strumento occorre che siano raccolte le statistiche d'uso delle app di almeno un giorno su cui basare le raccomandazioni.\n\nGrazie per l'utilizzo e l'apprezzamento di Hangar!"</string>
   <string name="instructions_4_button">Configura Hangar</string>
