@@ -3,8 +3,8 @@
     package="ca.mimic.apphangar"
     android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
     android:maxSdkVersion="19"
-    android:versionCode="35"
-    android:versionName="2.2rc1" >
+    android:versionCode="36"
+    android:versionName="2.2rc2" >
 
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
