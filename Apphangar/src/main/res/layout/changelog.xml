@@ -1,21 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp" >
+    android:orientation="vertical"
+    android:padding="10dp" >
 
-    <LinearLayout
-        android:divider="?android:dividerHorizontal"
-        android:showDividers="middle"
-        android:id="@+id/changeParent"
-        android:orientation="vertical"
-        android:scrollbars="vertical"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </LinearLayout>
-</ScrollView>
+        android:layout_height="wrap_content"
+        android:padding="3dp"
+        android:paddingLeft="6dp"
+        android:text="@string/changelog_coming_soon_title"
+        android:textStyle="bold"
+        android:background="#33999999"
+        android:layout_marginBottom="8dp"
+        android:textSize="16sp" />
+
+    <TextView
+        android:paddingLeft="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/changelog_coming_soon_text"
+        android:layout_marginBottom="10dp"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:paddingLeft="6dp"
+                android:text="@string/changelog_changes_title"
+                android:textStyle="bold"
+                android:background="#33999999"
+                android:layout_marginTop="6dp"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:divider="?android:dividerHorizontal"
+                android:showDividers="middle"
+                android:id="@+id/changeParent"
+                android:headerDividersEnabled="false"
+                android:orientation="vertical"
+                android:scrollbars="vertical"
+                android:scrollbarAlwaysDrawVerticalTrack="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

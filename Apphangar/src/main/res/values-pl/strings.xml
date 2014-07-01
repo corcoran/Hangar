@@ -96,6 +96,8 @@
   <string name="changelog_donate_button">Okaż wsparcie</string>
   <string name="changelog_contribute_button">Pozwól, aby Hangar stał się lepszy!</string>
   <string name="changelog_accept_button">Kontynuuj</string>
+  <string name="changelog_changes_title">Zmiany</string>
+  <string name="changelog_coming_soon_title">Wkrótce!</string>
   <string name="apps_widget_name">Widżet aplikacji Hangar</string>
   <string name="title_icon_size_preference">Rozmiar ikon</string>
   <string name="icon_size_small">Małe</string>

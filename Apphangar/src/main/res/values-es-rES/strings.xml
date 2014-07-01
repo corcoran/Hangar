@@ -59,6 +59,7 @@
   <string name="configure_instructions">Instrucciones</string>
   <string name="configure_donate">Donar</string>
   <string name="configure_license">Licencia</string>
+  <string name="configure_contribute">Contribuir</string>
   <string name="donate_title">¿Me quiere invitar una cerveza?</string>
   <string name="donate_head">Donaciones siempre son apreciadas y útiles para el futuro desarrollo de esta y otras apps.\n\nSi usted encuentra que Hangar sea útil y quiere mostrar agradecimiento por el trabajo que se ha hecho en la creación de la app, no dude en dejar una opinion que refleja su experiencia con la aplicación. Si se siente generoso, puede donar usando <b>Google Play</b> o <b>PayPal</b>.</string>
   <string name="donate_title_google">Google Play</string>

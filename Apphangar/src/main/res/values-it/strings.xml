@@ -96,6 +96,8 @@
   <string name="changelog_donate_button">Mostra ringraziamenti</string>
   <string name="changelog_contribute_button">Rendi Hangar migliore!</string>
   <string name="changelog_accept_button">Continua</string>
+  <string name="changelog_changes_title">Modifiche</string>
+  <string name="changelog_coming_soon_title">Prossimamente!</string>
   <string name="apps_widget_name">Hangar Widget delle App</string>
   <string name="title_icon_size_preference">Dimensione Icona</string>
   <string name="icon_size_small">Piccola</string>

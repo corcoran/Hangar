@@ -207,9 +207,12 @@
     <string name="changelog_donate_button">Show thanks</string>
     <string name="changelog_contribute_button">Make Hangar better!</string>
     <string name="changelog_accept_button">Continue</string>
+    <string name="changelog_changes_title">Changes</string>
+    <string name="changelog_coming_soon_title">Coming soon!</string>
+    <string name="changelog_coming_soon_text" translatable="false">&#8226; Custom icons/theme pack support\n&#8226; Pinned apps &amp; profiles</string>
 
     <string-array name="versionNumbers" translatable="false">
-        <item>2.2 (June 30th)</item>
+        <item>2.2 (July 1st)</item>
         <item>2.1 (May 29th)</item>
         <item>2.0 (May 16th)</item>
         <item>1.15 (Apr 23th)</item>
@@ -225,10 +228,10 @@
 "  &#8226; [New!] Added all white icon
   &#8226; [New!] Small, medium &amp; large notification icons
   &#8226; [New!] Contribute/Make Hangar better section!
+  &#8226; [New!] Portuguese/Spanish/Italian/Polish/French added
   &#8226; [Fix!] DB sync exception fixed
   &#8226; [Fix!] Fix some apps not launching to main action
-  &#8226; Minimum Android requirement lowered to 4.1+
-  &#8226; Translations for Portuguese/Spanish/Italian/Polish"</item>
+  &#8226; Minimum Android requirement lowered to 4.1+"</item>
         <item>
 "  &#8226; [Fix!] Crash in setting position/icon type
   &#8226; Added Instructions"</item>
