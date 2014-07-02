@@ -30,7 +30,7 @@ android {
         targetSdkVersion 20
     }
     lintOptions {
-        abortOnError false
+        abortOnError true
         disable 'MissingTranslation', 'GradleDependency', 'SmallSp', 'ExportedPreferenceActivity', 'TypographyEllipsis', 'IconMissingDensityFolder', 'ClickableViewAccessibility', 'IconDensities'
     }
     buildTypes {

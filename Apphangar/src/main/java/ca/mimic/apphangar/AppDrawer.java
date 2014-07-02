@@ -125,6 +125,7 @@ public class AppDrawer {
             PendingIntent activity = PendingIntent.getActivity(mContext, pendingNum, intent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
             mLastItem.setOnClickPendingIntent(mImageContLayout, activity);
+            mLastItem.setContentDescription(mImageButtonLayout, taskItem.appName);
         } catch (PackageManager.NameNotFoundException e) {
             return false;
         }

@@ -184,22 +184,25 @@
 
     <string name="contributors_title">Special thanks</string>
     <string name="contributors_name1" translatable="false">Melissa Gregory</string>
-    <string name="contributors_role1" translatable="false">Feedback &amp; support</string>
+    <string name="contributors_role1">Feedback &amp; support</string>
 
     <string name="contributors_name2" translatable="false">David Cormier</string>
-    <string name="contributors_role2" translatable="false">French translations</string>
+    <string name="contributors_role2">French translations</string>
 
     <string name="contributors_name3" translatable="false">Conor Anderson</string>
-    <string name="contributors_role3" translatable="false">Spanish translations</string>
+    <string name="contributors_role3">Spanish translations</string>
 
     <string name="contributors_name4" translatable="false">Vinicius Domingues</string>
-    <string name="contributors_role4" translatable="false">Portuguese translations</string>
+    <string name="contributors_role4">Portuguese translations</string>
 
     <string name="contributors_name5" translatable="false">Mario Sacquegna</string>
-    <string name="contributors_role5" translatable="false">Italian translations</string>
+    <string name="contributors_role5">Italian translations</string>
 
     <string name="contributors_name6" translatable="false">Michał Ostrowski (ufoman)</string>
-    <string name="contributors_role6" translatable="false">Polish translations</string>
+    <string name="contributors_role6">Polish translations</string>
+
+    <string name="contributors_name7" translatable="false">Abdullah Amir</string>
+    <string name="contributors_role7">Russian translations</string>
 
     <string name="contributors_special_thanks" translatable="false">&lt;3 Bridget W, Jeff DeChambeau, Joel Burke, Jonathan Kagan, Derek Rauch, Griffin Millender &amp; Anthony King</string>
 
@@ -222,7 +225,7 @@
     <string name="changelog_coming_soon_text" translatable="false">&#8226; Custom icons/theme pack support\n&#8226; Pinned apps &amp; profiles</string>
 
     <string-array name="versionNumbers" translatable="false">
-        <item>2.2 (July 2st)</item>
+        <item>2.2 (July 3rd)</item>
         <item>2.1 (May 29th)</item>
         <item>2.0 (May 16th)</item>
         <item>1.15 (Apr 23th)</item>
@@ -238,7 +241,8 @@
 "  &#8226; [New!] Added all white icon
   &#8226; [New!] Small, medium &amp; large notification icons
   &#8226; [New!] Contribute/Make Hangar better section!
-  &#8226; [New!] Portuguese/Spanish/Italian/Polish/French added
+  &#8226; [New!] Portuguese/Spanish/Italian/Polish/
+    French/Russian added
   &#8226; [Fix!] DB sync exception fixed
   &#8226; [Fix!] Fix some apps not launching to main action
   &#8226; Minimum Android requirement lowered to 4.1+"</item>

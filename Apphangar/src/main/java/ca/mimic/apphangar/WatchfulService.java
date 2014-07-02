@@ -341,7 +341,7 @@ public class WatchfulService extends Service {
         } else {
             maxButtons = numOfApps;
         }
-          
+
         Tools.HangarLog("taskList.size(): " + taskList.size() + " realmaxbuttons: " + numOfApps + " maxbuttons: " + maxButtons);
         int filledConts = 0;
 
