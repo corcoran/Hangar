@@ -1,6 +1,6 @@
 import com.android.builder.core.DefaultManifestParser
 
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 def manifestParser = new DefaultManifestParser()
 
@@ -23,20 +23,20 @@ repositories {
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '19.1.0'
+    compileSdkVersion 20
+    buildToolsVersion '20'
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 19
+        targetSdkVersion 20
     }
     lintOptions {
         abortOnError false
-        disable 'MissingTranslation'
+        disable 'MissingTranslation', 'GradleDependency', 'SmallSp', 'ExportedPreferenceActivity', 'TypographyEllipsis', 'IconMissingDensityFolder', 'ClickableViewAccessibility', 'IconDensities'
     }
     buildTypes {
         release {
             runProguard true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
+            proguardFiles 'proguard-android.txt'
         }
         applicationVariants.all { variant ->
             appendVersionNameVersionCode(variant, defaultConfig, manifestParser)
@@ -54,6 +54,6 @@ def appendVersionNameVersionCode(variant, defaultConfig, manifestParser) {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:19.1.0'
-    compile 'com.android.support:support-v13:19.+'
+    compile 'com.android.support:support-v4:20.+'
+    compile 'com.android.support:support-v13:20.+'
 }

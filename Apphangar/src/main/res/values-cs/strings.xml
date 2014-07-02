@@ -4,7 +4,6 @@
   <string name="title_behavior">Chování</string>
   <string name="title_appearance">Vzhled</string>
   <string name="title_apps">Aplikace</string>
-  <string name="action_settings">Nastavení</string>
   <string name="title_activity_settings">Nastavení Hangar</string>
   <string name="title_boot_preference">Spustit při startu operačního systému</string>
 </resources>

@@ -4,7 +4,6 @@
   <string name="title_behavior">Comportement</string>
   <string name="title_appearance">Apparence</string>
   <string name="title_apps">Apps</string>
-  <string name="action_settings">Paramètres</string>
   <string name="title_activity_settings">Paramètres de Hangar</string>
   <string name="title_toggle_preference">Afficher la barre de notification</string>
   <string name="title_boot_preference">Lancer au démarrage</string>
@@ -48,9 +47,6 @@
   <string name="dialog_color_picker">Sélecteur de couleurs</string>
   <string name="press_color_to_apply">Sélectionner la couleur ci-dessous pour appliquer</string>
   <string name="hex">Hex:</string>
-  <string name="set">Définir</string>
-  <string name="color_default">Par défaut</string>
-  <string name="title_activity_stats_widget_settings">Paramètres de StatsWidget</string>
   <string name="action_blacklist">Activer/désactiver la liste noire</string>
   <string name="action_reset_stats">Réinitialiser les stats</string>
   <string name="configure_apps_widget">Configurer le widget de l\'app</string>
@@ -116,10 +112,8 @@ Cependant, nous vous remercions dans tous les cas d'utiliser Hangar et de nous s
   <string name="aesthetics_category">Esthétique</string>
   <string name="title_stats_widget_appsno_preference">Portrait</string>
   <string name="summary_stats_widget_appsno_preference">Montrer un maximum de %s apps</string>
-  <string name="dialog_stats_widget_appsno_preference">Choisir un nombre d\'apps à montrer</string>
   <string name="title_stats_widget_appsno_ls_preference">Paysage</string>
   <string name="summary_stats_widget_appsno_ls_preference">Montrer un maximum de %s apps</string>
-  <string name="dialog_stats_widget_appsno_ls_preference">Choisir le nombre d\'apps à afficher (paysage)</string>
   <string name="title_alignment_preference">Alignement vertical du widget</string>
   <string name="alignment_top">Haut</string>
   <string name="alignment_center">Centre</string>

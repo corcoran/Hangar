@@ -20,6 +20,7 @@
 
 package ca.mimic.apphangar;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.TypedValue;
@@ -35,6 +36,8 @@ public class ChangeLog {
     ChangeLog(Context chgContext) {
         context = chgContext;
     }
+
+    @SuppressLint("InflateParams")
     protected View getView() {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         View mChangeLog = inflater.inflate(R.layout.changelog, null);

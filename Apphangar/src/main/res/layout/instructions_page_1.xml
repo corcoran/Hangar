@@ -1,5 +1,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="UnusedResources"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:padding="10dp"

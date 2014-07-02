@@ -15,6 +15,8 @@
         android:textStyle="bold"
         android:background="#33999999"
         android:layout_marginBottom="8dp"
+        android:drawableLeft="#00000000"
+        android:drawablePadding="6dp"
         android:textSize="16sp" />
 
     <TextView
@@ -30,7 +32,7 @@
         android:layout_height="1dp"
         android:background="?android:attr/listDivider" />
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -49,6 +51,8 @@
                 android:textStyle="bold"
                 android:background="#33999999"
                 android:layout_marginTop="6dp"
+                android:drawableLeft="#00000000"
+                android:drawablePadding="6dp"
                 android:textSize="16sp" />
 
             <LinearLayout

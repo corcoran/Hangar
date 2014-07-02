@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import ca.mimic.apphangar.Tools.TaskInfo;
@@ -281,7 +282,7 @@ public class WatchfulService extends Service {
             return db.increaseLaunch(newInfo.packageName);
         } else {
             Date date = new Date();
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
             Tools.HangarLog("Added task [" + newInfo.appName + "] to database date=[" + dateFormatter.format(date) + "]");
             db.createTask(newInfo.appName, newInfo.packageName, newInfo.className, dateFormatter.format(date));
             return 1;

@@ -20,6 +20,7 @@
 
 package ca.mimic.apphangar;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -37,6 +38,7 @@ public class Contribute {
         this.context = context;
     }
 
+    @SuppressLint("InflateParams")
     protected View getView() {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         mContribute = inflater.inflate(R.layout.contribute, null);

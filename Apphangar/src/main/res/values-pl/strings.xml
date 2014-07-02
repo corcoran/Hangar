@@ -4,7 +4,6 @@
   <string name="title_behavior">Zachowanie</string>
   <string name="title_appearance">Wygląd</string>
   <string name="title_apps">Aplikacje</string>
-  <string name="action_settings">Ustawienia</string>
   <string name="title_activity_settings">Ustawienia Hangar</string>
   <string name="title_toggle_preference">Pokaż pasek powiadomień</string>
   <string name="title_boot_preference">Uruchom przy starcie</string>
@@ -48,9 +47,6 @@
   <string name="dialog_color_picker">Próbnik kolorów</string>
   <string name="press_color_to_apply">Naciśnij na kolor poniżej aby zastosować</string>
   <string name="hex">Wartość szesnastkowa:</string>
-  <string name="set">Wybierz</string>
-  <string name="color_default">Domyślny kolor</string>
-  <string name="title_activity_stats_widget_settings">Ustawienia widżetu statystyk</string>
   <string name="action_blacklist">Przełącz czarną listę</string>
   <string name="action_reset_stats">Zresetuj statystyki</string>
   <string name="configure_apps_widget">Skonfiguruj widżet aplikacji</string>
@@ -115,10 +111,8 @@
   <string name="aesthetics_category">Wygląd</string>
   <string name="title_stats_widget_appsno_preference">Pionowo</string>
   <string name="summary_stats_widget_appsno_preference">Wyświetlanie maksymalnie %s aplikacji</string>
-  <string name="dialog_stats_widget_appsno_preference">Wybierz liczbę aplikacji do wyświetlenia</string>
   <string name="title_stats_widget_appsno_ls_preference">Poziomo</string>
   <string name="summary_stats_widget_appsno_ls_preference">Wyświetlanie maksymalnie %s aplikacji</string>
-  <string name="dialog_stats_widget_appsno_ls_preference">Wybierz liczbę aplikacji do pokazania (w trybie poziomym)</string>
   <string name="title_alignment_preference">Wyrównanie widżetu w pionie</string>
   <string name="alignment_top">Góra</string>
   <string name="alignment_center">Środek (domyślnie)</string>

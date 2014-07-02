@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -570,6 +571,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         taskRoot.addView(taskRL);
                     }
                 }
+                @TargetApi(17)
                 @Override
                 public ArrayList<LinearLayout> doInBackground(Void... voidp) {
                     int highestSeconds = db.getHighestSeconds();

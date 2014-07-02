@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -212,7 +213,7 @@ public class TasksDataSource {
     public int updateTaskTimestamp(String name) {
         ContentValues args = new ContentValues();
         Date date = new Date();
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         args.put(Tasks.COLUMN_TIMESTAMP, dateFormatter.format(date));
         return database.update(Tasks.TABLE_TASKS, args, Tasks.COLUMN_PACKAGENAME
                 + " = '" + name + "'", null);
@@ -314,7 +315,7 @@ public class TasksDataSource {
         task.setClassName(cursor.getString(3));
         task.setSeconds(cursor.getInt(4));
         String timeStamp = cursor.getString(5);
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         Timestamp ts = new Timestamp(dateFormatter.parse(timeStamp).getTime());
         task.setTimestamp(ts);
         task.setBlacklisted(cursor.getInt(6) == 1);

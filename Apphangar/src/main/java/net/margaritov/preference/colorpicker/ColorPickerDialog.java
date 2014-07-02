@@ -18,6 +18,7 @@ package net.margaritov.preference.colorpicker;
 
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -73,6 +74,7 @@ public class ColorPickerDialog
 
 	}
 
+    @SuppressLint("InflateParams")
 	private void setUp(int color) {
 		
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

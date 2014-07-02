@@ -20,6 +20,7 @@
 
 package ca.mimic.apphangar;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -93,6 +94,7 @@ public class Donate {
         }
     }
 
+    @SuppressLint("InflateParams")
     protected View getView(Context settingsContext) {
         mSettingsContext = settingsContext;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );

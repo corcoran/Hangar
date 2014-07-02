@@ -4,7 +4,6 @@
   <string name="title_behavior">Comportamento</string>
   <string name="title_appearance">Aparência</string>
   <string name="title_apps">Apps</string>
-  <string name="action_settings">Configurações</string>
   <string name="title_activity_settings">Configurações do Hangar</string>
   <string name="title_toggle_preference">Mostrar Barra de Notificação</string>
   <string name="title_boot_preference">Executar aplicativo na inicialização do sistema</string>
@@ -29,7 +28,7 @@
   <string name="title_statusbar_icon_preference">Ícone da barra de status</string>
   <string name="dialog_statusbar_icon_preference">Escolha o estilo do ícone</string>
   <string name="alert_title_statusbar_icon_preference">Só para você saber...</string>
-  <string name="alert_message_statusbar_icon_preference">Devido às limitações do Android, desativar o ícone da barra de status só pode ser feito reduzindo a prioridade da notificatição.\n\nTL;DR seu Hangar bar estará no por ultimo da gaveta da notificação.</string>
+  <string name="alert_message_statusbar_icon_preference">Devido às limitações do Android, desativar o ícone da barra de status só pode ser feito reduzindo a prioridade da notificatição.\n\nTL;DR seu Hangar bar estará no por último da gaveta da notificação.</string>
   <string name="statusbar_icon_warm_white">Ícone warm white (padrão)</string>
   <string name="statusbar_icon_cold_white">Ícone cold white</string>
   <string name="statusbar_icon_blue_white">Ícone blue white</string>
@@ -48,9 +47,6 @@
   <string name="dialog_color_picker">Color Picker</string>
   <string name="press_color_to_apply">Selecione a cor abaixo para aplicar</string>
   <string name="hex">Hex:</string>
-  <string name="set">Setar</string>
-  <string name="color_default">Padrão</string>
-  <string name="title_activity_stats_widget_settings">Configurações do Widget de Estátisticas</string>
   <string name="action_blacklist">Adicionar/Retirar da Blacklist</string>
   <string name="action_reset_stats">Zerar as estatísticas</string>
   <string name="configure_apps_widget">Configurar o widget de apps</string>
@@ -97,10 +93,8 @@
   <string name="aesthetics_category">Aparência</string>
   <string name="title_stats_widget_appsno_preference">Retrato</string>
   <string name="summary_stats_widget_appsno_preference">Mostrando no máximo %s apps</string>
-  <string name="dialog_stats_widget_appsno_preference">Escolha a quantidade de Apps</string>
   <string name="title_stats_widget_appsno_ls_preference">Paisagem</string>
   <string name="summary_stats_widget_appsno_ls_preference">Mostrando no máximo %s apps</string>
-  <string name="dialog_stats_widget_appsno_ls_preference">Escolha o no. de apps no Hangar  (paisagem)</string>
   <string name="title_alignment_preference">Alinhamento vertical do widget</string>
   <string name="alignment_top">Topo</string>
   <string name="alignment_center">Centro (padrão)</string>

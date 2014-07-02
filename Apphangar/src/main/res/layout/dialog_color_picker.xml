@@ -11,7 +11,7 @@
      Unless required by applicable law or agreed to in writing, software
      distributed under the License is distributed on an "AS IS" BASIS,
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and limitations under the License.
+     See the License for the specific language governing permissions and limitations under the License.
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -48,7 +48,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="HEX"
+            android:hint="@string/hex"
             android:imeOptions="actionDone"
             android:maxLength="7"
             android:singleLine="true"
@@ -75,7 +75,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:gravity="center"
-            android:text="→"
+            android:text="@string/arrow_right"
             android:textSize="20sp" />
 
         <net.margaritov.preference.colorpicker.ColorPickerPanelView

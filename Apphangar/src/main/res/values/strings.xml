@@ -5,7 +5,6 @@
     <string name="title_behavior">Behavior</string>
     <string name="title_appearance">Appearance</string>
     <string name="title_apps">Apps</string>
-    <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Hangar Settings</string>
 
     <!-- Preferences -->
@@ -125,10 +124,6 @@
     <string name="arrow_right" translatable="false">→</string>
     <string name="arrow_down" translatable="false">↓</string>
     <string name="hex">Hex:</string>
-    <string name="hex_hint" translatable="false">#ff000000</string>
-    <string name="set">Set</string>
-    <string name="color_default">Default</string>
-    <string name="title_activity_stats_widget_settings">StatsWidget Settings</string>
 
     <!-- Action menu -->
     <string name="action_blacklist">Toggle blacklist</string>
@@ -157,7 +152,6 @@
         <item>$4 (USD)</item>
         <item>$5 (USD)</item>
     </string-array>
-    <string name="donate_googleplus_url" translatable="false">https://plus.google.com/communities/117722899904055747117</string>
     <string name="donate_paypal_url" formatted="false" translatable="false">https://www.paypal.com/cgi-bin/webscr?cmd=_donations%26business=8M2WWALSUHQUW%26lc=CA%26item_name=Hangar%26currency_code=USD%26bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted</string>
     <string name="donate_try_paypal">"Hm.. looks like Google Play didn't like that.  Maybe try PayPal instead?"</string>
     <string name="donate_thanks_title">Thank you!</string>
@@ -189,9 +183,25 @@
     <string name="contribute_plus_url" translatable="false">https://plus.google.com/communities/117722899904055747117</string>
 
     <string name="contributors_title">Special thanks</string>
-    <string name="contributors_list1" translatable="false">"Melissa Gregory\nDavid Cormier\nConor Anderson\nVinicius Domingues\nMario Sacquegna\nMichał Ostrowski (ufoman)"</string>
-    <string name="contributors_list2" translatable="false">- Feedback &amp; support\n- French translations\n- Spanish translations\n- Portuguese translations\n- Italian translations\n- Polish translations</string>
-    <string name="contributors_list3" translatable="false">&lt;3 Bridget W, Jeff DeChambeau, Joel Burke, Jonathan Kagan, Derek Rauch, Griffin Millender &amp; Anthony King</string>
+    <string name="contributors_name1" translatable="false">Melissa Gregory</string>
+    <string name="contributors_role1" translatable="false">Feedback &amp; support</string>
+
+    <string name="contributors_name2" translatable="false">David Cormier</string>
+    <string name="contributors_role2" translatable="false">French translations</string>
+
+    <string name="contributors_name3" translatable="false">Conor Anderson</string>
+    <string name="contributors_role3" translatable="false">Spanish translations</string>
+
+    <string name="contributors_name4" translatable="false">Vinicius Domingues</string>
+    <string name="contributors_role4" translatable="false">Portuguese translations</string>
+
+    <string name="contributors_name5" translatable="false">Mario Sacquegna</string>
+    <string name="contributors_role5" translatable="false">Italian translations</string>
+
+    <string name="contributors_name6" translatable="false">Michał Ostrowski (ufoman)</string>
+    <string name="contributors_role6" translatable="false">Polish translations</string>
+
+    <string name="contributors_special_thanks" translatable="false">&lt;3 Bridget W, Jeff DeChambeau, Joel Burke, Jonathan Kagan, Derek Rauch, Griffin Millender &amp; Anthony King</string>
 
     <string name="contribute_accept_button">Continue</string>
 
@@ -212,7 +222,7 @@
     <string name="changelog_coming_soon_text" translatable="false">&#8226; Custom icons/theme pack support\n&#8226; Pinned apps &amp; profiles</string>
 
     <string-array name="versionNumbers" translatable="false">
-        <item>2.2 (July 1st)</item>
+        <item>2.2 (July 2st)</item>
         <item>2.1 (May 29th)</item>
         <item>2.0 (May 16th)</item>
         <item>1.15 (Apr 23th)</item>
@@ -349,7 +359,6 @@
 
     <string name="title_stats_widget_appsno_preference">Portrait</string>
     <string name="summary_stats_widget_appsno_preference">Showing up to a maximum of %s apps</string>
-    <string name="dialog_stats_widget_appsno_preference">Choose no. of apps to show</string>
 
     <string-array name="entries_stats_widget_appsno_preference" translatable="false">
         <item>2</item>
@@ -367,7 +376,6 @@
 
     <string name="title_stats_widget_appsno_ls_preference">Landscape</string>
     <string name="summary_stats_widget_appsno_ls_preference">Showing up to a maximum of %s apps</string>
-    <string name="dialog_stats_widget_appsno_ls_preference">Choose no. of apps to show (landscape)</string>
 
     <string-array name="entries_stats_widget_appsno_ls_preference" translatable="false">
         <item>1</item>

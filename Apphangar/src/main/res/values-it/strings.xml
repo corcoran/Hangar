@@ -4,7 +4,6 @@
   <string name="title_behavior">Comportamento</string>
   <string name="title_appearance">Aspetto</string>
   <string name="title_apps">Apps</string>
-  <string name="action_settings">Impostazioni</string>
   <string name="title_activity_settings">Impostazioni Hangar</string>
   <string name="title_toggle_preference">Mostra barra notifica</string>
   <string name="title_boot_preference">Avvio al boot</string>
@@ -48,9 +47,6 @@
   <string name="dialog_color_picker">Scelta Colore</string>
   <string name="press_color_to_apply">Seleziona il colore per sceglierlo</string>
   <string name="hex">Hex:</string>
-  <string name="set">Imposta</string>
-  <string name="color_default">Predefinito</string>
-  <string name="title_activity_stats_widget_settings">Impostazioni Widget Statistiche</string>
   <string name="action_blacklist">Pulsante blacklist</string>
   <string name="action_reset_stats">Azzera statistiche</string>
   <string name="configure_apps_widget">Configura widget app</string>
@@ -115,10 +111,8 @@
   <string name="aesthetics_category">Estetica</string>
   <string name="title_stats_widget_appsno_preference">Verticale</string>
   <string name="summary_stats_widget_appsno_preference">Mostrare fino a un massimo di %s app</string>
-  <string name="dialog_stats_widget_appsno_preference">Scegli numero di app da mostrare</string>
   <string name="title_stats_widget_appsno_ls_preference">Orizzontale</string>
   <string name="summary_stats_widget_appsno_ls_preference">Mostrare fino a un massimo di %s app</string>
-  <string name="dialog_stats_widget_appsno_ls_preference">Scegli il numero di app da mostrare (orizzontale)</string>
   <string name="title_alignment_preference">Allineamento verticale widget</string>
   <string name="alignment_top">In cima</string>
   <string name="alignment_center">Centrato (predefinito)</string>
