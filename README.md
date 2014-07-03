@@ -116,6 +116,13 @@ Contributors
       Polish translations 
     </td>
   </tr>
+  <tr>
+    <td>
+      Abdullah Amir
+    </td><td>
+      Russian translations
+    </td>
+  </tr>
 </table>
 
 Want to help translate Hangar into your native language?  [Visit our project page on Crowdin](https://crowdin.net/project/hangar)
