@@ -58,8 +58,6 @@
   <string name="configure_contribute">Внести вклад</string>
   <string name="donate_title">Хотите дать мне на пиво?</string>
   <string name="donate_head">Вложения всегда приветствуются и могут быть полезны при разработке приложений.\n\nТак или иначе, если Вы нашли Hangar полезным и желаете выразить признательность за проделанную работу, загляните в раздел \"Внести вклад\", в нём Вы найдёте несколько способов помочь.\n\nБудучи в приподнятом настроении Вы можете произвести оплату ниже через <b>Google Play</b> или <b>PayPal</b>.</string>
-  <string name="donate_title_google">Google Play</string>
-  <string name="donate_title_paypal">PayPal</string>
   <string name="donate_google">Оплатить через Google</string>
   <string name="donate_paypal">Оплатить через PayPal</string>
   <string name="donate_contribute">Сделать Hangar лучше!</string>

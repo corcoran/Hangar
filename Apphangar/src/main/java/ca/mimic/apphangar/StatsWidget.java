@@ -34,7 +34,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 
@@ -159,6 +158,8 @@ public class StatsWidget extends AppWidgetProvider {
 
         Collections.sort(tasks, new Tools.TasksModelComparator("seconds"));
 
+        IconHelper ih = new IconHelper(context);
+
         int count = 0;
         for (TasksModel task : tasks) {
             RemoteViews row = new RemoteViews(context.getPackageName(), R.layout.stats_widget_row);
@@ -186,22 +187,22 @@ public class StatsWidget extends AppWidgetProvider {
             }
 
             // Drawable taskIcon;
-            Uri uri = null;
+            Bitmap cachedIcon;
             try {
                 ApplicationInfo appInfo = pkgm.getApplicationInfo(task.getPackageName(), 0);
-                if(appInfo.icon != 0) {
-                    uri = Uri.parse("android.resource://" + task.getPackageName() + "/" + appInfo.icon);
-                }
-                // taskIcon = appInfo.loadIcon(pkgm);
+                ComponentName componentTask = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
+                cachedIcon = ih.cachedIconHelper(componentTask, task.getName());
+//                if(appInfo.icon != 0) {
+//                    uri = Uri.parse("android.resource://" + task.getPackageName() + "/" + appInfo.icon);
+//                }
             } catch (Exception e) {
                 continue;
             }
 
             count++;
 
-            // Bitmap bmpIcon = ((BitmapDrawable) taskIcon).getBitmap();
-            // row.setImageViewBitmap(iconID, bmpIcon);
-            row.setImageViewUri(iconID, uri);
+//            row.setImageViewUri(iconID, uri);
+            row.setImageViewBitmap(iconID, cachedIcon);
             row.setTextViewText(labelID, task.getName());
 
             // int maxWidth = dpToPx(250) - dpToPx(32+14+14); // ImageView + Margin? + Stats text?

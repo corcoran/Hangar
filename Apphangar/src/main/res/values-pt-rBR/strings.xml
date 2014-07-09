@@ -44,6 +44,11 @@
   <string name="summary_colorize_preference">Mudar a cor dos ícones de notificação</string>
   <string name="title_icon_color_preference">Cor</string>
   <string name="title_icon_color_category">Cor do ícone</string>
+  <string name="title_icon_pack_preference">Pacote de Ícones</string>
+  <string name="default_icon_pack">Ícones Padrão</string>
+  <string name="no_icon_packs_alert">Nenhum pacote de ícones instalado</string>
+  <string name="switched_icon_packs_alert">Atualizando o cache de ícones. Isso pode levar alguns segundos!</string>
+  <string name="title_icon_pack_picker">Escolha um pacote de ícones</string>
   <string name="dialog_color_picker">Color Picker</string>
   <string name="press_color_to_apply">Selecione a cor abaixo para aplicar</string>
   <string name="hex">Hex:</string>
@@ -58,8 +63,6 @@
   <string name="configure_contribute">Contribua</string>
   <string name="donate_title">Quer me pagar uma cerveja?</string>
   <string name="donate_head">As doações são sempre apreciadas e útil ao finaciar o desenvolvimento futuro deste e de outros apps.\n\nSe você achar o Hangar útil e quer mostrar agradecimento pelo trabalho que tem ido para isso, sinta-se livre para deixar um review sobre sua experiência com o app, se você também é generoso doê usando <b>Google Play</b> ou <b>PayPal</b> abaixo.</string>
-  <string name="donate_title_google">Google Play</string>
-  <string name="donate_title_paypal">PayPal</string>
   <string name="donate_google">Doê com Google</string>
   <string name="donate_paypal">Doê com PayPal</string>
   <string name="donate_contribute">Faça o Hangar melhor!</string>
@@ -83,6 +86,9 @@
   <string name="contribute_plus_text">"Versões Beta, deixe feedback, sugira recursos e esteja atualizado no status de novos desenvolvimentos."</string>
   <string name="contribute_plus_link">Participe da Comunidade no Google Plus</string>
   <string name="contributors_title">Agradecimentos especiais</string>
+  <string name="contributors_role7">Russian translations</string>
+  <string name="contributors_role8">German translations</string>
+  <string name="contributors_role9">Danish translations</string>
   <string name="contribute_accept_button">Continue</string>
   <string name="license_title">Licença e Fonte</string>
   <string name="license_head">Hangar é licenciado sob a GPLv3 da Free Software Foundation e é Copyright © 2014 Jeff Corcoran.\n\nSob a licença GPL, o Hangar está disponível livre de encargos, enquanto o uso do Hangar adere aos termos de licença.\n\nUsuários podem baixar o software gratuitamente e modificar, integrar e distribuí-lo. No entanto, os utilizadores GPL devem aceitar as regras da GPL, que estipula que, se um trabalho baseado no Hangar é redistribuído, o código-fonte completo para este trabalho também deve ser aberto e disponível para redistribuição.\n\nVeja os termos do GPL e o FAQ da Free Software Foundation para mais detalhes.</string>

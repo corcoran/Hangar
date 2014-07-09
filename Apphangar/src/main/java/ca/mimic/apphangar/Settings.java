@@ -40,9 +40,12 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -80,7 +83,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
     private static GetFragments mGetFragments;
     private static IWatchfulService s;
     private static TasksDataSource db;
-    // private Context mContext;
 
     final static String VERSION_CHECK = "version_check";
 
@@ -100,16 +102,18 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String APPS_BY_WIDGET_SIZE_PREFERENCE = "apps_by_widget_size_preference";
     final static String ICON_SIZE_PREFERENCE = "icon_size_preference";
     final static String ALIGNMENT_PREFERENCE = "alignment_preference";
-
+    final static String ICON_PACK_PREFERENCE = "icon_pack_preference";
 
     protected static View appsView;
     protected static boolean isBound = false;
     protected static boolean mLaunchedPaypal = false;
+    protected static boolean dirtyNotifications = false;
     boolean newStart;
 
     static PrefsGet prefs;
     static Context mContext;
     static ServiceCall myService;
+    static IconPackUpdate iconPackUpdate;
 
     final static boolean DIVIDER_DEFAULT = true;
     final static boolean TOGGLE_DEFAULT = true;
@@ -157,6 +161,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
     final static int START_SERVICE = 0;
     final static int STOP_SERVICE = 1;
+
+    final static int REQUEST_PICK_ICON = 13;
+
     static DrawTasks drawT;
     static int displayWidth;
 
@@ -555,6 +562,23 @@ public class Settings extends Activity implements ActionBar.TabListener {
         int[] ints = {hours , mins , secs};
         return ints;
     }
+
+    public static class IconPackUpdate {
+        Preference icon_pack_preference;
+        SharedPreferences prefs2;
+
+        IconPackUpdate(SharedPreferences prefs, Preference pref) {
+            icon_pack_preference = pref;
+            prefs2 = prefs;
+        }
+
+        public void iconPackUpdated() {
+            Toast.makeText(mContext, mContext.getResources().getString(R.string.switched_icon_packs_alert),
+                    Toast.LENGTH_LONG).show();
+            icon_pack_preference.setSummary(getApplicationName(prefs2.getString(ICON_PACK_PREFERENCE, null)));
+        }
+    }
+
     public class DrawTasks {
         public void drawTasks(View view) {
             final LinearLayout taskRoot = (LinearLayout) view.findViewById(R.id.taskRoot);
@@ -569,6 +593,12 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     taskRoot.removeAllViews();
                     for (LinearLayout taskRL : linearLayouts) {
                         taskRoot.addView(taskRL);
+                    }
+                    if (dirtyNotifications) {
+                        myService.execute(SERVICE_CLEAR_TASKS);
+                        myService.watchHelper(STOP_SERVICE);
+                        myService.watchHelper(START_SERVICE);
+                        dirtyNotifications = false;
                     }
                 }
                 @TargetApi(17)
@@ -589,6 +619,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     }
 
                     ArrayList<LinearLayout> linearLayouts = new ArrayList<LinearLayout>();
+                    IconHelper ih = new IconHelper(mContext);
 
                     for (TasksModel task : tasks) {
                         LinearLayout taskRL = new LinearLayout(getApplicationContext());
@@ -677,10 +708,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
                             PackageManager pm = getApplicationContext().getPackageManager();
                             // Tools.HangarLog("Trying to grab AppInfo class[" + task.getClassName()+ "] package[" + task.getPackageName() + "]");
                             ComponentName componentTask = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
-                            ApplicationInfo appInfo = pm.getApplicationInfo(componentTask.getPackageName(), 0);
 
+                            // Find/use cached icon with IconHelper
+                            ih.cachedIconHelper(taskIcon, componentTask, task.getName());
                             taskName.setText(task.getName());
-                            taskIcon.setImageDrawable(appInfo.loadIcon(pm));
                         } catch (Exception e) {
                             Tools.HangarLog("Could not find Application info for [" + task.getName() + "]");
                             continue;
@@ -755,6 +786,16 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
     }
 
+    public static String getApplicationName(String packageName) {
+        final PackageManager pm = mContext.getApplicationContext().getPackageManager();
+        ApplicationInfo ai;
+        try {
+            ai = pm.getApplicationInfo(packageName, 0);
+        } catch (final PackageManager.NameNotFoundException e) {
+            ai = null;
+        }
+        return (String) (ai != null ? pm.getApplicationLabel(ai) : "");
+    }
 
     public static class PrefsFragment extends PreferenceFragment {
         CheckBoxPreference divider_preference;
@@ -768,6 +809,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         UpdatingListPreference weight_priority_preference;
         UpdatingListPreference statusbar_icon_preference;
         UpdatingListPreference icon_size_preference;
+        Preference icon_pack_preference;
 
         public static PrefsFragment newInstance(int prefLayout) {
             PrefsFragment fragment = new PrefsFragment();
@@ -786,7 +828,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
             final int prefLayout = getArguments().getInt("layout");
             setHasOptionsMenu(true);
             addPreferencesFromResource(prefLayout);
-            SharedPreferences prefs2 = prefs.prefsGet();
+            final SharedPreferences prefs2 = prefs.prefsGet();
             SharedPreferences.Editor editor = prefs.editorGet();
 
             try {
@@ -817,6 +859,20 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 icon_size_preference = (UpdatingListPreference)findPreference(Settings.ICON_SIZE_PREFERENCE);
                 icon_size_preference.setValue(prefs2.getString(Settings.ICON_SIZE_PREFERENCE, Integer.toString(Settings.ICON_SIZE_DEFAULT)));
                 icon_size_preference.setOnPreferenceChangeListener(changeListener);
+
+                icon_pack_preference = findPreference(Settings.ICON_PACK_PREFERENCE);
+                icon_pack_preference.setSummary(getApplicationName(prefs2.getString(ICON_PACK_PREFERENCE, null)));
+                iconPackUpdate = new IconPackUpdate(prefs2, icon_pack_preference);
+                icon_pack_preference.setOnPreferenceClickListener(
+                    new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            IconPackHelper.pickIconPack(mContext, false);
+
+                            return false;
+                        }
+                    }
+                );
 
             } catch (NullPointerException e) {
             }

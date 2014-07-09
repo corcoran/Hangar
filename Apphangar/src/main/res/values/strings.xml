@@ -117,6 +117,11 @@
     <string name="summary_colorize_preference">Change the color of the notification icons</string>
     <string name="title_icon_color_preference">Color</string>
     <string name="title_icon_color_category">Icon Color</string>
+    <string name="title_icon_pack_preference">Icon Pack</string>
+    <string name="default_icon_pack">Default Icons</string>
+    <string name="no_icon_packs_alert">No icon packs installed</string>
+    <string name="switched_icon_packs_alert">Updating icon caches.  This may take a few seconds!</string>
+    <string name="title_icon_pack_picker">Pick an icon pack</string>
 
     <!-- Color Picker -->
     <string name="dialog_color_picker">Color Picker</string>

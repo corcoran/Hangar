@@ -58,8 +58,6 @@
   <string name="configure_contribute">Contribuer</string>
   <string name="donate_title">Vous souhaitez m\'acheter une bière?</string>
   <string name="donate_head">Les dons sont toujours appréciés et utiles pour financer le développement futur de cette et d\'autres apps.\n\nCependant, si vous trouvez que Hangar vous est utile et que vous voulez remercier les développeurs de leur travail, regarder la section Contribuer pour voir les différentes manières d\'aider\n\nSi vous vous sentez l\'âme charitable, vous pouvez faire un don en utilisant <b>Google Play</b> ou <b>PayPal</b>.</string>
-  <string name="donate_title_google">Google Play</string>
-  <string name="donate_title_paypal">PayPal</string>
   <string name="donate_google">Faire un don avec Google</string>
   <string name="donate_paypal">Faire un don avec PayPal</string>
   <string name="donate_contribute">Améliorer Hangar!</string>

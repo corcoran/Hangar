@@ -265,7 +265,7 @@ public class AppsWidget extends AppWidgetProvider {
                 newItemTask = appList.get(i);
             }
 
-            boolean newItem = appDrawer.newItem(newItemTask, itemLayout, i);
+            boolean newItem = appDrawer.newItem(newItemTask, itemLayout);
 
             if (!newItem) {
                 numOfIcons++;

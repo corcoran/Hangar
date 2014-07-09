@@ -32,11 +32,7 @@ import android.util.TypedValue;
 
 public class ColorHelper {
 
-    public static Bitmap getColoredBitmap(Drawable d, int color) {
-        if (d == null) {
-            return null;
-        }
-        Bitmap colorBitmap = ((BitmapDrawable) d).getBitmap();
+    public static Bitmap getColoredBitmap(Bitmap colorBitmap, int color) {
         Bitmap brighterBitmap = toBrighter(colorBitmap);
         Bitmap grayscaleBitmap = toGrayscale(colorBitmap);
         Paint pp = new Paint();
@@ -46,6 +42,13 @@ public class ColorHelper {
         Canvas cc = new Canvas(grayscaleBitmap);
         cc.drawBitmap(grayscaleBitmap, 0, 0, pp);
         return grayscaleBitmap;
+    }
+    public static Bitmap getColoredBitmap(Drawable d, int color) {
+        if (d == null) {
+            return null;
+        }
+        Bitmap b = ((BitmapDrawable) d).getBitmap();
+        return getColoredBitmap(b, color);
     }
 
     private static Bitmap toBrighter(Bitmap bmpOriginal) {

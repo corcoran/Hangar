@@ -21,15 +21,12 @@
 package ca.mimic.apphangar;
 
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.widget.RemoteViews;
 
 import java.util.Random;
@@ -38,6 +35,7 @@ public class AppDrawer {
     Context mContext;
     RemoteViews mRowView;
     RemoteViews mLastItem;
+    IconHelper ih;
 
     boolean isColorized;
     int getColor;
@@ -72,7 +70,9 @@ public class AppDrawer {
 
     public void setContext(Context context) {
         mContext = context;
+        ih = new IconHelper(context);
     }
+
     protected void setRowBackgroundColor(int color) {
         mRowView.setInt(mRowId, "setBackgroundColor", color);
     }
@@ -83,34 +83,34 @@ public class AppDrawer {
         getColor = prefs.getInt(Settings.ICON_COLOR_PREFERENCE, Settings.ICON_COLOR_DEFAULT);
     }
 
-    protected boolean newItem(Tools.TaskInfo taskItem, int mLastItemLayout, int count) {
+    protected boolean newItem(Tools.TaskInfo taskItem, int mLastItemLayout) {
         mLastItem = new RemoteViews(mTaskPackage, mLastItemLayout);
         if (taskItem.packageName == null) {
             // Dummy invisible item
             return true;
         }
 
-        Drawable taskIcon, d;
         PackageManager pkgm;
-        Uri uri = null;
+        Bitmap cachedIcon;
         try {
             pkgm = mContext.getPackageManager();
-            ApplicationInfo appInfo = pkgm.getApplicationInfo(taskItem.packageName, 0);
-            taskIcon = appInfo.loadIcon(pkgm);
-            if(appInfo.icon != 0) {
-                uri = Uri.parse("android.resource://" + taskItem.packageName + "/" + appInfo.icon);
-            }
+            ComponentName componentTask = ComponentName.unflattenFromString(taskItem.packageName + "/" + taskItem.className);
+
+            cachedIcon = ih.cachedIconHelper(componentTask, taskItem.appName);
+
         } catch (Exception e) {
+            Tools.HangarLog("newItem failed! " + e);
             return false;
         }
 
+
+
         if (isColorized) {
-            d = new BitmapDrawable(ColorHelper.getColoredBitmap(taskIcon, getColor));
-            Bitmap bmpIcon = ((BitmapDrawable) d).getBitmap();
+            Bitmap bmpIcon = ColorHelper.getColoredBitmap(cachedIcon, getColor);
             int size = Tools.dpToPx(mContext, 128);
             mLastItem.setImageViewBitmap(mImageButtonLayout, Bitmap.createScaledBitmap(bmpIcon, size, size, false));
         } else {
-            mLastItem.setImageViewUri(mImageButtonLayout, uri);
+            mLastItem.setImageViewBitmap(mImageButtonLayout, cachedIcon);
         }
 
         Intent intent;

@@ -359,7 +359,7 @@ public class WatchfulService extends Service {
                 break;
             }
 
-            if (appDrawer.newItem(taskList.get(i), itemLayout, i)) {
+            if (appDrawer.newItem(taskList.get(i), itemLayout)) {
                 appDrawer.addItem();
                 filledConts++;
             }
