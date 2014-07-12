@@ -228,7 +228,7 @@
     <string name="changelog_accept_button">Continue</string>
     <string name="changelog_changes_title">Changes</string>
     <string name="changelog_coming_soon_title">Coming soon!</string>
-    <string name="changelog_coming_soon_text" translatable="false">&#8226; Custom icons/theme pack support\n&#8226; Pinned apps &amp; profiles</string>
+    <string name="changelog_coming_soon_text" translatable="false">&#8226; Pinned apps &amp; profiles</string>
 
     <string-array name="versionNumbers" translatable="false">
         <item>2.3 (???)</item>
