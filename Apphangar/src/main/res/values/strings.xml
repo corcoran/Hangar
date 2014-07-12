@@ -139,8 +139,8 @@
     <!-- Donate -->
     <string name="donate_title">Want to buy me a beer?</string>
     <string name="donate_head">Donations are always appreciated and helpful in funding the future development of this and other apps.\n\nHowever, if you find Hangar useful and want to show thanks for the work that has gone into it, visit the Contribute section to see the many ways you can help.\n\nIf you\'re in a generous mood, you can donate using <b>Google Play</b> or <b>PayPal</b> below.</string>
-    <string name="donate_title_google">Google Play</string>
-    <string name="donate_title_paypal">PayPal</string>
+    <string name="donate_title_google" translatable="false">Google Play</string>
+    <string name="donate_title_paypal" translatable="false">PayPal</string>
     <string name="donate_google">Donate with Google</string>
     <string name="donate_paypal">Donate with PayPal</string>
     <string name="donate_contribute">Make Hangar better!</string>
