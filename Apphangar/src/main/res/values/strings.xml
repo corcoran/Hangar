@@ -204,6 +204,12 @@
     <string name="contributors_name7" translatable="false">Abdullah Amir</string>
     <string name="contributors_role7">Russian translations</string>
 
+    <string name="contributors_name8" translatable="false">Eike Wacker</string>
+    <string name="contributors_role8">German translations</string>
+
+    <string name="contributors_name9" translatable="false">Jan Madsen</string>
+    <string name="contributors_role9">Danish translations</string>
+
     <string name="contributors_special_thanks" translatable="false">&lt;3 Bridget W, Jeff DeChambeau, Joel Burke, Jonathan Kagan, Derek Rauch, Griffin Millender &amp; Anthony King</string>
 
     <string name="contribute_accept_button">Continue</string>

@@ -123,6 +123,20 @@ Contributors
       Russian translations
     </td>
   </tr>
+  <tr>
+    <td>
+      Eike Wacker
+    </td><td>
+      German translations
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Jan Madsen
+    </td><td>
+      Danish translations
+    </td>
+  </tr>
 </table>
 
 Want to help translate Hangar into your native language?  [Visit our project page on Crowdin](https://crowdin.net/project/hangar)
