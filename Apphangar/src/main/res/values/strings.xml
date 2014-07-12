@@ -231,6 +231,7 @@
     <string name="changelog_coming_soon_text" translatable="false">&#8226; Custom icons/theme pack support\n&#8226; Pinned apps &amp; profiles</string>
 
     <string-array name="versionNumbers" translatable="false">
+        <item>2.3 (???)</item>
         <item>2.2 (July 3rd)</item>
         <item>2.1 (May 29th)</item>
         <item>2.0 (May 16th)</item>
@@ -243,6 +244,9 @@
     </string-array>
 
     <string-array name="versionSummaries" translatable="false">
+        <item>
+"  &#8226; [New!] Icon pack support
+  &#8226; [New!] German/Danish translations"</item>
         <item>
 "  &#8226; [New!] Added all white icon
   &#8226; [New!] Small, medium &amp; large notification icons
