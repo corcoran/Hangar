@@ -87,6 +87,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String VERSION_CHECK = "version_check";
 
     final static String DIVIDER_PREFERENCE = "divider_preference";
+    final static String ROW_DIVIDER_PREFERENCE = "row_divider_preference";
     final static String APPSNO_PREFERENCE = "appsno_preference";
     final static String PRIORITY_PREFERENCE = "priority_preference";
     final static String TOGGLE_PREFERENCE = "toggle_preference";
@@ -116,7 +117,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
     static ServiceCall myService;
     static IconPackUpdate iconPackUpdate;
 
-    final static boolean DIVIDER_DEFAULT = true;
+    final static boolean DIVIDER_DEFAULT = false;
+    final static boolean ROW_DIVIDER_DEFAULT = true;
     final static boolean TOGGLE_DEFAULT = true;
     final static boolean BOOT_DEFAULT = true;
     final static boolean WEIGHTED_RECENTS_DEFAULT = true;
@@ -799,6 +801,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
     public static class PrefsFragment extends PreferenceFragment {
         CheckBoxPreference divider_preference;
+        CheckBoxPreference row_divider_preference;
         CheckBoxPreference weighted_recents_preference;
         CheckBoxPreference colorize_preference;
         CheckBoxPreference second_row_preference;
@@ -837,6 +840,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 divider_preference = (CheckBoxPreference)findPreference(DIVIDER_PREFERENCE);
                 divider_preference.setChecked(prefs2.getBoolean(DIVIDER_PREFERENCE, DIVIDER_DEFAULT));
                 divider_preference.setOnPreferenceChangeListener(changeListener);
+
+                row_divider_preference = (CheckBoxPreference)findPreference(ROW_DIVIDER_PREFERENCE);
+                row_divider_preference.setChecked(prefs2.getBoolean(ROW_DIVIDER_PREFERENCE, ROW_DIVIDER_DEFAULT));
+                row_divider_preference.setOnPreferenceChangeListener(changeListener);
 
                 colorize_preference = (CheckBoxPreference)findPreference(COLORIZE_PREFERENCE);
                 colorize_preference.setChecked(prefs2.getBoolean(COLORIZE_PREFERENCE, COLORIZE_DEFAULT));
@@ -917,6 +924,12 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
                 if (preference.getKey().equals(DIVIDER_PREFERENCE)) {
                     editor.putBoolean(DIVIDER_PREFERENCE, (Boolean) newValue);
+                    editor.apply();
+                    myService.execute(SERVICE_CLEAR_TASKS);
+                    myService.watchHelper(STOP_SERVICE);
+                    myService.watchHelper(START_SERVICE);
+                } else if (preference.getKey().equals(ROW_DIVIDER_PREFERENCE)) {
+                    editor.putBoolean(ROW_DIVIDER_PREFERENCE, (Boolean) newValue);
                     editor.apply();
                     myService.execute(SERVICE_CLEAR_TASKS);
                     myService.watchHelper(STOP_SERVICE);

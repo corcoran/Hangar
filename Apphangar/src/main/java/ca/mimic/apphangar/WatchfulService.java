@@ -323,7 +323,7 @@ public class WatchfulService extends Service {
         String taskPackage = this.getPackageName();
         Context mContext = getApplicationContext();
 
-        int contLayout = prefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT) ?
+        int contLayout = prefs.getBoolean(Settings.ROW_DIVIDER_PREFERENCE, Settings.ROW_DIVIDER_DEFAULT) ?
                 getResources().getIdentifier("notification", "layout", taskPackage) :
                 getResources().getIdentifier("notification_no_dividers", "layout", taskPackage);
         int rowLayout = prefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT) ?
@@ -369,6 +369,8 @@ public class WatchfulService extends Service {
         } else if (iconSize == ICON_SIZE_LARGE) {
             itemLayout = R.layout.notification_item_large;
         }
+
+        customNotifBigView.removeAllViews(R.id.notifContainer);
 
         for (int i=0; i <= taskList.size(); i++) {
             if (filledConts == maxButtons) {

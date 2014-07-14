@@ -16,6 +16,7 @@
         tools:ignore="ContentDescription"
         android:layout_width="64dp"
         android:layout_height="wrap_content"
+        android:scaleType="centerInside"
         android:background="#00000000"
         android:id="@+id/imageButton" />
 </LinearLayout>

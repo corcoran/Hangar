@@ -8,7 +8,6 @@
     android:id="@+id/notifContainer"
     android:divider="?android:dividerHorizontal"
     android:showDividers="middle"
-    android:headerDividersEnabled="false"
     android:orientation="vertical" >
 
 </LinearLayout>

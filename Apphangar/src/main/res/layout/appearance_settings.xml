@@ -29,6 +29,12 @@
         android:title="@string/title_divider_preference"
         android:summary="@string/summary_divider_preference" />
 
+    <CheckBoxPreference
+        android:key="row_divider_preference"
+        android:title="@string/title_row_divider_preference"
+        android:summary="@string/summary_row_divider_preference"
+        android:dependency="second_row_preference" />
+
     <PreferenceCategory
         android:title="@string/title_icon_color_category">
 
