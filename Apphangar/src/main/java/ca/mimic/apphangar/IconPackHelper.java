@@ -117,7 +117,7 @@ public class IconPackHelper {
             // Sanitize stored value
             component = component.substring(14, component.length() - 1).toLowerCase(Locale.getDefault());
 
-            ComponentName name = null;
+            ComponentName name;
             if (!component.contains("/")) {
                 // Package icon reference
                 iconPackResources.put(component, drawable);
@@ -133,7 +133,7 @@ public class IconPackHelper {
 
     private static void loadApplicationResources(Context context,
             Map<String, String> iconPackResources, String packageName) {
-        Field[] drawableItems = null;
+        Field[] drawableItems;
         try {
             Context appContext = context.createPackageContext(packageName,
                     Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY);
@@ -172,7 +172,7 @@ public class IconPackHelper {
 
     public boolean loadIconPack(String packageName) {
         mIconPackResources = getIconPackResources(mContext, packageName);
-        Resources res = null;
+        Resources res;
         try {
             res = mContext.getPackageManager().getResourcesForApplication(packageName);
         } catch (PackageManager.NameNotFoundException e) {
@@ -189,7 +189,7 @@ public class IconPackHelper {
             return null;
         }
 
-        Resources res = null;
+        Resources res;
         try {
             res = context.getPackageManager().getResourcesForApplication(packageName);
         } catch (PackageManager.NameNotFoundException e) {
@@ -288,7 +288,7 @@ public class IconPackHelper {
         }
     }
 
-    public static void pickIconPack(final Context context, final boolean pickIcon) {
+    public static void pickIconPack(final Context context) {
         Map<String, IconPackInfo> supportedPackages = getSupportedPackages(context);
         if (supportedPackages.isEmpty()) {
             Toast.makeText(context, R.string.no_icon_packs_alert, Toast.LENGTH_SHORT).show();
@@ -298,48 +298,31 @@ public class IconPackHelper {
         final IconAdapter adapter = new IconAdapter(context, supportedPackages);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.title_icon_pack_picker);
-        if (!pickIcon) {
-            builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int position) {
-                    if (adapter.isOriginalIconPack(position)) {
-                        return;
-                    }
-                    prefs = new Settings.PrefsGet(context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS));
-                    String selectedPackage = adapter.getItem(position);
-                    SharedPreferences.Editor mEditor = prefs.editorGet();
-                    mEditor.putString(Settings.ICON_PACK_PREFERENCE, selectedPackage);
-                    mEditor.apply();
-
-                    // Deleting cached icons
-                    File[] files = context.getCacheDir().listFiles();
-                    for (File file : files){
-                        file.delete();
-                    }
-
-                    Settings.iconPackUpdate.iconPackUpdated();
-
-                    // Notifications need to be refreshed after cache rebuild.
-                    Settings.dirtyNotifications = true;
-
-                    Settings.drawT.drawTasks(Settings.appsView);
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int position) {
+                if (adapter.isOriginalIconPack(position)) {
+                    return;
                 }
-            });
-        } else {
-            builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    String selectedPackage = adapter.getItem(which);
-                    Settings launcherActivity = (Settings) context;
-                    if (TextUtils.isEmpty(selectedPackage)) {
-                        launcherActivity.onActivityResult(Settings.REQUEST_PICK_ICON, Activity.RESULT_OK, null);
-                    } else {
-                        Intent i = new Intent();
-                        i.setClass(context, IconPickerActivity.class);
-                        i.putExtra(IconPickerActivity.PACKAGE_NAME_EXTRA, selectedPackage);
-                        launcherActivity.startActivityForResult(i, Settings.REQUEST_PICK_ICON);
-                    }
+                prefs = new Settings.PrefsGet(context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS));
+                String selectedPackage = adapter.getItem(position);
+                SharedPreferences.Editor mEditor = prefs.editorGet();
+                mEditor.putString(Settings.ICON_PACK_PREFERENCE, selectedPackage);
+                mEditor.apply();
+
+                // Deleting cached icons
+                File[] files = context.getCacheDir().listFiles();
+                for (File file : files){
+                    file.delete();
                 }
-            });
-        }
+
+                Settings.iconPackUpdate.iconPackUpdated();
+
+                // Notifications need to be refreshed after cache rebuild.
+                Settings.dirtyNotifications = true;
+
+                Settings.drawT.drawTasks(Settings.appsView);
+            }
+        });
         builder.show();
     }
 
@@ -350,8 +333,7 @@ public class IconPackHelper {
     }
 
     private int getResourceIdForDrawable(String resource) {
-        int resId = mLoadedIconPackResource.getIdentifier(resource, "drawable", mLoadedIconPackName);
-        return resId;
+        return mLoadedIconPackResource.getIdentifier(resource, "drawable", mLoadedIconPackName);
     }
 
     public Resources getIconPackResources() {

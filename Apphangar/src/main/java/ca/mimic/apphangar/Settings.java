@@ -867,7 +867,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     new Preference.OnPreferenceClickListener() {
                         @Override
                         public boolean onPreferenceClick(Preference preference) {
-                            IconPackHelper.pickIconPack(mContext, false);
+                            IconPackHelper.pickIconPack(mContext);
 
                             return false;
                         }

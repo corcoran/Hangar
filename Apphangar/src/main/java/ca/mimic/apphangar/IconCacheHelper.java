@@ -90,21 +90,6 @@ public class IconCacheHelper {
         return (d != null) ? d : getFullResDefaultActivityIcon();
     }
 
-    public Drawable getFullResIcon(String packageName, int iconId) {
-        Resources resources;
-        try {
-            resources = mPackageManager.getResourcesForApplication(packageName);
-        } catch (PackageManager.NameNotFoundException e) {
-            resources = null;
-        }
-        if (resources != null) {
-            if (iconId != 0) {
-                return getFullResIcon(resources, iconId);
-            }
-        }
-        return getFullResDefaultActivityIcon();
-    }
-
     public Drawable getFullResIcon(ResolveInfo info) {
         return getFullResIcon(info.activityInfo);
     }
@@ -119,7 +104,7 @@ public class IconCacheHelper {
             resources = null;
         }
         if (resources != null) {
-            int iconId = 0;
+            int iconId;
             if (mIconPackHelper != null && mIconPackHelper.isIconPackLoaded()) {
                 iconId = mIconPackHelper.getResourceIdForActivityIcon(info);
                 if (iconId != 0) {
@@ -150,15 +135,6 @@ public class IconCacheHelper {
 
 
     public static String preloadIcon(Context context, ComponentName componentName, Bitmap icon) {
-//        try {
-//            PackageManager packageManager = context.getPackageManager();
-//            packageManager.getActivityIcon(componentName);
-//            // component is present on the system already, do nothing
-//            return;
-//        } catch (PackageManager.NameNotFoundException e) {
-//            // pass
-//        }
-
         final String key = componentName.flattenToString();
         FileOutputStream resourceFile = null;
         File file = null;
@@ -252,22 +228,6 @@ public class IconCacheHelper {
         }
 
         return  icon;
-    }
-
-    /**
-     * Remove a pre-loaded icon from the persistent icon cache.
-     *
-     * @param componentName the component that should own the icon
-     * @returns true on success
-     */
-    public boolean deletePreloadedIcon(ComponentName componentName) {
-        if (componentName == null) {
-            return false;
-        }
-        boolean success = mContext.deleteFile(getResourceFilename(componentName));
-        Tools.HangarLog("removed pre-loaded icon from persistent cache");
-
-        return success;
     }
 
     private static String getResourceFilename(ComponentName component) {
