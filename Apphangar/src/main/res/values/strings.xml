@@ -75,6 +75,7 @@
 
     <string name="title_second_row_preference">Second row</string>
     <string name="summary_second_row_preference">Show an additional row of apps</string>
+    <string name="alert_second_row_summary">Android will only show the <b>top notification</b> as expanded by default.\n\nIf your Hangar priority is not set to <i>Top</i>, the second row <b>will be hidden</b> if not at the top of the notification drawer and need to be expanded manually in order to be shown.</string>
 
     <string name="title_statusbar_icon_preference">Statusbar icon</string>
     <string name="summary_statusbar_icon_preference" translatable="false">%s</string>

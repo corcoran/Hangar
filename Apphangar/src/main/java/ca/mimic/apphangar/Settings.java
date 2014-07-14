@@ -298,6 +298,17 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
     }
 
+    protected static void launchPriorityWarning(SharedPreferences prefs) {
+        String priority = prefs.getString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_DEFAULT));
+        if (Integer.parseInt(priority) != PRIORITY_DEFAULT && prefs.getBoolean(SECOND_ROW_PREFERENCE, SECOND_ROW_DEFAULT)) {
+            new AlertDialog.Builder(mContext)
+                    .setTitle(R.string.title_second_row_preference)
+                    .setMessage(R.string.alert_second_row_summary)
+                    .setPositiveButton(R.string.contribute_accept_button, null)
+                    .show();
+        }
+    }
+
     protected static void launchedPaypal(boolean launched) {
         mLaunchedPaypal = launched;
         Tools.HangarLog("launchedPaypal: " + launched);
@@ -953,6 +964,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                     editor.apply();
                                     PrefsFragment mBehaviorSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(0);
                                     mBehaviorSettings.priority_preference.setValue(Integer.toString(PRIORITY_BOTTOM));
+                                    launchPriorityWarning(prefs2);
                                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                                     myService.watchHelper(STOP_SERVICE);
                                     myService.watchHelper(START_SERVICE);
@@ -1026,6 +1038,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         mAppearanceSettings.statusbar_icon_preference.setValue(STATUSBAR_ICON_DEFAULT);
                     }
                     editor.apply();
+                    launchPriorityWarning(prefs2);
                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
@@ -1033,6 +1046,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     setAppsnoSummary((Boolean) newValue, appnos_preference);
                     editor.putBoolean(SECOND_ROW_PREFERENCE, (Boolean) newValue);
                     editor.apply();
+                    launchPriorityWarning(prefs2);
                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
