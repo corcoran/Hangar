@@ -58,7 +58,8 @@
     <!-- Appearance -->
 
     <string name="title_appsno_preference">Number of apps</string>
-    <string name="summary_appsno_preference">Showing up to a maximum of %s apps</string>
+    <string name="summary_appsno_preference">Showing %s apps</string>
+    <string name="summary_appsno_second_row_preference">Showing %s apps per row</string>
     <string name="dialog_appsno_preference">Choose no. of apps to show</string>
 
     <string-array name="entries_appsno_preference" translatable="false">
@@ -71,6 +72,9 @@
         <item>9</item>
         <item>10</item>
     </string-array>
+
+    <string name="title_second_row_preference">Second row</string>
+    <string name="summary_second_row_preference">Show an additional row of apps</string>
 
     <string name="title_statusbar_icon_preference">Statusbar icon</string>
     <string name="summary_statusbar_icon_preference" translatable="false">%s</string>

@@ -5,10 +5,10 @@
     tools:ignore="UnusedResources"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:id="@+id/notifContainer"
-    android:divider="?android:dividerHorizontal"
+    android:id="@+id/notifRow"
+    android:divider="?android:dividerVertical"
     android:showDividers="middle"
     android:headerDividersEnabled="false"
-    android:orientation="vertical" >
+    android:orientation="horizontal" >
 
 </LinearLayout>

@@ -103,6 +103,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String ICON_SIZE_PREFERENCE = "icon_size_preference";
     final static String ALIGNMENT_PREFERENCE = "alignment_preference";
     final static String ICON_PACK_PREFERENCE = "icon_pack_preference";
+    final static String SECOND_ROW_PREFERENCE = "second_row_preference";
 
     protected static View appsView;
     protected static boolean isBound = false;
@@ -121,6 +122,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static boolean WEIGHTED_RECENTS_DEFAULT = true;
     final static boolean COLORIZE_DEFAULT = false;
     final static boolean APPS_BY_WIDGET_SIZE_DEFAULT = true;
+    final static boolean SECOND_ROW_DEFAULT = false;
 
     final static int WEIGHT_PRIORITY_DEFAULT = 0;
     final static int APPSNO_DEFAULT = 8;
@@ -161,8 +163,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
     final static int START_SERVICE = 0;
     final static int STOP_SERVICE = 1;
-
-    final static int REQUEST_PICK_ICON = 13;
 
     static DrawTasks drawT;
     static int displayWidth;
@@ -801,6 +801,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         CheckBoxPreference divider_preference;
         CheckBoxPreference weighted_recents_preference;
         CheckBoxPreference colorize_preference;
+        CheckBoxPreference second_row_preference;
         ColorPickerPreference icon_color_preference;
         SwitchPreference toggle_preference;
         SwitchPreference boot_preference;
@@ -874,6 +875,12 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     }
                 );
 
+                second_row_preference = (CheckBoxPreference)findPreference(Settings.SECOND_ROW_PREFERENCE);
+                Boolean secondRow = prefs2.getBoolean(SECOND_ROW_PREFERENCE, SECOND_ROW_DEFAULT);
+                second_row_preference.setChecked(secondRow);
+                setAppsnoSummary(secondRow, appnos_preference);
+                second_row_preference.setOnPreferenceChangeListener(changeListener);
+
             } catch (NullPointerException e) {
             }
             try {
@@ -942,7 +949,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                     statusbar_icon_preference.setValue(prefs2.getString(STATUSBAR_ICON_PREFERENCE, STATUSBAR_ICON_DEFAULT));
                                 }
                             }).show();
-                        return true;
                     } else {
                         PrefsFragment mBehaviorSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(0);
                         if (mBehaviorSettings.priority_preference.getValue().equals(Integer.toString(PRIORITY_BOTTOM))) {
@@ -952,6 +958,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         editor.putString(STATUSBAR_ICON_PREFERENCE, (String) newValue);
                         editor.apply();
                         myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
+                        myService.watchHelper(STOP_SERVICE);
+                        myService.watchHelper(START_SERVICE);
                     }
                 } else if (preference.getKey().equals(ICON_COLOR_PREFERENCE)) {
                     String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String.valueOf(newValue)));
@@ -971,27 +979,30 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 } else if (preference.getKey().equals(TOGGLE_PREFERENCE)) {
                     editor.putBoolean(TOGGLE_PREFERENCE, (Boolean) newValue);
                     editor.apply();
-
                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
-
-                    return true;
                 } else if (preference.getKey().equals(BOOT_PREFERENCE)) {
                     editor.putBoolean(BOOT_PREFERENCE, (Boolean) newValue);
                     editor.apply();
-                    return true;
                 } else if (preference.getKey().equals(WEIGHT_PRIORITY_PREFERENCE)) {
                     editor.putString(WEIGHT_PRIORITY_PREFERENCE, (String) newValue);
+                    editor.apply();
+                    myService.execute(SERVICE_CLEAR_TASKS);
+                    myService.watchHelper(STOP_SERVICE);
+                    myService.watchHelper(START_SERVICE);
                 } else if (preference.getKey().equals(WEIGHTED_RECENTS_PREFERENCE)) {
                     editor.putBoolean(WEIGHTED_RECENTS_PREFERENCE, (Boolean) newValue);
+                    editor.apply();
+                    myService.execute(SERVICE_CLEAR_TASKS);
+                    myService.watchHelper(STOP_SERVICE);
+                    myService.watchHelper(START_SERVICE);
                 } else if (preference.getKey().equals(APPSNO_PREFERENCE)) {
                     editor.putString(APPSNO_PREFERENCE, (String) newValue);
                     editor.apply();
                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
-                    return true;
                 } else if (preference.getKey().equals(PRIORITY_PREFERENCE)) {
                     String mPriorityPreference = (String) newValue;
                     editor.putString(PRIORITY_PREFERENCE, mPriorityPreference);
@@ -1005,16 +1016,28 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
-                    return true;
+                } else if (preference.getKey().equals(SECOND_ROW_PREFERENCE)) {
+                    setAppsnoSummary((Boolean) newValue, appnos_preference);
+                    editor.putBoolean(SECOND_ROW_PREFERENCE, (Boolean) newValue);
+                    editor.apply();
+                    myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
+                    myService.watchHelper(STOP_SERVICE);
+                    myService.watchHelper(START_SERVICE);
                 }
-                editor.apply();
-                myService.execute(SERVICE_CLEAR_TASKS);
-                myService.watchHelper(STOP_SERVICE);
-                myService.watchHelper(START_SERVICE);
                 return true;
             }
         };
-    };
+    }
+
+    private static void setAppsnoSummary(Boolean second_row, Preference appnos_preference) {
+        // Update summary of AppNum pref for second row wording
+        if (second_row) {
+            appnos_preference.setSummary(R.string.summary_appsno_second_row_preference);
+        } else {
+            appnos_preference.setSummary(R.string.summary_appsno_preference);
+        }
+    }
+
     public static class AppsFragment extends Fragment {
         public static Fragment newInstance() {
             return new AppsFragment();

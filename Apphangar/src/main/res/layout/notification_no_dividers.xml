@@ -6,9 +6,9 @@
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:id="@+id/notifContainer"
-    android:divider="?android:dividerVertical"
+    android:divider="?android:dividerHorizontal"
     android:showDividers="none"
     android:headerDividersEnabled="false"
-    android:orientation="horizontal" >
+    android:orientation="vertical" >
 
 </LinearLayout>

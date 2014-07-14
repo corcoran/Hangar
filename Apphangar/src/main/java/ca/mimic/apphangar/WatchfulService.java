@@ -59,6 +59,7 @@ public class WatchfulService extends Service {
     TaskInfo runningTask;
     String launcherPackage = null;
     int numOfApps;
+    boolean secondRow;
 
     final int MAX_RUNNING_TASKS = 20;
     final int LOOP_SECONDS = 3;
@@ -139,6 +140,8 @@ public class WatchfulService extends Service {
         widgetPrefs = getSharedPreferences("AppsWidget", Context.MODE_MULTI_PROCESS);
         pkgm = getPackageManager();
         launcherPackage = Tools.getLauncher(getApplicationContext());
+
+        secondRow = prefs.getBoolean(Settings.SECOND_ROW_PREFERENCE, Settings.SECOND_ROW_DEFAULT);
         numOfApps = Integer.parseInt(prefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.APPSNO_DEFAULT)));
 
         IntentFilter filter = new IntentFilter();
@@ -320,15 +323,21 @@ public class WatchfulService extends Service {
         String taskPackage = this.getPackageName();
         Context mContext = getApplicationContext();
 
-        int rowLayout = prefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT) ?
+        int contLayout = prefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT) ?
                 getResources().getIdentifier("notification", "layout", taskPackage) :
                 getResources().getIdentifier("notification_no_dividers", "layout", taskPackage);
+        int rowLayout = prefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT) ?
+                getResources().getIdentifier("notification_row", "layout", taskPackage) :
+                getResources().getIdentifier("notification_row_no_dividers", "layout", taskPackage);
         int imageButtonLayout = getResources().getIdentifier("imageButton", "id", taskPackage);
         int imageContLayout = getResources().getIdentifier("imageCont", "id", taskPackage);
 
+        RemoteViews customNotifView = new RemoteViews(taskPackage, contLayout);
+        RemoteViews customNotifBigView = customNotifView;
+
         // Create new AppDrawer row
         AppDrawer appDrawer = new AppDrawer(taskPackage);
-        appDrawer.createRow(rowLayout, R.id.notifContainer);
+        appDrawer.createRow(rowLayout, R.id.notifRow);
         appDrawer.setImageLayouts(imageButtonLayout, imageContLayout);
         appDrawer.setPrefs(prefs);
         appDrawer.setContext(mContext);
@@ -342,8 +351,15 @@ public class WatchfulService extends Service {
             maxButtons = numOfApps;
         }
 
+        if (taskList.size() <= numOfApps) {
+            Tools.HangarLog("Not enough tasks to create second row");
+            // Not enough tasks to create second row.
+            secondRow = false;
+        }
+
         Tools.HangarLog("taskList.size(): " + taskList.size() + " realmaxbuttons: " + numOfApps + " maxbuttons: " + maxButtons);
         int filledConts = 0;
+        boolean filledSecondRow = false;
 
         int iconSize = Integer.parseInt(prefs.getString(Settings.ICON_SIZE_PREFERENCE, Integer.toString(Settings.ICON_SIZE_DEFAULT)));
         int itemLayout = R.layout.notification_item;
@@ -354,9 +370,20 @@ public class WatchfulService extends Service {
             itemLayout = R.layout.notification_item_large;
         }
 
-        for (int i=0; i < taskList.size(); i++) {
+        for (int i=0; i <= taskList.size(); i++) {
             if (filledConts == maxButtons) {
-                break;
+                if (filledSecondRow) {
+                    filledSecondRow = false;
+                    customNotifBigView = customNotifView;
+                    customNotifBigView.addView(R.id.notifContainer, appDrawer.getRow());
+                    break;
+                } else {
+                    customNotifView.addView(R.id.notifContainer, appDrawer.getRow());
+                    filledSecondRow = true;
+                    filledConts = 0;
+                    appDrawer.createRow(rowLayout, R.id.notifRow);
+                    appDrawer.setImageLayouts(imageButtonLayout, imageContLayout);
+                }
             }
 
             if (appDrawer.newItem(taskList.get(i), itemLayout)) {
@@ -364,9 +391,13 @@ public class WatchfulService extends Service {
                 filledConts++;
             }
         }
+        if (filledSecondRow && secondRow) {
+            Tools.HangarLog("Second row is not full -- adding expanded row anyway!");
+            // Second row is not full :(
+            customNotifBigView = customNotifView;
+            customNotifBigView.addView(R.id.notifContainer, appDrawer.getRow());
+        }
 
-        // get appDrawer view
-        RemoteViews customNotifView = appDrawer.getRow();
 
         // Set statusbar icon
         String mIcon = prefs.getString(Settings.STATUSBAR_ICON_PREFERENCE, Settings.STATUSBAR_ICON_DEFAULT);
@@ -384,6 +415,9 @@ public class WatchfulService extends Service {
                 .setOngoing(true)
                 .setPriority(setPriority)
                 .build();
+        if (secondRow) {
+            notification.bigContentView = customNotifBigView;
+        }
         startForeground(1337, notification);
         isNotificationRunning = true;
     }

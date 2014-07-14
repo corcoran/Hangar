@@ -11,6 +11,11 @@
         android:entryValues="@array/entries_appsno_preference"
         android:dialogTitle="@string/dialog_appsno_preference" />
 
+    <CheckBoxPreference
+        android:key="second_row_preference"
+        android:title="@string/title_second_row_preference"
+        android:summary="@string/summary_second_row_preference" />
+
     <ca.mimic.apphangar.UpdatingListPreference
         android:key="statusbar_icon_preference"
         android:title="@string/title_statusbar_icon_preference"
