@@ -99,19 +99,16 @@ public class AppDrawer {
             cachedIcon = ih.cachedIconHelper(componentTask, taskItem.appName);
 
         } catch (Exception e) {
-            Tools.HangarLog("newItem failed! " + e);
+            Tools.HangarLog("newItem failed! " + e + " app:" + taskItem.appName);
             return false;
         }
 
 
 
-        if (isColorized) {
-            Bitmap bmpIcon = ColorHelper.getColoredBitmap(cachedIcon, getColor);
-            int size = Tools.dpToPx(mContext, 128);
-            mLastItem.setImageViewBitmap(mImageButtonLayout, Bitmap.createScaledBitmap(bmpIcon, size, size, false));
-        } else {
-            mLastItem.setImageViewBitmap(mImageButtonLayout, cachedIcon);
-        }
+        if (isColorized)
+            cachedIcon = ColorHelper.getColoredBitmap(cachedIcon, getColor);
+
+        mLastItem.setImageViewBitmap(mImageButtonLayout, cachedIcon);
 
         Intent intent;
         try {

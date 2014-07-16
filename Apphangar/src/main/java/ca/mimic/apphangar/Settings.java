@@ -142,6 +142,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int TASKLIST_QUEUE_SIZE = 35;
     final static int APPLIST_QUEUE_SIZE = 14;
 
+    final static int CACHED_ICON_SIZE = 72;
+
     final static String STATUSBAR_ICON_WHITE_WARM = "**white_warm**";
     final static String STATUSBAR_ICON_WHITE_COLD = "**white_cold**";
     final static String STATUSBAR_ICON_WHITE_BLUE = "**white_blue**";
@@ -718,8 +720,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         taskIcon.setLayoutParams(iconParams);
 
                         try {
-                            PackageManager pm = getApplicationContext().getPackageManager();
-                            // Tools.HangarLog("Trying to grab AppInfo class[" + task.getClassName()+ "] package[" + task.getPackageName() + "]");
                             ComponentName componentTask = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
 
                             // Find/use cached icon with IconHelper
@@ -727,6 +727,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                             taskName.setText(task.getName());
                         } catch (Exception e) {
                             Tools.HangarLog("Could not find Application info for [" + task.getName() + "]");
+                            db.deleteTask(task);
                             continue;
                         }
 

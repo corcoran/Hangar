@@ -134,7 +134,7 @@ public class IconCacheHelper {
     }
 
 
-    public static String preloadIcon(Context context, ComponentName componentName, Bitmap icon) {
+    public static String preloadIcon(Context context, ComponentName componentName, Bitmap icon, int size) {
         final String key = componentName.flattenToString();
         FileOutputStream resourceFile = null;
         File file = null;
@@ -142,7 +142,7 @@ public class IconCacheHelper {
             file = new File(context.getCacheDir(), getResourceFilename(componentName));
             resourceFile = new FileOutputStream(file);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            if (icon.compress(android.graphics.Bitmap.CompressFormat.PNG, 75, os)) {
+            if (Bitmap.createScaledBitmap(icon, size, size, true).compress(android.graphics.Bitmap.CompressFormat.PNG, 75, os)) {
                 byte[] buffer = os.toByteArray();
                 resourceFile.write(buffer, 0, buffer.length);
             } else {

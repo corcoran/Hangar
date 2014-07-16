@@ -25,7 +25,7 @@ FAQ
 You can't!  Sorry.  But don't worry, this feature is under development.  Check out the github issue tracker to comment and/or see the status of outstanding issues.
 
 **Q: How do I customize the icons Hangar displays?**  
-You can't!  Again, though, this feature is under development.  Both theme packs and per-app icon customizations.  It's a big feature though, but it's happening!
+Hangar supports Icon packs available on the Play Store. This is a new addition to Hangar and can be found in Settings => Appearance
 
 **Q: How do I remove the statusbar icon?**  
 You can change the position in the Settings => Behavior screen. If you select the bottom position, the icon goes away!  One limitation of Android is that on-going notifications require a notification icon in order to have TOP_PRIORITY as a notification.  As a workaround, I've added a number of icon choices (Settings => Appearance) which includes a Transparent icon.  That icon creates a transparent gap, of course, but it's the best you can do without lowering the priority.

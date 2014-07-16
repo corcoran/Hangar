@@ -258,7 +258,10 @@
     <string-array name="versionSummaries" translatable="false">
         <item>
 "  &#8226; [New!] Icon pack support
-  &#8226; [New!] German/Danish translations"</item>
+  &#8226; [New!] Second row feature
+  &#8226; [New!] German/Danish translations
+  &#8226; [Fix!] Revamped icon caching
+  &#8226; [Fix!] Icon creation made more efficient"</item>
         <item>
 "  &#8226; [New!] Added all white icon
   &#8226; [New!] Small, medium &amp; large notification icons
