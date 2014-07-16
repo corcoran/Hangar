@@ -10,8 +10,8 @@
   <string name="title_weight_category">Sortierung und Symbolreihenfolge</string>
   <string name="title_weighted_recents_preference">Gewichtete Sortierung</string>
   <string name="summary_weighted_recents_preference">Apps sortiert nach Nutzungshäufigkeit und letztem Aufruf</string>
-  <string name="title_weight_priority_preference">Gewichtungs Merkmal</string>
-  <string name="dialog_weight_priority_preference">Wählen Sie das zu nutzende Gewicht</string>
+  <string name="title_weight_priority_preference">Bevorzugte Eigenschaft</string>
+  <string name="dialog_weight_priority_preference">Wählen Sie die bevorzugte Eigenschaft</string>
   <string name="weight_priority_default">Standard</string>
   <string name="weight_priority_recency">Letzter Zugriff</string>
   <string name="weight_priority_launches">Anzahl der Starts</string>
@@ -85,10 +85,10 @@
   <string name="contribute_plus_title">Treten Sie der Community bei</string>
   <string name="contribute_plus_text">"Teste Vorabversionen, gibt Rückmeldungen, schlage neue Funktionen vor und werde über den Verlauf der Weiterentwicklung von Hangar informiert."</string>
   <string name="contribute_plus_link">Der Google Plus Community beitreten</string>
-  <string name="contributors_title">Ein besonderer Dank</string>
-  <string name="contributors_role7">Russische Übersetzungen</string>
-  <string name="contributors_role8">Deutsche Übersetzungen</string>
-  <string name="contributors_role9">Dänische Übersetzungen</string>
+  <string name="contributors_title">Besonderer Dank an</string>
+  <string name="contributors_role7">Russische Übersetzung</string>
+  <string name="contributors_role8">Deutsche Übersetzung</string>
+  <string name="contributors_role9">Dänische Übersetzung</string>
   <string name="contribute_accept_button">Fortfahren</string>
   <string name="license_title">Lizenz und Quellcode</string>
   <string name="license_head">Hangar ist lizenziert unter der GPLv3 von der Free Software Foundation und ist urheberrechtlich geschützt von Jeff Corcoran © 2014.\n\nMit der GPL-Lizenz ist Hangar solange kostenlos wie die Verwendung von Hangar mit den Bedingungen der GPL-Lizenz vereinbar ist.\n\nBenutzer können die Software kostenlos herunterladen, ändern, integrieren und verteilen, Jedoch muss beachtet werden, dass nach den Regeln der GPL, wenn ein auf Hangar basierendes Werk verteilt wird, der vollständige Quellcode davon offen gelegt sein und die Verteilung unter den Bedingungen der GPL stattfinden muss.\n\nSiehe die GPL und die FAQ der Free Software Foundation für weitere Details.</string>

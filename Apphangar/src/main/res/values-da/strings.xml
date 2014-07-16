@@ -66,6 +66,7 @@
   <string name="donate_google">Doner med Google</string>
   <string name="donate_paypal">Doner med PayPal</string>
   <string name="donate_contribute">Gør Hangar bedre!</string>
+  <string name="donate_accept_button">"Fortsæt"</string>
   <string name="donate_try_paypal">"Hm... Ser ud som Google Play ikke kunne lide det.  Prøv i stedet PayPal?"</string>
   <string name="donate_thanks_title">Tak!</string>
   <string name="donate_thanks_continue">Tilbage til Hangar</string>
@@ -123,10 +124,17 @@
   <string name="alignment_center">Midten</string>
   <string name="alignment_bottom">Bund</string>
   <string name="instructions_1_1">"Velkommen til Hangar!"</string>
+  <string name="instructions_1_2">"Nu da hangar er installeret, er der tilføjet en <b>app genvejslinie</b> til meddelelsesområdet. Det vil begynde at overvåge hyppigheden og mængden af ​​tid, du bruger i dine apps."</string>
+  <string name="instructions_1_3">"Som Hangar følger dit daglige brug, vil den bruge disse data til at prioritere de vigtigste  apps. For hver app du bruger, bliver hangar klogere og ændrer disse genveje i realtid,  til dine behov."</string>
+  <string name="instructions_title_1">"Hangar's app genvejslinie i meddelelsesområde"</string>
   <string name="instructions_1_swipe">Stryg til næste side</string>
   <string name="instructions_2_1">"Statistik"</string>
+  <string name="instructions_2_2">"Hangar måler også den tid, du tilbringer i hver app!"</string>
   <string name="instructions_title_2">Statistik widget</string>
+  <string name="instructions_2_3">"Du kan kontrollere statistik under Hangars <b>Apps fane</b> eller ved at placere <b>en statistik widget</b> på startskærmen."</string>
   <string name="instructions_3_1">"Tilpasninger"</string>
+  <string name="instructions_3_2">"Ud over standard <b>meddelelseområdet</b> app genvejslinie, kan du tilføje og tilpasse en <b> widget</b> til at starte apps. Angiv farve, størrelse, antal, baggrundsfarve og meget mere."</string>
+  <string name="instructions_title_3">fx. 2 forskellige udformede apps widgets</string>
   <string name="instructions_title_4">Sortliste og slette statistik</string>
   <string name="instructions_3_3">"Du kan også <b>sortkliste</b> apps og nulstille deres statistik fra Hangar <b>fanen</b>."</string>
   <string name="instructions_4_1">"Kom i gang"</string>

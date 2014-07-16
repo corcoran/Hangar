@@ -44,6 +44,11 @@
   <string name="summary_colorize_preference">Cambiar el color de los iconos de notificaciones</string>
   <string name="title_icon_color_preference">Color</string>
   <string name="title_icon_color_category">Color de icono</string>
+  <string name="title_icon_pack_preference">Paquete de Iconos</string>
+  <string name="default_icon_pack">Iconos por defecto</string>
+  <string name="no_icon_packs_alert">No hay paquete de iconos instalado</string>
+  <string name="switched_icon_packs_alert">Actualizando cachés de iconos.  ¡Puede tardar unos segundos!</string>
+  <string name="title_icon_pack_picker">Elegir un paquete de iconos</string>
   <string name="dialog_color_picker">Selector de color</string>
   <string name="press_color_to_apply">Presione un color abajo para aplicar los cambios</string>
   <string name="hex">Hex:</string>
@@ -81,6 +86,9 @@
   <string name="contribute_plus_text">"Probar el beta, votar, sugerir características y mantenerse actualizado sobre el estado de desarrollo de Hangar."</string>
   <string name="contribute_plus_link">Unirse a la comunidad de Google Plus</string>
   <string name="contributors_title">Agradecimientos</string>
+  <string name="contributors_role7">Traducción rusa</string>
+  <string name="contributors_role8">Traducción alemana</string>
+  <string name="contributors_role9">Traducción danés</string>
   <string name="contribute_accept_button">Continuar</string>
   <string name="license_title">Licencia y código fuente</string>
   <string name="license_head">Hangar está licenciado bajo la licencia GPLv3 de la Free Software Foundation (Fundación para el sofware libre) y es Copyright © 2014 Jeff Corcoran.\n\nBajo la licencia GPL, Hangar está disponible de forma gratuita cuando el uso del Hangar se adhiere a los términos de la licencia GPL.\n\nLos usuarios pueden descargar el software de forma gratuita, modificarlo, integrarlo y distribuirlo. Sin embargo, los usuarios GPL deben acatar las reglas de la GPL, que estipulan que si un trabajo basado en Hangar se redistribuye, el código fuente completo de este trabajo también debe estar abierto y disponible para su redistribución bajo los términos de la GPL.\n\nVer la GPL y las preguntas frecuentes de la Free Software Foundation para obtener más detalles.</string>

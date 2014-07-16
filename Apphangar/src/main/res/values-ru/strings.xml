@@ -44,6 +44,11 @@
   <string name="summary_colorize_preference">Изменить цвета значков в уведомлении</string>
   <string name="title_icon_color_preference">Цвет</string>
   <string name="title_icon_color_category">Окрас значков</string>
+  <string name="title_icon_pack_preference">Набор значков</string>
+  <string name="default_icon_pack">Стандартные значки</string>
+  <string name="no_icon_packs_alert">Наборы значков не обнаружены</string>
+  <string name="switched_icon_packs_alert">Обновление кэша значков. Это может занять несколько секунд!</string>
+  <string name="title_icon_pack_picker">Выберите набор значков</string>
   <string name="dialog_color_picker">Палитра цветов</string>
   <string name="press_color_to_apply">Нажмите на оттенок ниже, чтобы применить его</string>
   <string name="hex">Hex:</string>
@@ -81,6 +86,9 @@
   <string name="contribute_plus_text">"Тестируйте, высказывайте Ваше мнение, предлагайте новые возможности и узнавайте о последних наработках."</string>
   <string name="contribute_plus_link">Вступить в сообщество на Google+</string>
   <string name="contributors_title">Отдельные благодарности</string>
+  <string name="contributors_role7">за русский перевод</string>
+  <string name="contributors_role8">за немецкий перевод</string>
+  <string name="contributors_role9">за датский перевод</string>
   <string name="contribute_accept_button">Продолжить</string>
   <string name="license_title">Лицензия и исходный код</string>
   <string name="license_head">Hangar распространяется под лицензией GPLv3 Фонда свободного ПО и принадлежит Джеффу Коркорану © 2014.\n\nБудучи под лицензией GPL, Hangar распространяется бесплатно до тех пор, пока использование приложения проходит с соблюдением правил данной лицензии.\n\nПользователи имеют возможность бесплатно скачивать данное ПО, а также изменять, интегрировать и распространять его. Однако, пользователи GPL обязаны следовать данным правилам, обусловленными тем, что работа, основанная на Hangar, преобразована и полный исходный код этого проекта должен быть так же открытым и доступным для распространения на правах GPL.\n\nЗагляните в GPL и ЧаВо Фонда свободного ПО для получения дополнительной информации.</string>
