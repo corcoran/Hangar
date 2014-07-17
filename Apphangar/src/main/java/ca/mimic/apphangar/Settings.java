@@ -142,8 +142,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int TASKLIST_QUEUE_SIZE = 35;
     final static int APPLIST_QUEUE_SIZE = 14;
 
-    final static int CACHED_ICON_SIZE = 48;
-
     final static String STATUSBAR_ICON_WHITE_WARM = "**white_warm**";
     final static String STATUSBAR_ICON_WHITE_COLD = "**white_cold**";
     final static String STATUSBAR_ICON_WHITE_BLUE = "**white_blue**";
@@ -936,19 +934,19 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
                 if (preference.getKey().equals(DIVIDER_PREFERENCE)) {
                     editor.putBoolean(DIVIDER_PREFERENCE, (Boolean) newValue);
-                    editor.apply();
+                    editor.commit();
                     myService.execute(SERVICE_CLEAR_TASKS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
                 } else if (preference.getKey().equals(ROW_DIVIDER_PREFERENCE)) {
                     editor.putBoolean(ROW_DIVIDER_PREFERENCE, (Boolean) newValue);
-                    editor.apply();
+                    editor.commit();
                     myService.execute(SERVICE_CLEAR_TASKS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
                 } else if (preference.getKey().equals(COLORIZE_PREFERENCE)) {
                     editor.putBoolean(COLORIZE_PREFERENCE, (Boolean) newValue);
-                    editor.apply();
+                    editor.commit();
                     myService.execute(SERVICE_CLEAR_TASKS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
@@ -962,7 +960,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     editor.putString(STATUSBAR_ICON_PREFERENCE, mStatusBarIcon);
                                     editor.putString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_BOTTOM));
-                                    editor.apply();
+                                    editor.commit();
                                     PrefsFragment mBehaviorSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(0);
                                     mBehaviorSettings.priority_preference.setValue(Integer.toString(PRIORITY_BOTTOM));
                                     launchPriorityWarning(prefs2);
@@ -982,7 +980,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                             mBehaviorSettings.priority_preference.setValue(Integer.toString(PRIORITY_DEFAULT));
                         }
                         editor.putString(STATUSBAR_ICON_PREFERENCE, (String) newValue);
-                        editor.apply();
+                        editor.commit();
                         myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                         myService.watchHelper(STOP_SERVICE);
                         myService.watchHelper(START_SERVICE);
@@ -992,40 +990,40 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     preference.setSummary(hex);
                     int intHex = ColorPickerPreference.convertToColorInt(hex);
                     editor.putInt(ICON_COLOR_PREFERENCE, intHex);
-                    editor.apply();
+                    editor.commit();
                     myService.execute(SERVICE_CLEAR_TASKS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
                 } else if (preference.getKey().equals(ICON_SIZE_PREFERENCE)) {
                     editor.putString(Settings.ICON_SIZE_PREFERENCE, (String) newValue);
-                    editor.apply();
+                    editor.commit();
                     myService.execute(SERVICE_CLEAR_TASKS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
                 } else if (preference.getKey().equals(TOGGLE_PREFERENCE)) {
                     editor.putBoolean(TOGGLE_PREFERENCE, (Boolean) newValue);
-                    editor.apply();
+                    editor.commit();
                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
                 } else if (preference.getKey().equals(BOOT_PREFERENCE)) {
                     editor.putBoolean(BOOT_PREFERENCE, (Boolean) newValue);
-                    editor.apply();
+                    editor.commit();
                 } else if (preference.getKey().equals(WEIGHT_PRIORITY_PREFERENCE)) {
                     editor.putString(WEIGHT_PRIORITY_PREFERENCE, (String) newValue);
-                    editor.apply();
+                    editor.commit();
                     myService.execute(SERVICE_CLEAR_TASKS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
                 } else if (preference.getKey().equals(WEIGHTED_RECENTS_PREFERENCE)) {
                     editor.putBoolean(WEIGHTED_RECENTS_PREFERENCE, (Boolean) newValue);
-                    editor.apply();
+                    editor.commit();
                     myService.execute(SERVICE_CLEAR_TASKS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
                 } else if (preference.getKey().equals(APPSNO_PREFERENCE)) {
                     editor.putString(APPSNO_PREFERENCE, (String) newValue);
-                    editor.apply();
+                    editor.commit();
                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
@@ -1038,7 +1036,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         editor.putString(STATUSBAR_ICON_PREFERENCE, STATUSBAR_ICON_DEFAULT);
                         mAppearanceSettings.statusbar_icon_preference.setValue(STATUSBAR_ICON_DEFAULT);
                     }
-                    editor.apply();
+                    editor.commit();
                     launchPriorityWarning(prefs2);
                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                     myService.watchHelper(STOP_SERVICE);
@@ -1046,7 +1044,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 } else if (preference.getKey().equals(SECOND_ROW_PREFERENCE)) {
                     setAppsnoSummary((Boolean) newValue, appnos_preference);
                     editor.putBoolean(SECOND_ROW_PREFERENCE, (Boolean) newValue);
-                    editor.apply();
+                    editor.commit();
                     launchPriorityWarning(prefs2);
                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                     myService.watchHelper(STOP_SERVICE);

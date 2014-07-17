@@ -34,15 +34,21 @@ public class IconHelper {
     protected IconCacheHelper ich;
     protected Context mContext;
     protected int mSize;
+    protected int mCount;
 
     IconHelper (Context context) {
         mContext = context;
-        mSize = Tools.dpToPx(context, Settings.CACHED_ICON_SIZE);
+        int iconSize = mContext.getResources().getInteger(R.integer.notification_icon_size);
+        mSize = Tools.dpToPx(context, iconSize);
+        mCount = 0;
+        Tools.HangarLog("Notification icon size: " + mSize);
     }
 
-    protected synchronized Bitmap cachedIconHelper(ImageView taskIcon, ComponentName componentTask, String taskName) {
+    protected Bitmap cachedIconHelper(ImageView taskIcon, ComponentName componentTask, String taskName) {
         Drawable iconPackIcon = null;
         String cachedIconString = IconCacheHelper.getPreloadedIconUri(mContext, componentTask);
+
+        mCount++;
 
         if (cachedIconString == null) {
             if (ich == null) {
@@ -58,11 +64,11 @@ public class IconHelper {
             ResolveInfo rInfo = mContext.getPackageManager().resolveActivity(intent, 0);
             Tools.HangarLog("ResolveInfo [" + taskName + "] packageName: " + componentTask.getPackageName() + " className: " + componentTask.getClassName());
             iconPackIcon = ich.getFullResIcon(rInfo);
-            Tools.HangarLog("Caching bitmap for: " + taskName);
+            Tools.HangarLog("[" + mCount + "] Caching bitmap for: " + taskName);
             cachedIconString = IconCacheHelper.preloadIcon(mContext, componentTask, Tools.drawableToBitmap(iconPackIcon), mSize);
             // taskIcon.setImageDrawable(iconPackIcon);
         } else {
-            Tools.HangarLog("Using cached bitmap for: " + taskName);
+            Tools.HangarLog("[" + mCount + "] Using cached bitmap for: " + taskName);
         }
         if (taskIcon != null) {
             taskIcon.setImageURI(Uri.parse(cachedIconString));

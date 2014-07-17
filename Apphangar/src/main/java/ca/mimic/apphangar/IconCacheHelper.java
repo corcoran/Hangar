@@ -168,9 +168,6 @@ public class IconCacheHelper {
     }
 
     protected static String getPreloadedIconUri(Context context, ComponentName componentName) {
-        final String key = componentName.flattenToShortString();
-
-        Tools.HangarLog("looking for pre-load icon for " + key);
         File file = new File(context.getCacheDir(), getResourceFilename(componentName));
         if (file.exists()) {
             return file.getPath();
@@ -182,7 +179,6 @@ public class IconCacheHelper {
     protected static Bitmap getPreloadedIcon(Context context, ComponentName componentName) {
         final String key = componentName.flattenToShortString();
 
-        Tools.HangarLog("looking for pre-load icon for " + key);
         Bitmap icon = null;
         FileInputStream resourceFile = null;
         try {

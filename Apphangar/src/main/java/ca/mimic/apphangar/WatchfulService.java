@@ -319,7 +319,7 @@ public class WatchfulService extends Service {
         }
     }
 
-    public void createNotification(ArrayList<Tools.TaskInfo> taskList) {
+    public synchronized void createNotification(ArrayList<Tools.TaskInfo> taskList) {
         // Not a fun hack.  No way around it until they let you do getInt for setShowDividers!
         String taskPackage = this.getPackageName();
         Context mContext = getApplicationContext();
