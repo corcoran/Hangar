@@ -138,9 +138,13 @@
     <string name="hex">Hex:</string>
 
     <!-- Action menu -->
+    <string name="action_pin">Pin app</string>
+    <string name="action_unpin">Unpin app</string>
     <string name="action_blacklist">Toggle blacklist</string>
     <string name="action_pick_icon">Change icon</string>
     <string name="action_reset_stats">Reset stats</string>
+
+    <!-- Settings menu -->
     <string name="configure_apps_widget">Configure apps widget</string>
     <string name="configure_stats_widget">Configure stats widget</string>
     <string name="configure_changelog">Recent changes</string>

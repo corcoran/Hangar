@@ -152,6 +152,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String STATUSBAR_ICON_NONE = "**none**";
     final static String STATUSBAR_ICON_DEFAULT = STATUSBAR_ICON_WHITE_WARM;
 
+    final static String PINNED_APPS = "pinned_apps";
+
     final static int ICON_SIZE_DEFAULT = 1;
     final static int CACHED_ICON_SIZE = 72;
     final static int CACHED_NOTIFICATION_ICON_LIMIT = 20;
@@ -673,6 +675,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem item) {
                                         switch (item.getItemId()) {
+                                            case R.id.action_pin:
+                                                SharedPreferences mPrefs = prefs.prefsGet();
+                                                // Tools.togglePinned(task);
+                                                // Tools.updateWidget(getApplicationContext());
+                                                break;
                                             case R.id.action_pick_icon:
                                                 mIconTask = task;
                                                 pickIcon(prefs.prefsGet().getString(Settings.ICON_PACK_PREFERENCE, null));

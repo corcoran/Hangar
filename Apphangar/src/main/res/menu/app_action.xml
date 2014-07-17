@@ -1,5 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:id="@+id/action_pin"
+        android:title="@string/action_pin"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+
     <item android:id="@+id/action_pick_icon"
         android:title="@string/action_pick_icon"
         android:orderInCategory="100"

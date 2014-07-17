@@ -36,6 +36,7 @@ import android.util.Log;
 import android.util.TypedValue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -47,6 +48,17 @@ public class Tools {
         if (BuildConfig.BUILD_TYPE.equals("debug"))
             Log.d(TAG, message);
     }
+
+    protected boolean togglePinned(Context context, TasksModel task) {
+        SharedPreferences settingsPrefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS);
+        SharedPreferences.Editor settingsEditor = settingsPrefs.edit();
+        String pinnedApps = settingsPrefs.getString(Settings.PINNED_APPS, "");
+
+        ArrayList<String> appList = new ArrayList<String> (Arrays.asList(pinnedApps.split("::")));
+
+        return false;
+    }
+
 
     protected static String getLauncher(Context context) {
         final Intent intent = new Intent(Intent.ACTION_MAIN);
