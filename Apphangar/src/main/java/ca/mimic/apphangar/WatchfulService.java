@@ -22,6 +22,7 @@ package ca.mimic.apphangar;
 
 import android.app.ActivityManager;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
@@ -373,7 +374,10 @@ public class WatchfulService extends Service {
         customNotifBigView.removeAllViews(R.id.notifContainer);
 
         for (int i=0; i <= taskList.size(); i++) {
-            if (filledConts == maxButtons) {
+            boolean wrapItUp = false;
+            if (i == taskList.size())
+                wrapItUp = true;
+            if (filledConts == maxButtons || wrapItUp) {
                 if (filledSecondRow) {
                     filledSecondRow = false;
                     customNotifBigView = customNotifView;
@@ -388,11 +392,12 @@ public class WatchfulService extends Service {
                 }
             }
 
-            if (appDrawer.newItem(taskList.get(i), itemLayout)) {
+            if (!wrapItUp && appDrawer.newItem(taskList.get(i), itemLayout)) {
                 appDrawer.addItem();
                 filledConts++;
             }
         }
+
         if (filledSecondRow && secondRow) {
             Tools.HangarLog("Second row is not full -- adding expanded row anyway!");
             // Second row is not full :(
@@ -420,7 +425,12 @@ public class WatchfulService extends Service {
         if (secondRow) {
             notification.bigContentView = customNotifBigView;
         }
-        startForeground(1337, notification);
+        if (isNotificationRunning) {
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.notify(1337, notification);
+        } else {
+            startForeground(1337, notification);
+        }
         isNotificationRunning = true;
     }
 
