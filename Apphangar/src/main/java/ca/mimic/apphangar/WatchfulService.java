@@ -358,6 +358,9 @@ public class WatchfulService extends Service {
             secondRow = false;
         }
 
+        int iconCacheCount = (maxButtons * (secondRow ? 2 : 1));
+        appDrawer.setCount(iconCacheCount, Settings.CACHED_NOTIFICATION_ICON_LIMIT, secondRow);
+
         Tools.HangarLog("taskList.size(): " + taskList.size() + " realmaxbuttons: " + numOfApps + " maxbuttons: " + maxButtons);
         int filledConts = 0;
         boolean filledSecondRow = false;

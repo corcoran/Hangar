@@ -33,15 +33,11 @@ public class IconHelper {
 
     protected IconCacheHelper ich;
     protected Context mContext;
-    protected int mSize;
     protected int mCount;
 
     IconHelper (Context context) {
         mContext = context;
-        int iconSize = mContext.getResources().getInteger(R.integer.notification_icon_size);
-        mSize = Tools.dpToPx(context, iconSize);
         mCount = 0;
-        Tools.HangarLog("Notification icon size: " + mSize);
     }
 
     protected Bitmap cachedIconHelper(ImageView taskIcon, ComponentName componentTask, String taskName) {
@@ -65,7 +61,7 @@ public class IconHelper {
             Tools.HangarLog("ResolveInfo [" + taskName + "] packageName: " + componentTask.getPackageName() + " className: " + componentTask.getClassName());
             iconPackIcon = ich.getFullResIcon(rInfo);
             Tools.HangarLog("[" + mCount + "] Caching bitmap for: " + taskName);
-            cachedIconString = IconCacheHelper.preloadIcon(mContext, componentTask, Tools.drawableToBitmap(iconPackIcon), mSize);
+            cachedIconString = IconCacheHelper.preloadIcon(mContext, componentTask, Tools.drawableToBitmap(iconPackIcon), Tools.dpToPx(mContext, Settings.CACHED_ICON_SIZE));
             // taskIcon.setImageDrawable(iconPackIcon);
         } else {
             Tools.HangarLog("[" + mCount + "] Using cached bitmap for: " + taskName);

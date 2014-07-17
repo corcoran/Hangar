@@ -154,6 +154,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String STATUSBAR_ICON_DEFAULT = STATUSBAR_ICON_WHITE_WARM;
 
     final static int ICON_SIZE_DEFAULT = 1;
+    final static int CACHED_ICON_SIZE = 72;
+    final static int CACHED_NOTIFICATION_ICON_LIMIT = 20;
 
     final static int SERVICE_RUN_SCAN = 0;
     final static int SERVICE_DESTROY_NOTIFICATIONS = 1;

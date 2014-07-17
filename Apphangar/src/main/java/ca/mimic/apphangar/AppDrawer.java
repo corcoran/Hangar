@@ -43,6 +43,7 @@ public class AppDrawer {
     int mImageButtonLayout;
     int mImageContLayout;
     int mRowId;
+    int mSize;
 
     int pendingNum;
     String mTaskPackage;
@@ -71,6 +72,7 @@ public class AppDrawer {
     public void setContext(Context context) {
         mContext = context;
         ih = new IconHelper(context);
+        mSize = Tools.dpToPx(context, Settings.CACHED_ICON_SIZE);
     }
 
     protected void setRowBackgroundColor(int color) {
@@ -81,6 +83,19 @@ public class AppDrawer {
         // set Prefs for mLastItems
         isColorized = prefs.getBoolean(Settings.COLORIZE_PREFERENCE, Settings.COLORIZE_DEFAULT);
         getColor = prefs.getInt(Settings.ICON_COLOR_PREFERENCE, Settings.ICON_COLOR_DEFAULT);
+    }
+
+    protected void setCount(int count, int maxCount, boolean secondRow) {
+        // Prevent TransactionTooLarge insanity while still keeping image quality where possible
+        boolean needsScaling = mContext.getResources().getBoolean(R.bool.notification_needs_scaling);
+        if (needsScaling) {
+            mSize = mContext.getResources().getInteger(R.integer.notification_icon_size);
+            int rowValue = mContext.getResources().getInteger(R.integer.notification_row_value);
+            int iconSize = mSize + (rowValue + maxCount - count) - (secondRow ? rowValue : 0);
+            mSize = Tools.dpToPx(mContext, iconSize);
+            Tools.HangarLog("Notification icon size (px): " + mSize + "(dp): " + iconSize);
+        }
+
     }
 
     protected boolean newItem(Tools.TaskInfo taskItem, int mLastItemLayout) {
@@ -104,11 +119,10 @@ public class AppDrawer {
         }
 
 
-
         if (isColorized)
             cachedIcon = ColorHelper.getColoredBitmap(cachedIcon, getColor);
 
-        mLastItem.setImageViewBitmap(mImageButtonLayout, cachedIcon);
+        mLastItem.setImageViewBitmap(mImageButtonLayout, Bitmap.createScaledBitmap(cachedIcon, mSize, mSize, true));
 
         Intent intent;
         try {

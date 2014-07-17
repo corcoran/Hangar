@@ -228,6 +228,7 @@ public class AppsWidget extends AppWidgetProvider {
         appDrawer.setPrefs(mPrefs);
         appDrawer.setContext(mContext);
         appDrawer.setRowBackgroundColor(getBackgroundColor);
+        appDrawer.setCount(numOfIcons, Settings.TASKLIST_QUEUE_SIZE, true);
 
         if (autoHeight && !appsNoByWidgetSize) {
             appsNoW = (int) Math.ceil((double) appsNoW / appsNoH);

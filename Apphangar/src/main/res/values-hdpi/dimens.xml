@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="notification_icon_size">42</integer>
+    <bool name="notification_needs_scaling">true</bool>
+    <integer name="notification_row_value">8</integer>
 </resources>
