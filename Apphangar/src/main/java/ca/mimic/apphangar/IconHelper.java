@@ -51,18 +51,11 @@ public class IconHelper {
                 ich = new IconCacheHelper(mContext);
                 Tools.HangarLog("Loading new IconCacheHelper instance");
             }
-            // Intent intent = new Intent();
-            // intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            // intent.setAction(Intent.ACTION_MAIN);
-            // intent.setPackage(componentTask.getPackageName());
-            // intent.setComponent(new ComponentName(componentTask.getPackageName(), componentTask.getClassName()));
             Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(componentTask.getPackageName());
             ResolveInfo rInfo = mContext.getPackageManager().resolveActivity(intent, 0);
-            Tools.HangarLog("ResolveInfo [" + taskName + "] packageName: " + componentTask.getPackageName() + " className: " + componentTask.getClassName());
             iconPackIcon = ich.getFullResIcon(rInfo);
             Tools.HangarLog("[" + mCount + "] Caching bitmap for: " + taskName);
             cachedIconString = IconCacheHelper.preloadIcon(mContext, componentTask, Tools.drawableToBitmap(iconPackIcon), Tools.dpToPx(mContext, Settings.CACHED_ICON_SIZE));
-            // taskIcon.setImageDrawable(iconPackIcon);
         } else {
             Tools.HangarLog("[" + mCount + "] Using cached bitmap for: " + taskName);
         }

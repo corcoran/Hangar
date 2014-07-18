@@ -332,6 +332,12 @@ public class IconPackHelper {
                 mIconPackResources != null;
     }
 
+    private String replaceActivityName(String activityName) {
+        // Hack for Gallery not showing up properly on some icon packs
+        activityName = activityName.replace("com.android.gallery3d.app.galleryactivity", "com.android.gallery3d.app.gallery");
+        return activityName;
+    }
+
     private int getResourceIdForDrawable(String resource) {
         return mLoadedIconPackResource.getIdentifier(resource, "drawable", mLoadedIconPackName);
     }
@@ -341,7 +347,12 @@ public class IconPackHelper {
     }
 
     public int getResourceIdForActivityIcon(ActivityInfo info) {
-        String drawable = mIconPackResources.get(info.name.toLowerCase(Locale.getDefault()));
+        String activityName = replaceActivityName(info.name.toLowerCase(Locale.getDefault()));
+        String drawable = mIconPackResources.get(activityName);
+        if (drawable == null) {
+            activityName = replaceActivityName(info.name.toLowerCase(Locale.getDefault()));
+            drawable = mIconPackResources.get(activityName);
+        }
         if (drawable == null) {
             // Icon pack doesn't have an icon for the activity, fallback to package icon
             drawable = mIconPackResources.get(info.packageName.toLowerCase(Locale.getDefault()));
