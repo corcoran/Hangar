@@ -40,12 +40,10 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -107,6 +105,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String SECOND_ROW_PREFERENCE = "second_row_preference";
 
     protected static View appsView;
+    protected static TasksModel mIconTask;
     protected static boolean isBound = false;
     protected static boolean mLaunchedPaypal = false;
     protected static boolean dirtyNotifications = false;
@@ -156,6 +155,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int ICON_SIZE_DEFAULT = 1;
     final static int CACHED_ICON_SIZE = 72;
     final static int CACHED_NOTIFICATION_ICON_LIMIT = 20;
+    final static String ACTION_ADW_PICK_ICON = "org.adw.launcher.icons.ACTION_PICK_ICON";
 
     final static int SERVICE_RUN_SCAN = 0;
     final static int SERVICE_DESTROY_NOTIFICATIONS = 1;
@@ -296,6 +296,18 @@ public class Settings extends Activity implements ActionBar.TabListener {
                             Toast.LENGTH_LONG).show();
                 }
                 launchDonate();
+            }
+        } else if (requestCode == 1) {
+            // Icon chooser
+            if (resultCode == Activity.RESULT_OK) {
+                try {
+                    Bitmap bitmap = data.getParcelableExtra("icon");
+                    ComponentName componentTask = ComponentName.unflattenFromString(mIconTask.getPackageName() + "/" + mIconTask.getClassName());
+                    IconCacheHelper.preloadIcon(mContext, componentTask, bitmap, Tools.dpToPx(mContext, Settings.CACHED_ICON_SIZE));
+                } catch (Exception e) {
+                    Tools.HangarLog("Icon result exception: " + e);
+                }
+                return;
             }
         }
     }
@@ -594,6 +606,12 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
     }
 
+    public void pickIcon(String packageName) {
+        Intent intent = new Intent();
+        intent.setAction(ACTION_ADW_PICK_ICON);
+        startActivityForResult(intent, 1);
+    }
+
     public class DrawTasks {
         public void drawTasks(View view) {
             final LinearLayout taskRoot = (LinearLayout) view.findViewById(R.id.taskRoot);
@@ -655,6 +673,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem item) {
                                         switch (item.getItemId()) {
+                                            case R.id.action_pick_icon:
+                                                mIconTask = task;
+                                                pickIcon(prefs.prefsGet().getString(Settings.ICON_PACK_PREFERENCE, null));
+                                                break;
                                             case R.id.action_blacklist:
                                                 db.blacklistTask(task, fadeTask(view, text));
                                                 Tools.updateWidget(getApplicationContext());

@@ -139,6 +139,7 @@
 
     <!-- Action menu -->
     <string name="action_blacklist">Toggle blacklist</string>
+    <string name="action_pick_icon">Change icon</string>
     <string name="action_reset_stats">Reset stats</string>
     <string name="configure_apps_widget">Configure apps widget</string>
     <string name="configure_stats_widget">Configure stats widget</string>
@@ -258,6 +259,7 @@
     <string-array name="versionSummaries" translatable="false">
         <item>
 "  &#8226; [New!] Icon pack support
+  &#8226; [New!] Per-app manual icon selection
   &#8226; [New!] Second row feature
   &#8226; [New!] German/Danish translations
   &#8226; [Fix!] Revamped icon caching

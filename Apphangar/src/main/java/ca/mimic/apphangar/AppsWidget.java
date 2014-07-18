@@ -45,9 +45,6 @@ public class AppsWidget extends AppWidgetProvider {
     protected static final int MEDIUM_ICONS = 1;
     protected static final int LARGE_ICONS = 2;
 
-    protected static final int MAX_DB_LOOKUPS = 12;
-    protected static final int ICON_ROW_BUFFER = 0;
-
     protected static final int ICON_SMALL_HEIGHT = 40;
     protected static final int ICON_SMALL_WIDTH = 36;
     protected static final int ICON_MEDIUM_HEIGHT = 54;
