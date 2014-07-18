@@ -49,14 +49,44 @@ public class Tools {
             Log.d(TAG, message);
     }
 
-    protected boolean togglePinned(Context context, TasksModel task) {
+    protected boolean isPinned(Context context, String packageName) {
+        SharedPreferences settingsPrefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS);
+        String pinnedApps = settingsPrefs.getString(Settings.PINNED_APPS, "");
+
+        ArrayList<String> appList = new ArrayList<String> (Arrays.asList(pinnedApps.split(" ")));
+        for (String app : appList) {
+            if (app.equals(packageName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean togglePinned(Context context, String packageName) {
         SharedPreferences settingsPrefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS);
         SharedPreferences.Editor settingsEditor = settingsPrefs.edit();
         String pinnedApps = settingsPrefs.getString(Settings.PINNED_APPS, "");
 
-        ArrayList<String> appList = new ArrayList<String> (Arrays.asList(pinnedApps.split("::")));
+        Boolean removed = false;
+        ArrayList<String> appList = new ArrayList<String> (Arrays.asList(pinnedApps.split(" ")));
+        pinnedApps = "";
+        for (String app : appList) {
+            if (app.equals(packageName)) {
+                removed = true;
+                continue;
+            }
+            pinnedApps += app + " ";
+        }
+        if (!removed) {
+            pinnedApps += packageName;
+        }
 
-        return false;
+        Tools.HangarLog("pinnedApps: " + pinnedApps);
+        Tools.HangarLog("Pinned app: " + packageName + " removed: " + removed);
+        settingsEditor.putString(Settings.PINNED_APPS, pinnedApps.trim());
+        settingsEditor.apply();
+
+        return !removed;
     }
 
 

@@ -41,6 +41,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
@@ -355,14 +356,15 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 .setIcon(R.drawable.ic_launcher)
                 .setView(mChg)
                 .setNegativeButton(R.string.changelog_donate_button,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            launchDonate();
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                launchDonate();
 
-                            dialog.dismiss();
+                                dialog.dismiss();
+                            }
+
                         }
-
-                    })
+                )
                 .setNeutralButton(R.string.changelog_contribute_button,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -371,7 +373,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                 dialog.dismiss();
                             }
 
-                        })
+                        }
+                )
                 .setPositiveButton(R.string.changelog_accept_button, null)
                 .show();
     }
@@ -581,6 +584,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
             return true;
         }
     }
+
     public static int[] splitToComponentTimes(int longVal) {
         int hours = longVal / 3600;
         int remainder = longVal - hours * 3600;
@@ -669,15 +673,19 @@ public class Settings extends Activity implements ActionBar.TabListener {
                             public void onClick(final View view) {
                                 final TasksModel task = (TasksModel) view.getTag();
                                 final TextView text = (TextView) view.findViewWithTag("text");
+                                final Boolean isPinned = new Tools().isPinned(mContext, task.getPackageName());
                                 PopupMenu popup = new PopupMenu(getApplicationContext(), view);
                                 popup.getMenuInflater().inflate(R.menu.app_action, popup.getMenu());
+                                MenuItem pinItem = popup.getMenu().getItem(0);
+                                if (isPinned) pinItem.setTitle(R.string.action_unpin);
                                 PopupMenu.OnMenuItemClickListener menuAction = new PopupMenu.OnMenuItemClickListener() {
                                     @Override
                                     public boolean onMenuItemClick(MenuItem item) {
+                                        Context context = getApplicationContext();
                                         switch (item.getItemId()) {
                                             case R.id.action_pin:
-                                                SharedPreferences mPrefs = prefs.prefsGet();
-                                                // Tools.togglePinned(task);
+                                                new Tools().togglePinned(context, task.getPackageName());
+                                                drawT.drawTasks(appsView);
                                                 // Tools.updateWidget(getApplicationContext());
                                                 break;
                                             case R.id.action_pick_icon:
@@ -686,7 +694,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                                 break;
                                             case R.id.action_blacklist:
                                                 db.blacklistTask(task, fadeTask(view, text));
-                                                Tools.updateWidget(getApplicationContext());
+                                                Tools.updateWidget(context);
                                                 break;
                                             case R.id.action_reset_stats:
                                                 db.resetTaskStats(task);
@@ -743,10 +751,18 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(Tools.dpToPx(mContext, 46),
                                 Tools.dpToPx(mContext, 46));
 
-                        iconParams.leftMargin = Tools.dpToPx(mContext, 6);
-                        iconParams.rightMargin = Tools.dpToPx(mContext, 6);
+                        iconParams.topMargin = Tools.dpToPx(mContext, 2);
+                        iconParams.leftMargin = Tools.dpToPx(mContext, 2);
                         iconParams.bottomMargin = Tools.dpToPx(mContext, 6);
                         taskIcon.setLayoutParams(iconParams);
+
+                        ImageView pinIcon = new ImageView(mContext);
+                        LinearLayout.LayoutParams pinParams = new LinearLayout.LayoutParams(Tools.dpToPx(mContext, 20),
+                                Tools.dpToPx(mContext, 20));
+                        pinIcon.setImageResource(R.drawable.pin_icon);
+                        pinIcon.setLayoutParams(pinParams);
+                        pinIcon.setVisibility(View.INVISIBLE);
+                        pinParams.leftMargin = Tools.dpToPx(mContext, -8);
 
                         try {
                             ComponentName componentTask = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
@@ -754,6 +770,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
                             // Find/use cached icon with IconHelper
                             ih.cachedIconHelper(taskIcon, componentTask, task.getName());
                             taskName.setText(task.getName());
+                            if (new Tools().isPinned(mContext, task.getPackageName())) {
+                                taskName.setTextColor(Color.WHITE);
+                                pinIcon.setVisibility(View.VISIBLE);
+                            }
+
                         } catch (Exception e) {
                             Tools.HangarLog("Could not find Application info for [" + task.getName() + "]");
                             db.deleteTask(task);
@@ -765,6 +786,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         taskRL.addView(textCont);
                         taskRL.addView(useStats);
                         taskRL.addView(taskIcon);
+                        taskRL.addView(pinIcon);
 
                         float secondsRatio = (float) task.getSeconds() / highestSeconds;
                         int barColor;
