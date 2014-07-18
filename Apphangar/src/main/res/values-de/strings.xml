@@ -23,8 +23,12 @@
   <string name="priority_normal">Normal</string>
   <string name="priority_bottom">Unten (versteckt Statusbar-Symbol)</string>
   <string name="title_appsno_preference">Anzahl der Apps</string>
-  <string name="summary_appsno_preference">Anzeigen von bis zu %s Apps</string>
+  <string name="summary_appsno_preference">Zeige %s Apps</string>
+  <string name="summary_appsno_second_row_preference">Zeige %s Apps pro Zeile</string>
   <string name="dialog_appsno_preference">Anzahl der Apps zum Anzeigen auswählen</string>
+  <string name="title_second_row_preference">Zweite Reihe</string>
+  <string name="summary_second_row_preference">Eine zusätzliche Reihe Apps anzeigen</string>
+  <string name="alert_second_row_summary">Android zeigt standardmäßig nur bei <b>Top-Meldungen</b> die komplette Benachrichtigung an.\n\nWenn die Hangar-Priorität nicht auf <i>oben</i> festgelegt ist, wird die zweite Zeile <b>ausgeblendet</b>. Sie muss dann manuell erweitert werden, um sie sehen zu können.</string>
   <string name="title_statusbar_icon_preference">Statusbar-Symbol</string>
   <string name="dialog_statusbar_icon_preference">Symbolaussehen bestimmen</string>
   <string name="alert_title_statusbar_icon_preference">Nur damit Sie es wissen...</string>
@@ -40,6 +44,8 @@
   <string name="statusbar_icon_none">Kein Symbol</string>
   <string name="title_divider_preference">Teiler anzeigen</string>
   <string name="summary_divider_preference">Teiler zwischen App-Symbolen setzen</string>
+  <string name="title_row_divider_preference">Reihenunterteiler anzeigen</string>
+  <string name="summary_row_divider_preference">Zeigt einen Teiler zwischen jeder Reihe</string>
   <string name="title_colorize_preference">Benachrichtigungssymbole einfärben</string>
   <string name="summary_colorize_preference">Farbe der Benachrichtigungssymbole ändern</string>
   <string name="title_icon_color_preference">Farbe</string>
@@ -86,6 +92,12 @@
   <string name="contribute_plus_text">"Teste Vorabversionen, gibt Rückmeldungen, schlage neue Funktionen vor und werde über den Verlauf der Weiterentwicklung von Hangar informiert."</string>
   <string name="contribute_plus_link">Der Google Plus Community beitreten</string>
   <string name="contributors_title">Besonderer Dank an</string>
+  <string name="contributors_role1">Feedback &amp; Support</string>
+  <string name="contributors_role2">Französische Übersetzung</string>
+  <string name="contributors_role3">Spanische Übersetzung</string>
+  <string name="contributors_role4">Portugiesische Übersetzung</string>
+  <string name="contributors_role5">Italienische Übersetzung</string>
+  <string name="contributors_role6">Polnische Übersetzung</string>
   <string name="contributors_role7">Russische Übersetzung</string>
   <string name="contributors_role8">Deutsche Übersetzung</string>
   <string name="contributors_role9">Dänische Übersetzung</string>

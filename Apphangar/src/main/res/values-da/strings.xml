@@ -7,7 +7,7 @@
   <string name="title_activity_settings">Hangar indstillinger</string>
   <string name="title_toggle_preference">Vis notifikations bar</string>
   <string name="title_boot_preference">Kør ved opstart</string>
-  <string name="title_weight_category">Sortering og ikonrækkefølge</string>
+  <string name="title_weight_category">Sorterings- og ikonrækkefølge</string>
   <string name="title_weighted_recents_preference">Vægtet sortering</string>
   <string name="summary_weighted_recents_preference">Apps sorteret efter mest og sidst anvendt</string>
   <string name="title_weight_priority_preference">Vægtnings bias</string>
@@ -23,8 +23,11 @@
   <string name="priority_normal">Normal</string>
   <string name="priority_bottom">Bunden (skjul statuslinie ikon)</string>
   <string name="title_appsno_preference">Antallet af apps</string>
-  <string name="summary_appsno_preference">Viser op til et maksimum af %s apps</string>
+  <string name="summary_appsno_preference">Viser %s apps</string>
+  <string name="summary_appsno_second_row_preference">Viser %s apps pr. række</string>
   <string name="dialog_appsno_preference">Vælg antal apps der skal vises</string>
+  <string name="title_second_row_preference">Anden række</string>
+  <string name="summary_second_row_preference">Vis en ekstra række af apps</string>
   <string name="title_statusbar_icon_preference">Statusbar ikon</string>
   <string name="dialog_statusbar_icon_preference">Vælg et ikon stil</string>
   <string name="alert_title_statusbar_icon_preference">Bare så du ved..</string>
@@ -40,6 +43,8 @@
   <string name="statusbar_icon_none">Ingen ikon</string>
   <string name="title_divider_preference">Aktiver skilletegn</string>
   <string name="summary_divider_preference">Viser en skillelinie mellem hver app-ikon</string>
+  <string name="title_row_divider_preference">Aktiver skilletegn for række</string>
+  <string name="summary_row_divider_preference">Viser et skilletegn mellem hver række</string>
   <string name="title_colorize_preference">Farvelæg meddelseses ikoner</string>
   <string name="summary_colorize_preference">Skift farve på meddelses ikonerne</string>
   <string name="title_icon_color_preference">Farve</string>

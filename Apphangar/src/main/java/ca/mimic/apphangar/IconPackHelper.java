@@ -317,9 +317,6 @@ public class IconPackHelper {
         builder.setTitle(R.string.title_icon_pack_picker);
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int position) {
-                if (adapter.isOriginalIconPack(position)) {
-                    return;
-                }
                 prefs = new Settings.PrefsGet(context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS));
                 String selectedPackage = adapter.getItem(position);
                 SharedPreferences.Editor mEditor = prefs.editorGet();

@@ -216,6 +216,11 @@ public class AppsWidget extends AppWidgetProvider {
                 Settings.WEIGHTED_RECENTS_DEFAULT);
         ArrayList<Tools.TaskInfo> appList = Tools.buildTaskList(context, db, queueSize, weightedRecents, true);
 
+        boolean ignorePinned = mPrefs.getBoolean(Settings.IGNORE_PINNED_PREFERENCE,
+                Settings.IGNORE_PINNED_DEFAULT);
+        if (!ignorePinned)
+            appList = new Tools().getPinnedTasks(context, db, appList, numOfIcons);
+
         int imageButtonLayout = context.getResources().getIdentifier("imageButton", "id", taskPackage);
         int imageContLayout = context.getResources().getIdentifier("imageCont", "id", taskPackage);
 

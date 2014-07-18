@@ -32,6 +32,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -104,6 +105,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String ALIGNMENT_PREFERENCE = "alignment_preference";
     final static String ICON_PACK_PREFERENCE = "icon_pack_preference";
     final static String SECOND_ROW_PREFERENCE = "second_row_preference";
+    final static String PINNED_SORT_PREFERENCE = "pinned_sort_preference";
+    final static String PINNED_PLACEMENT_PREFERENCE = "pinned_placement_preference";
+    final static String IGNORE_PINNED_PREFERENCE = "ignore_pinned_preference";
 
     protected static View appsView;
     protected static TasksModel mIconTask;
@@ -125,6 +129,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static boolean COLORIZE_DEFAULT = false;
     final static boolean APPS_BY_WIDGET_SIZE_DEFAULT = true;
     final static boolean SECOND_ROW_DEFAULT = false;
+    final static boolean IGNORE_PINNED_DEFAULT = false;
 
     final static int WEIGHT_PRIORITY_DEFAULT = 0;
     final static int APPSNO_DEFAULT = 8;
@@ -137,6 +142,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int APPS_WIDGET_APPSNO_DEFAULT = 6;
     final static int APPS_WIDGET_APPSNO_LS_DEFAULT = 13;
     final static int ALIGNMENT_DEFAULT = 16; // 16 is middle
+    final static int PINNED_SORT_DEFAULT = 0;
+    final static int PINNED_PLACEMENT_DEFAULT = 0;
 
     final static int TASKLIST_QUEUE_LIMIT = 40;
     final static int TASKLIST_QUEUE_SIZE = 35;
@@ -154,6 +161,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String STATUSBAR_ICON_DEFAULT = STATUSBAR_ICON_WHITE_WARM;
 
     final static String PINNED_APPS = "pinned_apps";
+    final static int PINNED_PLACEMENT_LEFT = 0;
 
     final static int ICON_SIZE_DEFAULT = 1;
     final static int CACHED_ICON_SIZE = 72;
@@ -264,7 +272,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
     protected void onPause() {
         super.onPause();
         if (isBound) {
-            unbindService(myService.mConnection);
+            try {
+                unbindService(myService.mConnection);
+            } catch (RuntimeException e) {
+                Tools.HangarLog("Could not unbind service!");
+            }
             isBound = false;
         }
     }
@@ -612,10 +624,14 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
     }
 
-    public void pickIcon(String packageName) {
-        Intent intent = new Intent();
-        intent.setAction(ACTION_ADW_PICK_ICON);
-        startActivityForResult(intent, 1);
+    public void pickIcon() {
+        try {
+            Intent intent = new Intent();
+            intent.setAction(ACTION_ADW_PICK_ICON);
+            startActivityForResult(intent, 1);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(mContext, getResources().getString(R.string.no_icon_packs_alert), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public class DrawTasks {
@@ -686,11 +702,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                             case R.id.action_pin:
                                                 new Tools().togglePinned(context, task.getPackageName());
                                                 drawT.drawTasks(appsView);
-                                                // Tools.updateWidget(getApplicationContext());
+                                                Tools.updateWidget(context);
                                                 break;
                                             case R.id.action_pick_icon:
                                                 mIconTask = task;
-                                                pickIcon(prefs.prefsGet().getString(Settings.ICON_PACK_PREFERENCE, null));
+                                                pickIcon();
                                                 break;
                                             case R.id.action_blacklist:
                                                 db.blacklistTask(task, fadeTask(view, text));
@@ -762,7 +778,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         pinIcon.setImageResource(R.drawable.pin_icon);
                         pinIcon.setLayoutParams(pinParams);
                         pinIcon.setVisibility(View.INVISIBLE);
-                        pinParams.leftMargin = Tools.dpToPx(mContext, -8);
+                        pinParams.leftMargin = Tools.dpToPx(mContext, -12);
 
                         try {
                             ComponentName componentTask = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
@@ -876,6 +892,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
         UpdatingListPreference weight_priority_preference;
         UpdatingListPreference statusbar_icon_preference;
         UpdatingListPreference icon_size_preference;
+        UpdatingListPreference pinned_sort_preference;
+        UpdatingListPreference pinned_placement_preference;
         Preference icon_pack_preference;
 
         public static PrefsFragment newInstance(int prefLayout) {
@@ -974,6 +992,15 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 priority_preference = (UpdatingListPreference)findPreference(PRIORITY_PREFERENCE);
                 priority_preference.setValue(prefs2.getString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_DEFAULT)));
                 priority_preference.setOnPreferenceChangeListener(changeListener);
+
+                pinned_sort_preference = (UpdatingListPreference)findPreference(Settings.PINNED_SORT_PREFERENCE);
+                pinned_sort_preference.setValue(prefs2.getString(Settings.PINNED_SORT_PREFERENCE, Integer.toString(Settings.PINNED_SORT_DEFAULT)));
+                pinned_sort_preference.setOnPreferenceChangeListener(changeListener);
+
+                pinned_placement_preference = (UpdatingListPreference)findPreference(Settings.PINNED_PLACEMENT_PREFERENCE);
+                pinned_placement_preference.setValue(prefs2.getString(Settings.PINNED_PLACEMENT_PREFERENCE, Integer.toString(Settings.PINNED_PLACEMENT_DEFAULT)));
+                pinned_placement_preference.setOnPreferenceChangeListener(changeListener);
+
             } catch (NullPointerException e) {
             }
         }
@@ -1102,6 +1129,24 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
+                } else if (preference.getKey().equals(PINNED_SORT_PREFERENCE)) {
+                    editor.putString(PINNED_SORT_PREFERENCE, (String) newValue);
+                    editor.commit();
+                    String pinnedApps = prefs2.getString(PINNED_APPS, null);
+                    if (pinnedApps != null && !pinnedApps.isEmpty()) {
+                        myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
+                        myService.watchHelper(STOP_SERVICE);
+                        myService.watchHelper(START_SERVICE);
+                    }
+                } else if (preference.getKey().equals(PINNED_PLACEMENT_PREFERENCE)) {
+                    editor.putString(PINNED_PLACEMENT_PREFERENCE, (String) newValue);
+                    editor.commit();
+                    String pinnedApps = prefs2.getString(PINNED_APPS, null);
+                    if (pinnedApps != null && !pinnedApps.isEmpty()) {
+                        myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
+                        myService.watchHelper(STOP_SERVICE);
+                        myService.watchHelper(START_SERVICE);
+                    }
                 }
                 return true;
             }

@@ -19,7 +19,7 @@
     <ca.mimic.apphangar.UpdatingListPreference
         android:key="statusbar_icon_preference"
         android:title="@string/title_statusbar_icon_preference"
-        android:summary="@string/summary_statusbar_icon_preference"
+        android:summary="@string/summary_wildcard_preference"
         android:entries="@array/entries_statusbar_icon_preference"
         android:entryValues="@array/values_statusbar_icon_preference"
         android:dialogTitle="@string/dialog_statusbar_icon_preference" />
@@ -57,7 +57,7 @@
     <ca.mimic.apphangar.UpdatingListPreference
         android:key="icon_size_preference"
         android:title="@string/title_icon_size_preference"
-        android:summary="@string/summary_icon_size_preference"
+        android:summary="@string/summary_wildcard_preference"
         android:entries="@array/entries_icon_size_preference"
         android:entryValues="@array/values_icon_size_preference"
         android:dialogTitle="@string/title_icon_size_preference" />

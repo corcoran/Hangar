@@ -50,10 +50,7 @@ public class Tools {
     }
 
     protected boolean isPinned(Context context, String packageName) {
-        SharedPreferences settingsPrefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS);
-        String pinnedApps = settingsPrefs.getString(Settings.PINNED_APPS, "");
-
-        ArrayList<String> appList = new ArrayList<String> (Arrays.asList(pinnedApps.split(" ")));
+        ArrayList<String> appList = getPinned(context);
         for (String app : appList) {
             if (app.equals(packageName)) {
                 return true;
@@ -62,14 +59,22 @@ public class Tools {
         return false;
     }
 
+    protected ArrayList<String> getPinned(Context context) {
+        SharedPreferences settingsPrefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS);
+        String pinnedApps = settingsPrefs.getString(Settings.PINNED_APPS, "");
+
+        return new ArrayList<String>(Arrays.asList(pinnedApps.split(" ")));
+    }
+
     protected boolean togglePinned(Context context, String packageName) {
         SharedPreferences settingsPrefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS);
         SharedPreferences.Editor settingsEditor = settingsPrefs.edit();
-        String pinnedApps = settingsPrefs.getString(Settings.PINNED_APPS, "");
+
+        ArrayList<String> appList = getPinned(context);
 
         Boolean removed = false;
-        ArrayList<String> appList = new ArrayList<String> (Arrays.asList(pinnedApps.split(" ")));
-        pinnedApps = "";
+        String pinnedApps = "";
+
         for (String app : appList) {
             if (app.equals(packageName)) {
                 removed = true;
@@ -81,8 +86,6 @@ public class Tools {
             pinnedApps += packageName;
         }
 
-        Tools.HangarLog("pinnedApps: " + pinnedApps);
-        Tools.HangarLog("Pinned app: " + packageName + " removed: " + removed);
         settingsEditor.putString(Settings.PINNED_APPS, pinnedApps.trim());
         settingsEditor.apply();
 
@@ -250,6 +253,7 @@ public class Tools {
 
 
     protected ArrayList<TaskInfo> reorderTasks(ArrayList<TaskInfo> taskList, TasksDataSource db, int weightPriority, boolean widget) {
+        Tools.HangarLog("reorderTasks: " + taskList.size() + " widget? " + widget);
         int highestSeconds = db.getHighestSeconds();
         int highestLaunch = db.getHighestLaunch();
         int count = 1;
@@ -333,8 +337,8 @@ public class Tools {
         }
         blPNames.add("com.android.systemui");
         blPNames.add("com.android.phone");
-        blPNames.add(context.getPackageName());
-        blPNames.add("com.android.settings");
+        // blPNames.add(context.getPackageName());
+        // blPNames.add("com.android.settings");
         blPNames.add("com.android.packageinstaller");
         return blPNames;
     }
@@ -349,7 +353,7 @@ public class Tools {
         } catch (PackageManager.NameNotFoundException e) {
             return true;
         }
-        for (String blTask : Tools.getBlacklisted(context, db)) {
+        for (String blTask : getBlacklisted(context, db)) {
             if (packageName.equals(blTask)) {
                 return true;
             }
@@ -362,11 +366,28 @@ public class Tools {
                                                              boolean widget) {
         ArrayList<Tools.TaskInfo> taskList = new ArrayList<Tools.TaskInfo>();
         List<TasksModel> tasks;
-        if (weighted) {
-            HangarLog("getOrderedTasks queueSize: " + queueSize);
-            tasks = db.getOrderedTasks(queueSize, widget);
+        ArrayList<String> pinnedApps;
+        boolean ignorePinned = false;
+
+        SharedPreferences settingsPrefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS);
+        SharedPreferences widgetPrefs = context.getSharedPreferences("AppsWidget", Context.MODE_MULTI_PROCESS);
+        int pinnedSort = Integer.parseInt(settingsPrefs.getString(Settings.PINNED_SORT_PREFERENCE, Integer.toString(Settings.PINNED_SORT_DEFAULT)));
+
+        if (widget) {
+            ignorePinned = widgetPrefs.getBoolean(Settings.IGNORE_PINNED_PREFERENCE, Settings.IGNORE_PINNED_DEFAULT);
+        }
+        pinnedApps = new Tools().getPinned(context);
+
+        if (queueSize == 0) {
+            // queueSize 0 gets pinnedTasks.
+            if (pinnedApps == null) {
+                return null;
+            }
+            tasks = db.getPinnedTasks(pinnedApps, pinnedSort);
+        } else if (weighted) {
+            tasks = db.getOrderedTasks(queueSize, widget, pinnedApps);
         } else {
-            tasks = db.getAllTasks(queueSize);
+            tasks = db.getAllTasks(queueSize, pinnedApps);
         }
 
         for (TasksModel taskM : tasks) {
@@ -396,4 +417,38 @@ public class Tools {
     protected static ArrayList<Tools.TaskInfo> buildTaskList(Context context, TasksDataSource db, int queueSize) {
         return buildTaskList(context, db, queueSize, false, false);
     }
+
+    protected static ArrayList<Tools.TaskInfo> buildPinnedList(Context context, TasksDataSource db) {
+        return buildTaskList(context, db, 0, false, false);
+    }
+
+    protected ArrayList<Tools.TaskInfo> getPinnedTasks (Context context, TasksDataSource db, ArrayList<Tools.TaskInfo> taskList, int count) {
+        SharedPreferences settingsPrefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS);
+        int pinnedPlacement = Integer.parseInt(settingsPrefs.getString(Settings.PINNED_PLACEMENT_PREFERENCE, Integer.toString(Settings.PINNED_PLACEMENT_DEFAULT)));
+
+        ArrayList<Tools.TaskInfo> pinnedList = Tools.buildPinnedList(context, db);
+
+        if (pinnedList.size() > 0) {
+            if (pinnedPlacement == Settings.PINNED_PLACEMENT_LEFT) {
+                pinnedList.addAll(taskList);
+                return pinnedList;
+            } else {
+                int index = count - pinnedList.size();
+                try {
+                    taskList.addAll(index, pinnedList);
+                } catch (IndexOutOfBoundsException e) {
+                    if (index > taskList.size()) {
+                        if (pinnedList.size() >= taskList.size()) {
+                            return pinnedList;
+                        }
+                        // index = taskList.size() - pinnedList.size();
+                        taskList.addAll(pinnedList);
+                    }
+                }
+                return taskList;
+            }
+        }
+        return taskList;
+    }
+
 }

@@ -73,6 +73,7 @@ public class AppsWidgetSettings extends PreferenceActivity {
 
         CheckBoxPreference weighted_recents_preference;
         CheckBoxPreference colorize_preference;
+        CheckBoxPreference ignore_pinned_preference;
         ColorPickerPreference icon_color_preference;
         ColorPickerPreference background_color_preference;
         SwitchPreference apps_by_widget_size_preference;
@@ -138,6 +139,7 @@ public class AppsWidgetSettings extends PreferenceActivity {
             final SharedPreferences.Editor mEditor = prefs.editorGet();
             mEditor.putBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE, weighted_recents_preference.isChecked());
             mEditor.putBoolean(Settings.COLORIZE_PREFERENCE, colorize_preference.isChecked());
+            mEditor.putBoolean(Settings.IGNORE_PINNED_PREFERENCE, ignore_pinned_preference.isChecked());
             mEditor.putString(Settings.WEIGHT_PRIORITY_PREFERENCE, weight_priority_preference.getValue());
             mEditor.putBoolean(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE, apps_by_widget_size_preference.isChecked());
             mEditor.putString(Settings.STATS_WIDGET_APPSNO_PREFERENCE, appnos_preference.getValue());
@@ -197,6 +199,10 @@ public class AppsWidgetSettings extends PreferenceActivity {
             colorize_preference = (CheckBoxPreference)findPreference(Settings.COLORIZE_PREFERENCE);
             colorize_preference.setChecked(mPrefs.getBoolean(Settings.COLORIZE_PREFERENCE, Settings.COLORIZE_DEFAULT));
             colorize_preference.setOnPreferenceChangeListener(changeListener);
+
+            ignore_pinned_preference = (CheckBoxPreference)findPreference(Settings.IGNORE_PINNED_PREFERENCE);
+            ignore_pinned_preference.setChecked(mPrefs.getBoolean(Settings.IGNORE_PINNED_PREFERENCE, Settings.IGNORE_PINNED_DEFAULT));
+            ignore_pinned_preference.setOnPreferenceChangeListener(changeListener);
 
             icon_color_preference = (ColorPickerPreference) findPreference(Settings.ICON_COLOR_PREFERENCE);
             int intColor2 = mPrefs.getInt(Settings.ICON_COLOR_PREFERENCE, Settings.ICON_COLOR_DEFAULT);

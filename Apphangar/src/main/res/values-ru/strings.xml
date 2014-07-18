@@ -15,7 +15,7 @@
   <string name="weight_priority_default">По умолчанию</string>
   <string name="weight_priority_recency">По времени нед. запусков</string>
   <string name="weight_priority_launches">По количеству запусков</string>
-  <string name="weight_priority_time">По времени исп. приложения</string>
+  <string name="weight_priority_time">По времени исп. прил.</string>
   <string name="title_priority_preference">Положение уведомления</string>
   <string name="summary_priority_preference">%s позиция в шторке уведомлений</string>
   <string name="dialog_priority_preference">Выберите позицию</string>
@@ -23,14 +23,18 @@
   <string name="priority_normal">Обычная</string>
   <string name="priority_bottom">Нижняя (без значка в панели уведомлений)</string>
   <string name="title_appsno_preference">Количество приложений</string>
-  <string name="summary_appsno_preference">Отображается не более %s приложений</string>
+  <string name="summary_appsno_preference">Отображаются %s приложений</string>
+  <string name="summary_appsno_second_row_preference">Отображается по %s приложений в ряду</string>
   <string name="dialog_appsno_preference">Выберите число отобр. прил.</string>
+  <string name="title_second_row_preference">Дополнительный ряд</string>
+  <string name="summary_second_row_preference">Отображать приложения в два ряда</string>
+  <string name="alert_second_row_summary">Android отображает только <b>верхнее уведомление</b> в развёрнутом виде.\n\nЕсли же уведомление от Hangar имеет <i>иное</i> положение, его дополнительный ряд <b>будет скрыт</b> до тех пор, пока пользователь не развернёт уведомление.</string>
   <string name="title_statusbar_icon_preference">Значок в панели уведомления</string>
   <string name="dialog_statusbar_icon_preference">Выберите стиль значка</string>
   <string name="alert_title_statusbar_icon_preference">Возьмите на заметку..</string>
   <string name="alert_message_statusbar_icon_preference">В связи с ограничениями в Android, отключение значка в панели уведомлений приведёт к снижению приоритета уведомления.\n\nПроще говоря, ваша панель Hangar окажется нижней в списке.</string>
   <string name="statusbar_icon_warm_white">Белый с тёплыми цветами (стандартный)</string>
-  <string name="statusbar_icon_cold_white">Белый с холодными цветами</string>
+  <string name="statusbar_icon_cold_white">Белый с холодн. цветами</string>
   <string name="statusbar_icon_blue_white">Сине-белый</string>
   <string name="statusbar_icon_all_white">Полностью белый</string>
   <string name="statusbar_icon_warm_black">Чёрный с тёплыми цветами</string>
@@ -40,6 +44,8 @@
   <string name="statusbar_icon_none">Без значка</string>
   <string name="title_divider_preference">Разделитель</string>
   <string name="summary_divider_preference">Отображать разделитель между значками приложений</string>
+  <string name="title_row_divider_preference">Разделитель рядов</string>
+  <string name="summary_row_divider_preference">Отображать разделитель между рядами</string>
   <string name="title_colorize_preference">Окрашивание значков</string>
   <string name="summary_colorize_preference">Изменить цвета значков в уведомлении</string>
   <string name="title_icon_color_preference">Цвет</string>
@@ -62,7 +68,7 @@
   <string name="configure_license">Лицензия</string>
   <string name="configure_contribute">Внести вклад</string>
   <string name="donate_title">Хотите дать мне на пиво?</string>
-  <string name="donate_head">Вложения всегда приветствуются и могут быть полезны при разработке приложений.\n\nТак или иначе, если Вы нашли Hangar полезным и желаете выразить признательность за проделанную работу, загляните в раздел \"Внести вклад\", в нём Вы найдёте несколько способов помочь.\n\nБудучи в приподнятом настроении Вы можете произвести оплату ниже через <b>Google Play</b> или <b>PayPal</b>.</string>
+  <string name="donate_head">Вложения полезны при разработке приложений и всегда приветствуются.\n\nЕсли Вы нашли полезным Hangar и желаете выразить признательность за проделанную работу, загляните в раздел \"Внести вклад\", в нём Вы найдёте несколько способов помочь.\n\nВы так же можете произвести оплату ниже через <b>Google Play</b> или <b>PayPal</b>.</string>
   <string name="donate_google">Оплатить через Google</string>
   <string name="donate_paypal">Оплатить через PayPal</string>
   <string name="donate_contribute">Сделать Hangar лучше!</string>
@@ -80,7 +86,7 @@
   <string name="contribute_translate_text">"Hangar используется людьми со всего света. Crowdin является инструментом, который позволяет пользователям с лёгкостью переводить приложения на родной язык."</string>
   <string name="contribute_translate_link">Перевести с помощью Crowdin</string>
   <string name="contribute_code_title">Исправляйте ошибки, расширяйте возможности!</string>
-  <string name="contribute_code_text">"Hangar абсолютно открыт и доступен, распространяется под лицензией GPLv3. Внесение поправок и спаренных запросов с помощью github поощряется и приветствуется."</string>
+  <string name="contribute_code_text">"Hangar открыт и доступен всем, распространяется под лицензией GPLv3. Внесение поправок с помощью github всегда приветствуется."</string>
   <string name="contribute_code_link">Оценить проект на Github</string>
   <string name="contribute_plus_title">Вступайте в сообщество</string>
   <string name="contribute_plus_text">"Тестируйте, высказывайте Ваше мнение, предлагайте новые возможности и узнавайте о последних наработках."</string>
@@ -91,7 +97,7 @@
   <string name="contributors_role9">за датский перевод</string>
   <string name="contribute_accept_button">Продолжить</string>
   <string name="license_title">Лицензия и исходный код</string>
-  <string name="license_head">Hangar распространяется под лицензией GPLv3 Фонда свободного ПО и принадлежит Джеффу Коркорану © 2014.\n\nБудучи под лицензией GPL, Hangar распространяется бесплатно до тех пор, пока использование приложения проходит с соблюдением правил данной лицензии.\n\nПользователи имеют возможность бесплатно скачивать данное ПО, а также изменять, интегрировать и распространять его. Однако, пользователи GPL обязаны следовать данным правилам, обусловленными тем, что работа, основанная на Hangar, преобразована и полный исходный код этого проекта должен быть так же открытым и доступным для распространения на правах GPL.\n\nЗагляните в GPL и ЧаВо Фонда свободного ПО для получения дополнительной информации.</string>
+  <string name="license_head">Hangar распространяется под лицензией GPLv3 Фонда свободного ПО и принадлежит Джеффу Коркорану © 2014.\n\nБудучи под лицензией GPL, Hangar распространяется бесплатно до тех пор, пока использование приложения проходит с соблюдением правил данной лицензии.\n\nПользователи имеют возможность бесплатного скачивания данного ПО, а также его изменения, внедрения и распространения. Пользователи GPL обязаны следовать данным правилам, обусловленными тем, что работа, основанная на Hangar, преобразуется и полный исходный код конечного продукта должен быть так же открытым и доступным для распространения на правах GPL.\n\nПрочтите GPL и ЧаВо Фонда свободного ПО для получения дополнительной информации.</string>
   <string name="license_view_source">Посетить Hangar на Github</string>
   <string name="license_accept_button">Продолжить</string>
   <string name="changelog_title">Изменения в Hangar</string>
@@ -113,7 +119,7 @@
   <string name="automatic_appsno">Подсчитывается автоматически</string>
   <string name="appsno_category">Количество приложений</string>
   <string name="title_apps_by_widget_size_preference">Автоматически</string>
-  <string name="summary_apps_by_widget_size_preference">Распределять на свободном месте</string>
+  <string name="summary_apps_by_widget_size_preference">Распределять по свободным местам</string>
   <string name="aesthetics_category">Внешний вид</string>
   <string name="title_stats_widget_appsno_preference">Вертикально</string>
   <string name="summary_stats_widget_appsno_preference">Отображается не более %s приложений</string>

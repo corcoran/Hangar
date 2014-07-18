@@ -15,7 +15,7 @@
     <string name="title_weighted_recents_preference">Weighted sorting</string>
     <string name="summary_weighted_recents_preference">Apps sorted by most used and recency</string>
     <string name="title_weight_priority_preference">Weight bias</string>
-    <string name="summary_weight_priority_preference" translatable="false">%s</string>
+    <string name="summary_wildcard_preference" translatable="false">%s</string>
     <string name="dialog_weight_priority_preference">Choose a weight</string>
 
     <string name="weight_priority_default">Default</string>
@@ -55,6 +55,42 @@
         <item>-2</item>
     </string-array>
 
+    <string name="title_pinned_category">Pinned apps</string>
+    <string name="title_pinned_sort_preference">Pinned app sorting</string>
+    <string name="title_pinned_placement_preference">Pinned app placement</string>
+
+    <string name="pinned_sort_time">Time spent in app</string>
+    <string name="pinned_sort_alphabetical">Alphabetical</string>
+    <string name="pinned_sort_last_opened">Last opened</string>
+    <string name="pinned_sort_added">Time pinned</string>
+
+    <string-array name="entries_pinned_sort_preference" translatable="false">
+        <item>@string/pinned_sort_time</item>
+        <item>@string/pinned_sort_alphabetical</item>
+        <item>@string/pinned_sort_last_opened</item>
+        <item>@string/pinned_sort_added</item>
+    </string-array>
+
+    <string-array name="values_pinned_sort_preference" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string name="pinned_placement_left">Left</string>
+    <string name="pinned_placement_right">Right</string>
+
+    <string-array name="entries_pinned_placement_preference" translatable="false">
+        <item>@string/pinned_placement_left</item>
+        <item>@string/pinned_placement_right</item>
+    </string-array>
+
+    <string-array name="values_pinned_placement_preference" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
     <!-- Appearance -->
 
     <string name="title_appsno_preference">Number of apps</string>
@@ -78,7 +114,6 @@
     <string name="alert_second_row_summary">Android will only show the <b>top notification</b> as expanded by default.\n\nIf your Hangar priority is not set to <i>Top</i>, the second row <b>will be hidden</b> if not at the top of the notification drawer and need to be expanded manually in order to be shown.</string>
 
     <string name="title_statusbar_icon_preference">Statusbar icon</string>
-    <string name="summary_statusbar_icon_preference" translatable="false">%s</string>
     <string name="dialog_statusbar_icon_preference">Choose an icon style</string>
     <string name="alert_title_statusbar_icon_preference">Just so you know..</string>
     <string name="alert_message_statusbar_icon_preference">Due to the limitations of Android, disabling the statusbar icon can only be done by lowering the priority of the notification.\n\nTL;DR Your Hangar bar will be at the bottom of the notification drawer.</string>
@@ -124,10 +159,10 @@
     <string name="summary_colorize_preference">Change the color of the notification icons</string>
     <string name="title_icon_color_preference">Color</string>
     <string name="title_icon_color_category">Icon Color</string>
-    <string name="title_icon_pack_preference">Icon Pack</string>
+    <string name="title_icon_pack_preference">Icon pack</string>
     <string name="default_icon_pack">Default Icons</string>
     <string name="no_icon_packs_alert">No icon packs installed</string>
-    <string name="switched_icon_packs_alert">Updating icon caches.  This may take a few seconds!</string>
+    <string name="switched_icon_packs_alert">Rebuilding icon caches.  This may take a few seconds!</string>
     <string name="title_icon_pack_picker">Pick an icon pack</string>
 
     <!-- Color Picker -->
@@ -262,7 +297,8 @@
 
     <string-array name="versionSummaries" translatable="false">
         <item>
-"  &#8226; [New!] Icon pack support
+"  &#8226; [New!] Pinned app feature
+  &#8226; [New!] Icon pack support
   &#8226; [New!] Per-app manual icon selection
   &#8226; [New!] Second row feature
   &#8226; [New!] German/Danish translations
@@ -321,7 +357,6 @@
     <!-- Apps Widget -->
     <string name="apps_widget_name">Hangar Apps Widget</string>
     <string name="title_icon_size_preference">Icon size</string>
-    <string name="summary_icon_size_preference" translatable="false">%s</string>
 
     <string name="icon_size_small">Small</string>
     <string name="icon_size_medium">Medium (default)</string>
@@ -376,6 +411,8 @@
         <item>35</item>
     </string-array>
 
+    <string name="title_ignore_pinned_preference">Exclude pinned apps</string>
+
     <!-- Stats Widget -->
     <string name="stats_widget_name">Hangar Stats Widget</string>
     <string name="title_background_color_preference">Background color</string>
@@ -428,7 +465,6 @@
     </string-array>
 
     <string name="title_alignment_preference">Widget vertical alignment</string>
-    <string name="summary_alignment_preference" translatable="false">%s</string>
 
     <string name="alignment_top">Top</string>
     <string name="alignment_center">Center</string>

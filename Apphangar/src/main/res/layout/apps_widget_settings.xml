@@ -43,12 +43,21 @@
         <ca.mimic.apphangar.UpdatingListPreference
             android:key="weight_priority_preference"
             android:title="@string/title_weight_priority_preference"
-            android:summary="@string/summary_weight_priority_preference"
+            android:summary="@string/summary_wildcard_preference"
             android:entries="@array/entries_weight_priority_preference"
             android:entryValues="@array/values_weight_priority_preference"
             android:dialogTitle="@string/dialog_weight_priority_preference"
             android:dependency="weighted_recents_preference"
             android:defaultValue="0" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/title_pinned_category">
+
+        <CheckBoxPreference
+            android:key="ignore_pinned_preference"
+            android:title="@string/title_ignore_pinned_preference" />
 
     </PreferenceCategory>
 
@@ -74,7 +83,7 @@
         <ca.mimic.apphangar.UpdatingListPreference
             android:key="icon_size_preference"
             android:title="@string/title_icon_size_preference"
-            android:summary="@string/summary_icon_size_preference"
+            android:summary="@string/summary_wildcard_preference"
             android:entries="@array/entries_icon_size_preference"
             android:entryValues="@array/values_icon_size_preference"
             android:dialogTitle="@string/title_icon_size_preference" />
@@ -88,7 +97,7 @@
         <ca.mimic.apphangar.UpdatingListPreference
             android:key="alignment_preference"
             android:title="@string/title_alignment_preference"
-            android:summary="@string/summary_alignment_preference"
+            android:summary="@string/summary_wildcard_preference"
             android:entries="@array/entries_alignment_preference"
             android:entryValues="@array/values_alignment_preference"
             android:dialogTitle="@string/title_alignment_preference" />

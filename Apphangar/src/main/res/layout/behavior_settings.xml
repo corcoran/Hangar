@@ -31,11 +31,34 @@
         <ca.mimic.apphangar.UpdatingListPreference
             android:key="weight_priority_preference"
             android:title="@string/title_weight_priority_preference"
-            android:summary="@string/summary_weight_priority_preference"
+            android:summary="@string/summary_wildcard_preference"
             android:entries="@array/entries_weight_priority_preference"
             android:entryValues="@array/values_weight_priority_preference"
             android:dialogTitle="@string/dialog_weight_priority_preference"
             android:dependency="weighted_recents_preference"
+            android:defaultValue="0" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/title_pinned_category">
+
+        <ca.mimic.apphangar.UpdatingListPreference
+            android:key="pinned_sort_preference"
+            android:title="@string/title_pinned_sort_preference"
+            android:summary="@string/summary_wildcard_preference"
+            android:entries="@array/entries_pinned_sort_preference"
+            android:entryValues="@array/values_pinned_sort_preference"
+            android:dialogTitle="@string/title_pinned_sort_preference"
+            android:defaultValue="0" />
+
+        <ca.mimic.apphangar.UpdatingListPreference
+            android:key="pinned_placement_preference"
+            android:title="@string/title_pinned_placement_preference"
+            android:summary="@string/summary_wildcard_preference"
+            android:entries="@array/entries_pinned_placement_preference"
+            android:entryValues="@array/values_pinned_placement_preference"
+            android:dialogTitle="@string/title_pinned_placement_preference"
             android:defaultValue="0" />
 
     </PreferenceCategory>

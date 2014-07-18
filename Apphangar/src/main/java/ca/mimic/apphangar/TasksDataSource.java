@@ -139,7 +139,7 @@ public class TasksDataSource {
     }
 
     public int getHighestLaunch() {
-        Cursor cursor = database.query(Tasks.TABLE_TASKS, new String [] {"MAX(" + Tasks.COLUMN_LAUNCHES + ")"}, Tasks.COLUMN_BLACKLISTED + " = " + 0, null, null, null, null);
+        Cursor cursor = database.query(Tasks.TABLE_TASKS, new String[]{"MAX(" + Tasks.COLUMN_LAUNCHES + ")"}, Tasks.COLUMN_BLACKLISTED + " = " + 0, null, null, null, null);
         try {
             while (cursor.moveToFirst()) {
                 return cursor.getInt(0);
@@ -244,11 +244,61 @@ public class TasksDataSource {
         database.update(Tasks.TABLE_TASKS, args, null, null);
     }
 
-    public List<TasksModel> getAllTasks(int limit) {
+    public List<TasksModel> getPinnedTasks(ArrayList<String> pinnedApps, int sortType) {
+        if (pinnedApps == null)
+            return null;
+        List<TasksModel> tasks = new ArrayList<TasksModel>();
+
+        String sortString = null;
+        switch (sortType) {
+            case 0:
+                sortString = Tasks.COLUMN_SECONDS + " DESC";
+                break;
+            case 1:
+                sortString = "lower(" + Tasks.COLUMN_NAME + ")";
+                break;
+            case 2:
+                sortString = Tasks.COLUMN_TIMESTAMP + " DESC";
+                break;
+        }
+
+        Cursor cursor = database.query(Tasks.TABLE_TASKS,
+                allColumns, Tasks.COLUMN_BLACKLISTED + " = " + 0 + filterPinned(pinnedApps, false),
+                null, null, null, sortString, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            try {
+                TasksModel task = cursorToTasks(cursor);
+                tasks.add(task);
+                cursor.moveToNext();
+            } catch (ParseException e) {
+                Tools.HangarLog("getPinnedTasks parse error [" + e + "]");
+            }
+        }
+        // make sure to close the cursor
+        cursor.close();
+        if (sortType == 3) {
+            List<TasksModel> addedPins = new ArrayList<TasksModel>();
+
+            for (int i=pinnedApps.size() - 1; i >= 0; i--) {
+                String packageName = pinnedApps.get(i);
+                for (TasksModel task : tasks) {
+                    if (task.getPackageName().equals(packageName)) {
+                        addedPins.add(task);
+                    }
+                }
+           }
+           return addedPins;
+        }
+        return tasks;
+    }
+
+    public List<TasksModel> getAllTasks(int limit, ArrayList<String> pinnedApps) {
         List<TasksModel> tasks = new ArrayList<TasksModel>();
 
         Cursor cursor = database.query(Tasks.TABLE_TASKS,
-                allColumns, limit == 0 ? null : Tasks.COLUMN_BLACKLISTED + " = " + 0,
+                allColumns, limit == 0 ? null : Tasks.COLUMN_BLACKLISTED + " = " + 0 + filterPinned(pinnedApps, true),
                 null, null, null, Tasks.COLUMN_TIMESTAMP + " DESC",
                 limit == 0 ? null : Integer.toString(limit));
 
@@ -267,7 +317,23 @@ public class TasksDataSource {
         return tasks;
     }
 
-    public List<TasksModel> getOrderedTasks(int limit, boolean widget) {
+    public List<TasksModel> getAllTasks(int limit) {
+        return getAllTasks(limit, null);
+    }
+
+    public String filterPinned(ArrayList<String> appList, boolean omit) {
+        String pinnedApps = "";
+        if (appList == null) {
+            return pinnedApps;
+        }
+        for (String app : appList) {
+            pinnedApps += Tasks.COLUMN_PACKAGENAME + " " + (omit ? "!" : "") +
+                    "= \"" + app + (omit ? "\" and " : "\" or ");
+        }
+        return " and (" + pinnedApps.replaceAll(omit ? " and $" : " or $", "") + ")";
+    }
+
+    public List<TasksModel> getOrderedTasks(int limit, boolean widget, ArrayList<String> pinnedApps) {
         List<TasksModel> tasks = new ArrayList<TasksModel>();
 
         Cursor cursor;
@@ -276,12 +342,12 @@ public class TasksDataSource {
                     allColumns, Tasks.COLUMN_WIDGET_ORDER + " > 0 or (" +
                         Tasks.COLUMN_WIDGET_ORDER + " = 0 and " +
                         Tasks.COLUMN_ORDER + " > 0)" +
-                        (limit == 0 ? null : " and " + Tasks.COLUMN_BLACKLISTED + " = " + 0),
+                        (limit == 0 ? null : " and " + Tasks.COLUMN_BLACKLISTED + " = " + 0 + filterPinned(pinnedApps, true)),
                     null, null, null, Tasks.COLUMN_WIDGET_ORDER + " desc, " + Tasks.COLUMN_ORDER + " desc",
                     limit == 0 ? null : Integer.toString(limit));
         } else {
             cursor = database.query(Tasks.TABLE_TASKS,
-                    allColumns, Tasks.COLUMN_ORDER + " > 0" + (limit == 0 ? null : " and " + Tasks.COLUMN_BLACKLISTED + " = " + 0),
+                    allColumns, Tasks.COLUMN_ORDER + " > 0" + (limit == 0 ? null : " and " + Tasks.COLUMN_BLACKLISTED + " = " + 0 + filterPinned(pinnedApps, true)),
                     null, null, null, Tasks.COLUMN_ORDER + " desc",
                     limit == 0 ? null : Integer.toString(limit));
         }
@@ -301,9 +367,14 @@ public class TasksDataSource {
         return tasks;
     }
 
+    public List<TasksModel> getOrderedTasks(int limit, boolean widget) {
+        return getOrderedTasks(limit, widget, null);
+    }
+
     public List<TasksModel> getOrderedTasks(int limit) {
         return getOrderedTasks(limit, false);
     }
+
     public List<TasksModel> getAllTasks() {
         return getAllTasks(0);
     }
