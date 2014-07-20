@@ -46,6 +46,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +54,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class IconPackHelper {
 
@@ -307,18 +307,34 @@ public class IconPackHelper {
 
     public static void pickIconPack(final Context context) {
         Map<String, IconPackInfo> supportedPackages = getSupportedPackages(context);
+
+        Boolean noPackages = false;
         if (supportedPackages.isEmpty()) {
-            Toast.makeText(context, R.string.no_icon_packs_alert, Toast.LENGTH_SHORT).show();
-            return;
+            Intent intent = context.getPackageManager().getLaunchIntentForPackage(Settings.PLAY_STORE_PACKAGENAME);
+            ResolveInfo rInfo = context.getPackageManager().resolveActivity(intent, 0);
+
+            Drawable icon = new IconCacheHelper(context).getFullResIcon(rInfo);
+            String label = context.getResources().getString(R.string.title_icon_pack_install);
+            IconPackInfo iconPack = new IconPackInfo(label, icon, Settings.PLAY_STORE_PACKAGENAME);
+            supportedPackages.put(Settings.PLAY_STORE_PACKAGENAME, iconPack);
+            noPackages = true;
         }
 
-        final IconAdapter adapter = new IconAdapter(context, supportedPackages);
+        final IconAdapter adapter = new IconAdapter(context, supportedPackages, noPackages);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.title_icon_pack_picker);
+        builder.setTitle(noPackages ? R.string.title_icon_pack_not_found : R.string.title_icon_pack_picker);
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int position) {
                 prefs = new Settings.PrefsGet(context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS));
                 String selectedPackage = adapter.getItem(position);
+                Tools.HangarLog("selectedPAckage: " + selectedPackage);
+                if (selectedPackage.equals(Settings.PLAY_STORE_PACKAGENAME)) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(Settings.PLAY_STORE_SEARCH_URI));
+
+                    context.startActivity(intent);
+                    return;
+                }
                 SharedPreferences.Editor mEditor = prefs.editorGet();
                 mEditor.putString(Settings.ICON_PACK_PREFERENCE, selectedPackage);
                 mEditor.apply();
@@ -401,7 +417,7 @@ public class IconPackHelper {
         String mCurrentIconPack;
         int mCurrentIconPackPosition;
 
-        IconAdapter(Context ctx, Map<String, IconPackInfo> supportedPackages) {
+        IconAdapter(Context ctx, Map<String, IconPackInfo> supportedPackages, Boolean noPackages) {
             mLayoutInflater = LayoutInflater.from(ctx);
             mSupportedPackages = new ArrayList<IconPackInfo>(supportedPackages.values());
             Collections.sort(mSupportedPackages, new Comparator<IconPackInfo>() {
@@ -410,6 +426,8 @@ public class IconPackHelper {
                     return lhs.label.toString().compareToIgnoreCase(rhs.toString());
                 }
             });
+
+            if (noPackages) return;
 
             Resources res = ctx.getResources();
             String defaultLabel = res.getString(R.string.default_icon_pack);
@@ -434,10 +452,6 @@ public class IconPackHelper {
         @Override
         public long getItemId(int position) {
             return 0;
-        }
-
-        public boolean isOriginalIconPack(int position) {
-            return mCurrentIconPackPosition == position;
         }
 
         @SuppressLint("InflateParams")

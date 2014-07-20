@@ -164,6 +164,8 @@
     <string name="no_icon_packs_alert">No icon packs installed</string>
     <string name="switched_icon_packs_alert">Rebuilding icon caches.  This may take a few seconds!</string>
     <string name="title_icon_pack_picker">Pick an icon pack</string>
+    <string name="title_icon_pack_not_found">No icon packs found</string>
+    <string name="title_icon_pack_install">Find an icon pack</string>
 
     <!-- Color Picker -->
     <string name="dialog_color_picker">Color Picker</string>

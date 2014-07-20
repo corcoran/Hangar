@@ -121,6 +121,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
     static ServiceCall myService;
     static IconPackUpdate iconPackUpdate;
 
+    final static String PLAY_STORE_PACKAGENAME = "com.android.vending";
+    final static String PLAY_STORE_SEARCH_URI = "market://search?q=icon+pack";
+
     final static boolean DIVIDER_DEFAULT = false;
     final static boolean ROW_DIVIDER_DEFAULT = true;
     final static boolean TOGGLE_DEFAULT = true;
@@ -630,7 +633,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
             intent.setAction(ACTION_ADW_PICK_ICON);
             startActivityForResult(intent, 1);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(mContext, getResources().getString(R.string.no_icon_packs_alert), Toast.LENGTH_SHORT).show();
+            IconPackHelper.pickIconPack(mContext);
         }
     }
 
