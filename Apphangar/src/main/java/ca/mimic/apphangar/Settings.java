@@ -42,11 +42,8 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Typeface;
-import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.preference.CheckBoxPreference;
@@ -63,9 +60,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -109,12 +106,18 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String PINNED_PLACEMENT_PREFERENCE = "pinned_placement_preference";
     final static String IGNORE_PINNED_PREFERENCE = "ignore_pinned_preference";
 
-    protected static View appsView;
-    protected static TasksModel mIconTask;
+    protected static Settings mInstance;
+    protected static AppsRowItem mIconTask;
     protected static boolean isBound = false;
     protected static boolean mLaunchedPaypal = false;
     protected static boolean dirtyNotifications = false;
+    protected static Display display;
     boolean newStart;
+
+    static AppsRowAdapter mAppRowAdapter;
+    protected static boolean completeRedraw;
+    protected static ListView lv;
+
 
     static PrefsGet prefs;
     static Context mContext;
@@ -175,6 +178,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int SERVICE_DESTROY_NOTIFICATIONS = 1;
     final static int SERVICE_BUILD_TASKS = 2;
     final static int SERVICE_CLEAR_TASKS = 3;
+    final static int SERVICE_BUILD_REORDER_LAUNCH = 4;
+    final static int SERVICE_CREATE_NOTIFICATIONS = 5;
 
     final static int THANK_YOU_GOOGLE = 0;
     final static int THANK_YOU_PAYPAL = 1;
@@ -182,12 +187,13 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int START_SERVICE = 0;
     final static int STOP_SERVICE = 1;
 
-    static DrawTasks drawT;
     static int displayWidth;
 
+    @TargetApi(17)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mInstance = this;
 
         setContentView(R.layout.activity_settings);
 
@@ -204,7 +210,16 @@ public class Settings extends Activity implements ActionBar.TabListener {
             db.open();
         }
 
-        drawT = new DrawTasks();
+        display = getWindowManager().getDefaultDisplay();
+
+        Point size = new Point();
+        try {
+            display.getRealSize(size);
+            displayWidth = size.x;
+        } catch (NoSuchMethodError e) {
+            displayWidth = display.getWidth();
+        }
+
         myService = new ServiceCall(mContext);
         myService.setConnection(mConnection);
 
@@ -225,21 +240,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
         mGetFragments.setVp(mViewPager);
 
         ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
-            int pagePosition;
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                try {
-                    if (pagePosition == 2 && newStart && state == ViewPager.SCROLL_STATE_IDLE) {
-                        newStart = false;
-                        drawT.drawTasks(appsView);
-                    }
-                } catch (NullPointerException e) {
-                    // Not yet created
-                }
-            }
             @Override
             public void onPageSelected(int position) {
-                pagePosition = position;
                 actionBar.setSelectedNavigationItem(position);
             }
         };
@@ -322,10 +324,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     Bitmap bitmap = data.getParcelableExtra("icon");
                     ComponentName componentTask = ComponentName.unflattenFromString(mIconTask.getPackageName() + "/" + mIconTask.getClassName());
                     IconCacheHelper.preloadIcon(mContext, componentTask, bitmap, Tools.dpToPx(mContext, Settings.CACHED_ICON_SIZE));
+                    myService.execute(SERVICE_CREATE_NOTIFICATIONS);
+                    completeRedraw = true;
                 } catch (Exception e) {
                     Tools.HangarLog("Icon result exception: " + e);
                 }
-                return;
             }
         }
     }
@@ -490,8 +493,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
         ServiceCall(Context context) {
             mContext = context;
         }
-        ServiceCall() {
-        }
         protected void setConnection(ServiceConnection connection) {
             mConnection = connection;
         }
@@ -525,6 +526,32 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         break;
                     case SERVICE_BUILD_TASKS:
                         s.buildTasks();
+                        return;
+                    case SERVICE_BUILD_REORDER_LAUNCH:
+                        Runnable runnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    s.buildReorderAndLaunch();
+                                } catch (Exception e) {
+                                    Tools.HangarLog("buildReorderAndLaunch exception: " + e);
+                                }
+                            }
+                        };
+                        new Thread(runnable).start();
+                        return;
+                    case SERVICE_CREATE_NOTIFICATIONS:
+                        Runnable runnable2 = new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    s.createNotification();
+                                } catch (Exception e) {
+                                    Tools.HangarLog("buildReorderAndLaunch exception: " + e);
+                                }
+                            }
+                        };
+                        new Thread(runnable2).start();
                         return;
                     case SERVICE_DESTROY_NOTIFICATIONS:
                         s.destroyNotification();
@@ -585,21 +612,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
 
-    public boolean fadeTask(View view, TextView text) {
-        if ((text.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0) {
-            view.setAlpha(1);
-            text.setPaintFlags(text.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            return false;
-        } else {
-            text.setPaintFlags(text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            AlphaAnimation aa = new AlphaAnimation(1f, 0.3f);
-            aa.setDuration(0);
-            aa.setFillAfter(true);
-            view.setAlpha((float) 0.5);
-            return true;
-        }
-    }
-
     public static int[] splitToComponentTimes(int longVal) {
         int hours = longVal / 3600;
         int remainder = longVal - hours * 3600;
@@ -621,224 +633,51 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
 
         public void iconPackUpdated() {
+            List<AppsRowItem> appTasks = createAppTasks();
+            rebuildIconCache(appTasks);
+
+            final List<AppsRowItem> finalTasks = appTasks;
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable(){
+                public void run(){
+                    mAppRowAdapter = new AppsRowAdapter(mContext, finalTasks);
+                    mAppRowAdapter.notifyDataSetChanged();
+                    lv.setAdapter(mAppRowAdapter);
+                }
+            }, 1000); // Add delay to reduce risk of conflicting image lookups during cache
+                      // reconstruction
+
+            // Notifications need to be refreshed after cache rebuild.
             Toast.makeText(mContext, mContext.getResources().getString(R.string.switched_icon_packs_alert),
                     Toast.LENGTH_LONG).show();
             icon_pack_preference.setSummary(getApplicationName(prefs2.getString(ICON_PACK_PREFERENCE, null)));
         }
     }
 
-    public void pickIcon() {
+    public static void pickIcon(Settings activity) {
         try {
             Intent intent = new Intent();
             intent.setAction(ACTION_ADW_PICK_ICON);
-            startActivityForResult(intent, 1);
+            activity.startActivityForResult(intent, 1);
         } catch (ActivityNotFoundException e) {
             IconPackHelper.pickIconPack(mContext);
         }
     }
 
-    public class DrawTasks {
-        public void drawTasks(View view) {
-            final LinearLayout taskRoot = (LinearLayout) view.findViewById(R.id.taskRoot);
-            final Context mContext = getApplicationContext();
+    public static synchronized void rebuildIconCache(final List<AppsRowItem> appTasks) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                IconHelper ih = new IconHelper(mContext);
 
-            new AsyncTask<Void, Void, ArrayList<LinearLayout>>() {
-                @Override
-                public void onPreExecute() {
+                for (AppsRowItem task : appTasks) {
+                    ComponentName componentName = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
+                    ih.cachedIconHelper(componentName, task.getName());
                 }
-                @Override
-                public void onPostExecute(ArrayList<LinearLayout> linearLayouts) {
-                    taskRoot.removeAllViews();
-                    for (LinearLayout taskRL : linearLayouts) {
-                        taskRoot.addView(taskRL);
-                    }
-                    if (dirtyNotifications) {
-                        myService.execute(SERVICE_CLEAR_TASKS);
-                        myService.watchHelper(STOP_SERVICE);
-                        myService.watchHelper(START_SERVICE);
-                        dirtyNotifications = false;
-                    }
-                }
-                @TargetApi(17)
-                @Override
-                public ArrayList<LinearLayout> doInBackground(Void... voidp) {
-                    int highestSeconds = db.getHighestSeconds();
-                    List<TasksModel> tasks = db.getAllTasks();
-                    Collections.sort(tasks, new Tools.TasksModelComparator("seconds"));
-
-                    Display display = getWindowManager().getDefaultDisplay();
-
-                    Point size = new Point();
-                    try {
-                        display.getRealSize(size);
-                        displayWidth = size.x;
-                    } catch (NoSuchMethodError e) {
-                        displayWidth = display.getWidth();
-                    }
-
-                    ArrayList<LinearLayout> linearLayouts = new ArrayList<LinearLayout>();
-                    IconHelper ih = new IconHelper(mContext);
-
-                    for (TasksModel task : tasks) {
-                        LinearLayout taskRL = new LinearLayout(getApplicationContext());
-
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT);
-                        params.topMargin = Tools.dpToPx(mContext, 6);
-                        taskRL.setLayoutParams(params);
-                        taskRL.setTag(task);
-                        taskRL.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(final View view) {
-                                final TasksModel task = (TasksModel) view.getTag();
-                                final TextView text = (TextView) view.findViewWithTag("text");
-                                final Boolean isPinned = new Tools().isPinned(mContext, task.getPackageName());
-                                PopupMenu popup = new PopupMenu(getApplicationContext(), view);
-                                popup.getMenuInflater().inflate(R.menu.app_action, popup.getMenu());
-                                MenuItem pinItem = popup.getMenu().getItem(0);
-                                if (isPinned) pinItem.setTitle(R.string.action_unpin);
-                                PopupMenu.OnMenuItemClickListener menuAction = new PopupMenu.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem item) {
-                                        Context context = getApplicationContext();
-                                        switch (item.getItemId()) {
-                                            case R.id.action_pin:
-                                                new Tools().togglePinned(context, task.getPackageName());
-                                                drawT.drawTasks(appsView);
-                                                Tools.updateWidget(context);
-                                                break;
-                                            case R.id.action_pick_icon:
-                                                mIconTask = task;
-                                                pickIcon();
-                                                break;
-                                            case R.id.action_blacklist:
-                                                db.blacklistTask(task, fadeTask(view, text));
-                                                Tools.updateWidget(context);
-                                                break;
-                                            case R.id.action_reset_stats:
-                                                db.resetTaskStats(task);
-                                                drawT.drawTasks(appsView);
-                                                break;
-                                        }
-                                        myService.execute(SERVICE_CLEAR_TASKS);
-                                        myService.watchHelper(STOP_SERVICE);
-                                        myService.watchHelper(START_SERVICE);
-                                        return true;
-                                    }
-                                };
-                                popup.setOnMenuItemClickListener(menuAction);
-                                popup.show();
-
-                            }
-                        });
-
-                        TextView useStats = new TextView(mContext);
-                        LinearLayout.LayoutParams useStatsParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT);
-                        useStatsParams.topMargin = Tools.dpToPx(mContext, 30);
-                        useStatsParams.leftMargin = Tools.dpToPx(mContext, 10);
-                        useStatsParams.rightMargin = Tools.dpToPx(mContext, 4);
-                        useStats.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-                        useStats.setTag("usestats");
-                        useStats.setLayoutParams(useStatsParams);
-                        useStats.setTypeface(null, Typeface.BOLD);
-
-                        LinearLayout textCont = new LinearLayout(mContext);
-                        LinearLayout.LayoutParams useStatsLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-                        textCont.setLayoutParams(useStatsLayout);
-                        textCont.setOrientation(LinearLayout.VERTICAL);
-
-                        TextView taskName = new TextView(mContext);
-                        LinearLayout.LayoutParams nameParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-                        nameParams.leftMargin = Tools.dpToPx(mContext, 10);
-                        nameParams.topMargin = Tools.dpToPx(mContext, 4);
-                        taskName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                        taskName.setTag("text");
-                        taskName.setLayoutParams(nameParams);
-
-                        LinearLayout barCont = new LinearLayout(mContext);
-                        LinearLayout.LayoutParams barContLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT);
-                        barContLayout.topMargin = Tools.dpToPx(mContext, 10);
-                        barContLayout.leftMargin = Tools.dpToPx(mContext, 10);
-                        barContLayout.height = Tools.dpToPx(mContext, 5);
-                        barCont.setLayoutParams(barContLayout);
-
-                        ImageView taskIcon = new ImageView(mContext);
-                        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(Tools.dpToPx(mContext, 46),
-                                Tools.dpToPx(mContext, 46));
-
-                        iconParams.topMargin = Tools.dpToPx(mContext, 2);
-                        iconParams.leftMargin = Tools.dpToPx(mContext, 2);
-                        iconParams.bottomMargin = Tools.dpToPx(mContext, 6);
-                        taskIcon.setLayoutParams(iconParams);
-
-                        ImageView pinIcon = new ImageView(mContext);
-                        LinearLayout.LayoutParams pinParams = new LinearLayout.LayoutParams(Tools.dpToPx(mContext, 20),
-                                Tools.dpToPx(mContext, 20));
-                        pinIcon.setImageResource(R.drawable.pin_icon);
-                        pinIcon.setLayoutParams(pinParams);
-                        pinIcon.setVisibility(View.INVISIBLE);
-                        pinParams.leftMargin = Tools.dpToPx(mContext, -12);
-
-                        try {
-                            ComponentName componentTask = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
-
-                            // Find/use cached icon with IconHelper
-                            ih.cachedIconHelper(taskIcon, componentTask, task.getName());
-                            taskName.setText(task.getName());
-                            if (new Tools().isPinned(mContext, task.getPackageName())) {
-                                taskName.setTextColor(Color.WHITE);
-                                pinIcon.setVisibility(View.VISIBLE);
-                            }
-
-                        } catch (Exception e) {
-                            Tools.HangarLog("Could not find Application info for [" + task.getName() + "]");
-                            db.deleteTask(task);
-                            continue;
-                        }
-
-                        textCont.addView(taskName);
-                        textCont.addView(barCont);
-                        taskRL.addView(textCont);
-                        taskRL.addView(useStats);
-                        taskRL.addView(taskIcon);
-                        taskRL.addView(pinIcon);
-
-                        float secondsRatio = (float) task.getSeconds() / highestSeconds;
-                        int barColor;
-                        int secondsColor = (Math.round(secondsRatio * 100));
-                        if (secondsColor >= 80) {
-                            barColor = 0xFF34B5E2;
-                        } else if (secondsColor >= 60) {
-                            barColor = 0xFFAA66CC;
-                        } else if (secondsColor >= 40) {
-                            barColor = 0xFF74C353;
-                        } else if (secondsColor >= 20) {
-                            barColor = 0xFFFFBB33;
-                        } else {
-                            barColor = 0xFFFF4444;
-                        }
-                        int[] statsTime = splitToComponentTimes(task.getSeconds());
-                        String statsString = ((statsTime[0] > 0) ? statsTime[0] + "h " : "") + ((statsTime[1] > 0) ? statsTime[1] + "m " : "") + ((statsTime[2] > 0) ? statsTime[2] + "s " : "");
-                        useStats.setText(statsString);
-                        barCont.setBackgroundColor(barColor);
-                        int maxWidth = displayWidth - Tools.dpToPx(mContext, 46 + 14 + 90);
-                        float adjustedWidth = maxWidth * secondsRatio;
-                        barContLayout.width = Math.round(adjustedWidth);
-
-                        // Tools.HangarLog("Blacklisted? [" + task.getBlacklisted() + "]");
-                        if (task.getBlacklisted()) {
-                            fadeTask(taskRL, taskName);
-                        }
-                        linearLayouts.add(taskRL);
-                    }
-                    return linearLayouts;
-                }
-            }.execute(null, null, null);
-        }
+                myService.execute(SERVICE_CREATE_NOTIFICATIONS);
+            }
+        };
+        new Thread(runnable).start();
     }
 
     public static class PrefsGet {
@@ -917,7 +756,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
             setHasOptionsMenu(true);
             addPreferencesFromResource(prefLayout);
             final SharedPreferences prefs2 = prefs.prefsGet();
-            SharedPreferences.Editor editor = prefs.editorGet();
 
             try {
                 // *** Appearance ***
@@ -1080,9 +918,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 } else if (preference.getKey().equals(ICON_SIZE_PREFERENCE)) {
                     editor.putString(Settings.ICON_SIZE_PREFERENCE, (String) newValue);
                     editor.commit();
-                    myService.execute(SERVICE_CLEAR_TASKS);
-                    myService.watchHelper(STOP_SERVICE);
-                    myService.watchHelper(START_SERVICE);
+                    myService.execute(SERVICE_CREATE_NOTIFICATIONS);
                 } else if (preference.getKey().equals(TOGGLE_PREFERENCE)) {
                     editor.putBoolean(TOGGLE_PREFERENCE, (Boolean) newValue);
                     editor.commit();
@@ -1095,15 +931,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 } else if (preference.getKey().equals(WEIGHT_PRIORITY_PREFERENCE)) {
                     editor.putString(WEIGHT_PRIORITY_PREFERENCE, (String) newValue);
                     editor.commit();
-                    myService.execute(SERVICE_CLEAR_TASKS);
-                    myService.watchHelper(STOP_SERVICE);
-                    myService.watchHelper(START_SERVICE);
+                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(WEIGHTED_RECENTS_PREFERENCE)) {
                     editor.putBoolean(WEIGHTED_RECENTS_PREFERENCE, (Boolean) newValue);
                     editor.commit();
-                    myService.execute(SERVICE_CLEAR_TASKS);
-                    myService.watchHelper(STOP_SERVICE);
-                    myService.watchHelper(START_SERVICE);
+                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(APPSNO_PREFERENCE)) {
                     editor.putString(APPSNO_PREFERENCE, (String) newValue);
                     editor.commit();
@@ -1137,18 +969,14 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     editor.commit();
                     String pinnedApps = prefs2.getString(PINNED_APPS, null);
                     if (pinnedApps != null && !pinnedApps.isEmpty()) {
-                        myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
-                        myService.watchHelper(STOP_SERVICE);
-                        myService.watchHelper(START_SERVICE);
+                        myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                     }
                 } else if (preference.getKey().equals(PINNED_PLACEMENT_PREFERENCE)) {
                     editor.putString(PINNED_PLACEMENT_PREFERENCE, (String) newValue);
                     editor.commit();
                     String pinnedApps = prefs2.getString(PINNED_APPS, null);
                     if (pinnedApps != null && !pinnedApps.isEmpty()) {
-                        myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
-                        myService.watchHelper(STOP_SERVICE);
-                        myService.watchHelper(START_SERVICE);
+                        myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                     }
                 }
                 return true;
@@ -1165,35 +993,172 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
     }
 
-    public static class AppsFragment extends Fragment {
+    public static void updateRowItem(AppsRowItem rowItem) {
+        int start = lv.getFirstVisiblePosition();
+        for (int i=start, j=lv.getLastVisiblePosition(); i<=j; i++) {
+            if (rowItem == null) {
+                View view = lv.getChildAt(i - start);
+                lv.getAdapter().getView(i, view, lv);
+            } else {
+                if (rowItem == lv.getItemAtPosition(i)) {
+                    View view = lv.getChildAt(i - start);
+                    lv.getAdapter().getView(i, view, lv);
+                    break;
+                }
+            }
+        }
+        if (rowItem == null) {
+            completeRedraw = false;
+            mAppRowAdapter.reDraw(false);
+        }
+    }
+
+    public static class AppsFragment extends Fragment implements OnItemClickListener {
+
         public static Fragment newInstance() {
             return new AppsFragment();
         }
 
-        public AppsFragment() {
-        }
+        public AppsFragment() {}
 
         public void onResume() {
             super.onResume();
-            drawT.drawTasks(appsView);
+            Tools.HangarLog("onResume AppsFragment");
+            mAppRowAdapter.reDraw(completeRedraw);
+            updateRowItem(null);
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             setHasOptionsMenu(true);
-            appsView = inflater.inflate(R.layout.apps_settings, container, false);
-            // drawT.drawTasks(appsView);
+            View appsView = inflater.inflate(R.layout.apps_settings, container, false);
+            lv = (ListView) appsView.findViewById(R.id.list);
             return appsView;
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+
+            List<AppsRowItem> appTasks = createAppTasks();
+
+            mAppRowAdapter = new AppsRowAdapter(mContext, appTasks);
+            lv.setAdapter(mAppRowAdapter);
+            lv.setOnItemClickListener(this);
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+            final AppsRowItem rowItem = (AppsRowItem) parent.getItemAtPosition(position);
+
+            PopupMenu popup = new PopupMenu(mContext, view);
+            popup.getMenuInflater().inflate(R.menu.app_action, popup.getMenu());
+            MenuItem pinItem = popup.getMenu().getItem(0);
+
+            if (rowItem.getPinned()) pinItem.setTitle(R.string.action_unpin);
+            PopupMenu.OnMenuItemClickListener menuAction = new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.action_pin:
+                            Boolean isPinned = rowItem.getPinned();
+                            rowItem.setPinned(!isPinned);
+                            new Tools().togglePinned(mContext, rowItem.getPackageName());
+                            break;
+                        case R.id.action_pick_icon:
+                            mIconTask = rowItem;
+                            pickIcon(mInstance);
+                            return true;
+                        case R.id.action_blacklist:
+                            Boolean isBlackListed = rowItem.getBlacklisted();
+                            rowItem.setBlacklisted(!isBlackListed);
+                            db.blacklistTask(rowItem, !isBlackListed);
+                            break;
+                        case R.id.action_reset_stats:
+                            rowItem.setStats(null);
+                            db.resetTaskStats(rowItem);
+                            break;
+                    }
+                    updateRowItem(rowItem);
+                    myService.execute(SERVICE_CLEAR_TASKS);
+                    myService.watchHelper(STOP_SERVICE);
+                    myService.watchHelper(START_SERVICE);
+                    return true;
+                }
+            };
+            popup.setOnMenuItemClickListener(menuAction);
+            popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
+                @Override
+                public void onDismiss(PopupMenu menu) {
+                    lv.setItemChecked(position, false);
+                }
+            });
+            popup.show();
         }
 
     }
 
+    public static List<AppsRowItem> createAppTasks() {
+        int highestSeconds = db.getHighestSeconds();
+        List<TasksModel> tasks = db.getAllTasks();
+        Collections.sort(tasks, new Tools.TasksModelComparator("seconds"));
+
+        List<AppsRowItem> appTasks = new ArrayList<AppsRowItem>();
+
+        for (TasksModel task : tasks) {
+            try {
+                try {
+                    ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
+                } catch (Exception e) {
+                    Tools.HangarLog("Could not find Application info for [" + task.getName() + "]");
+                    db.deleteTask(task);
+                    continue;
+                }
+                appTasks.add(createAppRowItem(task, highestSeconds));
+            } catch (Exception e) {
+                Tools.HangarLog("could not add taskList item " + e);
+            }
+
+        }
+        return appTasks;
+    }
+
+
+    public static AppsRowItem createAppRowItem(TasksModel task, int highestSeconds){
+        AppsRowItem appTask = new AppsRowItem(task);
+        float secondsRatio = (float) task.getSeconds() / highestSeconds;
+
+        int barColor;
+        int secondsColor = (Math.round(secondsRatio * 100));
+        if (secondsColor >= 80) {
+            barColor = 0xFF34B5E2;
+        } else if (secondsColor >= 60) {
+            barColor = 0xFFAA66CC;
+        } else if (secondsColor >= 40) {
+            barColor = 0xFF74C353;
+        } else if (secondsColor >= 20) {
+            barColor = 0xFFFFBB33;
+        } else {
+            barColor = 0xFFFF4444;
+        }
+        int[] statsTime = splitToComponentTimes(task.getSeconds());
+        String statsString = ((statsTime[0] > 0) ? statsTime[0] + "h " : "") + ((statsTime[1] > 0) ? statsTime[1] + "m " : "") + ((statsTime[2] > 0) ? statsTime[2] + "s " : "");
+
+        int maxWidth = displayWidth - Tools.dpToPx(mContext, 46 + 14 + 90);
+        float adjustedWidth = maxWidth * secondsRatio;
+
+        ComponentName componentTask = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
+        appTask.setComponentName(componentTask);
+        appTask.setPinned(new Tools().isPinned(mContext, task.getPackageName()));
+        appTask.setStats(statsString);
+        appTask.setBarColor(barColor);
+        appTask.setBarContWidth(Math.round(adjustedWidth));
+
+        return appTask;
+    }
+
     public static class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        // SharedPreferences prefs;
-        // SharedPreferences.Editor editor;
-
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }

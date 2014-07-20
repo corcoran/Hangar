@@ -54,10 +54,7 @@ public class IconHelper {
             Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(componentTask.getPackageName());
             ResolveInfo rInfo = mContext.getPackageManager().resolveActivity(intent, 0);
             iconPackIcon = ich.getFullResIcon(rInfo);
-            Tools.HangarLog("[" + mCount + "] Caching bitmap for: " + taskName);
             cachedIconString = IconCacheHelper.preloadIcon(mContext, componentTask, Tools.drawableToBitmap(iconPackIcon), Tools.dpToPx(mContext, Settings.CACHED_ICON_SIZE));
-        } else {
-            Tools.HangarLog("[" + mCount + "] Using cached bitmap for: " + taskName);
         }
         if (taskIcon != null) {
             taskIcon.setImageURI(Uri.parse(cachedIconString));

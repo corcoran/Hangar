@@ -152,9 +152,7 @@ public class Donate {
             Bundle buyIntentBundle = mService.getBuyIntent(3, context.getPackageName(),
                     sku, "inapp", null);
             Tools.HangarLog("buyIntentBundle: " + buyIntentBundle);
-            PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-
-            return pendingIntent;
+            return buyIntentBundle.getParcelable("BUY_INTENT");
         } catch (RemoteException e) {
             e.printStackTrace();
         }

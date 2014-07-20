@@ -23,7 +23,9 @@ package ca.mimic.apphangar;
 interface IWatchfulService {
     void clearTasks();
     void runScan();
+    void createNotification();
     void destroyNotification();
     void buildTasks();
+    void buildReorderAndLaunch();
 
 }

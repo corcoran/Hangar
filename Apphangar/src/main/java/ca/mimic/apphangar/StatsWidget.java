@@ -27,7 +27,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -78,7 +77,6 @@ public class StatsWidget extends AppWidgetProvider {
                 e.printStackTrace();
                 Tools.HangarLog("NPE onReceive");
             }
-            // mgr.notifyAppWidgetViewDataChanged(id, R.id.taskRoot);
         }
         super.onReceive(context, intent);
     }
@@ -99,7 +97,7 @@ public class StatsWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
             int appWidgetId, Bundle options) {
 
-        Tools.HangarLog("updateAppWidget");
+        Tools.HangarLog("updateAppWidget (StatsWidget)");
         prefs = new PrefsGet(context.getSharedPreferences("StatsWidget", Context.MODE_PRIVATE));
 
         SharedPreferences mPrefs = prefs.prefsGet();
@@ -189,12 +187,8 @@ public class StatsWidget extends AppWidgetProvider {
             // Drawable taskIcon;
             Bitmap cachedIcon;
             try {
-                ApplicationInfo appInfo = pkgm.getApplicationInfo(task.getPackageName(), 0);
                 ComponentName componentTask = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
                 cachedIcon = ih.cachedIconHelper(componentTask, task.getName());
-//                if(appInfo.icon != 0) {
-//                    uri = Uri.parse("android.resource://" + task.getPackageName() + "/" + appInfo.icon);
-//                }
             } catch (Exception e) {
                 continue;
             }

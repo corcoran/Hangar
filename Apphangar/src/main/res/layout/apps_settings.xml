@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/taskRoot"
-        android:divider="?android:dividerHorizontal"
-        android:showDividers="middle"
-        android:headerDividersEnabled="true"
+
+    <ListView
+        android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </LinearLayout>
-</ScrollView>
+        android:layout_height="match_parent"
+        android:choiceMode="singleChoice"
+        android:listSelector="@drawable/selector"
+        android:layout_alignParentTop="true">
+    </ListView>
+
+</RelativeLayout>

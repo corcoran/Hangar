@@ -71,6 +71,7 @@ public class WatchfulService extends Service {
     protected static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
 
     boolean isNotificationRunning;
+    static ArrayList<Tools.TaskInfo> taskList;
 
     Map<String, Integer> iconMap;
 
@@ -88,12 +89,21 @@ public class WatchfulService extends Service {
                 WatchfulService.this.runScan();
             }
             @Override
+            public void createNotification() {
+                WatchfulService.this.createNotification(taskList);
+            }
+            @Override
             public void destroyNotification() {
                 WatchfulService.this.destroyNotification();
             }
             @Override
             public void buildTasks() {
                 WatchfulService.this.buildTasks();
+            }
+            @Override
+            public void buildReorderAndLaunch() {
+                Tools.HangarLog("buildReorderAndLaunch");
+                WatchfulService.this.buildReorderAndLaunch(true);
             }
         };
     }
@@ -165,7 +175,8 @@ public class WatchfulService extends Service {
 
     protected void buildReorderAndLaunch(boolean isToggled) {
         if (isToggled) {
-            ArrayList<Tools.TaskInfo> taskList;
+            Tools.HangarLog("buildReorderAndLaunch isToggled");
+//            ArrayList<Tools.TaskInfo> taskList;
             taskList = Tools.buildTaskList(getApplicationContext(), db, Settings.TASKLIST_QUEUE_LIMIT);
             if (taskList.size() == 0) {
                 buildBaseTasks();
@@ -250,9 +261,7 @@ public class WatchfulService extends Service {
                         if (runningTask != null && runningTask.packageName.equals(taskPackage)) {
                             if (pm.isScreenOn()) {
                                 runningTask.seconds += LOOP_SECONDS;
-                                Tools.HangarLog("Task [" + runningTask.packageName + "] in fg [" + runningTask.seconds + "]s");
                                 if (runningTask.seconds >= LOOP_SECONDS * 5) {
-                                    Tools.HangarLog("Dumping task [" + runningTask.packageName + "] to DB [" + runningTask.seconds + "]s");
                                     db.addSeconds(taskPackage, runningTask.seconds);
                                     runningTask.totalseconds += runningTask.seconds;
                                     runningTask.seconds = 0;
@@ -300,6 +309,7 @@ public class WatchfulService extends Service {
     }
 
     protected void reorderAndLaunch(ArrayList<Tools.TaskInfo> taskList) {
+        Tools.HangarLog("reorderAndLaunch taskList.size(): " + taskList.size());
         boolean weightedRecents = prefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
                 Settings.WEIGHTED_RECENTS_DEFAULT);
         boolean isToggled = prefs.getBoolean(Settings.TOGGLE_PREFERENCE, Settings.TOGGLE_DEFAULT);

@@ -31,7 +31,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 
@@ -97,22 +96,12 @@ public class Tools {
         final Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         final ResolveInfo res = context.getPackageManager().resolveActivity(intent, 0);
-        if (res.activityInfo == null) {
-            // should not happen. A home is always installed, isn't it?
-        }
-        if ("android".equals(res.activityInfo.packageName)) {
-            // No default selected
-        } else {
+        if (!"android".equals(res.activityInfo.packageName)) {
             return res.activityInfo.packageName;
         }
         return null;
     }
-    public static float pxToDp(Context context, float px){
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float dp = px / (metrics.densityDpi / 160f);
-        return dp;
-    }
+
     public static int dpToPx(Context context, int dp) {
         Resources r = context.getResources();
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
@@ -168,15 +157,6 @@ public class Tools {
         drawable.draw(canvas);
 
         return bitmap;
-    }
-
-    protected static TaskInfo getTask(String packageName, ArrayList<TaskInfo> taskList) {
-        for (TaskInfo task : taskList) {
-            if (task.packageName.equals(packageName)) {
-                return task;
-            }
-        }
-        return null;
     }
 
     protected static class TasksModelComparator implements Comparator<TasksModel> {
@@ -294,7 +274,6 @@ public class Tools {
         int order = taskListE.size();
         db.blankOrder(widget);
         for (TaskInfoOrder taskE : taskListE) {
-            HangarLog("reorder weightedPriority: " + weightPriority + " widget: " + widget + " task[" + taskE.getOrig().appName + "] l[" + taskE.launchOrder + "] p[" + taskE.placeOrder + "] s[" + taskE.secondsOrder + "]");
             taskList.add(taskE.getOrig());
             db.setOrder(taskE.getOrig().packageName, order, widget);
             order--;
@@ -329,7 +308,7 @@ public class Tools {
         }
     }
 
-    protected static ArrayList<String> getBlacklisted(Context context, TasksDataSource db) {
+    protected static ArrayList<String> getBlacklisted(TasksDataSource db) {
         ArrayList<String> blPNames = new ArrayList<String>();
         List<TasksModel> blTasks = db.getBlacklisted();
         for (TasksModel task : blTasks) {
@@ -337,8 +316,6 @@ public class Tools {
         }
         blPNames.add("com.android.systemui");
         blPNames.add("com.android.phone");
-        // blPNames.add(context.getPackageName());
-        // blPNames.add("com.android.settings");
         blPNames.add("com.android.packageinstaller");
         return blPNames;
     }
@@ -353,7 +330,7 @@ public class Tools {
         } catch (PackageManager.NameNotFoundException e) {
             return true;
         }
-        for (String blTask : getBlacklisted(context, db)) {
+        for (String blTask : getBlacklisted(db)) {
             if (packageName.equals(blTask)) {
                 return true;
             }
@@ -367,15 +344,10 @@ public class Tools {
         ArrayList<Tools.TaskInfo> taskList = new ArrayList<Tools.TaskInfo>();
         List<TasksModel> tasks;
         ArrayList<String> pinnedApps;
-        boolean ignorePinned = false;
 
         SharedPreferences settingsPrefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS);
-        SharedPreferences widgetPrefs = context.getSharedPreferences("AppsWidget", Context.MODE_MULTI_PROCESS);
         int pinnedSort = Integer.parseInt(settingsPrefs.getString(Settings.PINNED_SORT_PREFERENCE, Integer.toString(Settings.PINNED_SORT_DEFAULT)));
 
-        if (widget) {
-            ignorePinned = widgetPrefs.getBoolean(Settings.IGNORE_PINNED_PREFERENCE, Settings.IGNORE_PINNED_DEFAULT);
-        }
         pinnedApps = new Tools().getPinned(context);
 
         if (queueSize == 0) {
@@ -431,17 +403,24 @@ public class Tools {
         if (pinnedList.size() > 0) {
             if (pinnedPlacement == Settings.PINNED_PLACEMENT_LEFT) {
                 pinnedList.addAll(taskList);
+                for (int i = pinnedList.size()-1;i >= count; i--) {
+                    pinnedList.remove(i);
+                }
+
                 return pinnedList;
             } else {
                 int index = count - pinnedList.size();
+                if (index < 0) index = 0;
                 try {
                     taskList.addAll(index, pinnedList);
+                    for (int i = taskList.size()-1;i >= count; i--) {
+                        taskList.remove(i);
+                    }
                 } catch (IndexOutOfBoundsException e) {
                     if (index > taskList.size()) {
                         if (pinnedList.size() >= taskList.size()) {
                             return pinnedList;
                         }
-                        // index = taskList.size() - pinnedList.size();
                         taskList.addAll(pinnedList);
                     }
                 }

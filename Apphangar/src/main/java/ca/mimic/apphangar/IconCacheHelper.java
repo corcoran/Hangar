@@ -135,7 +135,6 @@ public class IconCacheHelper {
         }
     }
 
-
     public static String preloadIcon(Context context, ComponentName componentName, Bitmap icon, int size) {
         final String key = componentName.flattenToString();
         FileOutputStream resourceFile = null;
@@ -228,7 +227,7 @@ public class IconCacheHelper {
         return  icon;
     }
 
-    private static String getResourceFilename(ComponentName component) {
+    protected static String getResourceFilename(ComponentName component) {
         String resourceName = component.flattenToShortString();
         String filename = resourceName.replace(File.separatorChar, '_');
         return RESOURCE_FILE_PREFIX + filename;

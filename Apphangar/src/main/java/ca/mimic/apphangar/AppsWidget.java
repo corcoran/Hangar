@@ -93,7 +93,7 @@ public class AppsWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
             int appWidgetId, Bundle options) {
 
-        Tools.HangarLog("updateAppWidget");
+        Tools.HangarLog("updateAppWidget (AppsWidget)");
         prefs = new PrefsGet(context.getSharedPreferences("AppsWidget", Context.MODE_PRIVATE));
 
         SharedPreferences mPrefs = prefs.prefsGet();

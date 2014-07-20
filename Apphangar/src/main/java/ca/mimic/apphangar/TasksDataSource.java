@@ -95,13 +95,13 @@ public class TasksDataSource {
         return 0;
     }
 
-    public int getSeconds(String name) {
-        TasksModel task = getTask(name);
-        if (task != null) {
-            return task.getSeconds();
-        }
-        return 0;
-    }
+//    public int getSeconds(String name) {
+//        TasksModel task = getTask(name);
+//        if (task != null) {
+//            return task.getSeconds();
+//        }
+//        return 0;
+//    }
 
     public int increaseLaunch(String name) {
         try {
@@ -230,9 +230,9 @@ public class TasksDataSource {
                 + " = '" + name + "'", null);
     }
 
-    public int setOrder(String name, int order) {
-        return setOrder(name, order, false);
-    }
+//    public int setOrder(String name, int order) {
+//        return setOrder(name, order, false);
+//    }
 
     public void blankOrder(boolean widget) {
         ContentValues args = new ContentValues();
@@ -367,13 +367,13 @@ public class TasksDataSource {
         return tasks;
     }
 
-    public List<TasksModel> getOrderedTasks(int limit, boolean widget) {
-        return getOrderedTasks(limit, widget, null);
-    }
+//    public List<TasksModel> getOrderedTasks(int limit, boolean widget) {
+//        return getOrderedTasks(limit, widget, null);
+//    }
 
-    public List<TasksModel> getOrderedTasks(int limit) {
-        return getOrderedTasks(limit, false);
-    }
+//    public List<TasksModel> getOrderedTasks(int limit) {
+//        return getOrderedTasks(limit, false);
+//    }
 
     public List<TasksModel> getAllTasks() {
         return getAllTasks(0);

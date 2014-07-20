@@ -346,11 +346,6 @@ public class IconPackHelper {
                 }
 
                 Settings.iconPackUpdate.iconPackUpdated();
-
-                // Notifications need to be refreshed after cache rebuild.
-                Settings.dirtyNotifications = true;
-
-                Settings.drawT.drawTasks(Settings.appsView);
             }
         });
         builder.show();
