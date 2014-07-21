@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:requiresFadingEdge="vertical"
+        android:fadingEdgeLength="6dp"
+        android:layout_marginTop="2dp"
         android:layout_marginBottom="40dp"
         android:layout_alignParentTop="true">
     </ListView>
@@ -71,12 +74,6 @@
             android:layout_height="wrap_content" />
 
     </RelativeLayout>
-
-    <View
-        android:layout_above="@+id/applist_action_line"
-        android:layout_width="fill_parent"
-        android:layout_height="9dp"
-        android:background="@drawable/drop_shadow" />
 
     <View
         android:id="@+id/applist_action_line"
