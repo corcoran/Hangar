@@ -1103,7 +1103,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
 
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             final AppsRowItem rowItem = (AppsRowItem) parent.getItemAtPosition(position);
 
             PopupMenu popup = new PopupMenu(mContext, view);
@@ -1142,12 +1142,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 }
             };
             popup.setOnMenuItemClickListener(menuAction);
-            popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
-                @Override
-                public void onDismiss(PopupMenu menu) {
-                    lv.setItemChecked(position, false);
-                }
-            });
             popup.show();
         }
 
