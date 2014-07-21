@@ -88,7 +88,7 @@
         </activity>
         <activity
             android:name="ca.mimic.apphangar.Instructions"
-            android:label="Hangar Instructions"
+            android:label="@string/instructions_title"
             android:parentActivityName="ca.mimic.apphangar.Settings"
             android:theme="@android:style/Theme.Holo" >
             <meta-data

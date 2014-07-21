@@ -507,6 +507,8 @@
     </string-array>
 
     <!-- Instructions -->
+
+    <string name="instructions_title">Hangar Instructions</string>
     <string name="instructions_1_1">"Welcome to Hangar!"</string>
     <string name="instructions_1_2">"Now that Hangar is installed, it has added an <b>app shortcut bar</b> to your notification drawer.  It will also start monitoring the frequency and amount of time you spend in your apps."</string>
     <string name="instructions_1_3">"As Hangar follows your daily usage, it will use this data to prioritize the apps you rely on most.  With every app you use, Hangar gets smarter and changes those shortcuts in real time to suit your needs."</string>
