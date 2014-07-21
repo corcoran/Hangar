@@ -62,8 +62,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -105,12 +107,13 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String PINNED_SORT_PREFERENCE = "pinned_sort_preference";
     final static String PINNED_PLACEMENT_PREFERENCE = "pinned_placement_preference";
     final static String IGNORE_PINNED_PREFERENCE = "ignore_pinned_preference";
+    final static String APPLIST_TOP_PREFERENCE = "applist_top_preference";
+    final static String APPLIST_SORT_PREFERENCE = "applist_sort_preference";
 
     protected static Settings mInstance;
     protected static AppsRowItem mIconTask;
     protected static boolean isBound = false;
     protected static boolean mLaunchedPaypal = false;
-    protected static boolean dirtyNotifications = false;
     protected static Display display;
     boolean newStart;
 
@@ -183,6 +186,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
     final static int THANK_YOU_GOOGLE = 0;
     final static int THANK_YOU_PAYPAL = 1;
+
+    final static int APPLIST_TOP_DEFAULT = 2;
+    final static int APPLIST_SORT_DEFAULT = 0;
 
     final static int START_SERVICE = 0;
     final static int STOP_SERVICE = 1;
@@ -1028,12 +1034,60 @@ public class Settings extends Activity implements ActionBar.TabListener {
             updateRowItem(null);
         }
 
+        Spinner.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                final SharedPreferences.Editor editor = prefs.editorGet();
+
+                switch (adapterView.getId()) {
+                    case R.id.top_spinner:
+                        Tools.HangarLog("onSpinnerItemSelected (Top): " + i);
+                        editor.putInt(APPLIST_TOP_PREFERENCE, i);
+                        break;
+                    case R.id.sort_spinner:
+                        Tools.HangarLog("onSpinnerItemSelected (Sort): " + i);
+                        editor.putInt(APPLIST_SORT_PREFERENCE, i);
+                        break;
+                }
+                editor.commit();
+
+                List<AppsRowItem> appTasks = createAppTasks();
+                mAppRowAdapter = new AppsRowAdapter(mContext, appTasks);
+                lv.setAdapter(mAppRowAdapter);
+                mAppRowAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        };
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             setHasOptionsMenu(true);
             View appsView = inflater.inflate(R.layout.apps_settings, container, false);
             lv = (ListView) appsView.findViewById(R.id.list);
+
+            final SharedPreferences prefs2 = prefs.prefsGet();
+
+            Spinner topSpin = (Spinner) appsView.findViewById(R.id.top_spinner);
+            ArrayAdapter<CharSequence> topAdapter = ArrayAdapter.createFromResource(mContext,
+                    R.array.entries_top_spinner, R.layout.spinner_item);
+            topAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            topSpin.setAdapter(topAdapter);
+            topSpin.setOnItemSelectedListener(spinnerListener);
+            topSpin.setSelection(prefs2.getInt(APPLIST_TOP_PREFERENCE, APPLIST_TOP_DEFAULT));
+
+            Spinner sortSpin = (Spinner) appsView.findViewById(R.id.sort_spinner);
+            ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(mContext,
+                    R.array.entries_sort_spinner, R.layout.spinner_item);
+            sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sortSpin.setAdapter(sortAdapter);
+            sortSpin.setOnItemSelectedListener(spinnerListener);
+            sortSpin.setSelection(prefs2.getInt(APPLIST_SORT_PREFERENCE, APPLIST_SORT_DEFAULT));
+
             return appsView;
         }
 
@@ -1102,7 +1156,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
     public static List<AppsRowItem> createAppTasks() {
         int highestSeconds = db.getHighestSeconds();
         List<TasksModel> tasks = db.getAllTasks();
-        Collections.sort(tasks, new Tools.TasksModelComparator("seconds"));
 
         List<AppsRowItem> appTasks = new ArrayList<AppsRowItem>();
 
@@ -1119,6 +1172,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
             } catch (Exception e) {
                 Tools.HangarLog("could not add taskList item " + e);
             }
+
+            SharedPreferences prefs2 = prefs.prefsGet();
+            Collections.sort(appTasks, new Tools.AppRowComparator(prefs2.getInt(APPLIST_TOP_PREFERENCE, APPLIST_TOP_DEFAULT), prefs2.getInt(APPLIST_SORT_PREFERENCE, APPLIST_SORT_DEFAULT)));
 
         }
         return appTasks;

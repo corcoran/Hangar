@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent" >
 
     <ListView
         android:id="@+id/list"
@@ -9,7 +9,82 @@
         android:layout_height="match_parent"
         android:choiceMode="singleChoice"
         android:listSelector="@drawable/selector"
+        android:layout_marginBottom="40dp"
         android:layout_alignParentTop="true">
     </ListView>
+
+    <RelativeLayout
+        android:id="@+id/applist_action_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:layout_centerInParent="true"
+        android:layout_alignParentBottom="true"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/sort_text"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="@string/title_sort_spinner"/>
+
+        <Spinner
+            android:id="@+id/sort_spinner"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/sort_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:id="@+id/separator"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/sort_spinner"
+            android:layout_centerVertical="true"
+            android:background="#22FFFFFF"
+            android:padding="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_width="1dp" />
+
+        <TextView
+            android:id="@+id/top_text"
+            android:layout_toRightOf="@id/separator"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="@string/title_top_spinner"/>
+
+        <Spinner
+            android:id="@+id/top_spinner"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/top_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_above="@+id/applist_action_line"
+        android:layout_width="fill_parent"
+        android:layout_height="9dp"
+        android:background="@drawable/drop_shadow" />
+
+    <View
+        android:id="@+id/applist_action_line"
+        android:layout_height="2dp"
+        android:layout_above="@+id/applist_action_bar"
+        android:background="#33b5e5"
+        android:layout_width="fill_parent" />
 
 </RelativeLayout>

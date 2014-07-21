@@ -159,6 +159,50 @@ public class Tools {
         return bitmap;
     }
 
+    protected static class AppRowComparator implements Comparator<AppsRowItem> {
+        final int TIME_SPENT = 0;
+        final int ALPHABETICAL = 1;
+
+        final int PINNED = 0;
+        final int BLACKLISTED = 1;
+        final int NONE = 2;
+
+        int mTopType;
+        int mSortType;
+
+        AppRowComparator (int topType, int sortType){
+            mTopType = topType;
+            mSortType = sortType;
+        }
+        @Override
+        public int compare(AppsRowItem r1, AppsRowItem r2) {
+            int firstCompare = 0;
+
+            switch (mTopType) {
+                case PINNED:
+                    firstCompare = r2.getPinned().compareTo(r1.getPinned());
+                    break;
+                case BLACKLISTED:
+                    firstCompare = r2.getBlacklisted().compareTo(r1.getBlacklisted());
+                    break;
+                case NONE:
+                    break;
+            }
+            if (firstCompare == 0) {
+                switch (mSortType) {
+                    case ALPHABETICAL:
+                        return r1.getName().compareToIgnoreCase(r2.getName());
+                    case TIME_SPENT:
+                        Integer o1 = r1.getSeconds();
+                        Integer o2 = r2.getSeconds();
+                        return o2.compareTo(o1);
+
+                }
+            }
+            return firstCompare;
+        }
+    }
+
     protected static class TasksModelComparator implements Comparator<TasksModel> {
         String mType = "seconds";
         TasksModelComparator(String type) {

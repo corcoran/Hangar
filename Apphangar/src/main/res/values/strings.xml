@@ -167,6 +167,28 @@
     <string name="title_icon_pack_not_found">No icon packs found</string>
     <string name="title_icon_pack_install">Find an icon pack</string>
 
+    <!-- Apps -->
+    <string name="title_top_spinner">Top</string>
+    <string name="title_sort_spinner">Sort by</string>
+
+    <string name="top_pinned">Pinned</string>
+    <string name="top_blacklisted">Blacklisted</string>
+    <string name="top_none">None</string>
+
+    <string name="sort_time_spent">Time spent in app</string>
+    <string name="sort_alphabetical">Alphabetical</string>
+
+    <string-array name="entries_top_spinner">
+        <item>@string/top_pinned</item>
+        <item>@string/top_blacklisted</item>
+        <item>@string/top_none</item>
+    </string-array>
+
+    <string-array name="entries_sort_spinner">
+        <item>@string/sort_time_spent</item>
+        <item>@string/sort_alphabetical</item>
+    </string-array>
+
     <!-- Color Picker -->
     <string name="dialog_color_picker">Color Picker</string>
     <string name="press_color_to_apply">Press on color below to apply</string>
