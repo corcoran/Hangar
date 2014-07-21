@@ -325,8 +325,10 @@
   &#8226; [New!] Icon pack support
   &#8226; [New!] Per-app manual icon selection
   &#8226; [New!] Second row feature
+  &#8226; [New!] Sorting added to Apps section
   &#8226; [New!] German/Danish translations
   &#8226; [Fix!] Revamped icon caching
+  &#8226; [Fix!] Apps section now uses far less memory
   &#8226; [Fix!] Icon creation made more efficient"</item>
         <item>
 "  &#8226; [New!] Added all white icon
