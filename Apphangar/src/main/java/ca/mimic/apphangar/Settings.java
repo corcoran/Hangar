@@ -109,6 +109,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String IGNORE_PINNED_PREFERENCE = "ignore_pinned_preference";
     final static String APPLIST_TOP_PREFERENCE = "applist_top_preference";
     final static String APPLIST_SORT_PREFERENCE = "applist_sort_preference";
+    final static String SMART_NOTIFICATION_PREFERENCE = "smart_notification_preference";
 
     protected static Settings mInstance;
     protected static AppsRowItem mIconTask;
@@ -139,6 +140,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static boolean APPS_BY_WIDGET_SIZE_DEFAULT = true;
     final static boolean SECOND_ROW_DEFAULT = false;
     final static boolean IGNORE_PINNED_DEFAULT = false;
+    final static boolean SMART_NOTIFICATION_DEFAULT = true;
 
     final static int WEIGHT_PRIORITY_DEFAULT = 0;
     final static int APPSNO_DEFAULT = 8;
@@ -271,7 +273,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     @Override
     protected void onResume() {
         super.onResume();
-        Tools.HangarLog("onREsume Settings!");
+        Tools.HangarLog("onResume Settings!");
         if (mLaunchedPaypal) {
             mLaunchedPaypal = false;
             launchThanks(THANK_YOU_PAYPAL);
@@ -732,6 +734,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         CheckBoxPreference weighted_recents_preference;
         CheckBoxPreference colorize_preference;
         CheckBoxPreference second_row_preference;
+        CheckBoxPreference smart_notification_preference;
         ColorPickerPreference icon_color_preference;
         SwitchPreference toggle_preference;
         SwitchPreference boot_preference;
@@ -835,6 +838,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 weight_priority_preference = (UpdatingListPreference)findPreference(WEIGHT_PRIORITY_PREFERENCE);
                 weight_priority_preference.setValue(prefs2.getString(WEIGHT_PRIORITY_PREFERENCE, Integer.toString(WEIGHT_PRIORITY_DEFAULT)));
                 weight_priority_preference.setOnPreferenceChangeListener(changeListener);
+
+                smart_notification_preference = (CheckBoxPreference)findPreference(SMART_NOTIFICATION_PREFERENCE);
+                smart_notification_preference.setChecked(prefs2.getBoolean(SMART_NOTIFICATION_PREFERENCE, SMART_NOTIFICATION_DEFAULT));
+                smart_notification_preference.setOnPreferenceChangeListener(changeListener);
 
                 priority_preference = (UpdatingListPreference)findPreference(PRIORITY_PREFERENCE);
                 priority_preference.setValue(prefs2.getString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_DEFAULT)));
@@ -942,6 +949,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     editor.putBoolean(WEIGHTED_RECENTS_PREFERENCE, (Boolean) newValue);
                     editor.commit();
                     myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
+                } else if (preference.getKey().equals(SMART_NOTIFICATION_PREFERENCE)) {
+                    editor.putBoolean(SMART_NOTIFICATION_PREFERENCE, (Boolean) newValue);
+                    editor.commit();
                 } else if (preference.getKey().equals(APPSNO_PREFERENCE)) {
                     editor.putString(APPSNO_PREFERENCE, (String) newValue);
                     editor.commit();
@@ -952,7 +962,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     String mPriorityPreference = (String) newValue;
                     editor.putString(PRIORITY_PREFERENCE, mPriorityPreference);
                     PrefsFragment mAppearanceSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(1);
-                    if (!mPriorityPreference.equals(PRIORITY_BOTTOM) &&
+                    if (!mPriorityPreference.equals(Integer.toString(PRIORITY_BOTTOM)) &&
                             mAppearanceSettings.statusbar_icon_preference.getValue().equals(STATUSBAR_ICON_NONE)) {
                         editor.putString(STATUSBAR_ICON_PREFERENCE, STATUSBAR_ICON_DEFAULT);
                         mAppearanceSettings.statusbar_icon_preference.setValue(STATUSBAR_ICON_DEFAULT);
@@ -1041,11 +1051,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
                 switch (adapterView.getId()) {
                     case R.id.top_spinner:
-                        Tools.HangarLog("onSpinnerItemSelected (Top): " + i);
                         editor.putInt(APPLIST_TOP_PREFERENCE, i);
                         break;
                     case R.id.sort_spinner:
-                        Tools.HangarLog("onSpinnerItemSelected (Sort): " + i);
                         editor.putInt(APPLIST_SORT_PREFERENCE, i);
                         break;
                 }

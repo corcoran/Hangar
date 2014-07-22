@@ -91,6 +91,9 @@
         <item>1</item>
     </string-array>
 
+    <string name="title_smart_notification">Smart notification sort</string>
+    <string name="summary_smart_notification">Only reorder when new icon is added</string>
+
     <!-- Appearance -->
 
     <string name="title_appsno_preference">Number of apps</string>

@@ -42,7 +42,6 @@ public class AppsWidget extends AppWidgetProvider {
     protected static PrefsGet prefs;
 
     protected static final int SMALL_ICONS = 0;
-    protected static final int MEDIUM_ICONS = 1;
     protected static final int LARGE_ICONS = 2;
 
     protected static final int ICON_SMALL_HEIGHT = 40;
@@ -218,8 +217,10 @@ public class AppsWidget extends AppWidgetProvider {
 
         boolean ignorePinned = mPrefs.getBoolean(Settings.IGNORE_PINNED_PREFERENCE,
                 Settings.IGNORE_PINNED_DEFAULT);
-        if (!ignorePinned)
-            appList = new Tools().getPinnedTasks(context, db, appList, numOfIcons);
+        if (!ignorePinned) {
+            ArrayList<Tools.TaskInfo> pinnedList = Tools.buildPinnedList(mContext, db);
+            appList = new Tools().getPinnedTasks(context, pinnedList, appList, numOfIcons);
+        }
 
         int imageButtonLayout = context.getResources().getIdentifier("imageButton", "id", taskPackage);
         int imageContLayout = context.getResources().getIdentifier("imageCont", "id", taskPackage);

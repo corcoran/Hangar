@@ -275,8 +275,16 @@ public class Tools {
         }
     }
 
+    public Boolean isInArray(ArrayList<String> list, String str) {
+        for (String curVal : list){
+            if (curVal.equals(str)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    protected ArrayList<TaskInfo> reorderTasks(ArrayList<TaskInfo> taskList, TasksDataSource db, int weightPriority, boolean widget) {
+    protected synchronized ArrayList<TaskInfo> reorderTasks(ArrayList<TaskInfo> taskList, TasksDataSource db, int weightPriority, boolean widget) {
         Tools.HangarLog("reorderTasks: " + taskList.size() + " widget? " + widget);
         int highestSeconds = db.getHighestSeconds();
         int highestLaunch = db.getHighestLaunch();
@@ -329,7 +337,7 @@ public class Tools {
         return reorderTasks(taskList, db, weightPriority, false);
     }
 
-    protected static void reorderWidgetTasks(TasksDataSource db, Context context) {
+    protected synchronized static void reorderWidgetTasks(TasksDataSource db, Context context) {
         SharedPreferences settingsPrefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS);
         SharedPreferences widgetPrefs = context.getSharedPreferences("AppsWidget", Context.MODE_MULTI_PROCESS);
 
@@ -382,7 +390,7 @@ public class Tools {
         return false;
     }
 
-    protected static ArrayList<Tools.TaskInfo> buildTaskList(Context context, TasksDataSource db,
+    protected synchronized static ArrayList<Tools.TaskInfo> buildTaskList(Context context, TasksDataSource db,
                                                              int queueSize, boolean weighted,
                                                              boolean widget) {
         ArrayList<Tools.TaskInfo> taskList = new ArrayList<Tools.TaskInfo>();
@@ -438,11 +446,10 @@ public class Tools {
         return buildTaskList(context, db, 0, false, false);
     }
 
-    protected ArrayList<Tools.TaskInfo> getPinnedTasks (Context context, TasksDataSource db, ArrayList<Tools.TaskInfo> taskList, int count) {
+    protected ArrayList<Tools.TaskInfo> getPinnedTasks (Context context, ArrayList<Tools.TaskInfo> pinnedList, ArrayList<Tools.TaskInfo> taskList, int count) {
         SharedPreferences settingsPrefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS);
         int pinnedPlacement = Integer.parseInt(settingsPrefs.getString(Settings.PINNED_PLACEMENT_PREFERENCE, Integer.toString(Settings.PINNED_PLACEMENT_DEFAULT)));
-
-        ArrayList<Tools.TaskInfo> pinnedList = Tools.buildPinnedList(context, db);
+        Tools.HangarLog("getPinnedTasks");
 
         if (pinnedList.size() > 0) {
             if (pinnedPlacement == Settings.PINNED_PLACEMENT_LEFT) {

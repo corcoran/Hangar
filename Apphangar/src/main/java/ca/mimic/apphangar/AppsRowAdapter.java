@@ -41,7 +41,7 @@ public class AppsRowAdapter extends BaseAdapter {
     Context mContext;
     List<AppsRowItem> mRowItems;
     IconHelper ih;
-    Boolean completeRedraw = false;
+    boolean completeRedraw = false;
 
     public AppsRowAdapter(Context context, List<AppsRowItem> rowItems) {
         mContext = context;
@@ -58,7 +58,7 @@ public class AppsRowAdapter extends BaseAdapter {
         TextView useStats;
     }
 
-    protected void reDraw(Boolean which) {
+    protected void reDraw(boolean which) {
         completeRedraw = which;
     }
 

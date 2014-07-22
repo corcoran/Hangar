@@ -22,7 +22,6 @@ package ca.mimic.apphangar;
 
 import android.app.ActivityManager;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
@@ -57,9 +56,14 @@ public class WatchfulService extends Service {
     PackageManager pkgm;
     PowerManager pm;
 
-    TaskInfo runningTask;
+    static TaskInfo runningTask;
+    static ArrayList<Tools.TaskInfo> pinnedList;
+    static ArrayList<Tools.TaskInfo> taskList;
+    static ArrayList<String> notificationTasks;
+
     String launcherPackage = null;
     int numOfApps;
+    boolean isNotificationRunning;
     boolean secondRow;
 
     final int MAX_RUNNING_TASKS = 20;
@@ -69,9 +73,6 @@ public class WatchfulService extends Service {
     final int ICON_SIZE_LARGE = 2;
 
     protected static final String BCAST_CONFIGCHANGED = "android.intent.action.CONFIGURATION_CHANGED";
-
-    boolean isNotificationRunning;
-    static ArrayList<Tools.TaskInfo> taskList;
 
     Map<String, Integer> iconMap;
 
@@ -103,6 +104,8 @@ public class WatchfulService extends Service {
             @Override
             public void buildReorderAndLaunch() {
                 Tools.HangarLog("buildReorderAndLaunch");
+                pinnedList = null;
+                notificationTasks = null;
                 WatchfulService.this.buildReorderAndLaunch(true);
             }
         };
@@ -228,6 +231,7 @@ public class WatchfulService extends Service {
             public void run() {
                 try {
                     boolean isToggled = prefs.getBoolean(Settings.TOGGLE_PREFERENCE, Settings.TOGGLE_DEFAULT);
+                    boolean smartNotification = prefs.getBoolean(Settings.SMART_NOTIFICATION_PREFERENCE, Settings.SMART_NOTIFICATION_DEFAULT);
 
                     final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
                     final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(MAX_RUNNING_TASKS);
@@ -269,7 +273,26 @@ public class WatchfulService extends Service {
                             }
                             return;
                         }
+
                         buildTaskInfo(taskClass, taskPackage);
+
+                        if (taskClass.equals(getPackageName())) {
+                            buildReorderAndLaunch(isToggled & !isNotificationRunning);
+                            return;
+                        }
+
+                        // If task is showing we do not need to update the notification drawer.
+                        if (smartNotification) {
+                            if (notificationTasks != null && new Tools().isInArray(notificationTasks, taskPackage)) {
+                                buildReorderAndLaunch(isToggled & !isNotificationRunning);
+                                return;
+                            }
+                        } else {
+                            if (new Tools().isPinned(mContext, taskPackage)) {
+                                buildReorderAndLaunch(isToggled & !isNotificationRunning);
+                                return;
+                            }
+                        }
                     }
                     buildReorderAndLaunch(isToggled);
                 } catch (Exception e) {
@@ -371,7 +394,10 @@ public class WatchfulService extends Service {
         int iconCacheCount = (maxButtons * (secondRow ? 2 : 1));
         appDrawer.setCount(iconCacheCount, Settings.CACHED_NOTIFICATION_ICON_LIMIT, secondRow);
 
-        taskList = new Tools().getPinnedTasks(mContext, db, taskList, iconCacheCount);
+        if (pinnedList == null)
+            pinnedList = Tools.buildPinnedList(mContext, db);
+        taskList = new Tools().getPinnedTasks(mContext, pinnedList, taskList, iconCacheCount);
+
 
         Tools.HangarLog("taskList.size(): " + taskList.size() + " realmaxbuttons: " + numOfApps + " maxbuttons: " + maxButtons);
         int filledConts = 0;
@@ -387,6 +413,7 @@ public class WatchfulService extends Service {
         }
 
         customNotifBigView.removeAllViews(R.id.notifContainer);
+        notificationTasks = new ArrayList<String>();
 
         for (int i=0; i <= taskList.size(); i++) {
             boolean wrapItUp = false;
@@ -409,6 +436,7 @@ public class WatchfulService extends Service {
 
             if (!wrapItUp && appDrawer.newItem(taskList.get(i), itemLayout)) {
                 appDrawer.addItem();
+                notificationTasks.add(taskList.get(i).packageName);
                 filledConts++;
             }
         }
@@ -440,12 +468,7 @@ public class WatchfulService extends Service {
         if (secondRow) {
             notification.bigContentView = customNotifBigView;
         }
-        if (isNotificationRunning) {
-            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(1337, notification);
-        } else {
-            startForeground(1337, notification);
-        }
+        startForeground(1337, notification);
         isNotificationRunning = true;
     }
 

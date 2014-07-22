@@ -38,6 +38,11 @@
             android:dependency="weighted_recents_preference"
             android:defaultValue="0" />
 
+        <CheckBoxPreference
+            android:key="smart_notification_preference"
+            android:title="@string/title_smart_notification"
+            android:summary="@string/summary_smart_notification" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
