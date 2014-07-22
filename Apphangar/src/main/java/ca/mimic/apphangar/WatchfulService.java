@@ -84,6 +84,8 @@ public class WatchfulService extends Service {
             @Override
             public void clearTasks() {
                 runningTask = null;
+                pinnedList = null;
+                notificationTasks = null;
             }
             @Override
             public void runScan() {
@@ -103,7 +105,6 @@ public class WatchfulService extends Service {
             }
             @Override
             public void buildReorderAndLaunch() {
-                Tools.HangarLog("buildReorderAndLaunch");
                 pinnedList = null;
                 notificationTasks = null;
                 WatchfulService.this.buildReorderAndLaunch(true);

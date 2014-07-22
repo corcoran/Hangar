@@ -92,7 +92,7 @@
     </string-array>
 
     <string name="title_smart_notification">Smart notification sort</string>
-    <string name="summary_smart_notification">Only reorder when new icon is added</string>
+    <string name="summary_smart_notification">Only reorder when a new icon is added</string>
 
     <!-- Appearance -->
 
@@ -307,7 +307,7 @@
     <string name="changelog_accept_button">Continue</string>
     <string name="changelog_changes_title">Changes</string>
     <string name="changelog_coming_soon_title">Coming soon!</string>
-    <string name="changelog_coming_soon_text" translatable="false">&#8226; Pinned apps &amp; profiles</string>
+    <string name="changelog_coming_soon_text" translatable="false">App use by time period</string>
 
     <string-array name="versionNumbers" translatable="false">
         <item>2.3 (???)</item>
@@ -329,10 +329,12 @@
   &#8226; [New!] Per-app manual icon selection
   &#8226; [New!] Second row feature
   &#8226; [New!] Sorting added to Apps section
+  &#8226; [New!] Ultra efficient Smart notification sort
   &#8226; [New!] German/Danish translations
   &#8226; [Fix!] Revamped icon caching
   &#8226; [Fix!] Apps section now uses far less memory
-  &#8226; [Fix!] Icon creation made more efficient"</item>
+  &#8226; [Fix!] Icon creation made more efficient
+  &#8226; Updated Instructions"</item>
         <item>
 "  &#8226; [New!] Added all white icon
   &#8226; [New!] Small, medium &amp; large notification icons
@@ -528,8 +530,8 @@
     <string name="instructions_3_1">"Customizations"</string>
     <string name="instructions_3_2">"In addition to the default <b>notification drawer</b> app shortcut bar, you can add and customize a <b>widget</b> for launching apps.  Specify the color, size, quantity, background color and more."</string>
     <string name="instructions_title_3">ex. 2 differently styled Apps widgets</string>
-    <string name="instructions_title_4">Blacklist and wipe stats</string>
-    <string name="instructions_3_3">"You can also <b>blacklist</b> apps and reset their statistics from the Hangar <b>Apps tab</b>."</string>
+    <string name="instructions_title_4">App options menu</string>
+    <string name="instructions_3_3">"You can also <b>pin</b> apps to be permanently anchored.  Got an <b>icon pack</b> you like?  Hangar supports icon packs and even the ability to manually change an individual app\'s icon.\n\nFinally, you can exclude apps from showing up with the <b>blacklist</b> option.  Do all this and more from the Hangar <b>Apps tab</b>."</string>
 
     <string name="instructions_4_1">"Get started"</string>
     <string name="instructions_4_2">"Hangar is a lightweight tool that makes launching apps convenient from anywhere in Android.\n\nTo enjoy the full benefits of this tool, it should have at least a day's worth of monitored app statistics to base its recommendations on.\n\nEnjoy and thank you for trying Hangar!"</string>

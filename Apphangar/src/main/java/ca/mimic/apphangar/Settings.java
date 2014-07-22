@@ -952,6 +952,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 } else if (preference.getKey().equals(SMART_NOTIFICATION_PREFERENCE)) {
                     editor.putBoolean(SMART_NOTIFICATION_PREFERENCE, (Boolean) newValue);
                     editor.commit();
+                    myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
+                    myService.watchHelper(STOP_SERVICE);
+                    myService.watchHelper(START_SERVICE);
                 } else if (preference.getKey().equals(APPSNO_PREFERENCE)) {
                     editor.putString(APPSNO_PREFERENCE, (String) newValue);
                     editor.commit();
@@ -1139,6 +1142,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                             break;
                         case R.id.action_reset_stats:
                             rowItem.setStats(null);
+                            rowItem.setBarContWidth(0);
                             db.resetTaskStats(rowItem);
                             break;
                     }
