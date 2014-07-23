@@ -213,11 +213,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
             launchChangelog();
         }
 
-        if (db == null) {
-            db = new TasksDataSource(this);
-            db.open();
-        }
-
         display = getWindowManager().getDefaultDisplay();
 
         Point size = new Point();
@@ -262,7 +257,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+        db = TasksDataSource.getInstance(this);
+        db.open();
+
         int allTasksSize = db.getAllTasks().size();
+        db.close();
         if (allTasksSize == 0) {
             newStart = true;
         }
@@ -680,7 +679,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
                 for (AppsRowItem task : appTasks) {
                     ComponentName componentName = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
-                    ih.cachedIconHelper(componentName, task.getName());
+                    ih.cachedIconHelper(componentName);
                 }
                 myService.execute(SERVICE_CREATE_NOTIFICATIONS);
             }
@@ -1059,8 +1058,12 @@ public class Settings extends Activity implements ActionBar.TabListener {
         public void onResume() {
             super.onResume();
             Tools.HangarLog("onResume AppsFragment");
-            mAppRowAdapter.reDraw(completeRedraw);
-            updateRowItem(null);
+
+            List<AppsRowItem> appTasks = createAppTasks();
+            mAppRowAdapter = new AppsRowAdapter(mContext, appTasks);
+            lv.setAdapter(mAppRowAdapter);
+            lv.setOnItemClickListener(this);
+            mAppRowAdapter.notifyDataSetChanged();
         }
 
         Spinner.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
@@ -1121,12 +1124,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-
-            List<AppsRowItem> appTasks = createAppTasks();
-
-            mAppRowAdapter = new AppsRowAdapter(mContext, appTasks);
-            lv.setAdapter(mAppRowAdapter);
-            lv.setOnItemClickListener(this);
         }
 
         @Override
@@ -1141,6 +1138,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
             PopupMenu.OnMenuItemClickListener menuAction = new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
+                    db = TasksDataSource.getInstance(mContext);
+                    db.open();
+
                     switch (item.getItemId()) {
                         case R.id.action_pin:
                             Boolean isPinned = rowItem.getPinned();
@@ -1155,11 +1155,13 @@ public class Settings extends Activity implements ActionBar.TabListener {
                             Boolean isBlackListed = rowItem.getBlacklisted();
                             rowItem.setBlacklisted(!isBlackListed);
                             db.blacklistTask(rowItem, !isBlackListed);
+                            db.close();
                             break;
                         case R.id.action_reset_stats:
                             rowItem.setStats(null);
                             rowItem.setBarContWidth(0);
                             db.resetTaskStats(rowItem);
+                            db.close();
                             break;
                     }
                     updateRowItem(rowItem);
@@ -1176,6 +1178,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
     }
 
     public static List<AppsRowItem> createAppTasks() {
+        db = TasksDataSource.getInstance(mContext);
+        db.open();
         int highestSeconds = db.getHighestSeconds();
         List<TasksModel> tasks = db.getAllTasks();
 
@@ -1190,7 +1194,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     db.deleteTask(task);
                     continue;
                 }
-                appTasks.add(createAppRowItem(task, highestSeconds));
+                if (new Tools().cachedImageResolveInfo(mContext, task.getPackageName()) != null)
+                    appTasks.add(createAppRowItem(task, highestSeconds));
             } catch (Exception e) {
                 Tools.HangarLog("could not add taskList item " + e);
             }
@@ -1199,6 +1204,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
             Collections.sort(appTasks, new Tools.AppRowComparator(prefs2.getInt(APPLIST_TOP_PREFERENCE, APPLIST_TOP_DEFAULT), prefs2.getInt(APPLIST_SORT_PREFERENCE, APPLIST_SORT_DEFAULT)));
 
         }
+        db.close();
         return appTasks;
     }
 

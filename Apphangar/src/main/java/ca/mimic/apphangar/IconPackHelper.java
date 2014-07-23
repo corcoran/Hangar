@@ -305,18 +305,24 @@ public class IconPackHelper {
         }
     }
 
-    public static void pickIconPack(final Context context) {
-        Map<String, IconPackInfo> supportedPackages = getSupportedPackages(context);
-
-        Boolean noPackages = false;
-        if (supportedPackages.isEmpty()) {
+    public static IconPackInfo installNewPack(Context context) {
+        try {
             Intent intent = context.getPackageManager().getLaunchIntentForPackage(Settings.PLAY_STORE_PACKAGENAME);
             ResolveInfo rInfo = context.getPackageManager().resolveActivity(intent, 0);
 
             Drawable icon = new IconCacheHelper(context).getFullResIcon(rInfo);
             String label = context.getResources().getString(R.string.title_icon_pack_install);
-            IconPackInfo iconPack = new IconPackInfo(label, icon, Settings.PLAY_STORE_PACKAGENAME);
-            supportedPackages.put(Settings.PLAY_STORE_PACKAGENAME, iconPack);
+            return new IconPackInfo(label, icon, Settings.PLAY_STORE_PACKAGENAME);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static void pickIconPack(final Context context) {
+        Map<String, IconPackInfo> supportedPackages = getSupportedPackages(context);
+
+        Boolean noPackages = false;
+        if (supportedPackages.isEmpty()) {
             noPackages = true;
         }
 
@@ -428,6 +434,9 @@ public class IconPackHelper {
             String defaultLabel = res.getString(R.string.default_icon_pack);
             Drawable icon = res.getDrawable(R.drawable.ic_launcher_home);
             mSupportedPackages.add(0, new IconPackInfo(defaultLabel, icon, ""));
+            IconPackInfo installNew = installNewPack(ctx);
+            if (installNew != null)
+                mSupportedPackages.add(installNew);
 
             prefs = new Settings.PrefsGet(ctx.getSharedPreferences(ctx.getPackageName(), Context.MODE_MULTI_PROCESS));
             SharedPreferences mPrefs = prefs.prefsGet();

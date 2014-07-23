@@ -43,7 +43,6 @@ import ca.mimic.apphangar.Settings.PrefsGet;
 
 public class StatsWidget extends AppWidgetProvider {
 
-    protected static TasksDataSource db;
     protected static Context mContext;
     protected static PrefsGet prefs;
 
@@ -147,12 +146,11 @@ public class StatsWidget extends AppWidgetProvider {
         String packageName = context.getPackageName();
         Intent intent;
 
-        if (db == null) {
-            db = new TasksDataSource(context);
-            db.open();
-        }
+        TasksDataSource db = TasksDataSource.getInstance(context);
+        db.open();
         int highestSeconds = db.getHighestSeconds();
         List<TasksModel> tasks = db.getAllTasks();
+        db.close();
 
         Collections.sort(tasks, new Tools.TasksModelComparator("seconds"));
 
@@ -186,12 +184,10 @@ public class StatsWidget extends AppWidgetProvider {
 
             // Drawable taskIcon;
             Bitmap cachedIcon;
-            try {
-                ComponentName componentTask = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
-                cachedIcon = ih.cachedIconHelper(componentTask, task.getName());
-            } catch (Exception e) {
+            ComponentName componentTask = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
+            cachedIcon = ih.cachedIconHelper(componentTask);
+            if (cachedIcon == null)
                 continue;
-            }
 
             count++;
 

@@ -43,34 +43,34 @@ public class ColorPickerPreference
 		Preference.OnPreferenceClickListener,
 		ColorPickerDialog.OnColorChangedListener {
 
-	View mView;
-	ColorPickerDialog mDialog;
-	private int mValue = Color.BLACK;
-	private float mDensity = 0;
-	private boolean mAlphaSliderEnabled = false;
-	private boolean mHexValueEnabled = false;
+    View mView;
+    ColorPickerDialog mDialog;
+    private int mValue = Color.BLACK;
+    private float mDensity = 0;
+    private boolean mAlphaSliderEnabled = false;
+    private boolean mHexValueEnabled = false;
 
-	public ColorPickerPreference(Context context) {
-		super(context);
-		init(context, null);
-	}
+    public ColorPickerPreference(Context context) {
+        super(context);
+        init(context, null);
+    }
 
-	public ColorPickerPreference(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init(context, attrs);
-	}
+    public ColorPickerPreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context, attrs);
+    }
 
-	public ColorPickerPreference(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		init(context, attrs);
-	}
+    public ColorPickerPreference(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init(context, attrs);
+    }
 
     @Override
     public void setSummary(CharSequence summary) {
         super.setSummary(summary);
         try {
             mValue = convertToColorInt((String) summary);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

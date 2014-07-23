@@ -111,7 +111,9 @@ public class AppDrawer {
             pkgm = mContext.getPackageManager();
             ComponentName componentTask = ComponentName.unflattenFromString(taskItem.packageName + "/" + taskItem.className);
 
-            cachedIcon = ih.cachedIconHelper(componentTask, taskItem.appName);
+            cachedIcon = ih.cachedIconHelper(componentTask);
+            if (cachedIcon == null)
+                return false;
 
         } catch (Exception e) {
             Tools.HangarLog("newItem failed! " + e + " app:" + taskItem.appName);

@@ -40,9 +40,12 @@ public class IconHelper {
         mCount = 0;
     }
 
-    protected Bitmap cachedIconHelper(ImageView taskIcon, ComponentName componentTask, String taskName) {
-        Drawable iconPackIcon = null;
+    protected boolean cachedIconHelper(ImageView taskIcon, ComponentName componentTask) {
+        Drawable iconPackIcon;
         String cachedIconString = IconCacheHelper.getPreloadedIconUri(mContext, componentTask);
+        ResolveInfo rInfo = new Tools().cachedImageResolveInfo(mContext, componentTask.getPackageName());
+        if (rInfo == null)
+            return false;
 
         mCount++;
 
@@ -51,24 +54,36 @@ public class IconHelper {
                 ich = new IconCacheHelper(mContext);
                 Tools.HangarLog("Loading new IconCacheHelper instance");
             }
-            Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(componentTask.getPackageName());
-            ResolveInfo rInfo = mContext.getPackageManager().resolveActivity(intent, 0);
             iconPackIcon = ich.getFullResIcon(rInfo);
             cachedIconString = IconCacheHelper.preloadIcon(mContext, componentTask, Tools.drawableToBitmap(iconPackIcon), Tools.dpToPx(mContext, Settings.CACHED_ICON_SIZE));
+
         }
-        if (taskIcon != null) {
-            taskIcon.setImageURI(Uri.parse(cachedIconString));
-            return null;
-        } else {
-            if (iconPackIcon == null) {
-                return IconCacheHelper.getPreloadedIcon(mContext, componentTask);
-            } else {
-                return Tools.drawableToBitmap(iconPackIcon);
-            }
-        }
+        taskIcon.setImageURI(Uri.parse(cachedIconString));
+        return true;
     }
 
-    protected Bitmap cachedIconHelper(ComponentName componentTask, String taskName) {
-        return cachedIconHelper(null, componentTask, taskName);
+    protected Bitmap cachedIconHelper(ComponentName componentTask) {
+        Drawable iconPackIcon = null;
+        String cachedIconString = IconCacheHelper.getPreloadedIconUri(mContext, componentTask);
+        ResolveInfo rInfo = new Tools().cachedImageResolveInfo(mContext, componentTask.getPackageName());
+        if (rInfo == null)
+            return null;
+
+        mCount++;
+
+        if (cachedIconString == null) {
+            if (ich == null) {
+                ich = new IconCacheHelper(mContext);
+                Tools.HangarLog("Loading new IconCacheHelper instance");
+            }
+            iconPackIcon = ich.getFullResIcon(rInfo);
+            IconCacheHelper.preloadIcon(mContext, componentTask, Tools.drawableToBitmap(iconPackIcon), Tools.dpToPx(mContext, Settings.CACHED_ICON_SIZE));
+
+        }
+        if (iconPackIcon == null) {
+            return IconCacheHelper.getPreloadedIcon(mContext, componentTask);
+        } else {
+            return Tools.drawableToBitmap(iconPackIcon);
+        }
     }
 }

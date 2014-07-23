@@ -24,8 +24,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
-
-
 /**
  * This drawable that draws a simple white and gray chessboard pattern.
  * It's pattern you will often see as a background behind a

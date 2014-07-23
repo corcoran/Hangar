@@ -37,14 +37,26 @@ import android.database.sqlite.SQLiteDatabase;
 public class TasksDataSource {
 
     // Database fields
-    private SQLiteDatabase database;
-    private Tasks dbHelper;
+    private static SQLiteDatabase database;
+    private static Tasks dbHelper;
+    private static TasksDataSource sInstance;
     private String[] allColumns = { Tasks.COLUMN_ID,
             Tasks.COLUMN_NAME, Tasks.COLUMN_PACKAGENAME,
             Tasks.COLUMN_CLASSNAME, Tasks.COLUMN_SECONDS, Tasks.COLUMN_TIMESTAMP, Tasks.COLUMN_BLACKLISTED, Tasks.COLUMN_LAUNCHES, Tasks.COLUMN_ORDER, Tasks.COLUMN_WIDGET_ORDER };
 
-    public TasksDataSource(Context context) {
-        dbHelper = new Tasks(context);
+    private TasksDataSource(Context context) {
+        if (dbHelper == null) {
+            Tools.HangarLog("dbHelper is null?");
+            dbHelper = new Tasks(context);
+        }
+    }
+
+    public static TasksDataSource getInstance(Context context) {
+        if (sInstance == null) {
+            Tools.HangarLog("getInstance is null?");
+            sInstance = new TasksDataSource(context.getApplicationContext());
+        }
+        return sInstance;
     }
 
     public void open() throws SQLException {
@@ -155,6 +167,12 @@ public class TasksDataSource {
         System.out.println("Tasks deleted with id: " + id);
         database.delete(Tasks.TABLE_TASKS, Tasks.COLUMN_ID
                 + " = " + id, null);
+    }
+
+    public void deletePackageName(String packageName) {
+        System.out.println("Tasks deleted with id: " + packageName);
+        database.delete(Tasks.TABLE_TASKS, Tasks.COLUMN_PACKAGENAME
+                + " = \"" + packageName + "\"", null);
     }
 
     public TasksModel getTask(String name) {

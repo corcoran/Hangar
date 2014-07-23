@@ -284,6 +284,21 @@ public class Tools {
         return false;
     }
 
+    protected ResolveInfo cachedImageResolveInfo(Context mContext, String packageName) {
+        ResolveInfo rInfo = null;
+        try {
+            Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(packageName);
+            rInfo = mContext.getPackageManager().resolveActivity(intent, 0);
+        } catch (Exception NullPointerException) {
+            Tools.HangarLog("bad PackageName: " + packageName + " -- deleting!");
+            TasksDataSource db = TasksDataSource.getInstance(mContext);
+            db.open();
+            db.deletePackageName(packageName);
+            db.close();
+        }
+        return rInfo;
+    }
+
     protected synchronized ArrayList<TaskInfo> reorderTasks(ArrayList<TaskInfo> taskList, TasksDataSource db, int weightPriority, boolean widget) {
         Tools.HangarLog("reorderTasks: " + taskList.size() + " widget? " + widget);
         int highestSeconds = db.getHighestSeconds();

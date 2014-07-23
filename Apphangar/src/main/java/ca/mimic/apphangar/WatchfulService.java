@@ -116,7 +116,7 @@ public class WatchfulService extends Service {
     public void onCreate() {
         super.onCreate();
         if (db == null) {
-            db = new TasksDataSource(this);
+            db = TasksDataSource.getInstance(this);
             db.open();
         } else {
             return;
@@ -237,6 +237,9 @@ public class WatchfulService extends Service {
                     final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
                     final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(MAX_RUNNING_TASKS);
                     final Context mContext = getApplicationContext();
+
+                    db = TasksDataSource.getInstance(mContext);
+                    db.open();
 
                     pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
@@ -449,10 +452,16 @@ public class WatchfulService extends Service {
                 }
             }
 
-            if (!wrapItUp && appDrawer.newItem(taskList.get(i), itemLayout)) {
-                appDrawer.addItem();
-                notificationTasks.add(taskList.get(i).packageName);
-                filledConts++;
+            if (!wrapItUp) {
+                if (appDrawer.newItem(taskList.get(i), itemLayout)) {
+                    appDrawer.addItem();
+                    notificationTasks.add(taskList.get(i).packageName);
+                    filledConts++;
+                } else {
+                    runningTask = null;
+                    pinnedList = null;
+                    notificationTasks = null;
+                }
             }
         }
 

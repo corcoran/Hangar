@@ -111,7 +111,7 @@ public class AppsWidgetSettings extends PreferenceActivity {
                     int mAppWidgetId;
                     savePrefs();
 
-                    TasksDataSource db = new TasksDataSource(mContext);
+                    TasksDataSource db = TasksDataSource.getInstance(mContext);
                     db.open();
                     Tools.reorderWidgetTasks(db, mContext);
                     db.close();

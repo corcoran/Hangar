@@ -20,8 +20,10 @@ import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.ComponentCallbacks;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
@@ -52,6 +54,7 @@ public class ColorPickerDialog
 	
 	private EditText mHexVal;
 	private boolean mHexValueEnabled = false;
+    private boolean mAlphaSliderEnabled = false;
 	private ColorStateList mHexDefaultTextColor;
 
 	private OnColorChangedListener mListener;
@@ -62,11 +65,22 @@ public class ColorPickerDialog
 	
 	public ColorPickerDialog(Context context, int initialColor) {
 		super(context);
+        context.registerComponentCallbacks(new ComponentCallbacks() {
+           @Override
+           public void onConfigurationChanged(Configuration newConfig) {
+               setUp(mOldColor.getColor(), mNewColor.getColor());
+               setAlphaSliderVisible(mAlphaSliderEnabled);
+               setHexValueEnabled(mHexValueEnabled);
+           }
+           @Override
+           public void onLowMemory() {
+           }
+        });
 
-		init(initialColor);
-	}
+        init(initialColor);
+    }
 
-	private void init(int color) {
+    private void init(int color) {
 		// To fight color banding.
 		getWindow().setFormat(PixelFormat.RGBA_8888);
 
@@ -75,10 +89,9 @@ public class ColorPickerDialog
 	}
 
     @SuppressLint("InflateParams")
-	private void setUp(int color) {
+	private void setUp(int color, int newColor) {
 		
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
 		View layout = inflater.inflate(R.layout.dialog_color_picker, null);
 
 		setContentView(layout);
@@ -128,16 +141,18 @@ public class ColorPickerDialog
 		mOldColor.setOnClickListener(this);
 		mNewColor.setOnClickListener(this);
 		mColorPicker.setOnColorChangedListener(this);
-		mOldColor.setColor(color);
-		mColorPicker.setColor(color, true);
+        mOldColor.setColor(color);
+        mColorPicker.setColor((newColor != color) ? newColor : color, true);
 
 	}
+    private void setUp(int color) {
+        setUp(color, color);
+    }
 
 	@Override
 	public void onColorChanged(int color) {
-
 		mNewColor.setColor(color);
-		
+
 		if (mHexValueEnabled)
 			updateHexValue(color);
 
@@ -182,6 +197,7 @@ public class ColorPickerDialog
 
 	public void setAlphaSliderVisible(boolean visible) {
 		mColorPicker.setAlphaSliderVisible(visible);
+        mAlphaSliderEnabled = visible;
 		if (mHexValueEnabled) {
 			updateHexLengthFilter();
 			updateHexValue(getColor());

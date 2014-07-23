@@ -181,13 +181,13 @@
     <string name="sort_time_spent">Time spent in app</string>
     <string name="sort_alphabetical">Alphabetical</string>
 
-    <string-array name="entries_top_spinner">
+    <string-array name="entries_top_spinner" translatable="false">
         <item>@string/top_pinned</item>
         <item>@string/top_blacklisted</item>
         <item>@string/top_none</item>
     </string-array>
 
-    <string-array name="entries_sort_spinner">
+    <string-array name="entries_sort_spinner" translatable="false">
         <item>@string/sort_time_spent</item>
         <item>@string/sort_alphabetical</item>
     </string-array>

@@ -99,7 +99,10 @@ public class AppsRowAdapter extends BaseAdapter {
         if (completeRedraw) {
             holder.taskIcon.setImageBitmap(null);
         }
-        ih.cachedIconHelper(holder.taskIcon, rowItem.getComponentName(), rowItem.getName());
+        if (!ih.cachedIconHelper(holder.taskIcon, rowItem.getComponentName())) {
+            mRowItems.remove(rowItem);
+        }
+
 
         if (rowItem.getBlacklisted()) {
             fadeCross(holder.rowCont);

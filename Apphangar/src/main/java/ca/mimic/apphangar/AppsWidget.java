@@ -193,7 +193,7 @@ public class AppsWidget extends AppWidgetProvider {
 
         views.setInt(R.id.viewCont, "setGravity", mGravity);
 
-        TasksDataSource db = new TasksDataSource(context);
+        TasksDataSource db = TasksDataSource.getInstance(context);
         db.open();
 
         int gridSize = (appsNoH * appsNoW);
