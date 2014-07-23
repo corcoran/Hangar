@@ -395,16 +395,20 @@ public class Tools {
                                                              boolean widget) {
         ArrayList<Tools.TaskInfo> taskList = new ArrayList<Tools.TaskInfo>();
         List<TasksModel> tasks;
-        ArrayList<String> pinnedApps;
+        ArrayList<String> pinnedApps = new ArrayList<String>();
 
         SharedPreferences settingsPrefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS);
         int pinnedSort = Integer.parseInt(settingsPrefs.getString(Settings.PINNED_SORT_PREFERENCE, Integer.toString(Settings.PINNED_SORT_DEFAULT)));
+        boolean ignorePinned = settingsPrefs.getBoolean(Settings.IGNORE_PINNED_PREFERENCE, Settings.IGNORE_PINNED_DEFAULT);
 
-        pinnedApps = new Tools().getPinned(context);
+        if (!ignorePinned)
+            pinnedApps = new Tools().getPinned(context);
+
+        Tools.HangarLog("buildTaskList queueSize: " + queueSize + " weighted: " + weighted);
 
         if (queueSize == 0) {
             // queueSize 0 gets pinnedTasks.
-            if (pinnedApps == null) {
+            if (pinnedApps.size() == 0) {
                 return null;
             }
             tasks = db.getPinnedTasks(pinnedApps, pinnedSort);

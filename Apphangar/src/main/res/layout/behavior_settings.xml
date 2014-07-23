@@ -18,7 +18,8 @@
         android:entries="@array/entries_priority_preference"
         android:entryValues="@array/values_priority_preference"
         android:dialogTitle="@string/dialog_priority_preference"
-        android:defaultValue="2" />
+        android:defaultValue="2"
+        android:dependency="toggle_preference" />
 
     <PreferenceCategory
         android:title="@string/title_weight_category">
@@ -26,7 +27,8 @@
         <CheckBoxPreference
             android:key="weighted_recents_preference"
             android:title="@string/title_weighted_recents_preference"
-            android:summary="@string/summary_weighted_recents_preference" />
+            android:summary="@string/summary_weighted_recents_preference"
+            android:dependency="toggle_preference" />
 
         <ca.mimic.apphangar.UpdatingListPreference
             android:key="weight_priority_preference"
@@ -41,7 +43,8 @@
         <CheckBoxPreference
             android:key="smart_notification_preference"
             android:title="@string/title_smart_notification"
-            android:summary="@string/summary_smart_notification" />
+            android:summary="@string/summary_smart_notification"
+            android:dependency="toggle_preference" />
 
     </PreferenceCategory>
 

@@ -248,6 +248,11 @@ public class WatchfulService extends Service {
                         if (launcherPackage != null && taskPackage != null &&
                                 taskPackage.equals(launcherPackage)) {
                             if (runningTask == null || !runningTask.packageName.equals(taskPackage)) {
+                                if (!isToggled && isAppsWidget()) {
+                                    taskList = Tools.buildTaskList(getApplicationContext(), db, Settings.TASKLIST_QUEUE_LIMIT);
+                                    reorderAndLaunch(taskList, true);
+                                }
+
                                 // First time in launcher?  Update the widget!
                                 Tools.HangarLog("Found launcher -- Calling updateWidget!");
                                 Tools.updateWidget(mContext);
@@ -283,16 +288,15 @@ public class WatchfulService extends Service {
                         }
 
                         // If task is showing we do not need to update the notification drawer.
-                        if (smartNotification) {
+                        if (smartNotification && isToggled) {
                             if (notificationTasks != null && new Tools().isInArray(notificationTasks, taskPackage)) {
-                                buildReorderAndLaunch(isToggled & !isNotificationRunning);
+                                buildReorderAndLaunch(!isNotificationRunning);
                                 return;
                             }
-                        } else {
-                            if (new Tools().isPinned(mContext, taskPackage)) {
-                                buildReorderAndLaunch(isToggled & !isNotificationRunning);
-                                return;
-                            }
+                        }
+                        if (new Tools().isPinned(mContext, taskPackage)) {
+                            buildReorderAndLaunch(isToggled & !isNotificationRunning);
+                            return;
                         }
                     }
                     buildReorderAndLaunch(isToggled);
@@ -332,8 +336,19 @@ public class WatchfulService extends Service {
         stopForeground(true);
     }
 
-    protected void reorderAndLaunch(ArrayList<Tools.TaskInfo> taskList) {
-        Tools.HangarLog("reorderAndLaunch taskList.size(): " + taskList.size());
+    protected boolean isAppsWidget() {
+        try {
+            int ids[] = AppWidgetManager.getInstance(this).getAppWidgetIds(new ComponentName(this, AppsWidget.class));
+            if (ids.length > 0)
+                return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    protected void reorderAndLaunch(ArrayList<Tools.TaskInfo> taskList, boolean isWidget) {
+        Tools.HangarLog("reorderAndLaunch taskList.size(): " + taskList.size() + " isWidget: " + isWidget);
         boolean weightedRecents = prefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
                 Settings.WEIGHTED_RECENTS_DEFAULT);
         boolean isToggled = prefs.getBoolean(Settings.TOGGLE_PREFERENCE, Settings.TOGGLE_DEFAULT);
@@ -344,13 +359,12 @@ public class WatchfulService extends Service {
         }
         if (isToggled)
             createNotification(taskList);
-        try {
-            int ids[] = AppWidgetManager.getInstance(this).getAppWidgetIds(new ComponentName(this, AppsWidget.class));
-            if (ids.length > 0)
-                Tools.reorderWidgetTasks(db, getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        if (isWidget)
+            Tools.reorderWidgetTasks(db, getApplicationContext());
+    }
+
+    protected void reorderAndLaunch(ArrayList<Tools.TaskInfo> taskList) {
+        reorderAndLaunch(taskList, false);
     }
 
     public synchronized void createNotification(ArrayList<Tools.TaskInfo> taskList) {

@@ -37,7 +37,6 @@ import ca.mimic.apphangar.Settings.PrefsGet;
 
 public class AppsWidget extends AppWidgetProvider {
 
-    protected static TasksDataSource db;
     protected static Context mContext;
     protected static PrefsGet prefs;
 
@@ -194,10 +193,8 @@ public class AppsWidget extends AppWidgetProvider {
 
         views.setInt(R.id.viewCont, "setGravity", mGravity);
 
-        if (db == null) {
-            db = new TasksDataSource(context);
-            db.open();
-        }
+        TasksDataSource db = new TasksDataSource(context);
+        db.open();
 
         int gridSize = (appsNoH * appsNoW);
         // numOfIcons should not exceed 35 (CPU reasons, etc)
@@ -288,6 +285,7 @@ public class AppsWidget extends AppWidgetProvider {
         }
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
+        db.close();
     }
 
 }

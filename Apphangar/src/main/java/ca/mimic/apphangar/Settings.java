@@ -819,6 +819,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 setAppsnoSummary(secondRow, appnos_preference);
                 second_row_preference.setOnPreferenceChangeListener(changeListener);
 
+                boolean toggleBool = prefs2.getBoolean(TOGGLE_PREFERENCE, TOGGLE_DEFAULT);
+                toggleDependencies(toggleBool);
+
             } catch (NullPointerException e) {
             }
             try {
@@ -935,6 +938,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 } else if (preference.getKey().equals(TOGGLE_PREFERENCE)) {
                     editor.putBoolean(TOGGLE_PREFERENCE, (Boolean) newValue);
                     editor.commit();
+                    boolean toggleBool = (Boolean) newValue;
+                    toggleDependencies(toggleBool);
                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                     myService.watchHelper(STOP_SERVICE);
                     myService.watchHelper(START_SERVICE);
@@ -1001,6 +1006,17 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 return true;
             }
         };
+        void toggleDependencies(boolean isToggled) {
+            // weight_priority_preference.setEnabled(isToggled);
+            PrefsFragment mAppearanceFrag = (PrefsFragment) mGetFragments.getFragmentByPosition(1);
+            mAppearanceFrag.appnos_preference.setEnabled(isToggled);
+            mAppearanceFrag.second_row_preference.setEnabled(isToggled);
+            mAppearanceFrag.statusbar_icon_preference.setEnabled(isToggled);
+            mAppearanceFrag.divider_preference.setEnabled(isToggled);
+            mAppearanceFrag.row_divider_preference.setEnabled(isToggled);
+            mAppearanceFrag.colorize_preference.setEnabled(isToggled);
+            mAppearanceFrag.icon_size_preference.setEnabled(isToggled);
+        }
     }
 
     private static void setAppsnoSummary(Boolean second_row, Preference appnos_preference) {
