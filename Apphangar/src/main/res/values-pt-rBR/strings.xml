@@ -31,6 +31,8 @@
   <string name="pinned_sort_added">Por tempo fixado</string>
   <string name="pinned_placement_left">Esquerda</string>
   <string name="pinned_placement_right">Direita</string>
+  <string name="title_smart_notification">Classificação inteligente de notificação</string>
+  <string name="summary_smart_notification">Reordenar somente quando é adicionado um novo ícone</string>
   <string name="title_appsno_preference">Número de aplicativos</string>
   <string name="summary_appsno_preference">MOstrando %s apps</string>
   <string name="summary_appsno_second_row_preference">Mostrando %s apps por linha</string>
@@ -66,6 +68,13 @@
   <string name="title_icon_pack_picker">Escolha um pacote de ícones</string>
   <string name="title_icon_pack_not_found">Nenhum pacote de ícones foi encontrado</string>
   <string name="title_icon_pack_install">Encontrar um pacote de ícones</string>
+  <string name="title_top_spinner">Topo</string>
+  <string name="title_sort_spinner">Classificar por</string>
+  <string name="top_pinned">Fixos</string>
+  <string name="top_blacklisted">Lista Negra</string>
+  <string name="top_none">Nenhum</string>
+  <string name="sort_time_spent">Tempo de uso no Aplicativo</string>
+  <string name="sort_alphabetical">Alfabética</string>
   <string name="dialog_color_picker">Color Picker</string>
   <string name="press_color_to_apply">Selecione a cor abaixo para aplicar</string>
   <string name="hex">Hex:</string>
@@ -150,6 +159,7 @@
   <string name="alignment_top">Topo</string>
   <string name="alignment_center">Centro (padrão)</string>
   <string name="alignment_bottom">Abaixo</string>
+  <string name="instructions_title">Instruções do Hangar</string>
   <string name="instructions_1_1">"Bem-vindo ao Hangar!"</string>
   <string name="instructions_1_2">"Agora que o Hangar foi instalado, ele adicionou uma <b>barra de atalhos para Aplicativos</b> na sua gaveta de notificação.  Também vai começar a monitorar a frequência e a quantidade de tempo que você usa cada um dos seus aplicativos."</string>
   <string name="instructions_1_3">"Ao monitorar seu uso diário o Hangar usará esses dados para priorizar os apps que você mais usa. A cada aplicativo você usa, Hangar fica mais esperto e altera esses atalhos em tempo real atendendo às suas necessidades."</string>
@@ -162,8 +172,8 @@
   <string name="instructions_3_1">"Customizações"</string>
   <string name="instructions_3_2">"Além da barra de atalhos padrão na <b>gaveta de notificação</b>, você pode adicionar e personalizar um <b>widget</b> para a inicialização de apps.  Especifique a cor, tamanho, quantidade, cor de fundo e muito mais."</string>
   <string name="instructions_title_3">Ex. 2 Widgets estilizados</string>
-  <string name="instructions_title_4">Lista negra e resetar estatísticas</string>
-  <string name="instructions_3_3">"Você também pode adicionar apps na <b>lista negra</b> e resetar as estatísticas do Hangar na <b>Guia de Apps</b>."</string>
+  <string name="instructions_title_4">Menu de opções do App</string>
+  <string name="instructions_3_3">"Você também pode <b>fixar</b> apps para ser permanentemente ancorado.  Tem um <b>pacote de ícones</b> que você gosta?  Hangar oferece suporte a pacotes de ícone e até mesmo a capacidade de alterar manualmente ícones individuais.\n\nFinalmente você pode excluir apps de aparecer com a opção <b>"lista negra"</b>. Faça tudo isso e mais na <b>aba Apps</b> no Hangar."</string>
   <string name="instructions_4_1">"Começar"</string>
   <string name="instructions_4_2">"Hangar é uma ferramenta leve que inicializa apps de qualquer lugar no Android.\n\nPara aproveitar todos os benefícios desta ferramenta, deve ter no mínimo um dia de monitoramento dos aplicativos, para  basear suas recomendações.\n\nAproveite e obrigado por usar o Hangar!"</string>
   <string name="instructions_4_button">Configurar o Hangar</string>

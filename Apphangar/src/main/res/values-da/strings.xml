@@ -31,6 +31,8 @@
   <string name="pinned_sort_added">Tidspunkt for fastgørelse</string>
   <string name="pinned_placement_left">Venstre</string>
   <string name="pinned_placement_right">Højre</string>
+  <string name="title_smart_notification">Smart sortering af meddelelser</string>
+  <string name="summary_smart_notification">Ændre kun rækkefølgen når der tilføjes et nyt ikon</string>
   <string name="title_appsno_preference">Antallet af apps</string>
   <string name="summary_appsno_preference">Viser %s apps</string>
   <string name="summary_appsno_second_row_preference">Viser %s apps pr. række</string>
@@ -66,6 +68,13 @@
   <string name="title_icon_pack_picker">Vælg en ikonpakke</string>
   <string name="title_icon_pack_not_found">Ingen ikon pakker fundet</string>
   <string name="title_icon_pack_install">Find en ikon pakke</string>
+  <string name="title_top_spinner">Top</string>
+  <string name="title_sort_spinner">Sorter efter</string>
+  <string name="top_pinned">Fastgjorte</string>
+  <string name="top_blacklisted">Sortlistet</string>
+  <string name="top_none">Ingen</string>
+  <string name="sort_time_spent">Tidsforbrug i app</string>
+  <string name="sort_alphabetical">Alfabetisk</string>
   <string name="dialog_color_picker">Farvevælger</string>
   <string name="press_color_to_apply">Tryk på farve nedenfor for at anvende</string>
   <string name="hex">Hex:</string>
@@ -150,6 +159,7 @@
   <string name="alignment_top">Top</string>
   <string name="alignment_center">Midten</string>
   <string name="alignment_bottom">Bund</string>
+  <string name="instructions_title">Hangar instruktioner</string>
   <string name="instructions_1_1">"Velkommen til Hangar!"</string>
   <string name="instructions_1_2">"Nu da hangar er installeret, er der tilføjet en <b>app genvejslinie</b> til meddelelsesområdet. Det vil begynde at overvåge hyppigheden og mængden af ​​tid, du bruger i dine apps."</string>
   <string name="instructions_1_3">"Som Hangar følger dit daglige brug, vil den bruge disse data til at prioritere de vigtigste  apps. For hver app du bruger, bliver hangar klogere og ændrer disse genveje i realtid,  til dine behov."</string>
@@ -162,8 +172,8 @@
   <string name="instructions_3_1">"Tilpasninger"</string>
   <string name="instructions_3_2">"Ud over standard <b>meddelelseområdet</b> app genvejslinie, kan du tilføje og tilpasse en <b> widget</b> til at starte apps. Angiv farve, størrelse, antal, baggrundsfarve og meget mere."</string>
   <string name="instructions_title_3">fx. 2 forskellige udformede apps widgets</string>
-  <string name="instructions_title_4">Sortliste og slette statistik</string>
-  <string name="instructions_3_3">"Du kan også <b>sortkliste</b> apps og nulstille deres statistik fra Hangar <b>fanen</b>."</string>
+  <string name="instructions_title_4">Valgmenu</string>
+  <string name="instructions_3_3">"Du kan også <b>fastgøre</b> apps permanent. Har du en <b>ikon pakke</b> du kan lide? Hangar understøtter ikon pakker og endda mulighed for manuelt at ændre en individuel apps ikon.\n\nEndelig kan du udelukke apps mod at blive vist ved at <b>sortliste</b> dem. Gør alt dette og mere fra hangar <b>apps fanen</b>  ."</string>
   <string name="instructions_4_1">"Kom i gang"</string>
   <string name="instructions_4_2">"Hangar er et letvægts værktøj, der gør bekvemt at starte apps overalt i Android.\n\n For at få det fulde udbytte af værktøjet, skal det have mindst en dag til af overvågede app statistik til at basere sine anbefalinger på.\n\n Nyd og tak for at prøve Hangar!"</string>
   <string name="instructions_4_button">Konfigurer Hangar</string>

@@ -31,6 +31,8 @@
   <string name="pinned_sort_added">По дате закрепления</string>
   <string name="pinned_placement_left">Слева</string>
   <string name="pinned_placement_right">Справа</string>
+  <string name="title_smart_notification">Продвинутая сортировка</string>
+  <string name="summary_smart_notification">Перераспрелять исключительно при появлении нового значка</string>
   <string name="title_appsno_preference">Количество приложений</string>
   <string name="summary_appsno_preference">Отображается не более %s приложений</string>
   <string name="summary_appsno_second_row_preference">Отображается по %s приложений в ряду</string>
@@ -66,6 +68,13 @@
   <string name="title_icon_pack_picker">Выберите набор значков</string>
   <string name="title_icon_pack_not_found">Набор значков не обнаружен</string>
   <string name="title_icon_pack_install">Найти набор значков</string>
+  <string name="title_top_spinner">Верхняя</string>
+  <string name="title_sort_spinner">Сорт.</string>
+  <string name="top_pinned">Закрепленные</string>
+  <string name="top_blacklisted">Исключенные</string>
+  <string name="top_none">Без исключений</string>
+  <string name="sort_time_spent">По времени исп. прил.</string>
+  <string name="sort_alphabetical">По алфавиту</string>
   <string name="dialog_color_picker">Палитра цветов</string>
   <string name="press_color_to_apply">Нажмите на оттенок ниже, чтобы применить его</string>
   <string name="hex">Hex:</string>
@@ -82,7 +91,7 @@
   <string name="configure_license">Лицензия</string>
   <string name="configure_contribute">Внести вклад</string>
   <string name="donate_title">Хотите дать мне на пиво?</string>
-  <string name="donate_head">Вложения полезны при разработке приложений и всегда приветствуются.\n\nЕсли Вы нашли полезным Hangar и желаете выразить признательность за проделанную работу, загляните в раздел \"Внести вклад\", в нём Вы найдёте несколько способов помочь.\n\nВы так же можете произвести оплату ниже через <b>Google Play</b> или <b>PayPal</b>.</string>
+  <string name="donate_head">Вложения полезны и принимаются во внимание при разработке приложений.\n\nЕсли Вы нашли полезным Hangar и желаете выразить признательность за проделанную работу, загляните в раздел \"Внести вклад\", в нём Вы найдёте несколько способов помочь.\n\nВы также можете произвести оплату ниже через <b>Google Play</b> или <b>PayPal</b>.</string>
   <string name="donate_google">Оплатить через Google</string>
   <string name="donate_paypal">Оплатить через PayPal</string>
   <string name="donate_contribute">Сделать Hangar лучше!</string>
@@ -100,7 +109,7 @@
   <string name="contribute_translate_text">"Hangar используется людьми со всего света. Crowdin является инструментом, который позволяет пользователям с лёгкостью переводить приложения на родной язык."</string>
   <string name="contribute_translate_link">Перевести с помощью Crowdin</string>
   <string name="contribute_code_title">Исправляйте ошибки, расширяйте возможности!</string>
-  <string name="contribute_code_text">"Hangar открыт и доступен всем, распространяется под лицензией GPLv3. Внесение поправок с помощью github всегда приветствуется."</string>
+  <string name="contribute_code_text">"Hangar открыт и доступен всем, распространяется под лицензией GPLv3. Внесение поправок с помощью Github всегда приветствуется."</string>
   <string name="contribute_code_link">Оценить проект на Github</string>
   <string name="contribute_plus_title">Вступайте в сообщество</string>
   <string name="contribute_plus_text">"Тестируйте, высказывайте Ваше мнение, предлагайте новые возможности и узнавайте о последних наработках."</string>
@@ -150,6 +159,7 @@
   <string name="alignment_top">Верхняя</string>
   <string name="alignment_center">По центру</string>
   <string name="alignment_bottom">По нижнему краю</string>
+  <string name="instructions_title">Руководство по Hangar</string>
   <string name="instructions_1_1">"Добро пожаловать в Hangar!"</string>
   <string name="instructions_1_2">"Hangar установлен и теперь, в шторке уведомлений, у Вас имеется <b>панель ярлыков приложений</b>. Также будет учитываться частота запусков и время, проведённое Вами в приложениях."</string>
   <string name="instructions_1_3">"Отслеживая используемые в течении дня приложения, Hangar начинает отображать ярлыки для наиболее важных из них. С каждым использованным приложением Hangar изменяет порядок ярлыков в реальном времени, подстраиваясь под Ваши нужды."</string>
@@ -162,8 +172,8 @@
   <string name="instructions_3_1">"Персонализация"</string>
   <string name="instructions_3_2">"Помимо стандартной панели ярлыков <b>в шторке уведомлений</b>, Вы можете добавить и настроить под себя <b>виджет</b> заспускаемых приложений. Определяйте цвет, размер, количество, фон и т.п."</string>
   <string name="instructions_title_3">Пр. Два по-разному выглядящих виджета приложений</string>
-  <string name="instructions_title_4">Чёрный список и сброс статистики</string>
-  <string name="instructions_3_3">"Также доступно добавление приложений в <b>чёрный список</b> и обнуление их статистике во <b>вкладке Приложения</b>."</string>
+  <string name="instructions_title_4">Настройка конкретных приложений</string>
+  <string name="instructions_3_3">"Вы также можете <b>закреплять</b> приложения, чтобы всегда иметь их под рукой.  Нашли желаемый <b>набор значков</b>?  Hangar не только поддерживает наборы значков, но и позволяет вручную менять значки отдельным приложениям.\n\nНаконец, имеется возможность исключить показ конкретных приложений с помощью <b>чёрного списка</b>. Всё это и кое-что другое доступно во <b>вкладке Приложения</b>."</string>
   <string name="instructions_4_1">"Приступая к работе"</string>
   <string name="instructions_4_2">"Hangar это малопотребное приложение, позволяющее удобно запускать приложения отовсюду в Android.\n\nЧтобы насладиться всеми преимуществами этого приложения, оставьте его хотя бы на день для формирования базовых рекоммендаций.\n\nПриятного использования и благодарим Вас за испытание Hangar!"</string>
   <string name="instructions_4_button">Настроить Hangar</string>

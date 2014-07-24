@@ -363,7 +363,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
         AlertDialog alert = new AlertDialog.Builder(Settings.this)
                 .setTitle(R.string.donate_thanks_title)
-                .setIcon(R.drawable.ic_launcher)
+                .setIcon(R.drawable.ic_logo)
                 .setMessage(thankYouMsg)
                 .setPositiveButton(R.string.donate_thanks_continue, null)
                 .show();
@@ -378,7 +378,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         mChg.refreshDrawableState();
         new AlertDialog.Builder(Settings.this)
                 .setTitle(R.string.changelog_title)
-                .setIcon(R.drawable.ic_launcher)
+                .setIcon(R.drawable.ic_logo)
                 .setView(mChg)
                 .setNegativeButton(R.string.changelog_donate_button,
                         new DialogInterface.OnClickListener() {
@@ -410,7 +410,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         mLicense.refreshDrawableState();
         new AlertDialog.Builder(Settings.this)
                 .setTitle(R.string.license_title)
-                .setIcon(R.drawable.ic_launcher)
+                .setIcon(R.drawable.ic_logo)
                 .setView(mLicense)
                 .setPositiveButton(R.string.license_accept_button, null)
                 .show();
@@ -422,7 +422,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         mContribute.refreshDrawableState();
         new AlertDialog.Builder(context)
                 .setTitle(R.string.contribute_title)
-                .setIcon(R.drawable.ic_launcher)
+                .setIcon(R.drawable.ic_logo)
                 .setView(mContribute)
                 .setPositiveButton(R.string.contribute_accept_button, null)
                 .show();
@@ -435,7 +435,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         mDonate.refreshDrawableState();
         AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this)
                 .setTitle(R.string.donate_title)
-                .setIcon(R.drawable.ic_launcher)
+                .setIcon(R.drawable.ic_logo)
                 .setView(mDonate)
                 .setPositiveButton(R.string.donate_accept_button, null);
         AlertDialog alert = builder.show();
@@ -1057,13 +1057,18 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
         public void onResume() {
             super.onResume();
-            Tools.HangarLog("onResume AppsFragment");
+            Tools.HangarLog("onResume AppsFragment completeRedraw: " + completeRedraw);
 
-            List<AppsRowItem> appTasks = createAppTasks();
-            mAppRowAdapter = new AppsRowAdapter(mContext, appTasks);
-            lv.setAdapter(mAppRowAdapter);
-            lv.setOnItemClickListener(this);
-            mAppRowAdapter.notifyDataSetChanged();
+            if (completeRedraw) {
+                mAppRowAdapter.reDraw(true);
+                updateRowItem(null);
+            } else {
+                List<AppsRowItem> appTasks = createAppTasks();
+                mAppRowAdapter = new AppsRowAdapter(mContext, appTasks);
+                lv.setAdapter(mAppRowAdapter);
+                lv.setOnItemClickListener(this);
+                mAppRowAdapter.notifyDataSetChanged();
+            }
         }
 
         Spinner.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {

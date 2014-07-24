@@ -31,6 +31,8 @@
   <string name="pinned_sort_added">Tiempo anclada</string>
   <string name="pinned_placement_left">Izquierda</string>
   <string name="pinned_placement_right">Derecha</string>
+  <string name="title_smart_notification">Orden de notificaciones inteligentes</string>
+  <string name="summary_smart_notification">Reordenar sólo cuando se añade un nuevo icono</string>
   <string name="title_appsno_preference">Número de aplicaciones</string>
   <string name="summary_appsno_preference">Mostrando %s apps</string>
   <string name="summary_appsno_second_row_preference">Mostrando %s apps por fila</string>
@@ -66,6 +68,13 @@
   <string name="title_icon_pack_picker">Elegir un paquete de iconos</string>
   <string name="title_icon_pack_not_found">No hay paquetes de iconos</string>
   <string name="title_icon_pack_install">Buscar un paquete de iconos</string>
+  <string name="title_top_spinner">Parte superior</string>
+  <string name="title_sort_spinner">Ordenar por</string>
+  <string name="top_pinned">Ancladas</string>
+  <string name="top_blacklisted">En la lista negra</string>
+  <string name="top_none">Ninguna</string>
+  <string name="sort_time_spent">Tiempo de uso de la aplicación</string>
+  <string name="sort_alphabetical">Alphabetical</string>
   <string name="dialog_color_picker">Selector de color</string>
   <string name="press_color_to_apply">Presione un color abajo para aplicar los cambios</string>
   <string name="hex">Hex:</string>
@@ -150,6 +159,7 @@
   <string name="alignment_top">Parte superior</string>
   <string name="alignment_center">Centro (por defecto)</string>
   <string name="alignment_bottom">Parte inferior</string>
+  <string name="instructions_title">Instrucciones de Hangar</string>
   <string name="instructions_1_1">"¡Bienvenido a Hangar!"</string>
   <string name="instructions_1_2">"Hangar ha añadido una <b>barra de acceso directo a aplicaciones</b> a tu panel de notificaciones.  También se iniciará el monitoreo de la frecuencia y la cantidad de tiempo que pasas en tus aplicaciones."</string>
   <string name="instructions_1_3">"Hangar sigue su uso diario y utilizará esta información para priorizar las aplicaciones que más usa.  Con cada aplicación que utiliza, Hangar se vuelve más inteligente y cambia los accesos directos en tiempo real para satisfacer sus necesidades."</string>
@@ -162,8 +172,8 @@
   <string name="instructions_3_1">"Personalizaciones"</string>
   <string name="instructions_3_2">"Además de la barra de acceso directo de aplicaciones predeterminado del <b>panel de notificaciones</b>, puede agregar y personalizar un <b>widget</b> para lanzar aplicaciones, especificando el color, tamaño, cantidad, color de fondo y mucho más."</string>
   <string name="instructions_title_3">ej.: 2 widgets de aplicaciones de distintos estilos</string>
-  <string name="instructions_title_4">Lista negra y borrado de estadísticas</string>
-  <string name="instructions_3_3">"También puede agregar aplicaciones a la <b>lista negra</b> y restablecer sus estadísticas desde la <b>pestaña "Aplicaciones"</b> de Hangar."</string>
+  <string name="instructions_title_4">Menú de opciones de apps</string>
+  <string name="instructions_3_3">"Se puede <b>anclar</b> aplicaciones para ser ancladas permanentemente.  ¿Hay un <b>pack de iconos</b> que le gusta?  Hangar es compatible con paquetes de iconos e incluso tiene la opción de cambiar un icono manualmente.\n\nFinalmente, se puede excluir una aplicación con la opción de <b>lista negra</b>. Se puede hacer todo esto y mucho más desde la <b>pestaña "Aplicaciones"</b> de Hangar."</string>
   <string name="instructions_4_1">"Comenzar"</string>
   <string name="instructions_4_2">"Hangar es una herramienta ligera que hace conveniente el lanzamiento de aplicaciones desde cualquier lugar de Android.\n\nPara disfrutar de los beneficios de esta herramienta, se necesita al menos un día de estadísticas de aplicaciones monitoreados para preparar sus recomendaciones.\n\n¡Disfrutelo y gracias por probar Hangar!"</string>
   <string name="instructions_4_button">Configurar Hangar</string>
