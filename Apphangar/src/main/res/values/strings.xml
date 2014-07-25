@@ -173,6 +173,7 @@
     <!-- Apps -->
     <string name="title_top_spinner">Top</string>
     <string name="title_sort_spinner">Sort by</string>
+    <string name="refresh_button">Refresh</string>
 
     <string name="top_pinned">Pinned</string>
     <string name="top_blacklisted">Blacklisted</string>

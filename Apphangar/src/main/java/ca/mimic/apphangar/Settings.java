@@ -58,11 +58,15 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
@@ -169,7 +173,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String STATUSBAR_ICON_BLACK_BLUE = "**black_blue**";
     final static String STATUSBAR_ICON_TRANSPARENT = "**transparent**";
     final static String STATUSBAR_ICON_NONE = "**none**";
-    final static String STATUSBAR_ICON_DEFAULT = STATUSBAR_ICON_WHITE_WARM;
+    final static String STATUSBAR_ICON_DEFAULT = STATUSBAR_ICON_WHITE;
 
     final static String PINNED_APPS = "pinned_apps";
     final static int PINNED_PLACEMENT_LEFT = 0;
@@ -1057,18 +1061,16 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
         public void onResume() {
             super.onResume();
-            Tools.HangarLog("onResume AppsFragment completeRedraw: " + completeRedraw);
 
-            if (completeRedraw) {
-                mAppRowAdapter.reDraw(true);
-                updateRowItem(null);
-            } else {
-                List<AppsRowItem> appTasks = createAppTasks();
-                mAppRowAdapter = new AppsRowAdapter(mContext, appTasks);
-                lv.setAdapter(mAppRowAdapter);
-                lv.setOnItemClickListener(this);
-                mAppRowAdapter.notifyDataSetChanged();
-            }
+            mAppRowAdapter.reDraw(completeRedraw);
+            updateRowItem(null);
+        }
+
+        public void buildList() {
+            List<AppsRowItem> appTasks = createAppTasks();
+            mAppRowAdapter = new AppsRowAdapter(mContext, appTasks);
+            lv.setAdapter(mAppRowAdapter);
+            mAppRowAdapter.notifyDataSetChanged();
         }
 
         Spinner.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
@@ -1086,11 +1088,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 }
                 editor.commit();
 
-                List<AppsRowItem> appTasks = createAppTasks();
-                mAppRowAdapter = new AppsRowAdapter(mContext, appTasks);
-                lv.setAdapter(mAppRowAdapter);
-                mAppRowAdapter.notifyDataSetChanged();
-
+                buildList();
             }
 
             @Override
@@ -1123,12 +1121,46 @@ public class Settings extends Activity implements ActionBar.TabListener {
             sortSpin.setOnItemSelectedListener(spinnerListener);
             sortSpin.setSelection(prefs2.getInt(APPLIST_SORT_PREFERENCE, APPLIST_SORT_DEFAULT));
 
+            ImageView refreshBtn = (ImageView) appsView.findViewById(R.id.refresh);
+            refreshBtn.setClickable(true);
+            final Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh);
+            rotation.setRepeatCount(1);
+            rotation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                    buildList();
+                }
+            });
+            refreshBtn.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View view, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        view.startAnimation(rotation);
+                    }
+                    return false;
+                }
+            });
+
             return appsView;
         }
 
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
+            Tools.HangarLog("onActivityCreated appsFragment");
+
+            List<AppsRowItem> appTasks = createAppTasks();
+            mAppRowAdapter = new AppsRowAdapter(mContext, appTasks);
+            lv.setAdapter(mAppRowAdapter);
+            lv.setOnItemClickListener(this);
+            mAppRowAdapter.notifyDataSetChanged();
         }
 
         @Override
