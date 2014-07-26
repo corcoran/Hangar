@@ -44,10 +44,10 @@
   <string name="dialog_statusbar_icon_preference">Выберите стиль значка</string>
   <string name="alert_title_statusbar_icon_preference">Возьмите на заметку..</string>
   <string name="alert_message_statusbar_icon_preference">В связи с ограничениями в Android, отключение значка в панели уведомлений приведёт к снижению приоритета уведомления.\n\nПроще говоря, ваша панель Hangar окажется нижней в списке.</string>
-  <string name="statusbar_icon_warm_white">Белый с тёплыми цветами (стандартный)</string>
+  <string name="statusbar_icon_warm_white">Белый с тёплыми цветами</string>
   <string name="statusbar_icon_cold_white">Белый с холодн. цветами</string>
   <string name="statusbar_icon_blue_white">Сине-белый</string>
-  <string name="statusbar_icon_all_white">Полностью белый</string>
+  <string name="statusbar_icon_all_white">Полностью белый (стандартный)</string>
   <string name="statusbar_icon_warm_black">Чёрный с тёплыми цветами</string>
   <string name="statusbar_icon_cold_black">Чёрный с холодн. цветами</string>
   <string name="statusbar_icon_blue_black">Чёрно-синий</string>

@@ -337,6 +337,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     IconCacheHelper.preloadIcon(mContext, componentTask, bitmap, Tools.dpToPx(mContext, Settings.CACHED_ICON_SIZE));
                     myService.execute(SERVICE_CREATE_NOTIFICATIONS);
                     completeRedraw = true;
+                    Tools.updateWidget(mContext);
                 } catch (Exception e) {
                     Tools.HangarLog("Icon result exception: " + e);
                 }
@@ -685,6 +686,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     ComponentName componentName = ComponentName.unflattenFromString(task.getPackageName() + "/" + task.getClassName());
                     ih.cachedIconHelper(componentName);
                 }
+                Tools.updateWidget(mContext);
                 myService.execute(SERVICE_CREATE_NOTIFICATIONS);
             }
         };
@@ -732,6 +734,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     }
 
     public static class PrefsFragment extends PreferenceFragment {
+        CheckBoxPreference boot_preference;
         CheckBoxPreference divider_preference;
         CheckBoxPreference row_divider_preference;
         CheckBoxPreference weighted_recents_preference;
@@ -740,7 +743,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
         CheckBoxPreference smart_notification_preference;
         ColorPickerPreference icon_color_preference;
         SwitchPreference toggle_preference;
-        SwitchPreference boot_preference;
         UpdatingListPreference appnos_preference;
         UpdatingListPreference priority_preference;
         UpdatingListPreference weight_priority_preference;
@@ -833,7 +835,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 toggle_preference.setChecked(prefs2.getBoolean(TOGGLE_PREFERENCE, TOGGLE_DEFAULT));
                 toggle_preference.setOnPreferenceChangeListener(changeListener);
 
-                boot_preference = (SwitchPreference)findPreference(BOOT_PREFERENCE);
+                boot_preference = (CheckBoxPreference)findPreference(BOOT_PREFERENCE);
                 boot_preference.setChecked(prefs2.getBoolean(BOOT_PREFERENCE, BOOT_DEFAULT));
                 boot_preference.setOnPreferenceChangeListener(changeListener);
 

@@ -7,7 +7,7 @@
         android:key="toggle_preference"
         android:title="@string/title_toggle_preference" />
 
-    <SwitchPreference
+    <CheckBoxPreference
         android:key="boot_preference"
         android:title="@string/title_boot_preference" />
 

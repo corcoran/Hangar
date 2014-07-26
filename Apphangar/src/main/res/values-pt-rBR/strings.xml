@@ -44,10 +44,10 @@
   <string name="dialog_statusbar_icon_preference">Escolha o estilo do ícone</string>
   <string name="alert_title_statusbar_icon_preference">Só para você saber...</string>
   <string name="alert_message_statusbar_icon_preference">Devido às limitações do Android, desativar o ícone da barra de status só pode ser feito reduzindo a prioridade da notificatição.\n\nTL;DR seu Hangar bar estará no por último da gaveta da notificação.</string>
-  <string name="statusbar_icon_warm_white">Ícone warm white (padrão)</string>
+  <string name="statusbar_icon_warm_white">Ícone warm white</string>
   <string name="statusbar_icon_cold_white">Ícone cold white</string>
   <string name="statusbar_icon_blue_white">Ícone blue white</string>
-  <string name="statusbar_icon_all_white">Ícone white</string>
+  <string name="statusbar_icon_all_white">Ícone white (padrão)</string>
   <string name="statusbar_icon_warm_black">Ícone warm black</string>
   <string name="statusbar_icon_cold_black">Ícone cold black</string>
   <string name="statusbar_icon_blue_black">Ícone blue black</string>

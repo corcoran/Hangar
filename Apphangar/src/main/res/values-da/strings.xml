@@ -44,10 +44,10 @@
   <string name="dialog_statusbar_icon_preference">Vælg et ikon stil</string>
   <string name="alert_title_statusbar_icon_preference">Bare så du ved..</string>
   <string name="alert_message_statusbar_icon_preference">På grund af begrænsninger i Android, kan deaktivering af ikonet i statuslinjen  kun  gøres ved at sænke prioriteten for meddelelsen.\n\n Hangar linien vil være nederst i beskedsområdet.</string>
-  <string name="statusbar_icon_warm_white">Varm hvid ikon (standard)</string>
+  <string name="statusbar_icon_warm_white">Varm hvid ikon</string>
   <string name="statusbar_icon_cold_white">Kold hvidt ikon</string>
   <string name="statusbar_icon_blue_white">Blå hvid ikon</string>
-  <string name="statusbar_icon_all_white">Alle ikoner hvide</string>
+  <string name="statusbar_icon_all_white">Alle ikoner hvide (standard)</string>
   <string name="statusbar_icon_warm_black">Varm sort ikon</string>
   <string name="statusbar_icon_cold_black">Kold sort ikon</string>
   <string name="statusbar_icon_blue_black">Blå sort ikon</string>

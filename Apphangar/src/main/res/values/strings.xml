@@ -9,7 +9,7 @@
 
     <!-- Preferences -->
     <!-- Behavior -->
-    <string name="title_toggle_preference">Show notification bar</string>
+    <string name="title_toggle_preference">Notification bar</string>
     <string name="title_boot_preference">Start on boot</string>
     <string name="title_weight_category">Sorting and Icon Order</string>
     <string name="title_weighted_recents_preference">Weighted sorting</string>
@@ -121,10 +121,10 @@
     <string name="alert_title_statusbar_icon_preference">Just so you know..</string>
     <string name="alert_message_statusbar_icon_preference">Due to the limitations of Android, disabling the statusbar icon can only be done by lowering the priority of the notification.\n\nTL;DR Your Hangar bar will be at the bottom of the notification drawer.</string>
 
-    <string name="statusbar_icon_warm_white">Warm white icon (default)</string>
+    <string name="statusbar_icon_warm_white">Warm white icon</string>
     <string name="statusbar_icon_cold_white">Cold white icon</string>
     <string name="statusbar_icon_blue_white">Blue white icon</string>
-    <string name="statusbar_icon_all_white">All white icon</string>
+    <string name="statusbar_icon_all_white">All white icon (default)</string>
     <string name="statusbar_icon_warm_black">Warm black icon</string>
     <string name="statusbar_icon_cold_black">Cold black icon</string>
     <string name="statusbar_icon_blue_black">Blue black icon</string>

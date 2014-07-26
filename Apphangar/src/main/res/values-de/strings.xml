@@ -44,10 +44,10 @@
   <string name="dialog_statusbar_icon_preference">Symbolaussehen bestimmen</string>
   <string name="alert_title_statusbar_icon_preference">Nur damit Sie es wissen...</string>
   <string name="alert_message_statusbar_icon_preference">Aufgrund von Beschränkungen in Android ist das Deaktivieren des Statusbar-Symbols nur möglich, durch eine Senkung der Priorität der Benachrichtigung.\n\n Die Hangar Leiste wird daher immer unten im Benachrichtigungsfeld dargestellt.</string>
-  <string name="statusbar_icon_warm_white">Warmesweiß Symbol (Standard)</string>
+  <string name="statusbar_icon_warm_white">Warmesweiß Symbol</string>
   <string name="statusbar_icon_cold_white">Kaltweißes Symbol</string>
   <string name="statusbar_icon_blue_white">Blauweißes Symbol</string>
-  <string name="statusbar_icon_all_white">Komplett weißes Symbol</string>
+  <string name="statusbar_icon_all_white">Komplett weißes Symbol (Standard)</string>
   <string name="statusbar_icon_warm_black">Warmschwarzes Symbol</string>
   <string name="statusbar_icon_cold_black">Kaltschwarzes Symbol</string>
   <string name="statusbar_icon_blue_black">Blauschwarzes Symbol</string>
@@ -91,7 +91,7 @@
   <string name="configure_license">Lizenz</string>
   <string name="configure_contribute">Mitwirken</string>
   <string name="donate_title">Willst du mir ein Bier ausgeben?</string>
-  <string name="donate_head">Spenden sind immer willkommen und hilfreich für die zukünftige Entwicklung dieser und anderer Apps.\n\nSollten Sie die App nützlich finden und ihren Dank, für die hineingesteckte Arbeit, zum Ausdruck bringen wollen, besuchen Sie den Mitwirken-Menüpunkt, um die vielen Wege mitzuhelfen kennenzulernen.\n\nWenn Sie spendeten sind können Sie unten über <b>Google Play</b> oder <b>PayPal</b> Spenden.</string>
+  <string name="donate_head">Spenden sind immer willkommen und hilfreich für die zukünftige Entwicklung dieser und anderer Apps.\n\nSollten Sie die App nützlich finden und ihren Dank für die hineingesteckte Arbeit zum Ausdruck bringen wollen besuchen Sie den Mitwirken-Menüpunkt, um die vielen Wege mitzuhelfen kennenzulernen.\n\nSpenden können Sie unten über <b>Google Play</b> oder <b>PayPal</b>.</string>
   <string name="donate_google">Spenden mit Google</string>
   <string name="donate_paypal">Spenden mit PayPal</string>
   <string name="donate_contribute">Helf mit Hangar besser zu machen!</string>

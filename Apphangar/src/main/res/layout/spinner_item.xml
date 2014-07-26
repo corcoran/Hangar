@@ -5,5 +5,5 @@
     style="?android:attr/spinnerItemStyle"
     android:singleLine="true"
     android:ellipsize="marquee"
-    android:textSize="14sp" >
+    android:textSize="12sp" >
 </TextView>

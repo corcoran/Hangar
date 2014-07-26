@@ -31,6 +31,8 @@
   <string name="pinned_sort_added">Ostatnio przypięte</string>
   <string name="pinned_placement_left">Po lewej</string>
   <string name="pinned_placement_right">Po prawej</string>
+  <string name="title_smart_notification">Inteligentne sortowanie powiadomień</string>
+  <string name="summary_smart_notification">Zmieniaj kolejność tylko po dodaniu nowej ikony</string>
   <string name="title_appsno_preference">Liczba aplikacji</string>
   <string name="summary_appsno_preference">Pokazywanie %s aplikacji</string>
   <string name="summary_appsno_second_row_preference">Pokazywanie %s aplikacji w wierszu</string>
@@ -42,10 +44,10 @@
   <string name="dialog_statusbar_icon_preference">Wybierz styl ikony</string>
   <string name="alert_title_statusbar_icon_preference">Do Twojej wiadomości...</string>
   <string name="alert_message_statusbar_icon_preference">Z uwagi na ograniczenia Androida, ikonę można wyłączyć tylko poprzez obniżenie priorytetu powiadomienia.\n\nInnymi słowy, pasek Hangar znajdzie się na ostatniej pozycji w panelu powiadomień.</string>
-  <string name="statusbar_icon_warm_white">Ikona w ciepłym odcieniu bieli (domyślna)</string>
+  <string name="statusbar_icon_warm_white">Ikona w ciepłym odcieniu bieli</string>
   <string name="statusbar_icon_cold_white">Ikona w chłodnymi odcieniu bieli</string>
   <string name="statusbar_icon_blue_white">Białoniebieska ikona</string>
-  <string name="statusbar_icon_all_white">Wszystkie ikony w kolorze białym</string>
+  <string name="statusbar_icon_all_white">Wszystkie ikony w kolorze białym (domyślna)</string>
   <string name="statusbar_icon_warm_black">Ikona w ciepłym odcieniu czerni</string>
   <string name="statusbar_icon_cold_black">Ikona w chłodnym odcieniu czerni</string>
   <string name="statusbar_icon_blue_black">Niebieskoczarna ikona</string>
@@ -64,6 +66,15 @@
   <string name="no_icon_packs_alert">Brak zainstalowanych pakietów ikon</string>
   <string name="switched_icon_packs_alert">Aktualizacja pamięci podręcznej ikon.  Może to potrwać kilka sekund!</string>
   <string name="title_icon_pack_picker">Wybierz pakiet ikon</string>
+  <string name="title_icon_pack_not_found">Nie znaleziono paczek z ikonami</string>
+  <string name="title_icon_pack_install">Znajdź paczkę z ikonami</string>
+  <string name="title_top_spinner">Góra</string>
+  <string name="title_sort_spinner">Sortuj według</string>
+  <string name="top_pinned">Przypięte</string>
+  <string name="top_blacklisted">Na czarnej liście</string>
+  <string name="top_none">Brak</string>
+  <string name="sort_time_spent">Czas spędzony w aplikacji</string>
+  <string name="sort_alphabetical">Alfabetycznie</string>
   <string name="dialog_color_picker">Próbnik kolorów</string>
   <string name="press_color_to_apply">Naciśnij na kolor poniżej aby zastosować</string>
   <string name="hex">Wartość szesnastkowa:</string>
@@ -148,6 +159,7 @@
   <string name="alignment_top">Góra</string>
   <string name="alignment_center">Środek (domyślnie)</string>
   <string name="alignment_bottom">Dół</string>
+  <string name="instructions_title">Początki z Hangar</string>
   <string name="instructions_1_1">"Witamy w Hangar!"</string>
   <string name="instructions_1_2">"Teraz, gdy Hangar jest zainstalowany, w pasku powiadomień znajduje się dodatkowy <b>pasek skrótów do aplkacji</b>. Hangar rozpoczyna też monitorowanie częstotliwości uruchamiania i czasu spędzonego w aplikacjach."</string>
   <string name="instructions_1_3">"Dzięki monitorowaniu tego, jak używasz aplikacji w ciągu Dnia, Hangar może wyświetlać skróty do tych aplikacji, które są dla Ciebie najważniejsze. Każde uruchomienie aplikacji pozwala Hangar uczyć się twoich nawyków użycia aplikacji i zmieniać wyświetlane skróty w czasie rzeczywistym tak, aby jak najlepiej odpowiadały Twoim potrzebom."</string>
@@ -160,8 +172,8 @@
   <string name="instructions_3_1">"Dostosowanie"</string>
   <string name="instructions_3_2">"Poza domyślnym paskiem skrótów w <b>panelu powiadomień</b>, możesz dodać i skonfigurować <b>widżet</b>, z którego możesz uruchamiać aplikacji. Możesz określić, kolor, wielkość, liczbę ikon, kolor ich tła oraz inne parametry."</string>
   <string name="instructions_title_3">np. dwa różnie skonfigurowane widżety aplikacji</string>
-  <string name="instructions_title_4">Czarna lista i czyszczenie statystyk</string>
-  <string name="instructions_3_3">"Możesz także dodać aplikacje do <b>Czarnej listy</b> i wyczyścić ich statystyki z <b>Zakładki aplikacji</b> w Hangar."</string>
+  <string name="instructions_title_4">Menu opcji aplikacji</string>
+  <string name="instructions_3_3">"Możesz także <b>przypinać</b> aplikacje, aby zawsze pozostawały w tym samym miejscu. Czy lubisz korzystać z <b>pakietów ikon</b>? Hangar obsługuje pakiety ikon, łącznie z możliwością zmiany ikon dla pojedynczych aplikacji.\n\nMożesz także sprawić, że niektóre aplikacje nie będą pokazywane, dzięki <b>czarnej liście</b>. Te i więcej opcji możesz skonfigurować na <b>karcie aplikacji</b> Hangar."</string>
   <string name="instructions_4_1">"Wprowadzenie"</string>
   <string name="instructions_4_2">"Hangar jest lekkim narzędziem, które sprawia, że uruchomienie aplikacji z dowolnego miejsca w systemie Android jest niezwykle wygodne.\n\nAby w pełni wykorzystać możliwości tego narzędzia, należy pozwolić mu zebrać statystyki uruchamianych aplikacji z co najmniej jednego dnia, co pozwoli na dokonywanie właściwych sugestii.\n\nDziękuję za wypróbowanie Hangar!"</string>
   <string name="instructions_4_button">Skonfiguruj Hangar</string>
