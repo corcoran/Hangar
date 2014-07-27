@@ -3,7 +3,11 @@
     tools:ignore="UnusedResources"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="10dp"
+    android:paddingTop="10dp"
+    android:paddingRight="10dp"
+    android:paddingLeft="10dp"
+    android:paddingBottom="0dp"
+    android:requiresFadingEdge="vertical"
     tools:context="ca.mimic.apphangar.Instructions$PlaceholderFragment">
 
     <LinearLayout
