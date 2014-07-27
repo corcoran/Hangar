@@ -22,6 +22,7 @@ package ca.mimic.apphangar;
 
 import android.app.ActivityManager;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
@@ -56,15 +57,14 @@ public class WatchfulService extends Service {
     PackageManager pkgm;
     PowerManager pm;
 
+    static int failCount;
     static TaskInfo runningTask;
     static ArrayList<Tools.TaskInfo> pinnedList;
     static ArrayList<Tools.TaskInfo> taskList;
     static ArrayList<String> notificationTasks;
 
     String launcherPackage = null;
-    int numOfApps;
     boolean isNotificationRunning;
-    boolean secondRow;
 
     final int MAX_RUNNING_TASKS = 20;
     final int LOOP_SECONDS = 3;
@@ -107,7 +107,9 @@ public class WatchfulService extends Service {
             public void buildReorderAndLaunch() {
                 pinnedList = null;
                 notificationTasks = null;
-                WatchfulService.this.buildReorderAndLaunch(true);
+                synchronized (WatchfulService.this) {
+                    WatchfulService.this.buildReorderAndLaunch(true);
+                }
             }
         };
     }
@@ -118,6 +120,7 @@ public class WatchfulService extends Service {
         if (db == null) {
             db = TasksDataSource.getInstance(this);
             db.open();
+            failCount = 0;
         } else {
             return;
         }
@@ -156,9 +159,6 @@ public class WatchfulService extends Service {
         pkgm = getPackageManager();
         launcherPackage = Tools.getLauncher(getApplicationContext());
 
-        secondRow = prefs.getBoolean(Settings.SECOND_ROW_PREFERENCE, Settings.SECOND_ROW_DEFAULT);
-        numOfApps = Integer.parseInt(prefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.APPSNO_DEFAULT)));
-
         IntentFilter filter = new IntentFilter();
         filter.addAction(BCAST_CONFIGCHANGED);
         registerReceiver(mBroadcastReceiver, filter);
@@ -180,9 +180,9 @@ public class WatchfulService extends Service {
     protected void buildReorderAndLaunch(boolean isToggled) {
         if (isToggled) {
             Tools.HangarLog("buildReorderAndLaunch isToggled");
-//            ArrayList<Tools.TaskInfo> taskList;
             taskList = Tools.buildTaskList(getApplicationContext(), db, Settings.TASKLIST_QUEUE_LIMIT);
-            if (taskList.size() == 0) {
+            if (taskList.size() == 0 ||
+                    (taskList.size() == 1 && taskList.get(0).packageName.equals(getPackageName()))) {
                 buildBaseTasks();
                 taskList = Tools.buildTaskList(getApplicationContext(), db, Settings.TASKLIST_QUEUE_LIMIT);
             }
@@ -304,7 +304,13 @@ public class WatchfulService extends Service {
                     }
                     buildReorderAndLaunch(isToggled);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    if (failCount >= 2) {
+                        e.printStackTrace();
+                        Tools.HangarLog("failCount reached limit.  Giving up!");
+                    } else {
+                        Tools.HangarLog("Exception hit!  Restarting buildTasks.. [" + failCount + "]");
+                        WatchfulService.this.buildTasks();
+                    }
                 }
             }
         };
@@ -395,7 +401,9 @@ public class WatchfulService extends Service {
         appDrawer.setContext(mContext);
 
         int maxButtons;
+        int numOfApps = Integer.parseInt(prefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.APPSNO_DEFAULT)));
         int setPriority = Integer.parseInt(prefs.getString(Settings.PRIORITY_PREFERENCE, Integer.toString(Settings.PRIORITY_DEFAULT)));
+        boolean secondRow = prefs.getBoolean(Settings.SECOND_ROW_PREFERENCE, Settings.SECOND_ROW_DEFAULT);
 
         if (taskList.size() < numOfApps) {
             maxButtons = taskList.size();
@@ -479,6 +487,7 @@ public class WatchfulService extends Service {
         try {
             smallIcon = iconMap.get(mIcon);
         } catch (NullPointerException e) {
+            e.printStackTrace();
         }
 
         Notification notification = new Notification.Builder(WatchfulService.this).
@@ -492,7 +501,14 @@ public class WatchfulService extends Service {
         if (secondRow) {
             notification.bigContentView = customNotifBigView;
         }
-        startForeground(1337, notification);
+        Tools.HangarLog("isNotificationRunning: " + isNotificationRunning);
+        if (isNotificationRunning) {
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.notify(1337, notification);
+        } else {
+            startForeground(1337, notification);
+        }
+
         isNotificationRunning = true;
     }
 

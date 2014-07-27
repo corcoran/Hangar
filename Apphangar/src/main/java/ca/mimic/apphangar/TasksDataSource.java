@@ -46,14 +46,12 @@ public class TasksDataSource {
 
     private TasksDataSource(Context context) {
         if (dbHelper == null) {
-            Tools.HangarLog("dbHelper is null?");
             dbHelper = new Tasks(context);
         }
     }
 
     public static TasksDataSource getInstance(Context context) {
         if (sInstance == null) {
-            Tools.HangarLog("getInstance is null?");
             sInstance = new TasksDataSource(context.getApplicationContext());
         }
         return sInstance;
