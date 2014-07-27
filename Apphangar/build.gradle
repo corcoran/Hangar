@@ -31,7 +31,7 @@ android {
     }
     lintOptions {
         abortOnError true
-        disable 'MissingTranslation', 'GradleDependency', 'SmallSp', 'ExportedPreferenceActivity', 'TypographyEllipsis', 'IconMissingDensityFolder', 'ClickableViewAccessibility', 'IconDensities'
+        disable 'MissingTranslation', 'GradleDependency', 'SmallSp', 'ExportedPreferenceActivity', 'TypographyEllipsis', 'IconMissingDensityFolder', 'ClickableViewAccessibility', 'IconDensities', 'OldTargetApi'
     }
     buildTypes {
         release {

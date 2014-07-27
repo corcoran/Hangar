@@ -63,7 +63,6 @@
   <string name="title_icon_color_category">Symbolfarbe</string>
   <string name="title_icon_pack_preference">Symbolpacket</string>
   <string name="default_icon_pack">Standardsymbole</string>
-  <string name="no_icon_packs_alert">Es sind keine Symbolpakete installiert</string>
   <string name="switched_icon_packs_alert">Symbole werden aktualisiert. Dies kann einige Sekunden dauern!</string>
   <string name="title_icon_pack_picker">Wählen Sie ein Symbolpacket</string>
   <string name="title_icon_pack_not_found">Kein Symbolpacket gefunden</string>

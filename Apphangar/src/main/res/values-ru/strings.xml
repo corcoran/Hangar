@@ -63,7 +63,6 @@
   <string name="title_icon_color_category">Окрас значков</string>
   <string name="title_icon_pack_preference">Набор значков</string>
   <string name="default_icon_pack">Стандартные значки</string>
-  <string name="no_icon_packs_alert">Не установлено ни одного набора</string>
   <string name="switched_icon_packs_alert">Обновление кэша значков. Это может занять несколько секунд!</string>
   <string name="title_icon_pack_picker">Выберите набор значков</string>
   <string name="title_icon_pack_not_found">Набор значков не обнаружен</string>

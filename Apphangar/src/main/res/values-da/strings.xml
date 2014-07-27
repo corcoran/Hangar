@@ -63,7 +63,6 @@
   <string name="title_icon_color_category">Ikon farve</string>
   <string name="title_icon_pack_preference">Ikonpakke</string>
   <string name="default_icon_pack">Standardikoner</string>
-  <string name="no_icon_packs_alert">Ingen ikonpakker installeret</string>
   <string name="switched_icon_packs_alert">Opdaterer ikon cache.  Kan tage et par sekunder!</string>
   <string name="title_icon_pack_picker">Vælg en ikonpakke</string>
   <string name="title_icon_pack_not_found">Ingen ikon pakker fundet</string>

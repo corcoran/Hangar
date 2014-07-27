@@ -41,6 +41,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Handler;
@@ -201,7 +202,18 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
     static int displayWidth;
 
-    @TargetApi(17)
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Update displayed width bars.
+        updateDisplayWidth();
+
+        updateRowItems();
+
+        mAppRowAdapter.reDraw(false);
+        updateRowItem(null);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -218,14 +230,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
 
         display = getWindowManager().getDefaultDisplay();
-
-        Point size = new Point();
-        try {
-            display.getRealSize(size);
-            displayWidth = size.x;
-        } catch (NoSuchMethodError e) {
-            displayWidth = display.getWidth();
-        }
+        updateDisplayWidth();
 
         myService = new ServiceCall(mContext);
         myService.setConnection(mConnection);
@@ -342,6 +347,17 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     Tools.HangarLog("Icon result exception: " + e);
                 }
             }
+        }
+    }
+
+    @TargetApi(17)
+    protected void updateDisplayWidth() {
+        Point size = new Point();
+        try {
+            display.getRealSize(size);
+            displayWidth = size.x;
+        } catch (NoSuchMethodError e) {
+            displayWidth = display.getWidth();
         }
     }
 
@@ -1050,9 +1066,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
 
         public void buildList() {
-            List<AppsRowItem> appTasks = createAppTasks();
-            mAppRowAdapter = new AppsRowAdapter(mContext, appTasks);
-            lv.setAdapter(mAppRowAdapter);
+            mAppRowAdapter.mRowItems = createAppTasks();
             mAppRowAdapter.notifyDataSetChanged();
         }
 
@@ -1226,6 +1240,23 @@ public class Settings extends Activity implements ActionBar.TabListener {
         return appTasks;
     }
 
+    public void updateRowItems() {
+        List<AppsRowItem> appList = mAppRowAdapter.mRowItems;
+        List<AppsRowItem> newAppList = new ArrayList<AppsRowItem>();
+
+        db = TasksDataSource.getInstance(mContext);
+        db.open();
+        int highestSeconds = db.getHighestSeconds();
+        db.close();
+
+        for (AppsRowItem item : appList) {
+            AppsRowItem newItem = createAppRowItem(item, highestSeconds);
+            newAppList.add(newItem);
+        }
+
+        mAppRowAdapter.mRowItems = newAppList;
+        mAppRowAdapter.notifyDataSetChanged();
+    }
 
     public static AppsRowItem createAppRowItem(TasksModel task, int highestSeconds){
         AppsRowItem appTask = new AppsRowItem(task);

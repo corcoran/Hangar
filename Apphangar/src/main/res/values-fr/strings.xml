@@ -63,7 +63,6 @@
   <string name="title_icon_color_category">Couleur de l\'icône</string>
   <string name="title_icon_pack_preference">Pack d\'icônes</string>
   <string name="default_icon_pack">Icônes par défaut</string>
-  <string name="no_icon_packs_alert">Aucun pack d\'icônes installé</string>
   <string name="switched_icon_packs_alert">Mise en cache des icônes en cours.  Cela peut prendre quelques secondes !</string>
   <string name="title_icon_pack_picker">Choisissez un pack d\'icônes</string>
   <string name="title_icon_pack_not_found">Pas de Pack d\'icône trouvé</string>

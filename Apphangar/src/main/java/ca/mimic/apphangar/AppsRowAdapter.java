@@ -102,6 +102,7 @@ public class AppsRowAdapter extends BaseAdapter {
         if (!ih.cachedIconHelper(holder.taskIcon, rowItem.getComponentName())) {
             mRowItems.remove(rowItem);
         }
+        holder.taskIcon.setContentDescription(rowItem.getName());
 
 
         if (rowItem.getBlacklisted()) {
