@@ -310,7 +310,7 @@
     <string name="changelog_coming_soon_text" translatable="false">App use by time period</string>
 
     <string-array name="versionNumbers" translatable="false">
-        <item>2.3 (???)</item>
+        <item>2.3 (July 29th)</item>
         <item>2.2 (July 3rd)</item>
         <item>2.1 (May 29th)</item>
         <item>2.0 (May 16th)</item>
@@ -334,6 +334,7 @@
   &#8226; [Fix!] Revamped icon caching
   &#8226; [Fix!] Apps section now uses far less memory
   &#8226; [Fix!] Icon creation made more efficient
+  &#8226; Updated app icon (Material design)
   &#8226; Updated Instructions"</item>
         <item>
 "  &#8226; [New!] Added all white icon

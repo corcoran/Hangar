@@ -12,6 +12,9 @@ Features
 
 * Auto-updating notification drawer shortcuts containing your most used and important apps
 * Sort and display apps based on user specified weight factors
+* Pin apps to always display
+* Supports icon packs and custom icons
+* Optional second row of icons
 * Blacklist unwanted apps
 * Fully customizable!  Change the number of shortcuts, icon color, icon size, background and more.
 * Additional re-sizeable widget to launch apps
@@ -22,10 +25,10 @@ FAQ
 ================
 
 **Q: How do I pin apps or select specific apps to appear in Hangar?**  
-You can't!  Sorry.  But don't worry, this feature is under development.  Check out the github issue tracker to comment and/or see the status of outstanding issues.
+In Hangar go to Settings => Apps, select an app and "Pin app" from the menu.
 
 **Q: How do I customize the icons Hangar displays?**  
-Hangar supports Icon packs available on the Play Store. This is a new addition to Hangar and can be found in Settings => Appearance
+You can apply an icon pack by selecting "Icon pack" in Settings => Appearance.  You can also manually adjust each app's icon in Settings => Apps by selecting an app and choosing "Change icon".
 
 **Q: How do I remove the statusbar icon?**  
 You can change the position in the Settings => Behavior screen. If you select the bottom position, the icon goes away!  One limitation of Android is that on-going notifications require a notification icon in order to have TOP_PRIORITY as a notification.  As a workaround, I've added a number of icon choices (Settings => Appearance) which includes a Transparent icon.  That icon creates a transparent gap, of course, but it's the best you can do without lowering the priority.
@@ -36,11 +39,8 @@ This is caused by Google limiting in-app purchase apps (which Hangar uses for do
 **Q: Will Hangar drain my battery?**  
 No!  It uses very little memory and very little CPU.  It also only runs while your phone is awake and does not hold wakelock.
 
-**Q: I want some apps to hide and show depending on my location, or if I'm at work, or...**  
-Good news!  This is what I'm calling Profiles and it's also in development.  This is arguably the biggest addition/feature to add, but again, it's on the roadmap.
-
 **Q: Can I have the recency weight and in-app use stats last a week/month/6mos/etc?**  
-Sorry again.  Right now time is added forever.  This is definitely something that will change, but there are other features that have priority right now.
+Sorry again.  Right now time is added forever.  This is one of the highest priority features and will be coming in the near future.
 
 Screenshots
 ================
@@ -135,6 +135,13 @@ Contributors
       Jan Madsen
     </td><td>
       Danish translations
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Cyril L.
+    </td><td>
+      French translations
     </td>
   </tr>
 </table>
