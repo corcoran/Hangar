@@ -164,7 +164,7 @@
     <string name="title_icon_color_category">Icon Color</string>
     <string name="title_icon_pack_preference">Icon pack</string>
     <string name="default_icon_pack">Default Icons</string>
-    <string name="switched_icon_packs_alert">Rebuilding icon caches.  This may take a few seconds!</string>
+    <string name="switched_icon_packs_alert">Rebuilding icon cache.  This may take a few seconds!</string>
     <string name="title_icon_pack_picker">Pick an icon pack</string>
     <string name="title_icon_pack_not_found">No icon packs found</string>
     <string name="title_icon_pack_install">Find an icon pack</string>
@@ -236,13 +236,13 @@
     <string name="donate_thanks_title">Thank you!</string>
     <string name="donate_thanks_continue">Back to Hangar</string>
     <string name="donate_thanks">"Your contribution to the development of Hangar is much appreciated! The Android community is made better by people like you who support and motivate developers."</string>
-    <string name="donate_thanks_paypal">"Hangar doesn't know if an actual donation was made using PayPal, since we just sent you off to a paypal link via your favorite browser.  However we're going to thank you regardless for your continued use and support! :)"</string>
+    <string name="donate_thanks_paypal">"Hangar doesn't know if an actual donation was made using PayPal, since we just sent you off to a PayPal link via your favorite browser.  However we're going to thank you regardless for your continued use and support! :)"</string>
 
     <!-- Contribute -->
     <string name="contribute_title">Contribute to Hangar</string>
 
     <string name="contribute_google_title">Rate + Review</string>
-    <string name="contribute_google_text">"Higher ratings &amp; positive reviews help spread the word by promoting Hangar's rank in the Play store.  It's also the easiest and quickest way to contribute!"</string>
+    <string name="contribute_google_text">"Higher ratings &amp; positive reviews help spread the word by promoting Hangar's rank in the Play Store.  It's also the easiest and quickest way to contribute!"</string>
     <string name="contribute_google_link">Rate on Google Play</string>
     <string name="contribute_google_url" translatable="false">market://details?id=ca.mimic.apphangar</string>
 
@@ -295,7 +295,7 @@
 
     <!-- License -->
     <string name="license_title">License and Source</string>
-    <string name="license_head">Hangar is licensed under the GPLv3 from the Free Software Foundation and is Copyright © 2014 Jeff Corcoran.\n\nUnder the GPL license, Hangar is available free of charge as long as the use of Hangar adheres to the terms of the GPL license.\n\nUsers may download the software for free, and modify, integrate and distribute it. However, GPL users must abide by the rules of the GPL, which stipulate that if a work based on Hangar is redistributed, the complete source code for this work must also be open and available for redistribution under the terms of the GPL.\n\nSee the GPL and the FAQ of the Free Software Foundation for more details.</string>
+    <string name="license_head">Hangar is licensed under the GNU GPLv3 from the Free Software Foundation and is Copyright © 2014 Jeff Corcoran.\n\nUnder the GPL, Hangar is available free of charge as long as the use of Hangar adheres to the terms of the GPL.\n\nUsers may download the software for free, and modify, integrate and distribute it. However, GPL users must abide by the rules of the GPL, which stipulate that if a work based on Hangar is redistributed, the complete source code for this work must also be open and available for redistribution under the terms of the GPL.\n\nSee the GPL and the FAQ of the Free Software Foundation for more details.</string>
     <string name="license_view_source">Visit Hangar on Github</string>
     <string name="license_github_url" translatable="false">https://github.com/corcoran/Hangar</string>
     <string name="license_accept_button">Continue</string>
