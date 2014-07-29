@@ -1,9 +1,11 @@
 Hangar
 ================
 
-Hangar is a tool that provides easy, relevant shortcuts in your notification drawer to your most used and relied upon apps.
+Hangar is an Android app that provides easy, relevant shortcuts in your notification drawer to your most used and relied upon apps.
 
 This lightweight notification bar gives you convenient access to these apps from anywhere in Android while intelligently updating the priority and order of the shortcuts based on your daily use.
+
+With the new pinned apps feature, favorite apps can be pinned alongside the ones Hangar has set.  Want a fresh look on those shortcuts?  Hangar now supports custom icons, letting you set a stylized theme by installing one of the many gorgeous icon packs available on the Play Store.
 
 Hangar also keeps track of app usage statistics and includes 2 highly customizable widgets.
 
@@ -40,26 +42,26 @@ This is caused by Google limiting in-app purchase apps (which Hangar uses for do
 No!  It uses very little memory and very little CPU.  It also only runs while your phone is awake and does not hold wakelock.
 
 **Q: Can I have the recency weight and in-app use stats last a week/month/6mos/etc?**  
-Sorry again.  Right now time is added forever.  This is one of the highest priority features and will be coming in the near future.
+Right now time is added forever.  This is one of the highest priority features and will be coming in the near future.
 
 Screenshots
 ================
 
 Notification drawer shortcuts:
 
-  ![Notification drawer shortcuts](http://mimic.ca/~jeff/hangar/Hangar_1_notif.png)
+  ![Notification drawer shortcuts](http://mimic.ca/~jeff/hangar/2.3/Hangar_1_notif.png)
 
 Stats widget:
 
-  ![Stats widget](http://mimic.ca/~jeff/hangar/Hangar_2_stats_widget.png)
+  ![Stats widget](http://mimic.ca/~jeff/hangar/2.3/Hangar_2_stats_widget.png)
 
 Apps widget:
 
-  ![Apps widget](http://mimic.ca/~jeff/hangar/Hangar_3_apps_widget.png)
+  ![Apps widget](http://mimic.ca/~jeff/hangar/2.3/Hangar_3_apps_widget.png)
 
 Settings:
 
-  ![Settings](http://mimic.ca/~jeff/hangar/Hangar_settings.png)
+  ![Settings](http://mimic.ca/~jeff/hangar/2.3/Hangar_settings.png)
 
 Play Store
 ================
