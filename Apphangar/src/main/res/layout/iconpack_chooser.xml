@@ -20,7 +20,7 @@
         android:paddingEnd="8dip"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textSize="16sp" />
 
     <ImageView
         tools:ignore="ContentDescription"

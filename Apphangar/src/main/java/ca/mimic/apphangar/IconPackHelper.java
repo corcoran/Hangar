@@ -53,6 +53,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class IconPackHelper {
@@ -73,12 +74,23 @@ public class IconPackHelper {
     private final Context mContext;
     private String mLoadedIconPackName;
     private Resources mLoadedIconPackResource;
+
+    protected static Settings mActivity;
+    protected static AppsRowItem mTask;
     protected static Settings.PrefsGet prefs;
 
     IconPackHelper(Context context) {
         mContext = context;
         mIconPackResources = new HashMap<String, String>();
 
+    }
+
+    public static void setActivity(Settings activity) {
+        mActivity = activity;
+    }
+
+    public static void setTask(AppsRowItem task) {
+        mTask = task;
     }
 
     public static Map<String, IconPackInfo> getSupportedPackages(Context context) {
@@ -100,6 +112,18 @@ public class IconPackHelper {
                 packages.put(r.activityInfo.packageName, info);
             }
             i.removeCategory(category);
+        }
+        return packages;
+    }
+
+    public static Map<String, IconPackInfo> getPickerPackages(Context context) {
+        Intent i = new Intent();
+        Map<String, IconPackInfo> packages = new HashMap<String, IconPackInfo>();
+        PackageManager packageManager = context.getPackageManager();
+        i.setAction(Settings.ACTION_ADW_PICK_ICON);
+        for (ResolveInfo r : packageManager.queryIntentActivities(i, 0)) {
+            IconPackInfo info = new IconPackInfo(r, packageManager);
+            packages.put(r.activityInfo.packageName, info);
         }
         return packages;
     }
@@ -318,21 +342,43 @@ public class IconPackHelper {
         }
     }
 
-    public static void pickIconPack(final Context context) {
-        Map<String, IconPackInfo> supportedPackages = getSupportedPackages(context);
-
+    public static void pickIconPack(final Context context, final boolean isPicker) {
+        Map<String, IconPackInfo> supportedPackages = (isPicker) ? getPickerPackages(context) : getSupportedPackages(context);
         Boolean noPackages = false;
         if (supportedPackages.isEmpty()) {
             noPackages = true;
         }
 
-        final IconAdapter adapter = new IconAdapter(context, supportedPackages, noPackages);
+        final IconAdapter adapter = new IconAdapter(context, supportedPackages, noPackages, isPicker);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(noPackages ? R.string.title_icon_pack_not_found : R.string.title_icon_pack_picker);
+        if (noPackages) {
+            builder.setTitle(R.string.title_icon_pack_not_found);
+        } else {
+            builder.setTitle(isPicker ? R.string.title_icon_pack_choose_from : R.string.title_icon_pack_picker);
+        }
+        AlertDialog alertDialog = builder.create();
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int position) {
-                prefs = new Settings.PrefsGet(context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS));
                 String selectedPackage = adapter.getItem(position);
+                if (isPicker) {
+                    if (mTask != null && selectedPackage.equals(mTask.getPackageName())) {
+                        ComponentName componentName = ComponentName.unflattenFromString(mTask.getPackageName() + "/" + mTask.getClassName());
+                        Settings.resetIconCache(componentName);
+                        return;
+                    }
+                    try {
+                        Intent intent = new Intent();
+                        intent.setPackage(selectedPackage);
+                        intent.setAction(Settings.ACTION_ADW_PICK_ICON);
+                        mActivity.startActivityForResult(intent, 1);
+                    } catch (Exception e) {
+                        Tools.HangarLog("Change icon intent failed! " + e + " : " + selectedPackage);
+                    }
+                    return;
+                }
+                prefs = new Settings.PrefsGet(context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS));
+                SharedPreferences.Editor mEditor = prefs.editorGet();
+
                 Tools.HangarLog("selectedPAckage: " + selectedPackage);
                 if (selectedPackage.equals(Settings.PLAY_STORE_PACKAGENAME)) {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -341,20 +387,52 @@ public class IconPackHelper {
                     context.startActivity(intent);
                     return;
                 }
-                SharedPreferences.Editor mEditor = prefs.editorGet();
                 mEditor.putString(Settings.ICON_PACK_PREFERENCE, selectedPackage);
                 mEditor.apply();
 
                 // Deleting cached icons
                 File[] files = context.getCacheDir().listFiles();
-                for (File file : files){
+                for (File file : files) {
                     file.delete();
                 }
 
                 Settings.iconPackUpdate.iconPackUpdated();
             }
         });
+
+        if (isPicker) {
+            boolean needsWarning = true;
+            String alertTxt;
+            String selectedPackage = prefs.prefsGet().getString(Settings.ICON_PACK_PREFERENCE, null);
+
+            if (selectedPackage == null || selectedPackage.isEmpty()) {
+                alertTxt = context.getString(R.string.title_icon_pack_no_single_picks);
+            } else {
+                for (int i = 0; i < supportedPackages.size(); i++) {
+                    if (supportedPackages.containsKey(selectedPackage)) {
+                        needsWarning = false;
+                    }
+                }
+                alertTxt = String.format(context.getString(R.string.title_icon_pack_no_single_ui),
+                        Tools.getApplicationName(context, selectedPackage));
+            }
+            if (needsWarning) {
+                LinearLayout iconPackWarning = (LinearLayout) alertDialog.getLayoutInflater().inflate(R.layout.iconpack_main, null);
+                TextView tv = (TextView) iconPackWarning.findViewById(R.id.iconpack_warning);
+                tv.setText(alertTxt);
+                builder.setView(iconPackWarning);
+            }
+        }
+
         builder.show();
+    }
+
+    public static void pickIconPack(final Context context) {
+        pickIconPack(context, false);
+    }
+
+    public static void pickIconPicker(final Context context) {
+        pickIconPack(context, true);
     }
 
     boolean isIconPackLoaded() {
@@ -418,8 +496,8 @@ public class IconPackHelper {
         String mCurrentIconPack;
         int mCurrentIconPackPosition;
 
-        IconAdapter(Context ctx, Map<String, IconPackInfo> supportedPackages, Boolean noPackages) {
-            mLayoutInflater = LayoutInflater.from(ctx);
+        IconAdapter(Context context, Map<String, IconPackInfo> supportedPackages, boolean noPackages, boolean isPicker) {
+            mLayoutInflater = LayoutInflater.from(context);
             mSupportedPackages = new ArrayList<IconPackInfo>(supportedPackages.values());
             Collections.sort(mSupportedPackages, new Comparator<IconPackInfo>() {
                 @Override
@@ -428,17 +506,30 @@ public class IconPackHelper {
                 }
             });
 
-            if (noPackages) return;
+            if (noPackages && !isPicker) return;
 
-            Resources res = ctx.getResources();
-            String defaultLabel = res.getString(R.string.default_icon_pack);
-            Drawable icon = res.getDrawable(R.drawable.ic_launcher_home);
-            mSupportedPackages.add(0, new IconPackInfo(defaultLabel, icon, ""));
-            IconPackInfo installNew = installNewPack(ctx);
+            if (isPicker && mTask != null) {
+                Resources res = context.getResources();
+                String defaultLabel = res.getString(R.string.reset_icon);
+                Intent intent = context.getPackageManager().getLaunchIntentForPackage(mTask.getPackageName());
+                ResolveInfo rInfo = context.getPackageManager().resolveActivity(intent, 0);
+
+                Drawable icon = new IconCacheHelper(context).getFullResIcon(rInfo.activityInfo, true);
+                mSupportedPackages.add(0, new IconPackInfo(defaultLabel, icon, mTask.getPackageName()));
+            } else {
+
+                Resources res = context.getResources();
+                String defaultLabel = res.getString(R.string.default_icon_pack);
+                Drawable icon = res.getDrawable(R.drawable.ic_launcher_home);
+                mSupportedPackages.add(0, new IconPackInfo(defaultLabel, icon, ""));
+            }
+
+            IconPackInfo installNew = installNewPack(context);
             if (installNew != null)
                 mSupportedPackages.add(installNew);
 
-            prefs = new Settings.PrefsGet(ctx.getSharedPreferences(ctx.getPackageName(), Context.MODE_MULTI_PROCESS));
+
+            prefs = new Settings.PrefsGet(context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS));
             SharedPreferences mPrefs = prefs.prefsGet();
             mCurrentIconPack = mPrefs.getString(Settings.ICON_PACK_PREFERENCE, "");
         }

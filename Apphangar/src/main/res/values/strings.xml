@@ -164,10 +164,14 @@
     <string name="title_icon_color_category">Icon Color</string>
     <string name="title_icon_pack_preference">Icon pack</string>
     <string name="default_icon_pack">Default Icons</string>
+    <string name="reset_icon">Use default icon</string>
     <string name="switched_icon_packs_alert">Rebuilding icon cache.  This may take a few seconds!</string>
     <string name="title_icon_pack_picker">Pick an icon pack</string>
+    <string name="title_icon_pack_choose_from">Choose from an icon pack</string>
     <string name="title_icon_pack_not_found">No icon packs found</string>
     <string name="title_icon_pack_install">Find an icon pack</string>
+    <string name="title_icon_pack_no_single_ui">Your chosen icon pack (%1$s) does not provide a UI for individual icon selection.\n\nPlease contact the icon pack developer for more information.</string>
+    <string name="title_icon_pack_no_single_picks">You have not selected a base icon pack to apply to all Hangar icons.\n\nYou may want to select one from the <b>Appearance</b> tab first.</string>
 
     <!-- Apps -->
     <string name="title_top_spinner">Top</string>

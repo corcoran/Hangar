@@ -32,18 +32,18 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -347,6 +347,24 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     Tools.HangarLog("Icon result exception: " + e);
                 }
             }
+        }
+    }
+
+    protected static void resetIconCache(ComponentName componentName) {
+        Tools.HangarLog("resetIconCache!: " + componentName.getPackageName());
+
+        try {
+            Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(componentName.getPackageName());
+            ResolveInfo rInfo = mContext.getPackageManager().resolveActivity(intent, 0);
+
+            Drawable icon = new IconCacheHelper(mContext).getFullResIcon(rInfo.activityInfo, true);
+            Bitmap bitmap = Tools.drawableToBitmap(icon);
+            IconCacheHelper.preloadIcon(mContext, componentName, bitmap, Tools.dpToPx(mContext, Settings.CACHED_ICON_SIZE));
+            myService.execute(SERVICE_CREATE_NOTIFICATIONS);
+            mAppRowAdapter.reDraw(true);
+            updateRowItem(null);
+        } catch (Exception e) {
+            Tools.HangarLog("reset Icon Cache exception: " + e);
         }
     }
 
@@ -678,18 +696,14 @@ public class Settings extends Activity implements ActionBar.TabListener {
             // Notifications need to be refreshed after cache rebuild.
             Toast.makeText(mContext, mContext.getResources().getString(R.string.switched_icon_packs_alert),
                     Toast.LENGTH_LONG).show();
-            icon_pack_preference.setSummary(getApplicationName(prefs2.getString(ICON_PACK_PREFERENCE, null)));
+            icon_pack_preference.setSummary(Tools.getApplicationName(mContext, prefs2.getString(ICON_PACK_PREFERENCE, null)));
         }
     }
 
-    public static void pickIcon(Settings activity) {
-        try {
-            Intent intent = new Intent();
-            intent.setAction(ACTION_ADW_PICK_ICON);
-            activity.startActivityForResult(intent, 1);
-        } catch (ActivityNotFoundException e) {
-            IconPackHelper.pickIconPack(mContext);
-        }
+    public static void pickIcon(Settings activity, AppsRowItem task) {
+        IconPackHelper.setActivity(activity);
+        IconPackHelper.setTask(task);
+        IconPackHelper.pickIconPicker(mContext);
     }
 
     public static synchronized void rebuildIconCache(final List<AppsRowItem> appTasks) {
@@ -736,17 +750,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
         public void setFm(FragmentManager mFm) {
             fm = mFm;
         }
-    }
-
-    public static String getApplicationName(String packageName) {
-        final PackageManager pm = mContext.getApplicationContext().getPackageManager();
-        ApplicationInfo ai;
-        try {
-            ai = pm.getApplicationInfo(packageName, 0);
-        } catch (final PackageManager.NameNotFoundException e) {
-            ai = null;
-        }
-        return (String) (ai != null ? pm.getApplicationLabel(ai) : "");
     }
 
     public static class PrefsFragment extends PreferenceFragment {
@@ -821,7 +824,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 icon_size_preference.setOnPreferenceChangeListener(changeListener);
 
                 icon_pack_preference = findPreference(Settings.ICON_PACK_PREFERENCE);
-                icon_pack_preference.setSummary(getApplicationName(prefs2.getString(ICON_PACK_PREFERENCE, null)));
+                icon_pack_preference.setSummary(Tools.getApplicationName(mContext, prefs2.getString(ICON_PACK_PREFERENCE, null)));
                 iconPackUpdate = new IconPackUpdate(prefs2, icon_pack_preference);
                 icon_pack_preference.setOnPreferenceClickListener(
                     new Preference.OnPreferenceClickListener() {
@@ -1183,7 +1186,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                             break;
                         case R.id.action_pick_icon:
                             mIconTask = rowItem;
-                            pickIcon(mInstance);
+                            pickIcon(mInstance, rowItem);
                             return true;
                         case R.id.action_blacklist:
                             Boolean isBlackListed = rowItem.getBlacklisted();

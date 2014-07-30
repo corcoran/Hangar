@@ -24,6 +24,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -91,6 +92,17 @@ public class Tools {
         return !removed;
     }
 
+
+    public static String getApplicationName(Context context, String packageName) {
+        final PackageManager pm = context.getPackageManager();
+        ApplicationInfo ai;
+        try {
+            ai = pm.getApplicationInfo(packageName, 0);
+        } catch (final PackageManager.NameNotFoundException e) {
+            ai = null;
+        }
+        return (String) (ai != null ? pm.getApplicationLabel(ai) : "");
+    }
 
     protected static String getLauncher(Context context) {
         final Intent intent = new Intent(Intent.ACTION_MAIN);

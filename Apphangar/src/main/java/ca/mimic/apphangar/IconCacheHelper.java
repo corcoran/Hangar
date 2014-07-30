@@ -96,7 +96,7 @@ public class IconCacheHelper {
         return getFullResIcon(info.activityInfo);
     }
 
-    public Drawable getFullResIcon(ActivityInfo info) {
+    public Drawable getFullResIcon(ActivityInfo info, boolean getStock) {
 
         Resources resources;
         try {
@@ -107,7 +107,7 @@ public class IconCacheHelper {
         }
         if (resources != null) {
             int iconId;
-            if (mIconPackHelper != null && mIconPackHelper.isIconPackLoaded()) {
+            if (mIconPackHelper != null && mIconPackHelper.isIconPackLoaded() && !getStock) {
                 iconId = mIconPackHelper.getResourceIdForActivityIcon(info);
                 if (iconId != 0) {
                     return getFullResIcon(mIconPackHelper.getIconPackResources(), iconId);
@@ -120,6 +120,10 @@ public class IconCacheHelper {
         }
 
         return getFullResDefaultActivityIcon();
+    }
+
+    public Drawable getFullResIcon(ActivityInfo info) {
+        return getFullResIcon(info, false);
     }
 
     public static int chmod(File path, int mode) {
