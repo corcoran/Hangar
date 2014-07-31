@@ -2,21 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="ca.mimic.apphangar.Settings" >
 
-    <item android:id="@+id/action_apps_widget_settings"
-        android:title="@string/configure_apps_widget"
-        android:orderInCategory="100"
-        android:showAsAction="never" />
-
-    <item android:id="@+id/action_stats_widget_settings"
-        android:title="@string/configure_stats_widget"
-        android:orderInCategory="100"
-        android:showAsAction="never" />
-
-    <item android:id="@+id/action_instructions"
-        android:title="@string/configure_instructions"
-        android:orderInCategory="100"
-        android:showAsAction="never" />
-
     <item android:id="@+id/action_contribute"
         android:title="@string/configure_contribute"
         android:orderInCategory="100"
@@ -24,6 +9,11 @@
 
     <item android:id="@+id/action_changelog"
         android:title="@string/configure_changelog"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+
+    <item android:id="@+id/action_instructions"
+        android:title="@string/configure_instructions"
         android:orderInCategory="100"
         android:showAsAction="never" />
 

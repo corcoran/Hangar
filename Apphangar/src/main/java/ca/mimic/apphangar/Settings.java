@@ -71,6 +71,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -214,6 +215,34 @@ public class Settings extends Activity implements ActionBar.TabListener {
         updateRowItem(null);
     }
 
+    protected void setUpSpinner(Spinner spinner) {
+        SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this,
+                R.array.entries_action_spinner, android.R.layout.simple_spinner_dropdown_item);
+
+        Spinner.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    case 0:
+                        return;
+                    case 1:
+                        startActivity(new Intent(mContext, AppsWidgetSettings.class));
+                        break;
+                    case 2:
+                        startActivity(new Intent(mContext, StatsWidgetSettings.class));
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        };
+
+        spinner.setAdapter(mSpinnerAdapter);
+        spinner.setOnItemSelectedListener(spinnerListener);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -237,8 +266,13 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
+
         actionBar.setTitle(R.string.title_activity_settings);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setCustomView(R.layout.action_spinner);
+        setUpSpinner((Spinner) actionBar.getCustomView().findViewById(R.id.config_spinner));
+        actionBar.setDisplayShowCustomEnabled(true);
+
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
@@ -282,6 +316,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
     protected void onResume() {
         super.onResume();
         Tools.HangarLog("onResume Settings!");
+        try {
+            ((Spinner) getActionBar().getCustomView().findViewById(R.id.config_spinner)).setSelection(0);
+        } catch (Exception e) {
+        }
         if (mLaunchedPaypal) {
             mLaunchedPaypal = false;
             launchThanks(THANK_YOU_PAYPAL);
@@ -618,13 +656,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_stats_widget_settings) {
-            startActivity(new Intent(mContext, StatsWidgetSettings.class));
-            return true;
-        } else if (id == R.id.action_apps_widget_settings) {
-            startActivity(new Intent(mContext, AppsWidgetSettings.class));
-            return true;
-        } else if (id == R.id.action_instructions) {
+        if (id == R.id.action_instructions) {
             launchInstructions();
             return true;
         } else if (id == R.id.action_changelog) {

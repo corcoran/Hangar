@@ -210,9 +210,17 @@
     <string name="action_pick_icon">Change icon</string>
     <string name="action_reset_stats">Reset stats</string>
 
+    <!-- Action spinner -->
+    <string name="title_activity_apps_widget">Apps Widget</string>
+    <string name="title_activity_stats_widget">Stats Widget</string>
+
+    <string-array name="entries_action_spinner">
+        <item>@string/title_activity_settings</item>
+        <item>@string/title_activity_apps_widget</item>
+        <item>@string/title_activity_stats_widget</item>
+    </string-array>
+
     <!-- Settings menu -->
-    <string name="configure_apps_widget">Configure apps widget</string>
-    <string name="configure_stats_widget">Configure stats widget</string>
     <string name="configure_changelog">Recent changes</string>
     <string name="configure_instructions">Instructions</string>
     <string name="configure_donate">Donate</string>
