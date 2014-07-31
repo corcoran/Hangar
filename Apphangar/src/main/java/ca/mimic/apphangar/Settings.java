@@ -22,6 +22,7 @@ package ca.mimic.apphangar;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -216,8 +217,16 @@ public class Settings extends Activity implements ActionBar.TabListener {
     }
 
     protected void setUpSpinner(Spinner spinner) {
-        SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.entries_action_spinner, android.R.layout.simple_spinner_dropdown_item);
+        String[] spinnerItems = getResources().getStringArray(R.array.entries_action_spinner);
+        List<HashMap<Integer, String>> items = new ArrayList<HashMap<Integer, String>>();
+        for (int i = 0;i < spinnerItems.length; i++ ) {
+            HashMap<Integer, String> spinnerMap = new HashMap<Integer, String>();
+            spinnerMap.put(i, spinnerItems[i]);
+            items.add(spinnerMap);
+        }
+
+        SpinnerAdapter mSpinnerAdapter = new CustomArrayAdapter(mContext, android.R.layout.simple_spinner_dropdown_item, items);
+        spinner.setAdapter(mSpinnerAdapter);
 
         Spinner.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
             @Override
