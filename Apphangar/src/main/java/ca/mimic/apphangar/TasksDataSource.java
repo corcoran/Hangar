@@ -50,7 +50,7 @@ public class TasksDataSource {
         }
     }
 
-    public static TasksDataSource getInstance(Context context) {
+    public static synchronized TasksDataSource getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new TasksDataSource(context.getApplicationContext());
         }
@@ -67,42 +67,46 @@ public class TasksDataSource {
 
     public TasksModel createTask(String name, String packagename, String classname,
             String timestamp) {
-        ContentValues values = new ContentValues();
-        values.put(Tasks.COLUMN_NAME, name);
-        values.put(Tasks.COLUMN_PACKAGENAME, packagename);
-        values.put(Tasks.COLUMN_CLASSNAME, classname);
-        values.put(Tasks.COLUMN_TIMESTAMP, timestamp);
-        long insertId = database.insert(Tasks.TABLE_TASKS, null,
-                values);
-        Cursor cursor = database.query(Tasks.TABLE_TASKS,
-                allColumns, Tasks.COLUMN_ID + " = " + insertId, null,
-                null, null, null);
-        cursor.moveToFirst();
-        TasksModel newTasks;
-        try {
-            newTasks = cursorToTasks(cursor);
-            cursor.close();
-            return newTasks;
-        } catch (ParseException e) {
-            Tools.HangarLog("createTask timestamp parse error [" + e + "]");
-        }
+        synchronized (this) {
+            ContentValues values = new ContentValues();
+            values.put(Tasks.COLUMN_NAME, name);
+            values.put(Tasks.COLUMN_PACKAGENAME, packagename);
+            values.put(Tasks.COLUMN_CLASSNAME, classname);
+            values.put(Tasks.COLUMN_TIMESTAMP, timestamp);
+            long insertId = database.insert(Tasks.TABLE_TASKS, null,
+                    values);
+            Cursor cursor = database.query(Tasks.TABLE_TASKS,
+                    allColumns, Tasks.COLUMN_ID + " = " + insertId, null,
+                    null, null, null);
+            cursor.moveToFirst();
+            TasksModel newTasks;
+            try {
+                newTasks = cursorToTasks(cursor);
+                cursor.close();
+                return newTasks;
+            } catch (ParseException e) {
+                Tools.HangarLog("createTask timestamp parse error [" + e + "]");
+            }
 
-        return null;
+            return null;
+        }
     }
 
     public int addSeconds(String name, int seconds) {
-        try {
-            TasksModel task = getTask(name);
-            long id = task.getId();
-            database.execSQL("UPDATE " + Tasks.TABLE_TASKS + " SET "
-                    + Tasks.COLUMN_SECONDS + " = " + Tasks.COLUMN_SECONDS + " +" + seconds + " WHERE "
-                    + Tasks.COLUMN_ID + " = " + id);
-            return task.getSeconds() + seconds;
-        } catch (Exception e) {
-            Tools.HangarLog("Exception for addSeconds [" + name + "]");
-            e.printStackTrace();
+        synchronized (this) {
+            try {
+                TasksModel task = getTask(name);
+                long id = task.getId();
+                database.execSQL("UPDATE " + Tasks.TABLE_TASKS + " SET "
+                        + Tasks.COLUMN_SECONDS + " = " + Tasks.COLUMN_SECONDS + " +" + seconds + " WHERE "
+                        + Tasks.COLUMN_ID + " = " + id);
+                return task.getSeconds() + seconds;
+            } catch (Exception e) {
+                Tools.HangarLog("Exception for addSeconds [" + name + "]");
+                e.printStackTrace();
+            }
+            return 0;
         }
-        return 0;
     }
 
 //    public int getSeconds(String name) {
@@ -114,17 +118,19 @@ public class TasksDataSource {
 //    }
 
     public int increaseLaunch(String name) {
-        try {
-            TasksModel task = getTask(name);
-            long id = task.getId();
-            database.execSQL("UPDATE " + Tasks.TABLE_TASKS + " SET "
-                    + Tasks.COLUMN_LAUNCHES + " = " + Tasks.COLUMN_LAUNCHES + " +1 WHERE "
-                    + Tasks.COLUMN_ID + " = " + id);
-            return task.getLaunches() + 1;
-        } catch (Exception e) {
-            Tools.HangarLog("Exception for increaseLaunch [" + name + "]");
+        synchronized (this) {
+            try {
+                TasksModel task = getTask(name);
+                long id = task.getId();
+                database.execSQL("UPDATE " + Tasks.TABLE_TASKS + " SET "
+                        + Tasks.COLUMN_LAUNCHES + " = " + Tasks.COLUMN_LAUNCHES + " +1 WHERE "
+                        + Tasks.COLUMN_ID + " = " + id);
+                return task.getLaunches() + 1;
+            } catch (Exception e) {
+                Tools.HangarLog("Exception for increaseLaunch [" + name + "]");
+            }
+            return 0;
         }
-        return 0;
     }
 
     public int getHighestSeconds() {
@@ -161,16 +167,20 @@ public class TasksDataSource {
     }
 
     public void deleteTask(TasksModel task) {
-        long id = task.getId();
-        System.out.println("Tasks deleted with id: " + id);
-        database.delete(Tasks.TABLE_TASKS, Tasks.COLUMN_ID
-                + " = " + id, null);
+        synchronized (this) {
+            long id = task.getId();
+            System.out.println("Tasks deleted with id: " + id);
+            database.delete(Tasks.TABLE_TASKS, Tasks.COLUMN_ID
+                    + " = " + id, null);
+        }
     }
 
     public void deletePackageName(String packageName) {
-        System.out.println("Tasks deleted with id: " + packageName);
-        database.delete(Tasks.TABLE_TASKS, Tasks.COLUMN_PACKAGENAME
-                + " = \"" + packageName + "\"", null);
+        synchronized (this) {
+            System.out.println("Tasks deleted with id: " + packageName);
+            database.delete(Tasks.TABLE_TASKS, Tasks.COLUMN_PACKAGENAME
+                    + " = \"" + packageName + "\"", null);
+        }
     }
 
     public TasksModel getTask(String name) {
@@ -190,18 +200,22 @@ public class TasksDataSource {
     }
 
     public void resetTaskStats(TasksModel task) {
-        ContentValues args = new ContentValues();
-        args.put(Tasks.COLUMN_LAUNCHES, 0);
-        args.put(Tasks.COLUMN_SECONDS, 0);
-        database.update(Tasks.TABLE_TASKS, args, Tasks.COLUMN_ID
-                + " = " + task.getId(), null);
+        synchronized (this) {
+            ContentValues args = new ContentValues();
+            args.put(Tasks.COLUMN_LAUNCHES, 0);
+            args.put(Tasks.COLUMN_SECONDS, 0);
+            database.update(Tasks.TABLE_TASKS, args, Tasks.COLUMN_ID
+                    + " = " + task.getId(), null);
+        }
     }
 
     public void blacklistTask(TasksModel task, boolean blacklisted) {
-        ContentValues args = new ContentValues();
-        args.put(Tasks.COLUMN_BLACKLISTED, blacklisted ? 1 : 0);
-        database.update(Tasks.TABLE_TASKS, args, Tasks.COLUMN_ID
-                + " = " + task.getId(), null);
+        synchronized (this) {
+            ContentValues args = new ContentValues();
+            args.put(Tasks.COLUMN_BLACKLISTED, blacklisted ? 1 : 0);
+            database.update(Tasks.TABLE_TASKS, args, Tasks.COLUMN_ID
+                    + " = " + task.getId(), null);
+        }
     }
 
     public List<TasksModel> getBlacklisted() {
@@ -227,23 +241,27 @@ public class TasksDataSource {
     }
 
     public int updateTaskTimestamp(String name) {
-        ContentValues args = new ContentValues();
-        Date date = new Date();
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-        args.put(Tasks.COLUMN_TIMESTAMP, dateFormatter.format(date));
-        return database.update(Tasks.TABLE_TASKS, args, Tasks.COLUMN_PACKAGENAME
-                + " = '" + name + "'", null);
+        synchronized (this) {
+            ContentValues args = new ContentValues();
+            Date date = new Date();
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+            args.put(Tasks.COLUMN_TIMESTAMP, dateFormatter.format(date));
+            return database.update(Tasks.TABLE_TASKS, args, Tasks.COLUMN_PACKAGENAME
+                    + " = '" + name + "'", null);
+        }
     }
 
     public int setOrder(String name, int order, boolean widget) {
-        ContentValues args = new ContentValues();
-        if (widget) {
-            args.put(Tasks.COLUMN_WIDGET_ORDER, order);
-        } else {
-            args.put(Tasks.COLUMN_ORDER, order);
+        synchronized (this) {
+            ContentValues args = new ContentValues();
+            if (widget) {
+                args.put(Tasks.COLUMN_WIDGET_ORDER, order);
+            } else {
+                args.put(Tasks.COLUMN_ORDER, order);
+            }
+            return database.update(Tasks.TABLE_TASKS, args, Tasks.COLUMN_PACKAGENAME
+                    + " = '" + name + "'", null);
         }
-        return database.update(Tasks.TABLE_TASKS, args, Tasks.COLUMN_PACKAGENAME
-                + " = '" + name + "'", null);
     }
 
 //    public int setOrder(String name, int order) {
@@ -251,13 +269,15 @@ public class TasksDataSource {
 //    }
 
     public void blankOrder(boolean widget) {
-        ContentValues args = new ContentValues();
-        if (widget) {
-            args.put(Tasks.COLUMN_WIDGET_ORDER, 0);
-        } else {
-            args.put(Tasks.COLUMN_ORDER, 0);
+        synchronized (this) {
+            ContentValues args = new ContentValues();
+            if (widget) {
+                args.put(Tasks.COLUMN_WIDGET_ORDER, 0);
+            } else {
+                args.put(Tasks.COLUMN_ORDER, 0);
+            }
+            database.update(Tasks.TABLE_TASKS, args, null, null);
         }
-        database.update(Tasks.TABLE_TASKS, args, null, null);
     }
 
     public List<TasksModel> getPinnedTasks(ArrayList<String> pinnedApps, int sortType) {
