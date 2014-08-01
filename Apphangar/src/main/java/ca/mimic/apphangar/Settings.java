@@ -324,6 +324,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     @Override
     protected void onResume() {
         super.onResume();
+        prefs = new PrefsGet(getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS));
         Tools.HangarLog("onResume Settings!");
         try {
             ((Spinner) getActionBar().getCustomView().findViewById(R.id.config_spinner)).setSelection(0);
@@ -570,12 +571,12 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 return false;
             } else {
                 mEditor.putString(Settings.VERSION_CHECK, hangarVersion);
-                mEditor.apply();
+                mEditor.commit();
                 return true;
             }
         } else {
             mEditor.putString(Settings.VERSION_CHECK, hangarVersion);
-            mEditor.apply();
+            mEditor.commit();
             launchInstructions();
             return false;
         }
@@ -1223,7 +1224,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         case R.id.action_pin:
                             Boolean isPinned = rowItem.getPinned();
                             rowItem.setPinned(!isPinned);
-                            new Tools().togglePinned(mContext, rowItem.getPackageName());
+                            new Tools().togglePinned(mContext, rowItem.getPackageName(), prefs.editorGet());
                             break;
                         case R.id.action_pick_icon:
                             mIconTask = rowItem;

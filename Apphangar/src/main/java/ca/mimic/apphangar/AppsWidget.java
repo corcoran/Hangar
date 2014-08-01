@@ -219,6 +219,8 @@ public class AppsWidget extends AppWidgetProvider {
             appList = new Tools().getPinnedTasks(context, pinnedList, appList, numOfIcons);
         }
 
+        db.close();
+
         int imageButtonLayout = context.getResources().getIdentifier("imageButton", "id", taskPackage);
         int imageContLayout = context.getResources().getIdentifier("imageCont", "id", taskPackage);
 
@@ -285,7 +287,6 @@ public class AppsWidget extends AppWidgetProvider {
         }
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
-        db.close();
     }
 
 }

@@ -66,10 +66,7 @@ public class Tools {
         return new ArrayList<String>(Arrays.asList(pinnedApps.split(" ")));
     }
 
-    protected boolean togglePinned(Context context, String packageName) {
-        SharedPreferences settingsPrefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS);
-        SharedPreferences.Editor settingsEditor = settingsPrefs.edit();
-
+    protected boolean togglePinned(Context context, String packageName, SharedPreferences.Editor settingsEditor) {
         ArrayList<String> appList = getPinned(context);
 
         Boolean removed = false;
@@ -87,7 +84,7 @@ public class Tools {
         }
 
         settingsEditor.putString(Settings.PINNED_APPS, pinnedApps.trim());
-        settingsEditor.apply();
+        settingsEditor.commit();
 
         return !removed;
     }
