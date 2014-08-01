@@ -82,8 +82,6 @@
   <string name="action_blacklist">Activer/désactiver la liste noire</string>
   <string name="action_pick_icon">Changer d\'icone</string>
   <string name="action_reset_stats">Réinitialiser les stats</string>
-  <string name="configure_apps_widget">Configurer le widget de l\'app</string>
-  <string name="configure_stats_widget">Configurer le widget de stats</string>
   <string name="configure_changelog">Modifications récentes</string>
   <string name="configure_instructions">Fonctionnement</string>
   <string name="configure_donate">Soutenez</string>

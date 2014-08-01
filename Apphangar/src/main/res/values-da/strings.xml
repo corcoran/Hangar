@@ -82,8 +82,6 @@
   <string name="action_blacklist">Skift mellem sortlistning</string>
   <string name="action_pick_icon">Ændre ikon</string>
   <string name="action_reset_stats">Nulstil statistik</string>
-  <string name="configure_apps_widget">Konfigurer apps widget</string>
-  <string name="configure_stats_widget">Konfigurer statistik widget</string>
   <string name="configure_changelog">Seneste ændringer</string>
   <string name="configure_instructions">Instruktioner</string>
   <string name="configure_donate">Donér</string>

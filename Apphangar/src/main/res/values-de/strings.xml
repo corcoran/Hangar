@@ -82,8 +82,6 @@
   <string name="action_blacklist">Ausnahme hinzufügen/entfernen</string>
   <string name="action_pick_icon">Symbol ändern</string>
   <string name="action_reset_stats">Statistik zurücksetzen</string>
-  <string name="configure_apps_widget">Apps-Widget konfigurieren</string>
-  <string name="configure_stats_widget">Statistik-Widget konfigurieren</string>
   <string name="configure_changelog">Letzte Änderungen</string>
   <string name="configure_instructions">Anleitung</string>
   <string name="configure_donate">Spenden</string>

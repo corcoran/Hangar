@@ -82,8 +82,6 @@
   <string name="action_blacklist">Pulsante blacklist</string>
   <string name="action_pick_icon">Cambia icona</string>
   <string name="action_reset_stats">Azzera statistiche</string>
-  <string name="configure_apps_widget">Configura widget app</string>
-  <string name="configure_stats_widget">Configura widget statistiche</string>
   <string name="configure_changelog">Vedi cambi recenti</string>
   <string name="configure_instructions">Istruzioni</string>
   <string name="configure_donate">Donazione</string>

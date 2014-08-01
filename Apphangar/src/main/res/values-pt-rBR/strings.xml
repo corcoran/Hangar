@@ -82,8 +82,6 @@
   <string name="action_blacklist">Adicionar/Retirar da Blacklist</string>
   <string name="action_pick_icon">Mudar ícone</string>
   <string name="action_reset_stats">Zerar as estatísticas</string>
-  <string name="configure_apps_widget">Configurar o widget de apps</string>
-  <string name="configure_stats_widget">Configurar o widget de estatísticas</string>
   <string name="configure_changelog">Veja as alterações recentes</string>
   <string name="configure_instructions">Instruções</string>
   <string name="configure_donate">Doar</string>

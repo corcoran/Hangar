@@ -82,8 +82,6 @@
   <string name="action_blacklist">Исключить/Вернуть</string>
   <string name="action_pick_icon">Сменить значок</string>
   <string name="action_reset_stats">Сбросить статистику</string>
-  <string name="configure_apps_widget">Виджет приложений</string>
-  <string name="configure_stats_widget">Виджет статистики</string>
   <string name="configure_changelog">Последние нововведения</string>
   <string name="configure_instructions">Руководство</string>
   <string name="configure_donate">Пожертвования</string>

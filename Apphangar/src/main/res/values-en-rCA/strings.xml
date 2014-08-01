@@ -82,8 +82,6 @@
   <string name="action_blacklist">Toggle blacklist</string>
   <string name="action_pick_icon">Change icon</string>
   <string name="action_reset_stats">Reset stats</string>
-  <string name="configure_apps_widget">Configure apps widget</string>
-  <string name="configure_stats_widget">Configure stats widget</string>
   <string name="configure_changelog">Recent changes</string>
   <string name="configure_instructions">Instructions</string>
   <string name="configure_donate">Donate</string>

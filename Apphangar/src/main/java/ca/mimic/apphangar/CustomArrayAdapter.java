@@ -35,7 +35,7 @@ class CustomArrayAdapter extends ArrayAdapter<HashMap<Integer, String>> {
 
     Context mContext;
     List<HashMap<Integer, String>> items;
-    Integer[] icons = new Integer[] {R.drawable.ic_apps_white, R.drawable.ic_action_apps_widget, R.drawable.ic_action_stats_widget};
+    Integer[] icons = new Integer[] {R.drawable.ic_action_settings, R.drawable.ic_action_apps_widget, R.drawable.ic_action_stats_widget};
 
     public CustomArrayAdapter(Context context, int resId, List<HashMap<Integer, String>> objects) {
         super(context, resId, objects);
