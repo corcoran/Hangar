@@ -214,7 +214,7 @@
     <string name="title_activity_apps_widget">Apps Widget</string>
     <string name="title_activity_stats_widget">Stats Widget</string>
 
-    <string-array name="entries_action_spinner">
+    <string-array name="entries_action_spinner" translatable="false">
         <item>@string/title_activity_settings</item>
         <item>@string/title_activity_apps_widget</item>
         <item>@string/title_activity_stats_widget</item>
