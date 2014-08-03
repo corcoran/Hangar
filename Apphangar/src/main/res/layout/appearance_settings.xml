@@ -63,9 +63,4 @@
         android:dialogTitle="@string/title_icon_size_preference" />
     </PreferenceCategory>
 
-    <Preference
-        android:key="icon_pack_preference"
-        android:title="@string/title_icon_pack_preference">
-
-    </Preference>
 </PreferenceScreen>

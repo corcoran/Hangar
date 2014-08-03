@@ -2,15 +2,81 @@
 <resources>
 
     <string name="app_name" translatable="false">Hangar</string>
+    <string name="title_general">General</string>
     <string name="title_behavior">Behavior</string>
     <string name="title_appearance">Appearance</string>
     <string name="title_apps">Apps</string>
     <string name="title_activity_settings">Hangar Settings</string>
 
     <!-- Preferences -->
-    <!-- Behavior -->
+
+    <!-- General -->
     <string name="title_toggle_preference">Notification bar</string>
     <string name="title_boot_preference">Start on boot</string>
+
+    <string name="title_icon_pack_preference">Icon pack</string>
+    <string name="default_icon_pack">Default Icons</string>
+    <string name="reset_icon">Use default icon</string>
+    <string name="switched_icon_packs_alert">Rebuilding icon cache.  This may take a few seconds!</string>
+    <string name="title_icon_pack_picker">Pick an icon pack</string>
+    <string name="title_icon_pack_choose_from">Choose from an icon pack</string>
+    <string name="title_icon_pack_not_found">No icon packs found</string>
+    <string name="title_icon_pack_install">Find an icon pack</string>
+    <string name="title_icon_pack_no_single_ui">Your chosen icon pack (%1$s) does not provide a UI for individual icon selection.\n\nPlease contact the icon pack developer for more information.</string>
+    <string name="title_icon_pack_no_single_picks">You have not selected a base icon pack to apply to all Hangar icons.\n\nYou may want to select one from the <b>Appearance</b> tab first.</string>
+
+    <string name="title_pinned_category">Pinned apps</string>
+    <string name="title_pinned_sort_preference">Pinned app sorting</string>
+    <string name="title_pinned_placement_preference">Pinned app placement</string>
+
+    <string name="pinned_sort_time">Time spent in app</string>
+    <string name="pinned_sort_alphabetical">Alphabetical</string>
+    <string name="pinned_sort_last_opened">Last opened</string>
+    <string name="pinned_sort_added">Time pinned</string>
+
+    <string-array name="entries_pinned_sort_preference" translatable="false">
+        <item>@string/pinned_sort_time</item>
+        <item>@string/pinned_sort_alphabetical</item>
+        <item>@string/pinned_sort_last_opened</item>
+        <item>@string/pinned_sort_added</item>
+    </string-array>
+
+    <string-array name="values_pinned_sort_preference" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string name="pinned_placement_left">Left</string>
+    <string name="pinned_placement_right">Right</string>
+
+    <string-array name="entries_pinned_placement_preference" translatable="false">
+        <item>@string/pinned_placement_left</item>
+        <item>@string/pinned_placement_right</item>
+    </string-array>
+
+    <string-array name="values_pinned_placement_preference" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+    <string name="title_more_apps_category">Multiple pages</string>
+    <string name="title_more_apps">Multiple pages</string>
+    <string name="summary_more_apps">Adds a button to switch pages</string>
+
+    <string name="title_more_apps_pages">Number of pages</string>
+    <string name="summary_more_apps_pages">Switch between %s pages</string>
+    <string-array name="values_more_apps_pages_preference" translatable="false">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string name="title_more_apps_icon">Switcher icon</string>
+
+    <!-- Behavior -->
     <string name="title_weight_category">Sorting and Icon Order</string>
     <string name="title_weighted_recents_preference">Weighted sorting</string>
     <string name="summary_weighted_recents_preference">Apps sorted by most used and recency</string>
@@ -53,42 +119,6 @@
         <item>2</item>
         <item>0</item>
         <item>-2</item>
-    </string-array>
-
-    <string name="title_pinned_category">Pinned apps</string>
-    <string name="title_pinned_sort_preference">Pinned app sorting</string>
-    <string name="title_pinned_placement_preference">Pinned app placement</string>
-
-    <string name="pinned_sort_time">Time spent in app</string>
-    <string name="pinned_sort_alphabetical">Alphabetical</string>
-    <string name="pinned_sort_last_opened">Last opened</string>
-    <string name="pinned_sort_added">Time pinned</string>
-
-    <string-array name="entries_pinned_sort_preference" translatable="false">
-        <item>@string/pinned_sort_time</item>
-        <item>@string/pinned_sort_alphabetical</item>
-        <item>@string/pinned_sort_last_opened</item>
-        <item>@string/pinned_sort_added</item>
-    </string-array>
-
-    <string-array name="values_pinned_sort_preference" translatable="false">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string name="pinned_placement_left">Left</string>
-    <string name="pinned_placement_right">Right</string>
-
-    <string-array name="entries_pinned_placement_preference" translatable="false">
-        <item>@string/pinned_placement_left</item>
-        <item>@string/pinned_placement_right</item>
-    </string-array>
-
-    <string-array name="values_pinned_placement_preference" translatable="false">
-        <item>0</item>
-        <item>1</item>
     </string-array>
 
     <string name="title_smart_notification">Smart notification sort</string>
@@ -162,16 +192,6 @@
     <string name="summary_colorize_preference">Change the color of the notification icons</string>
     <string name="title_icon_color_preference">Color</string>
     <string name="title_icon_color_category">Icon Color</string>
-    <string name="title_icon_pack_preference">Icon pack</string>
-    <string name="default_icon_pack">Default Icons</string>
-    <string name="reset_icon">Use default icon</string>
-    <string name="switched_icon_packs_alert">Rebuilding icon cache.  This may take a few seconds!</string>
-    <string name="title_icon_pack_picker">Pick an icon pack</string>
-    <string name="title_icon_pack_choose_from">Choose from an icon pack</string>
-    <string name="title_icon_pack_not_found">No icon packs found</string>
-    <string name="title_icon_pack_install">Find an icon pack</string>
-    <string name="title_icon_pack_no_single_ui">Your chosen icon pack (%1$s) does not provide a UI for individual icon selection.\n\nPlease contact the icon pack developer for more information.</string>
-    <string name="title_icon_pack_no_single_picks">You have not selected a base icon pack to apply to all Hangar icons.\n\nYou may want to select one from the <b>Appearance</b> tab first.</string>
 
     <!-- Apps -->
     <string name="title_top_spinner">Top</string>

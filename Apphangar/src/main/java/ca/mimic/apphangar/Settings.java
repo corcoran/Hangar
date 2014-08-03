@@ -44,6 +44,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.IBinder;
@@ -92,6 +93,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
     final static String VERSION_CHECK = "version_check";
 
+    final static int GENERAL_TAB = 0;
+    final static int BEHAVIOR_TAB = 1;
+    final static int APPEARANCE_TAB = 2;
+    final static int APPS_TAB = 3;
+
     final static String DIVIDER_PREFERENCE = "divider_preference";
     final static String ROW_DIVIDER_PREFERENCE = "row_divider_preference";
     final static String APPSNO_PREFERENCE = "appsno_preference";
@@ -117,6 +123,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String APPLIST_TOP_PREFERENCE = "applist_top_preference";
     final static String APPLIST_SORT_PREFERENCE = "applist_sort_preference";
     final static String SMART_NOTIFICATION_PREFERENCE = "smart_notification_preference";
+    final static String MORE_APPS_PREFERENCE = "more_apps_preference";
+    final static String MORE_APPS_PAGES_PREFERENCE = "more_apps_pages_preference";
+    final static String MORE_APPS_ICON_PREFERENCE = "more_apps_icon_preference";
 
     protected static Settings mInstance;
     protected static AppsRowItem mIconTask;
@@ -138,6 +147,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String PLAY_STORE_PACKAGENAME = "com.android.vending";
     final static String PLAY_STORE_SEARCH_URI = "market://search?q=icon+pack";
 
+    final static String MORE_APPS_PACKAGE = "ca.mimic.apphangar.MoreApps";
+    final static String MORE_APPS_ACTION = "ca.mimic.apphangar.action.MORE_APPS";
+    final static int MORE_APPS_DRAWABLE_RESOURCE = R.drawable.ic_apps_plus;
+
     final static boolean DIVIDER_DEFAULT = false;
     final static boolean ROW_DIVIDER_DEFAULT = true;
     final static boolean TOGGLE_DEFAULT = true;
@@ -148,6 +161,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static boolean SECOND_ROW_DEFAULT = false;
     final static boolean IGNORE_PINNED_DEFAULT = false;
     final static boolean SMART_NOTIFICATION_DEFAULT = true;
+    final static boolean MORE_APPS_DEFAULT = false;
 
     final static int WEIGHT_PRIORITY_DEFAULT = 0;
     final static int APPSNO_DEFAULT = 8;
@@ -162,8 +176,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int ALIGNMENT_DEFAULT = 16; // 16 is middle
     final static int PINNED_SORT_DEFAULT = 0;
     final static int PINNED_PLACEMENT_DEFAULT = 0;
+    final static int MORE_APPS_PAGES_DEFAULT = 3;
 
-    final static int TASKLIST_QUEUE_LIMIT = 40;
+    final static int TASKLIST_QUEUE_LIMIT = 140;
     final static int TASKLIST_QUEUE_SIZE = 35;
     final static int APPLIST_QUEUE_SIZE = 14;
 
@@ -288,7 +303,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(4);
 
         mGetFragments = new GetFragments();
         mGetFragments.setFm(getFragmentManager());
@@ -317,7 +332,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         if (allTasksSize == 0) {
             newStart = true;
         }
-        pageChangeListener.onPageSelected(0);
+        pageChangeListener.onPageSelected(GENERAL_TAB);
 
     }
 
@@ -387,7 +402,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 try {
                     Bitmap bitmap = data.getParcelableExtra("icon");
                     ComponentName componentTask = ComponentName.unflattenFromString(mIconTask.getPackageName() + "/" + mIconTask.getClassName());
-                    IconCacheHelper.preloadIcon(mContext, componentTask, bitmap, Tools.dpToPx(mContext, Settings.CACHED_ICON_SIZE));
+                    IconCacheHelper.preloadComponent(mContext, componentTask, bitmap, Tools.dpToPx(mContext, CACHED_ICON_SIZE));
                     myService.execute(SERVICE_CREATE_NOTIFICATIONS);
                     completeRedraw = true;
                     Tools.updateWidget(mContext);
@@ -395,10 +410,32 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     Tools.HangarLog("Icon result exception: " + e);
                 }
             }
+        } else if (requestCode == 2) {
+            // Icon chooser
+            if (resultCode == Activity.RESULT_OK) {
+                try {
+                    Bitmap bitmap = data.getParcelableExtra("icon");
+                    IconCacheHelper.preloadIcon(mContext, Settings.MORE_APPS_PACKAGE, bitmap, Tools.dpToPx(mContext, CACHED_ICON_SIZE));
+                    myService.execute(SERVICE_CREATE_NOTIFICATIONS);
+                    completeRedraw = true;
+                    Tools.updateWidget(mContext);
+                    updateMoreAppsIcon(mContext);
+                } catch (Exception e) {
+                    Tools.HangarLog("Icon result exception: " + e);
+                }
+            }
         }
     }
 
-    protected static void resetIconCache(ComponentName componentName) {
+    protected static void resetIconCache(String resourceName) {
+        if (resourceName.equals(Settings.MORE_APPS_PACKAGE)) {
+            Bitmap bitmap = Tools.drawableToBitmap(mContext.getResources().getDrawable(Settings.MORE_APPS_DRAWABLE_RESOURCE));
+            IconCacheHelper.preloadIcon(mContext, resourceName, bitmap, Tools.dpToPx(mContext, CACHED_ICON_SIZE));
+            updateMoreAppsIcon(mContext);
+        }
+        myService.execute(SERVICE_CREATE_NOTIFICATIONS);
+    }
+    protected static void resetIconComponent(ComponentName componentName) {
         Tools.HangarLog("resetIconCache!: " + componentName.getPackageName());
 
         try {
@@ -407,7 +444,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
             Drawable icon = new IconCacheHelper(mContext).getFullResIcon(rInfo.activityInfo, true);
             Bitmap bitmap = Tools.drawableToBitmap(icon);
-            IconCacheHelper.preloadIcon(mContext, componentName, bitmap, Tools.dpToPx(mContext, Settings.CACHED_ICON_SIZE));
+            IconCacheHelper.preloadComponent(mContext, componentName, bitmap, Tools.dpToPx(mContext, CACHED_ICON_SIZE));
             myService.execute(SERVICE_CREATE_NOTIFICATIONS);
             mAppRowAdapter.reDraw(true);
             updateRowItem(null);
@@ -563,19 +600,19 @@ public class Settings extends Activity implements ActionBar.TabListener {
             hangarVersion = versionArray[0] + "." + versionArray[1];
         } catch (PackageManager.NameNotFoundException e) {}
 
-        String whichVersion = mPrefs.getString(Settings.VERSION_CHECK, null);
+        String whichVersion = mPrefs.getString(VERSION_CHECK, null);
 
         Tools.HangarLog("savedVer: " + whichVersion + " hangarVersion: " + hangarVersion);
         if (whichVersion != null) {
             if (whichVersion.equals(hangarVersion)) {
                 return false;
             } else {
-                mEditor.putString(Settings.VERSION_CHECK, hangarVersion);
+                mEditor.putString(VERSION_CHECK, hangarVersion);
                 mEditor.commit();
                 return true;
             }
         } else {
-            mEditor.putString(Settings.VERSION_CHECK, hangarVersion);
+            mEditor.putString(VERSION_CHECK, hangarVersion);
             mEditor.commit();
             launchInstructions();
             return false;
@@ -629,6 +666,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                     s.buildReorderAndLaunch();
                                 } catch (Exception e) {
                                     Tools.HangarLog("buildReorderAndLaunch exception: " + e);
+                                    e.printStackTrace();
                                 }
                             }
                         };
@@ -782,7 +820,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
         static ViewPager vp;
         static FragmentManager fm;
 
-        public Fragment getFragmentByPosition(int pos) {
+        public Fragment
+        getFragmentByPosition(int pos) {
             String tag = "android:switcher:" + vp.getId() + ":" + pos;
             return fm.findFragmentByTag(tag);
         }
@@ -802,6 +841,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         CheckBoxPreference colorize_preference;
         CheckBoxPreference second_row_preference;
         CheckBoxPreference smart_notification_preference;
+        CheckBoxPreference more_apps_preference;
         ColorPickerPreference icon_color_preference;
         SwitchPreference toggle_preference;
         UpdatingListPreference appnos_preference;
@@ -811,7 +851,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
         UpdatingListPreference icon_size_preference;
         UpdatingListPreference pinned_sort_preference;
         UpdatingListPreference pinned_placement_preference;
+        UpdatingListPreference more_apps_pages_preference;
         Preference icon_pack_preference;
+        Preference more_apps_icon_preference;
 
         public static PrefsFragment newInstance(int prefLayout) {
             PrefsFragment fragment = new PrefsFragment();
@@ -861,25 +903,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 statusbar_icon_preference.setValue(prefs2.getString(STATUSBAR_ICON_PREFERENCE, STATUSBAR_ICON_DEFAULT));
                 statusbar_icon_preference.setOnPreferenceChangeListener(changeListener);
 
-                icon_size_preference = (UpdatingListPreference)findPreference(Settings.ICON_SIZE_PREFERENCE);
-                icon_size_preference.setValue(prefs2.getString(Settings.ICON_SIZE_PREFERENCE, Integer.toString(Settings.ICON_SIZE_DEFAULT)));
+                icon_size_preference = (UpdatingListPreference)findPreference(ICON_SIZE_PREFERENCE);
+                icon_size_preference.setValue(prefs2.getString(ICON_SIZE_PREFERENCE, Integer.toString(ICON_SIZE_DEFAULT)));
                 icon_size_preference.setOnPreferenceChangeListener(changeListener);
 
-                icon_pack_preference = findPreference(Settings.ICON_PACK_PREFERENCE);
-                icon_pack_preference.setSummary(Tools.getApplicationName(mContext, prefs2.getString(ICON_PACK_PREFERENCE, null)));
-                iconPackUpdate = new IconPackUpdate(prefs2, icon_pack_preference);
-                icon_pack_preference.setOnPreferenceClickListener(
-                    new Preference.OnPreferenceClickListener() {
-                        @Override
-                        public boolean onPreferenceClick(Preference preference) {
-                            IconPackHelper.pickIconPack(mContext);
-
-                            return false;
-                        }
-                    }
-                );
-
-                second_row_preference = (CheckBoxPreference)findPreference(Settings.SECOND_ROW_PREFERENCE);
+                second_row_preference = (CheckBoxPreference)findPreference(SECOND_ROW_PREFERENCE);
                 Boolean secondRow = prefs2.getBoolean(SECOND_ROW_PREFERENCE, SECOND_ROW_DEFAULT);
                 second_row_preference.setChecked(secondRow);
                 setAppsnoSummary(secondRow, appnos_preference);
@@ -892,14 +920,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
             }
             try {
                 // *** Behavior ***
-                toggle_preference = (SwitchPreference)findPreference(TOGGLE_PREFERENCE);
-                toggle_preference.setChecked(prefs2.getBoolean(TOGGLE_PREFERENCE, TOGGLE_DEFAULT));
-                toggle_preference.setOnPreferenceChangeListener(changeListener);
-
-                boot_preference = (CheckBoxPreference)findPreference(BOOT_PREFERENCE);
-                boot_preference.setChecked(prefs2.getBoolean(BOOT_PREFERENCE, BOOT_DEFAULT));
-                boot_preference.setOnPreferenceChangeListener(changeListener);
-
                 weighted_recents_preference = (CheckBoxPreference)findPreference(WEIGHTED_RECENTS_PREFERENCE);
                 weighted_recents_preference.setChecked(prefs2.getBoolean(WEIGHTED_RECENTS_PREFERENCE, WEIGHTED_RECENTS_DEFAULT));
                 weighted_recents_preference.setOnPreferenceChangeListener(changeListener);
@@ -916,13 +936,61 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 priority_preference.setValue(prefs2.getString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_DEFAULT)));
                 priority_preference.setOnPreferenceChangeListener(changeListener);
 
-                pinned_sort_preference = (UpdatingListPreference)findPreference(Settings.PINNED_SORT_PREFERENCE);
-                pinned_sort_preference.setValue(prefs2.getString(Settings.PINNED_SORT_PREFERENCE, Integer.toString(Settings.PINNED_SORT_DEFAULT)));
+            } catch (NullPointerException e) {
+            }
+            try {
+                // *** General ***
+                toggle_preference = (SwitchPreference)findPreference(TOGGLE_PREFERENCE);
+                toggle_preference.setChecked(prefs2.getBoolean(TOGGLE_PREFERENCE, TOGGLE_DEFAULT));
+                toggle_preference.setOnPreferenceChangeListener(changeListener);
+
+                boot_preference = (CheckBoxPreference)findPreference(BOOT_PREFERENCE);
+                boot_preference.setChecked(prefs2.getBoolean(BOOT_PREFERENCE, BOOT_DEFAULT));
+                boot_preference.setOnPreferenceChangeListener(changeListener);
+
+                icon_pack_preference = findPreference(ICON_PACK_PREFERENCE);
+                icon_pack_preference.setSummary(Tools.getApplicationName(mContext, prefs2.getString(ICON_PACK_PREFERENCE, null)));
+                iconPackUpdate = new IconPackUpdate(prefs2, icon_pack_preference);
+                icon_pack_preference.setOnPreferenceClickListener(
+                        new Preference.OnPreferenceClickListener() {
+                            @Override
+                            public boolean onPreferenceClick(Preference preference) {
+                                IconPackHelper.pickIconPack(mContext);
+
+                                return false;
+                            }
+                        }
+                );
+
+                pinned_sort_preference = (UpdatingListPreference)findPreference(PINNED_SORT_PREFERENCE);
+                pinned_sort_preference.setValue(prefs2.getString(PINNED_SORT_PREFERENCE, Integer.toString(PINNED_SORT_DEFAULT)));
                 pinned_sort_preference.setOnPreferenceChangeListener(changeListener);
 
-                pinned_placement_preference = (UpdatingListPreference)findPreference(Settings.PINNED_PLACEMENT_PREFERENCE);
-                pinned_placement_preference.setValue(prefs2.getString(Settings.PINNED_PLACEMENT_PREFERENCE, Integer.toString(Settings.PINNED_PLACEMENT_DEFAULT)));
+                pinned_placement_preference = (UpdatingListPreference)findPreference(PINNED_PLACEMENT_PREFERENCE);
+                pinned_placement_preference.setValue(prefs2.getString(PINNED_PLACEMENT_PREFERENCE, Integer.toString(PINNED_PLACEMENT_DEFAULT)));
                 pinned_placement_preference.setOnPreferenceChangeListener(changeListener);
+
+                more_apps_preference = (CheckBoxPreference)findPreference(MORE_APPS_PREFERENCE);
+                more_apps_preference.setChecked(prefs2.getBoolean(MORE_APPS_PREFERENCE, MORE_APPS_DEFAULT));
+                more_apps_preference.setOnPreferenceChangeListener(changeListener);
+
+                more_apps_pages_preference = (UpdatingListPreference)findPreference(MORE_APPS_PAGES_PREFERENCE);
+                more_apps_pages_preference.setValue(prefs2.getString(MORE_APPS_PAGES_PREFERENCE, Integer.toString(MORE_APPS_PAGES_DEFAULT)));
+                more_apps_pages_preference.setOnPreferenceChangeListener(changeListener);
+
+                more_apps_icon_preference = findPreference(MORE_APPS_ICON_PREFERENCE);
+                updateMoreAppsIcon(mContext);
+                more_apps_icon_preference.setOnPreferenceClickListener(
+                        new Preference.OnPreferenceClickListener() {
+                            @Override
+                            public boolean onPreferenceClick(Preference preference) {
+                                IconPackHelper.setActivity(mInstance);
+                                IconPackHelper.pickIconPack(mContext, true, true);
+
+                                return false;
+                            }
+                        }
+                );
 
             } catch (NullPointerException e) {
             }
@@ -958,7 +1026,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                     editor.putString(STATUSBAR_ICON_PREFERENCE, mStatusBarIcon);
                                     editor.putString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_BOTTOM));
                                     editor.commit();
-                                    PrefsFragment mBehaviorSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(0);
+                                    PrefsFragment mBehaviorSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(BEHAVIOR_TAB);
                                     mBehaviorSettings.priority_preference.setValue(Integer.toString(PRIORITY_BOTTOM));
                                     launchPriorityWarning(prefs2);
                                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
@@ -970,7 +1038,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                 }
                             }).show();
                     } else {
-                        PrefsFragment mBehaviorSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(0);
+                        PrefsFragment mBehaviorSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(BEHAVIOR_TAB);
                         if (mBehaviorSettings.priority_preference.getValue().equals(Integer.toString(PRIORITY_BOTTOM))) {
                             editor.putString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_DEFAULT));
                             mBehaviorSettings.priority_preference.setValue(Integer.toString(PRIORITY_DEFAULT));
@@ -988,9 +1056,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     editor.commit();
                     myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(ICON_SIZE_PREFERENCE)) {
-                    editor.putString(Settings.ICON_SIZE_PREFERENCE, (String) newValue);
+                    editor.putString(ICON_SIZE_PREFERENCE, (String) newValue);
                     editor.commit();
-                    myService.execute(SERVICE_CREATE_NOTIFICATIONS);
+                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(TOGGLE_PREFERENCE)) {
                     editor.putBoolean(TOGGLE_PREFERENCE, (Boolean) newValue);
                     editor.commit();
@@ -1012,6 +1080,14 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     editor.putBoolean(SMART_NOTIFICATION_PREFERENCE, (Boolean) newValue);
                     editor.commit();
                     myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
+                } else if (preference.getKey().equals(MORE_APPS_PREFERENCE)) {
+                    editor.putBoolean(MORE_APPS_PREFERENCE, (Boolean) newValue);
+                    editor.commit();
+                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
+                } else if (preference.getKey().equals(MORE_APPS_PAGES_PREFERENCE)) {
+                    editor.putString(MORE_APPS_PAGES_PREFERENCE, (String) newValue);
+                    editor.commit();
+                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(APPSNO_PREFERENCE)) {
                     editor.putString(APPSNO_PREFERENCE, (String) newValue);
                     editor.commit();
@@ -1019,7 +1095,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 } else if (preference.getKey().equals(PRIORITY_PREFERENCE)) {
                     String mPriorityPreference = (String) newValue;
                     editor.putString(PRIORITY_PREFERENCE, mPriorityPreference);
-                    PrefsFragment mAppearanceSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(1);
+                    PrefsFragment mAppearanceSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(APPEARANCE_TAB);
                     if (!mPriorityPreference.equals(Integer.toString(PRIORITY_BOTTOM)) &&
                             mAppearanceSettings.statusbar_icon_preference.getValue().equals(STATUSBAR_ICON_NONE)) {
                         editor.putString(STATUSBAR_ICON_PREFERENCE, STATUSBAR_ICON_DEFAULT);
@@ -1053,16 +1129,33 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 return true;
             }
         };
+
         void toggleDependencies(boolean isToggled) {
-            // weight_priority_preference.setEnabled(isToggled);
-            PrefsFragment mAppearanceFrag = (PrefsFragment) mGetFragments.getFragmentByPosition(1);
-            mAppearanceFrag.appnos_preference.setEnabled(isToggled);
-            mAppearanceFrag.second_row_preference.setEnabled(isToggled);
-            mAppearanceFrag.statusbar_icon_preference.setEnabled(isToggled);
-            mAppearanceFrag.divider_preference.setEnabled(isToggled);
-            mAppearanceFrag.row_divider_preference.setEnabled(isToggled);
-            mAppearanceFrag.colorize_preference.setEnabled(isToggled);
-            mAppearanceFrag.icon_size_preference.setEnabled(isToggled);
+            try {
+                PrefsFragment mBehaviorFrag = (PrefsFragment) mGetFragments.getFragmentByPosition(BEHAVIOR_TAB);
+                mBehaviorFrag.priority_preference.setEnabled(isToggled);
+                mBehaviorFrag.weighted_recents_preference.setEnabled(isToggled);
+                mBehaviorFrag.smart_notification_preference.setEnabled(isToggled);
+
+                PrefsFragment mAppearanceFrag = (PrefsFragment) mGetFragments.getFragmentByPosition(APPEARANCE_TAB);
+                mAppearanceFrag.appnos_preference.setEnabled(isToggled);
+                mAppearanceFrag.second_row_preference.setEnabled(isToggled);
+                mAppearanceFrag.statusbar_icon_preference.setEnabled(isToggled);
+                mAppearanceFrag.divider_preference.setEnabled(isToggled);
+                mAppearanceFrag.row_divider_preference.setEnabled(isToggled);
+                mAppearanceFrag.colorize_preference.setEnabled(isToggled);
+                mAppearanceFrag.icon_size_preference.setEnabled(isToggled);
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    static void updateMoreAppsIcon(Context context) {
+        try {
+            Drawable d = new BitmapDrawable(context.getResources(), new IconHelper(mContext).cachedResourceIconHelper(MORE_APPS_PACKAGE));
+            PrefsFragment mGeneralSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(GENERAL_TAB);
+            mGeneralSettings.more_apps_icon_preference.setIcon(d);
+        } catch (Exception e) {
         }
     }
 
@@ -1344,29 +1437,34 @@ public class Settings extends Activity implements ActionBar.TabListener {
         @Override
         public Fragment getItem(final int position) {
             switch (position) {
-                case 0:
+                case GENERAL_TAB:
+                    return PrefsFragment.newInstance(R.layout.general_settings);
+                case BEHAVIOR_TAB:
                     return PrefsFragment.newInstance(R.layout.behavior_settings);
-                case 1:
+                case APPEARANCE_TAB:
                     return PrefsFragment.newInstance(R.layout.appearance_settings);
-                default:
+                case APPS_TAB:
                     return AppsFragment.newInstance();
             }
+            return null;
         }
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
             switch (position) {
-                case 0:
+                case GENERAL_TAB:
+                    return mContext.getString(R.string.title_general).toUpperCase(l);
+                case BEHAVIOR_TAB:
                     return mContext.getString(R.string.title_behavior).toUpperCase(l);
-                case 1:
+                case APPEARANCE_TAB:
                     return mContext.getString(R.string.title_appearance).toUpperCase(l);
-                case 2:
+                case APPS_TAB:
                     return mContext.getString(R.string.title_apps).toUpperCase(l);
             }
             return null;

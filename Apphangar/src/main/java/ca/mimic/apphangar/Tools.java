@@ -474,37 +474,63 @@ public class Tools {
         return buildTaskList(context, db, 0, false, false);
     }
 
-    protected ArrayList<Tools.TaskInfo> getPinnedTasks (Context context, ArrayList<Tools.TaskInfo> pinnedList, ArrayList<Tools.TaskInfo> taskList, int count) {
+    protected ArrayList<Tools.TaskInfo> addMoreAppsButton(ArrayList<Tools.TaskInfo> taskList, int count) {
+        HangarLog("addMoreAppsButton: taskList.size(): " + taskList.size() + " count: " + count);
+
+        Tools.TaskInfo moreAppsTask = new TaskInfo(Settings.MORE_APPS_PACKAGE);
+
+        if (count >= taskList.size()) {
+            taskList.add(moreAppsTask);
+        } else {
+            taskList.add(count, moreAppsTask);
+        }
+        return taskList;
+    }
+
+    protected ArrayList<Tools.TaskInfo> getPinnedTasks (Context context, ArrayList<Tools.TaskInfo> pinnedList, ArrayList<Tools.TaskInfo> taskList, int count, boolean moreApps) {
         SharedPreferences settingsPrefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_MULTI_PROCESS);
         int pinnedPlacement = Integer.parseInt(settingsPrefs.getString(Settings.PINNED_PLACEMENT_PREFERENCE, Integer.toString(Settings.PINNED_PLACEMENT_DEFAULT)));
-        Tools.HangarLog("getPinnedTasks");
 
-        if (pinnedList.size() > 0) {
+        if (pinnedList != null && pinnedList.size() > 0) {
             if (pinnedPlacement == Settings.PINNED_PLACEMENT_LEFT) {
                 pinnedList.addAll(taskList);
-                for (int i = pinnedList.size()-1;i >= count; i--) {
-                    pinnedList.remove(i);
-                }
+                if (moreApps)
+                    pinnedList = new Tools().addMoreAppsButton(pinnedList, count-1);
 
                 return pinnedList;
             } else {
                 int index = count - pinnedList.size();
                 if (index < 0) index = 0;
                 try {
-                    taskList.addAll(index, pinnedList);
-                    for (int i = taskList.size()-1;i >= count; i--) {
-                        taskList.remove(i);
+                    if (moreApps) {
+                        // Slice off 1 less for More Apps!
+                        taskList.addAll((index == 0) ? index : index - 1, pinnedList);
+                        // This too
+                        taskList = new Tools().addMoreAppsButton(taskList, count - 1);
+                    } else {
+                        taskList.addAll(index, pinnedList);
                     }
+
                 } catch (IndexOutOfBoundsException e) {
                     if (index > taskList.size()) {
                         if (pinnedList.size() >= taskList.size()) {
                             return pinnedList;
                         }
-                        taskList.addAll(pinnedList);
+                        if (moreApps) {
+                            taskList.addAll(taskList.size() - 1, pinnedList);
+                        } else {
+                            taskList.addAll(pinnedList);
+                        }
+                        if (moreApps)
+                            taskList = new Tools().addMoreAppsButton(taskList, taskList.size() - 1);
+
                     }
                 }
                 return taskList;
             }
+        } else {
+            taskList = new Tools().addMoreAppsButton(taskList, count - 1);
+
         }
         return taskList;
     }

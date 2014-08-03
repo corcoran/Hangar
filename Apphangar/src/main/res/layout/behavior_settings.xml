@@ -3,14 +3,6 @@
     android:layout_height="fill_parent"
     android:layout_width="fill_parent">
 
-    <SwitchPreference
-        android:key="toggle_preference"
-        android:title="@string/title_toggle_preference" />
-
-    <CheckBoxPreference
-        android:key="boot_preference"
-        android:title="@string/title_boot_preference" />
-
     <ca.mimic.apphangar.UpdatingListPreference
         android:key="priority_preference"
         android:title="@string/title_priority_preference"
@@ -18,8 +10,7 @@
         android:entries="@array/entries_priority_preference"
         android:entryValues="@array/values_priority_preference"
         android:dialogTitle="@string/dialog_priority_preference"
-        android:defaultValue="2"
-        android:dependency="toggle_preference" />
+        android:defaultValue="2" />
 
     <PreferenceCategory
         android:title="@string/title_weight_category">
@@ -27,8 +18,7 @@
         <CheckBoxPreference
             android:key="weighted_recents_preference"
             android:title="@string/title_weighted_recents_preference"
-            android:summary="@string/summary_weighted_recents_preference"
-            android:dependency="toggle_preference" />
+            android:summary="@string/summary_weighted_recents_preference" />
 
         <ca.mimic.apphangar.UpdatingListPreference
             android:key="weight_priority_preference"
@@ -43,31 +33,7 @@
         <CheckBoxPreference
             android:key="smart_notification_preference"
             android:title="@string/title_smart_notification"
-            android:summary="@string/summary_smart_notification"
-            android:dependency="toggle_preference" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/title_pinned_category">
-
-        <ca.mimic.apphangar.UpdatingListPreference
-            android:key="pinned_sort_preference"
-            android:title="@string/title_pinned_sort_preference"
-            android:summary="@string/summary_wildcard_preference"
-            android:entries="@array/entries_pinned_sort_preference"
-            android:entryValues="@array/values_pinned_sort_preference"
-            android:dialogTitle="@string/title_pinned_sort_preference"
-            android:defaultValue="0" />
-
-        <ca.mimic.apphangar.UpdatingListPreference
-            android:key="pinned_placement_preference"
-            android:title="@string/title_pinned_placement_preference"
-            android:summary="@string/summary_wildcard_preference"
-            android:entries="@array/entries_pinned_placement_preference"
-            android:entryValues="@array/values_pinned_placement_preference"
-            android:dialogTitle="@string/title_pinned_placement_preference"
-            android:defaultValue="0" />
+            android:summary="@string/summary_smart_notification" />
 
     </PreferenceCategory>
 

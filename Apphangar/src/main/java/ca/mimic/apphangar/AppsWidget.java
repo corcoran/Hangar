@@ -216,7 +216,7 @@ public class AppsWidget extends AppWidgetProvider {
                 Settings.IGNORE_PINNED_DEFAULT);
         if (!ignorePinned) {
             ArrayList<Tools.TaskInfo> pinnedList = Tools.buildPinnedList(mContext, db);
-            appList = new Tools().getPinnedTasks(context, pinnedList, appList, numOfIcons);
+            appList = new Tools().getPinnedTasks(context, pinnedList, appList, numOfIcons, false);
         }
 
         db.close();

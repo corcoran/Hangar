@@ -139,25 +139,24 @@ public class IconCacheHelper {
         }
     }
 
-    public static String preloadIcon(Context context, ComponentName componentName, Bitmap icon, int size) {
-        final String key = componentName.flattenToString();
+    public static String preloadIcon(Context context, String resourceName, Bitmap icon, int size) {
         FileOutputStream resourceFile = null;
         File file = null;
         try {
-            file = new File(context.getCacheDir(), getResourceFilename(componentName));
+            file = new File(context.getCacheDir(), getResourceName(resourceName));
             resourceFile = new FileOutputStream(file);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             if (Bitmap.createScaledBitmap(icon, size, size, true).compress(android.graphics.Bitmap.CompressFormat.PNG, 75, os)) {
                 byte[] buffer = os.toByteArray();
                 resourceFile.write(buffer, 0, buffer.length);
             } else {
-                Tools.HangarLog("failed to encode cache for " + key);
+                Tools.HangarLog("failed to encode cache for " + resourceName);
                 return null;
             }
         } catch (FileNotFoundException e) {
-            Tools.HangarLog("failed to pre-load cache for " + key);
+            Tools.HangarLog("failed to pre-load cache for " + resourceName);
         } catch (IOException e) {
-            Tools.HangarLog("failed to pre-load cache for " + key);
+            Tools.HangarLog("failed to pre-load cache for " + resourceName);
         } finally {
             if (resourceFile != null) {
                 try {
@@ -165,15 +164,19 @@ public class IconCacheHelper {
                     resourceFile.close();
                     chmod(file, 0664);
                 } catch (IOException e) {
-                    Tools.HangarLog("failed to save restored icon for: " + key);
+                    Tools.HangarLog("failed to save restored icon for: " + resourceName);
                 }
             }
         }
         return file.getPath();
     }
 
-    protected static String getPreloadedIconUri(Context context, ComponentName componentName) {
-        File file = new File(context.getCacheDir(), getResourceFilename(componentName));
+    public static String preloadComponent(Context context, ComponentName componentName, Bitmap icon, int size) {
+        return preloadIcon(context, getResourceFilename(componentName), icon, size);
+    }
+
+    protected static String getPreloadedIconUri(Context context, String resourceName) {
+        File file = new File(context.getCacheDir(), getResourceName(resourceName));
         if (file.exists()) {
             return file.getPath();
         } else {
@@ -181,13 +184,15 @@ public class IconCacheHelper {
         }
     }
 
-    protected static Bitmap getPreloadedIcon(Context context, ComponentName componentName) {
-        final String key = componentName.flattenToShortString();
+    protected static String getPreloadedComponentUri(Context context, ComponentName componentName) {
+        return getPreloadedIconUri(context, getResourceFilename(componentName));
+    }
 
+    protected static Bitmap getPreloadedIcon(Context context, String resourceName) {
         Bitmap icon = null;
         FileInputStream resourceFile = null;
         try {
-            File file = new File(context.getCacheDir(), getResourceFilename(componentName));
+            File file = new File(context.getCacheDir(), getResourceName(resourceName));
             resourceFile = new FileInputStream(file);
             byte[] buffer = new byte[1024];
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -198,18 +203,18 @@ public class IconCacheHelper {
             }
             icon = BitmapFactory.decodeByteArray(bytes.toByteArray(), 0, bytes.size());
             if (icon == null) {
-                Tools.HangarLog("failed to decode pre-load icon for " + key);
+                Tools.HangarLog("failed to decode pre-load icon for " + resourceName);
             }
         } catch (FileNotFoundException e) {
-            Tools.HangarLog("there is no restored icon for: " + key);
+            Tools.HangarLog("there is no restored icon for: " + resourceName);
         } catch (IOException e) {
-            Tools.HangarLog("failed to read pre-load icon for: " + key);
+            Tools.HangarLog("failed to read pre-load icon for: " + resourceName);
         } finally {
             if(resourceFile != null) {
                 try {
                     resourceFile.close();
                 } catch (IOException e) {
-                    Tools.HangarLog("failed to manage pre-load icon file: " + key);
+                    Tools.HangarLog("failed to manage pre-load icon file: " + resourceName);
                 }
             }
         }
@@ -231,9 +236,16 @@ public class IconCacheHelper {
         return  icon;
     }
 
-    protected static String getResourceFilename(ComponentName component) {
-        String resourceName = component.flattenToShortString();
+    protected static Bitmap getPreloadedComponent(Context context, ComponentName componentName) {
+        return getPreloadedIcon(context, getResourceFilename(componentName));
+    }
+
+    protected static String getResourceName(String resourceName) {
         String filename = resourceName.replace(File.separatorChar, '_');
         return RESOURCE_FILE_PREFIX + filename;
+    }
+
+    protected static String getResourceFilename(ComponentName component) {
+        return component.flattenToShortString();
     }
 }

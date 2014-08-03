@@ -99,25 +99,30 @@ public class AppDrawer {
     }
 
     protected boolean newItem(Tools.TaskInfo taskItem, int mLastItemLayout) {
+        PackageManager pkgm = mContext.getPackageManager();
+        Bitmap cachedIcon;
+
         mLastItem = new RemoteViews(mTaskPackage, mLastItemLayout);
+
         if (taskItem.packageName == null) {
             // Dummy invisible item
             return true;
-        }
+        } else if (taskItem.packageName.equals(Settings.MORE_APPS_PACKAGE)) {
+            taskItem.appName = mContext.getResources().getString(R.string.title_more_apps);
+            // More Apps icon
+            cachedIcon = ih.cachedResourceIconHelper(Settings.MORE_APPS_PACKAGE);
+        } else {
+            try {
+                ComponentName componentTask = ComponentName.unflattenFromString(taskItem.packageName + "/" + taskItem.className);
 
-        PackageManager pkgm;
-        Bitmap cachedIcon;
-        try {
-            pkgm = mContext.getPackageManager();
-            ComponentName componentTask = ComponentName.unflattenFromString(taskItem.packageName + "/" + taskItem.className);
+                cachedIcon = ih.cachedIconHelper(componentTask);
+                if (cachedIcon == null)
+                    return false;
 
-            cachedIcon = ih.cachedIconHelper(componentTask);
-            if (cachedIcon == null)
+            } catch (Exception e) {
+                Tools.HangarLog("newItem failed! " + e + " app:" + taskItem.appName);
                 return false;
-
-        } catch (Exception e) {
-            Tools.HangarLog("newItem failed! " + e + " app:" + taskItem.appName);
-            return false;
+            }
         }
 
 
@@ -127,20 +132,30 @@ public class AppDrawer {
         mLastItem.setImageViewBitmap(mImageButtonLayout, Bitmap.createScaledBitmap(cachedIcon, mSize, mSize, true));
 
         Intent intent;
-        try {
-            intent = pkgm.getLaunchIntentForPackage(taskItem.packageName);
-            if (intent == null) {
-                Tools.HangarLog("Couldn't get intent for ["+ taskItem.packageName +"] className:" + taskItem.className);
-                throw new PackageManager.NameNotFoundException();
-            }
-            intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            intent.setAction(Intent.ACTION_MAIN);
-            PendingIntent activity = PendingIntent.getActivity(mContext, pendingNum, intent,
+        if (taskItem.packageName.equals(Settings.MORE_APPS_PACKAGE)) {
+            Tools.HangarLog("newItem: " + Settings.MORE_APPS_PACKAGE);
+            intent = new Intent(new Intent(mContext, WatchfulService.class));
+            intent.setAction(Settings.MORE_APPS_ACTION);
+            PendingIntent activity = PendingIntent.getService(mContext, pendingNum, intent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
             mLastItem.setOnClickPendingIntent(mImageContLayout, activity);
             mLastItem.setContentDescription(mImageButtonLayout, taskItem.appName);
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
+        } else {
+            try {
+                intent = pkgm.getLaunchIntentForPackage(taskItem.packageName);
+                if (intent == null) {
+                    Tools.HangarLog("Couldn't get intent for [" + taskItem.packageName + "] className:" + taskItem.className);
+                    throw new PackageManager.NameNotFoundException();
+                }
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                intent.setAction(Intent.ACTION_MAIN);
+                PendingIntent activity = PendingIntent.getActivity(mContext, pendingNum, intent,
+                        PendingIntent.FLAG_CANCEL_CURRENT);
+                mLastItem.setOnClickPendingIntent(mImageContLayout, activity);
+                mLastItem.setContentDescription(mImageButtonLayout, taskItem.appName);
+            } catch (PackageManager.NameNotFoundException e) {
+                return false;
+            }
         }
 
         return true;

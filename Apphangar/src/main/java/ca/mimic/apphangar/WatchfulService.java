@@ -59,9 +59,29 @@ public class WatchfulService extends Service {
 
     static int failCount;
     static TaskInfo runningTask;
-    static ArrayList<Tools.TaskInfo> pinnedList;
-    static ArrayList<Tools.TaskInfo> taskList;
+    static ArrayList<TaskInfo> pinnedList;
+    static ArrayList<TaskInfo> taskList;
     static ArrayList<String> notificationTasks;
+
+    // createNotification variables
+
+    String taskPackage;
+
+    int contLayout;
+    int rowLayout;
+    int imageButtonLayout;
+    int imageContLayout;
+
+    int numOfApps;
+    int setPriority;
+    boolean secondRow;
+    boolean moreApps;
+    int moreAppsPage = 1;
+    int moreAppsPages;
+    int pinnedCount;
+    int iconSize;
+    int itemLayout;
+    String mIcon;
 
     String launcherPackage = null;
     boolean isNotificationRunning;
@@ -86,6 +106,7 @@ public class WatchfulService extends Service {
                 runningTask = null;
                 pinnedList = null;
                 notificationTasks = null;
+                moreAppsPage = 1;
             }
             @Override
             public void runScan() {
@@ -93,7 +114,7 @@ public class WatchfulService extends Service {
             }
             @Override
             public void createNotification() {
-                WatchfulService.this.createNotification(taskList);
+                WatchfulService.this.createNotification();
             }
             @Override
             public void destroyNotification() {
@@ -107,6 +128,7 @@ public class WatchfulService extends Service {
             public void buildReorderAndLaunch() {
                 pinnedList = null;
                 notificationTasks = null;
+                moreAppsPage = 1;
                 synchronized (WatchfulService.this) {
                     WatchfulService.this.buildReorderAndLaunch(true);
                 }
@@ -128,6 +150,11 @@ public class WatchfulService extends Service {
 
         prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
         widgetPrefs = getSharedPreferences("AppsWidget", Context.MODE_MULTI_PROCESS);
+
+        taskPackage = this.getPackageName();
+
+        imageButtonLayout = getResources().getIdentifier("imageButton", "id", taskPackage);
+        imageContLayout = getResources().getIdentifier("imageCont", "id", taskPackage);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(BCAST_CONFIGCHANGED);
@@ -154,6 +181,13 @@ public class WatchfulService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Tools.HangarLog("Getting prefs");
+        Tools.HangarLog("intent.getAction(): " + intent.getAction());
+        if (intent.getAction() != null && intent.getAction().equals(Settings.MORE_APPS_ACTION)) {
+            Tools.HangarLog("onStartCommand: " + Settings.MORE_APPS_ACTION);
+            moreAppsPage = moreAppsPage + 1;
+            createNotification();
+            return START_STICKY;
+        }
         prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
         widgetPrefs = getSharedPreferences("AppsWidget", Context.MODE_MULTI_PROCESS);
         pkgm = getPackageManager();
@@ -186,7 +220,7 @@ public class WatchfulService extends Service {
                 buildBaseTasks();
                 taskList = Tools.buildTaskList(getApplicationContext(), db, Settings.TASKLIST_QUEUE_LIMIT);
             }
-            reorderAndLaunch(taskList);
+            reorderAndLaunch();
         }
     }
 
@@ -253,7 +287,7 @@ public class WatchfulService extends Service {
                             if (runningTask == null || !runningTask.packageName.equals(taskPackage)) {
                                 if (!isToggled && isAppsWidget()) {
                                     taskList = Tools.buildTaskList(getApplicationContext(), db, Settings.TASKLIST_QUEUE_LIMIT);
-                                    reorderAndLaunch(taskList, true);
+                                    reorderAndLaunch(true);
                                 }
 
                                 // First time in launcher?  Update the widget!
@@ -295,6 +329,8 @@ public class WatchfulService extends Service {
                             if (notificationTasks != null && new Tools().isInArray(notificationTasks, taskPackage)) {
                                 buildReorderAndLaunch(!isNotificationRunning);
                                 return;
+                            } else if (notificationTasks == null) {
+                                moreAppsPage = 1;
                             }
                         }
                         if (new Tools().isPinned(mContext, taskPackage)) {
@@ -356,7 +392,7 @@ public class WatchfulService extends Service {
         return false;
     }
 
-    protected void reorderAndLaunch(ArrayList<Tools.TaskInfo> taskList, boolean isWidget) {
+    protected void reorderAndLaunch(boolean isWidget) {
         Tools.HangarLog("reorderAndLaunch taskList.size(): " + taskList.size() + " isWidget: " + isWidget);
         boolean weightedRecents = prefs.getBoolean(Settings.WEIGHTED_RECENTS_PREFERENCE,
                 Settings.WEIGHTED_RECENTS_DEFAULT);
@@ -367,28 +403,85 @@ public class WatchfulService extends Service {
             taskList = new Tools().reorderTasks(taskList, db, weightPriority);
         }
         if (isToggled)
-            createNotification(taskList);
+            createNotification();
         if (isWidget)
             Tools.reorderWidgetTasks(db, getApplicationContext());
     }
 
-    protected void reorderAndLaunch(ArrayList<Tools.TaskInfo> taskList) {
-        reorderAndLaunch(taskList, false);
+    protected void reorderAndLaunch() {
+        reorderAndLaunch(false);
     }
 
-    public synchronized void createNotification(ArrayList<Tools.TaskInfo> taskList) {
-        // Not a fun hack.  No way around it until they let you do getInt for setShowDividers!
-        String taskPackage = this.getPackageName();
-        Context mContext = getApplicationContext();
-
-        int contLayout = prefs.getBoolean(Settings.ROW_DIVIDER_PREFERENCE, Settings.ROW_DIVIDER_DEFAULT) ?
+    public void updatePrefs() {
+        contLayout = prefs.getBoolean(Settings.ROW_DIVIDER_PREFERENCE, Settings.ROW_DIVIDER_DEFAULT) ?
                 getResources().getIdentifier("notification", "layout", taskPackage) :
                 getResources().getIdentifier("notification_no_dividers", "layout", taskPackage);
-        int rowLayout = prefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT) ?
+        rowLayout = prefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT) ?
                 getResources().getIdentifier("notification_row", "layout", taskPackage) :
                 getResources().getIdentifier("notification_row_no_dividers", "layout", taskPackage);
-        int imageButtonLayout = getResources().getIdentifier("imageButton", "id", taskPackage);
-        int imageContLayout = getResources().getIdentifier("imageCont", "id", taskPackage);
+
+        numOfApps = Integer.parseInt(prefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.APPSNO_DEFAULT)));
+        setPriority = Integer.parseInt(prefs.getString(Settings.PRIORITY_PREFERENCE, Integer.toString(Settings.PRIORITY_DEFAULT)));
+        secondRow = prefs.getBoolean(Settings.SECOND_ROW_PREFERENCE, Settings.SECOND_ROW_DEFAULT);
+        moreApps = prefs.getBoolean(Settings.MORE_APPS_PREFERENCE, Settings.MORE_APPS_DEFAULT);
+        moreAppsPages = Integer.parseInt(prefs.getString(Settings.MORE_APPS_PAGES_PREFERENCE, Integer.toString(Settings.MORE_APPS_PAGES_DEFAULT)));
+        iconSize = Integer.parseInt(prefs.getString(Settings.ICON_SIZE_PREFERENCE, Integer.toString(Settings.ICON_SIZE_DEFAULT)));
+
+        itemLayout = R.layout.notification_item;
+
+        if (iconSize == ICON_SIZE_SMALL) {
+            itemLayout = R.layout.notification_item_small;
+        } else if (iconSize == ICON_SIZE_LARGE) {
+            itemLayout = R.layout.notification_item_large;
+        }
+
+        mIcon = prefs.getString(Settings.STATUSBAR_ICON_PREFERENCE, Settings.STATUSBAR_ICON_DEFAULT);
+
+    }
+
+    public ArrayList<TaskInfo> getPageTasks(int pageNum, int count) {
+        ArrayList<TaskInfo> tmpList = new ArrayList<TaskInfo>();
+
+        if (pageNum > moreAppsPages) return null;
+
+        try {
+            int start = (count * (pageNum - 1)) - pinnedCount - pageNum + 1;
+            int end = (count * pageNum) - pinnedCount - pageNum + 1;
+
+            Tools.HangarLog("getPageTasks i = " + start + " ; i < " + end);
+
+            if (start < 0) start = 0;
+
+            if (taskList.size() < start) {
+                Tools.HangarLog("taskList.size() == " + taskList.size() + " < start(" + start + " )");
+                return null;
+//                return getPageTasks(moreAppsPage, count);
+            }
+            if (taskList.size() < end) {
+                end = taskList.size();
+            } else if (taskList.size() == end) {
+                end = taskList.size() - 1;
+            }
+
+            for (int i = start; i < end; i++) {
+                tmpList.add(taskList.get(i));
+            }
+            return tmpList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public synchronized void createNotification() {
+        int filledConts = 0;
+        int maxButtons;
+        boolean filledSecondRow = false;
+
+        Context mContext = getApplicationContext();
+
+        if (moreAppsPage == 1)
+            updatePrefs();
 
         RemoteViews customNotifView = new RemoteViews(taskPackage, contLayout);
         RemoteViews customNotifBigView = customNotifView;
@@ -399,11 +492,6 @@ public class WatchfulService extends Service {
         appDrawer.setImageLayouts(imageButtonLayout, imageContLayout);
         appDrawer.setPrefs(prefs);
         appDrawer.setContext(mContext);
-
-        int maxButtons;
-        int numOfApps = Integer.parseInt(prefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.APPSNO_DEFAULT)));
-        int setPriority = Integer.parseInt(prefs.getString(Settings.PRIORITY_PREFERENCE, Integer.toString(Settings.PRIORITY_DEFAULT)));
-        boolean secondRow = prefs.getBoolean(Settings.SECOND_ROW_PREFERENCE, Settings.SECOND_ROW_DEFAULT);
 
         if (taskList.size() < numOfApps) {
             maxButtons = taskList.size();
@@ -420,30 +508,35 @@ public class WatchfulService extends Service {
         int iconCacheCount = (maxButtons * (secondRow ? 2 : 1));
         appDrawer.setCount(iconCacheCount, Settings.CACHED_NOTIFICATION_ICON_LIMIT, secondRow);
 
-        if (pinnedList == null)
-            pinnedList = Tools.buildPinnedList(mContext, db);
-        taskList = new Tools().getPinnedTasks(mContext, pinnedList, taskList, iconCacheCount);
+        ArrayList<TaskInfo> pageList;
 
-
-        Tools.HangarLog("taskList.size(): " + taskList.size() + " realmaxbuttons: " + numOfApps + " maxbuttons: " + maxButtons);
-        int filledConts = 0;
-        boolean filledSecondRow = false;
-
-        int iconSize = Integer.parseInt(prefs.getString(Settings.ICON_SIZE_PREFERENCE, Integer.toString(Settings.ICON_SIZE_DEFAULT)));
-        int itemLayout = R.layout.notification_item;
-
-        if (iconSize == ICON_SIZE_SMALL) {
-            itemLayout = R.layout.notification_item_small;
-        } else if (iconSize == ICON_SIZE_LARGE) {
-            itemLayout = R.layout.notification_item_large;
+        if (moreAppsPage == 1) {
+            if (pinnedList == null) {
+                Tools.HangarLog("pinnedList is null");
+                pinnedList = Tools.buildPinnedList(mContext, db);
+                pinnedCount = pinnedList.size();
+            }
+            pageList = new ArrayList<TaskInfo>(taskList);
+            pageList = new Tools().getPinnedTasks(mContext, pinnedList, pageList, iconCacheCount, moreApps);
+        } else {
+            // Assume taskList has reset to non-pinned version.
+            pageList = getPageTasks(moreAppsPage, iconCacheCount);
+            if (pageList == null) {
+                moreAppsPage = 1;
+                createNotification();
+                return;
+            }
+            pageList = new Tools().getPinnedTasks(mContext, null, pageList, iconCacheCount, moreApps);
         }
+
+        Tools.HangarLog("taskList.size(): " + taskList.size() + " pageList.size(): " + pageList.size() + " realmaxbuttons: " + numOfApps + " maxbuttons: " + maxButtons + " moreAppsPage: " + moreAppsPage);
 
         customNotifBigView.removeAllViews(R.id.notifContainer);
         notificationTasks = new ArrayList<String>();
 
-        for (int i=0; i <= taskList.size(); i++) {
+        for (int i=0; i <= pageList.size(); i++) {
             boolean wrapItUp = false;
-            if (i == taskList.size())
+            if (i == pageList.size())
                 wrapItUp = true;
             if (filledConts == maxButtons || wrapItUp) {
                 if (filledSecondRow) {
@@ -461,14 +554,10 @@ public class WatchfulService extends Service {
             }
 
             if (!wrapItUp) {
-                if (appDrawer.newItem(taskList.get(i), itemLayout)) {
+                if (appDrawer.newItem(pageList.get(i), itemLayout)) {
                     appDrawer.addItem();
-                    notificationTasks.add(taskList.get(i).packageName);
+                    notificationTasks.add(pageList.get(i).packageName);
                     filledConts++;
-                } else {
-                    runningTask = null;
-                    pinnedList = null;
-                    notificationTasks = null;
                 }
             }
         }
@@ -482,7 +571,6 @@ public class WatchfulService extends Service {
 
 
         // Set statusbar icon
-        String mIcon = prefs.getString(Settings.STATUSBAR_ICON_PREFERENCE, Settings.STATUSBAR_ICON_DEFAULT);
         int smallIcon = iconMap.get(Settings.STATUSBAR_ICON_WHITE_WARM);
         try {
             smallIcon = iconMap.get(mIcon);
@@ -507,6 +595,11 @@ public class WatchfulService extends Service {
             mNotificationManager.notify(1337, notification);
         } else {
             startForeground(1337, notification);
+        }
+
+        if (moreAppsPage > 1) {
+            notificationTasks = null;
+            pinnedList = null;
         }
 
         isNotificationRunning = true;
