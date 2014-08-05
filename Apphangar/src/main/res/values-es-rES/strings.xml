@@ -5,7 +5,7 @@
   <string name="title_appearance">Apariencia</string>
   <string name="title_apps">Apps</string>
   <string name="title_activity_settings">Configuración de Hangar</string>
-  <string name="title_toggle_preference">Mostrar la barra de notificaciones</string>
+  <string name="title_toggle_preference">Panel de notificaciones</string>
   <string name="title_boot_preference">Ejecutarse al arrancar</string>
   <string name="title_weight_category">Clasificación y orden de iconos</string>
   <string name="title_weighted_recents_preference">Clasificación ponderada</string>
@@ -63,12 +63,17 @@
   <string name="title_icon_color_category">Color de icono</string>
   <string name="title_icon_pack_preference">Paquete de Iconos</string>
   <string name="default_icon_pack">Iconos por defecto</string>
+  <string name="reset_icon">Utilizar el icono predeterminado</string>
   <string name="switched_icon_packs_alert">Actualizando cachés de iconos.  ¡Puede tardar unos segundos!</string>
   <string name="title_icon_pack_picker">Elegir un paquete de iconos</string>
+  <string name="title_icon_pack_choose_from">Elegir de un paquete de iconos</string>
   <string name="title_icon_pack_not_found">No hay paquetes de iconos</string>
   <string name="title_icon_pack_install">Buscar un paquete de iconos</string>
+  <string name="title_icon_pack_no_single_ui">El paquete de iconos elegido (%1$s) no proporciona una interfaz para la selección de iconos individuales.\n\nComuníquese con el desarrollador del paquete de iconos para obtener más información.</string>
+  <string name="title_icon_pack_no_single_picks">No se ha seleccionado un paquete de iconos base para aplicar a todos los iconos de Hangar.\n\nFalta seleccionar uno de la pestaña <b>"Apariencia"</b> primero.</string>
   <string name="title_top_spinner">Parte superior</string>
   <string name="title_sort_spinner">Ordenar por</string>
+  <string name="refresh_button">Actualizar</string>
   <string name="top_pinned">Ancladas</string>
   <string name="top_blacklisted">En la lista negra</string>
   <string name="top_none">Ninguna</string>
@@ -82,6 +87,8 @@
   <string name="action_blacklist">Lista negra</string>
   <string name="action_pick_icon">Cambiar icono</string>
   <string name="action_reset_stats">Resetear estadísticas</string>
+  <string name="title_activity_apps_widget">Widget de Aplicaciones</string>
+  <string name="title_activity_stats_widget">Widget de Estadísticas</string>
   <string name="configure_changelog">Cambios recientes</string>
   <string name="configure_instructions">Instrucciones</string>
   <string name="configure_donate">Donar</string>

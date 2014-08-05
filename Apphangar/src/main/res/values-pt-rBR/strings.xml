@@ -5,7 +5,7 @@
   <string name="title_appearance">Aparência</string>
   <string name="title_apps">Apps</string>
   <string name="title_activity_settings">Configurações do Hangar</string>
-  <string name="title_toggle_preference">Mostrar Barra de Notificação</string>
+  <string name="title_toggle_preference">Barra de notificações</string>
   <string name="title_boot_preference">Executar aplicativo na inicialização do sistema</string>
   <string name="title_weight_category">Método de classificação e ordem dos ícones</string>
   <string name="title_weighted_recents_preference">Método de classificação</string>
@@ -47,7 +47,7 @@
   <string name="statusbar_icon_warm_white">Ícone warm white</string>
   <string name="statusbar_icon_cold_white">Ícone cold white</string>
   <string name="statusbar_icon_blue_white">Ícone blue white</string>
-  <string name="statusbar_icon_all_white">Ícone white (padrão)</string>
+  <string name="statusbar_icon_all_white">Ícone todo branco (padrão)</string>
   <string name="statusbar_icon_warm_black">Ícone warm black</string>
   <string name="statusbar_icon_cold_black">Ícone cold black</string>
   <string name="statusbar_icon_blue_black">Ícone blue black</string>
@@ -63,12 +63,17 @@
   <string name="title_icon_color_category">Cor do ícone</string>
   <string name="title_icon_pack_preference">Pacote de Ícones</string>
   <string name="default_icon_pack">Ícones Padrão</string>
+  <string name="reset_icon">Usar ícone padrão</string>
   <string name="switched_icon_packs_alert">Atualizando o cache de ícones. Isso pode levar alguns segundos!</string>
   <string name="title_icon_pack_picker">Escolha um pacote de ícones</string>
+  <string name="title_icon_pack_choose_from">Escolha de um pacote de ícones</string>
   <string name="title_icon_pack_not_found">Nenhum pacote de ícones foi encontrado</string>
   <string name="title_icon_pack_install">Encontrar um pacote de ícones</string>
+  <string name="title_icon_pack_no_single_ui">Seu pacote de ícones (%1$s) não fornece uma UI para uma seleção individual de ícone.\n\nEntre em contato com desenvolvedor do pacote de ícones para mais informações.</string>
+  <string name="title_icon_pack_no_single_picks">Você não selecionou um pacote de ícones base para aplicar a todos ícones do Hangar.\n\nTalvez você queira selecionar um na guia <b>Aparência</b> primeiro.</string>
   <string name="title_top_spinner">Topo</string>
   <string name="title_sort_spinner">Classificar por</string>
+  <string name="refresh_button">Atualizar</string>
   <string name="top_pinned">Fixos</string>
   <string name="top_blacklisted">Lista Negra</string>
   <string name="top_none">Nenhum</string>
@@ -82,6 +87,8 @@
   <string name="action_blacklist">Adicionar/Retirar da Blacklist</string>
   <string name="action_pick_icon">Mudar ícone</string>
   <string name="action_reset_stats">Zerar as estatísticas</string>
+  <string name="title_activity_apps_widget">Apps Widget</string>
+  <string name="title_activity_stats_widget">Widget de Estatísticas</string>
   <string name="configure_changelog">Veja as alterações recentes</string>
   <string name="configure_instructions">Instruções</string>
   <string name="configure_donate">Doar</string>

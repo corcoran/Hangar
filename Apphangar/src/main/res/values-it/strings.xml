@@ -5,7 +5,7 @@
   <string name="title_appearance">Aspetto</string>
   <string name="title_apps">Apps</string>
   <string name="title_activity_settings">Impostazioni Hangar</string>
-  <string name="title_toggle_preference">Mostra barra notifica</string>
+  <string name="title_toggle_preference">Area di notifica</string>
   <string name="title_boot_preference">Avvio al boot</string>
   <string name="title_weight_category">Ordinamento Icone</string>
   <string name="title_weighted_recents_preference">Ordinamento per scala</string>
@@ -47,7 +47,7 @@
   <string name="statusbar_icon_warm_white">Icona avorio</string>
   <string name="statusbar_icon_cold_white">Icona bianca</string>
   <string name="statusbar_icon_blue_white">Icona azzurra</string>
-  <string name="statusbar_icon_all_white">Icona completamente bianca (predefinito)</string>
+  <string name="statusbar_icon_all_white">Icona bianca (predefinito)</string>
   <string name="statusbar_icon_warm_black">Icona grigia</string>
   <string name="statusbar_icon_cold_black">Icona nera</string>
   <string name="statusbar_icon_blue_black">Icona Blu</string>
@@ -63,12 +63,17 @@
   <string name="title_icon_color_category">Colore Icona</string>
   <string name="title_icon_pack_preference">Icon pack</string>
   <string name="default_icon_pack">Icone predefinite</string>
+  <string name="reset_icon">Usa icona predefinita</string>
   <string name="switched_icon_packs_alert">Ricostruisco la cache delle icone. Ci potrebbe volere qualche secondo!</string>
   <string name="title_icon_pack_picker">Seleziona un icon pack</string>
+  <string name="title_icon_pack_choose_from">Seleziona da icon pack</string>
   <string name="title_icon_pack_not_found">Nessun icon pack trovato</string>
   <string name="title_icon_pack_install">Trova un icon pack</string>
+  <string name="title_icon_pack_no_single_ui">L\'icon pack (%1$s) da te scelto non permette la selezione di una icona singola.\n\nPuoi contattare lo sviluppatore dell\'icon pack per maggiori informazioni.</string>
+  <string name="title_icon_pack_no_single_picks">Non hai selezionato un icon pack di base per la sostituzione di tutte le icone di Hangar.\n\nDovresti prima selezionarlo dal tab <b>Aspetto</b>.</string>
   <string name="title_top_spinner">In cima</string>
   <string name="title_sort_spinner">Ordina oer</string>
+  <string name="refresh_button">Aggiorna</string>
   <string name="top_pinned">Bloccata</string>
   <string name="top_blacklisted">Nella blacklist</string>
   <string name="top_none">Nessuna</string>
@@ -82,6 +87,8 @@
   <string name="action_blacklist">Pulsante blacklist</string>
   <string name="action_pick_icon">Cambia icona</string>
   <string name="action_reset_stats">Azzera statistiche</string>
+  <string name="title_activity_apps_widget">Widget App</string>
+  <string name="title_activity_stats_widget">Widget statistiche</string>
   <string name="configure_changelog">Vedi cambi recenti</string>
   <string name="configure_instructions">Istruzioni</string>
   <string name="configure_donate">Donazione</string>

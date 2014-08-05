@@ -5,7 +5,7 @@
   <string name="title_appearance">Darstellung</string>
   <string name="title_apps">Apps</string>
   <string name="title_activity_settings">Hangar Einstellungen</string>
-  <string name="title_toggle_preference">Benachrichtigungsleiste anzeigen</string>
+  <string name="title_toggle_preference">Benachrichtigungsleiste</string>
   <string name="title_boot_preference">Beim Hochfahren starten</string>
   <string name="title_weight_category">Sortierung und Symbolreihenfolge</string>
   <string name="title_weighted_recents_preference">Gewichtete Sortierung</string>
@@ -44,7 +44,7 @@
   <string name="dialog_statusbar_icon_preference">Symbolaussehen bestimmen</string>
   <string name="alert_title_statusbar_icon_preference">Nur damit Sie es wissen...</string>
   <string name="alert_message_statusbar_icon_preference">Aufgrund von Beschränkungen in Android ist das Deaktivieren des Statusbar-Symbols nur möglich, durch eine Senkung der Priorität der Benachrichtigung.\n\n Die Hangar Leiste wird daher immer unten im Benachrichtigungsfeld dargestellt.</string>
-  <string name="statusbar_icon_warm_white">Warmesweiß Symbol</string>
+  <string name="statusbar_icon_warm_white">Warm weißes Symbol</string>
   <string name="statusbar_icon_cold_white">Kaltweißes Symbol</string>
   <string name="statusbar_icon_blue_white">Blauweißes Symbol</string>
   <string name="statusbar_icon_all_white">Komplett weißes Symbol (Standard)</string>
@@ -63,12 +63,17 @@
   <string name="title_icon_color_category">Symbolfarbe</string>
   <string name="title_icon_pack_preference">Symbolpacket</string>
   <string name="default_icon_pack">Standardsymbole</string>
+  <string name="reset_icon">Verwende Standard-Symbol</string>
   <string name="switched_icon_packs_alert">Symbole werden aktualisiert. Dies kann einige Sekunden dauern!</string>
   <string name="title_icon_pack_picker">Wählen Sie ein Symbolpacket</string>
+  <string name="title_icon_pack_choose_from">Wählen Sie ein Symbolpacket</string>
   <string name="title_icon_pack_not_found">Kein Symbolpacket gefunden</string>
   <string name="title_icon_pack_install">Symbolpacket suchen</string>
+  <string name="title_icon_pack_no_single_ui">Ihre gewählte Symbolpacket (%1$s) bietet keine Benutzeroberfläche zum Auswählen einzelner Symbole an.\n\nKontaktieren Sie den Symbolpacket Entwickler für weitere Informationen.</string>
+  <string name="title_icon_pack_no_single_picks">Sie haben kein Symbolpacket, für alle Symbole ausgewählt.\n\nSie möchten möglicherweise zuerst eines in der Registerkarte \"<b>Darstellung</b>\" auswählen.</string>
   <string name="title_top_spinner">Oben</string>
   <string name="title_sort_spinner">Sortieren nach</string>
+  <string name="refresh_button">Aktualisieren</string>
   <string name="top_pinned">Fixierte</string>
   <string name="top_blacklisted">Ignorierte</string>
   <string name="top_none">Standard</string>
@@ -82,6 +87,8 @@
   <string name="action_blacklist">Ausnahme hinzufügen/entfernen</string>
   <string name="action_pick_icon">Symbol ändern</string>
   <string name="action_reset_stats">Statistik zurücksetzen</string>
+  <string name="title_activity_apps_widget">Apps-Widget</string>
+  <string name="title_activity_stats_widget">Statistik-Widget</string>
   <string name="configure_changelog">Letzte Änderungen</string>
   <string name="configure_instructions">Anleitung</string>
   <string name="configure_donate">Spenden</string>

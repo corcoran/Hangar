@@ -23,7 +23,7 @@
     <string name="title_icon_pack_not_found">No icon packs found</string>
     <string name="title_icon_pack_install">Find an icon pack</string>
     <string name="title_icon_pack_no_single_ui">Your chosen icon pack (%1$s) does not provide a UI for individual icon selection.\n\nPlease contact the icon pack developer for more information.</string>
-    <string name="title_icon_pack_no_single_picks">You have not selected a base icon pack to apply to all Hangar icons.\n\nYou may want to select one from the <b>Appearance</b> tab first.</string>
+    <string name="title_icon_pack_no_single_picks">You have not selected a base icon pack to apply to all Hangar icons.\n\nYou may want to select one from the <b>General</b> tab first.</string>
 
     <string name="title_pinned_category">Pinned apps</string>
     <string name="title_pinned_sort_preference">Pinned app sorting</string>
