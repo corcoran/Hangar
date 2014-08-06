@@ -21,6 +21,7 @@
 package ca.mimic.apphangar;
 
 import android.content.Context;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,16 +29,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.HashMap;
 import java.util.List;
 
-class CustomArrayAdapter extends ArrayAdapter<HashMap<Integer, String>> {
+class CustomArrayAdapter extends ArrayAdapter<SparseArray<String>> {
 
     Context mContext;
-    List<HashMap<Integer, String>> items;
+    List<SparseArray<String>> items;
     Integer[] icons = new Integer[] {R.drawable.ic_action_settings, R.drawable.ic_action_apps_widget, R.drawable.ic_action_stats_widget};
 
-    public CustomArrayAdapter(Context context, int resId, List<HashMap<Integer, String>> objects) {
+    public CustomArrayAdapter(Context context, int resId, List<SparseArray<String>> objects) {
         super(context, resId, objects);
         mContext = context;
         items = objects;

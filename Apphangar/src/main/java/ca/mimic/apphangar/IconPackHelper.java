@@ -342,6 +342,7 @@ public class IconPackHelper {
         }
     }
 
+    @SuppressLint("InflateParams")
     public static void pickIconPack(final Context context, final boolean isPicker, final boolean moreAppIcon) {
         Map<String, IconPackInfo> supportedPackages = (isPicker) ? getPickerPackages(context) : getSupportedPackages(context);
         Boolean noPackages = false;

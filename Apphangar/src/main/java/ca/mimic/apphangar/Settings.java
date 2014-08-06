@@ -56,6 +56,7 @@ import android.preference.SwitchPreference;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -178,7 +179,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int PINNED_PLACEMENT_DEFAULT = 0;
     final static int MORE_APPS_PAGES_DEFAULT = 3;
 
-    final static int TASKLIST_QUEUE_LIMIT = 140;
+    final static int TASKLIST_QUEUE_LIMIT = 100;
     final static int TASKLIST_QUEUE_SIZE = 35;
     final static int APPLIST_QUEUE_SIZE = 14;
 
@@ -201,12 +202,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int CACHED_NOTIFICATION_ICON_LIMIT = 20;
     final static String ACTION_ADW_PICK_ICON = "org.adw.launcher.icons.ACTION_PICK_ICON";
 
-    final static int SERVICE_RUN_SCAN = 0;
-    final static int SERVICE_DESTROY_NOTIFICATIONS = 1;
-    final static int SERVICE_BUILD_TASKS = 2;
-    final static int SERVICE_CLEAR_TASKS = 3;
-    final static int SERVICE_BUILD_REORDER_LAUNCH = 4;
-    final static int SERVICE_CREATE_NOTIFICATIONS = 5;
+    final static int SERVICE_BUILD_TASKS = 0;
+    final static int SERVICE_BUILD_REORDER_LAUNCH = 1;
+    final static int SERVICE_CREATE_NOTIFICATIONS = 2;
+    final static int SERVICE_DESTROY_NOTIFICATIONS = 3;
 
     final static int THANK_YOU_GOOGLE = 0;
     final static int THANK_YOU_PAYPAL = 1;
@@ -233,12 +232,13 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
     protected void setUpSpinner(Spinner spinner) {
         String[] spinnerItems = getResources().getStringArray(R.array.entries_action_spinner);
-        List<HashMap<Integer, String>> items = new ArrayList<HashMap<Integer, String>>();
+        List<SparseArray<String>> items = new ArrayList<SparseArray<String>>();
         for (int i = 0;i < spinnerItems.length; i++ ) {
-            HashMap<Integer, String> spinnerMap = new HashMap<Integer, String>();
+            SparseArray<String> spinnerMap = new SparseArray<String>();
             spinnerMap.put(i, spinnerItems[i]);
             items.add(spinnerMap);
         }
+        final List<SparseArray<String>> finalItems = items;
 
         SpinnerAdapter mSpinnerAdapter = new CustomArrayAdapter(mContext, android.R.layout.simple_spinner_dropdown_item, items);
         spinner.setAdapter(mSpinnerAdapter);
@@ -246,6 +246,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
         Spinner.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                try {
+                    ((TextView) view).setText(finalItems.get(i).get(i));
+                } catch (NullPointerException e) {
+                }
                 switch (i) {
                     case 0:
                         return;
@@ -648,13 +652,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
         protected void execute(int which) {
             try {
                 switch(which) {
-                    case SERVICE_RUN_SCAN:
-                        watchHelper(STOP_SERVICE);
-                        watchHelper(START_SERVICE);
-                        break;
-                    case SERVICE_CLEAR_TASKS:
-                        s.clearTasks();
-                        break;
                     case SERVICE_BUILD_TASKS:
                         s.buildTasks();
                         return;
@@ -687,7 +684,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         return;
                     case SERVICE_DESTROY_NOTIFICATIONS:
                         s.destroyNotification();
-                        s.clearTasks();
                         break;
                 }
             } catch (RemoteException e) {
@@ -820,8 +816,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         static ViewPager vp;
         static FragmentManager fm;
 
-        public Fragment
-        getFragmentByPosition(int pos) {
+        public Fragment getFragmentByPosition(int pos) {
             String tag = "android:switcher:" + vp.getId() + ":" + pos;
             return fm.findFragmentByTag(tag);
         }

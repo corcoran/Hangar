@@ -102,17 +102,6 @@ public class WatchfulService extends Service {
     public IBinder onBind(Intent intent) {
         return new IWatchfulService.Stub() {
             @Override
-            public void clearTasks() {
-                runningTask = null;
-                pinnedList = null;
-                notificationTasks = null;
-                moreAppsPage = 1;
-            }
-            @Override
-            public void runScan() {
-                WatchfulService.this.runScan();
-            }
-            @Override
             public void createNotification() {
                 WatchfulService.this.createNotification();
             }
@@ -180,14 +169,14 @@ public class WatchfulService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Tools.HangarLog("Getting prefs");
-        Tools.HangarLog("intent.getAction(): " + intent.getAction());
+        // Check if action is a Multiple page trigger
         if (intent.getAction() != null && intent.getAction().equals(Settings.MORE_APPS_ACTION)) {
-            Tools.HangarLog("onStartCommand: " + Settings.MORE_APPS_ACTION);
             moreAppsPage = moreAppsPage + 1;
             createNotification();
             return START_STICKY;
         }
+
+        Tools.HangarLog("Getting prefs");
         prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
         widgetPrefs = getSharedPreferences("AppsWidget", Context.MODE_MULTI_PROCESS);
         pkgm = getPackageManager();
@@ -214,6 +203,7 @@ public class WatchfulService extends Service {
     protected void buildReorderAndLaunch(boolean isToggled) {
         if (isToggled) {
             Tools.HangarLog("buildReorderAndLaunch isToggled");
+            // Grab new taskList and check if this is a new install
             taskList = Tools.buildTaskList(getApplicationContext(), db, Settings.TASKLIST_QUEUE_LIMIT);
             if (taskList.size() == 0 ||
                     (taskList.size() == 1 && taskList.get(0).packageName.equals(getPackageName()))) {
@@ -378,6 +368,10 @@ public class WatchfulService extends Service {
     public void destroyNotification() {
         Tools.HangarLog("DESTROY");
         isNotificationRunning = false;
+        runningTask = null;
+        pinnedList = null;
+        notificationTasks = null;
+        moreAppsPage = 1;
         stopForeground(true);
     }
 
@@ -493,6 +487,7 @@ public class WatchfulService extends Service {
         appDrawer.setPrefs(prefs);
         appDrawer.setContext(mContext);
 
+        // Check if numOfApps is actually bigger than the number of tasks in db
         if (taskList.size() < numOfApps) {
             maxButtons = taskList.size();
         } else {
@@ -519,7 +514,6 @@ public class WatchfulService extends Service {
             pageList = new ArrayList<TaskInfo>(taskList);
             pageList = new Tools().getPinnedTasks(mContext, pinnedList, pageList, iconCacheCount, moreApps);
         } else {
-            // Assume taskList has reset to non-pinned version.
             pageList = getPageTasks(moreAppsPage, iconCacheCount);
             if (pageList == null) {
                 moreAppsPage = 1;

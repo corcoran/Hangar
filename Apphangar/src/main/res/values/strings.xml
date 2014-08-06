@@ -61,7 +61,7 @@
         <item>1</item>
     </string-array>
 
-    <string name="title_more_apps_category">Multiple pages</string>
+    <string name="title_more_apps_category">Pages</string>
     <string name="title_more_apps">Multiple pages</string>
     <string name="summary_more_apps">Adds a button to switch pages</string>
 

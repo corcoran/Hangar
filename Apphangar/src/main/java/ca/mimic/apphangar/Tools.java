@@ -528,7 +528,7 @@ public class Tools {
                 }
                 return taskList;
             }
-        } else {
+        } else if (moreApps) {
             taskList = new Tools().addMoreAppsButton(taskList, count - 1);
 
         }
