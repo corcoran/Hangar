@@ -162,15 +162,10 @@ public class WatchfulService extends Service {
         iconMap.put(Settings.STATUSBAR_ICON_TRANSPARENT, R.drawable.ic_apps_transparent);
     }
 
-    protected void runScan() {
-        handler.removeCallbacks(scanApps);
-        handler.post(scanApps);
-    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Check if action is a Multiple page trigger
-        if (intent.getAction() != null && intent.getAction().equals(Settings.MORE_APPS_ACTION)) {
+        if (intent != null && intent.getAction() != null && intent.getAction().equals(Settings.MORE_APPS_ACTION)) {
             moreAppsPage = moreAppsPage + 1;
             createNotification();
             return START_STICKY;
