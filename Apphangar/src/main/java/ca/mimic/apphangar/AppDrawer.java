@@ -38,6 +38,7 @@ public class AppDrawer {
     IconHelper ih;
 
     boolean isColorized;
+    boolean roundedCorners;
     int getColor;
 
     int mImageButtonLayout;
@@ -76,13 +77,43 @@ public class AppDrawer {
         mSize = Math.round(mContext.getResources().getDimension(android.R.dimen.notification_large_icon_height) * 0.8f);
     }
 
+    protected void setRowBackgroundColor(int color, int position) {
+        final int TOP_ROW = 1;
+        final int BOT_ROW = 2;
+
+        final int TOP_ROUNDED_BG = R.drawable.rounded_bg_top;
+        final int BOTTOM_ROUNDED_BG = R.drawable.rounded_bg_bottom;
+        final int ROUNDED_BG = R.drawable.rounded_bg;
+        final int NOT_ROUNDED_BG = R.drawable.empty_bg;
+
+        int bgDrawable;
+
+        switch (position) {
+            case TOP_ROW:
+                bgDrawable = TOP_ROUNDED_BG;
+                break;
+            case BOT_ROW:
+                bgDrawable = BOTTOM_ROUNDED_BG;
+                break;
+            default:
+                bgDrawable = NOT_ROUNDED_BG;
+        }
+
+        if (Tools.getViewBackgroundResource() == TOP_ROUNDED_BG
+                && bgDrawable == BOTTOM_ROUNDED_BG)
+            bgDrawable = ROUNDED_BG;
+
+        Tools.setViewBackgroundColor(mRowView, color, (roundedCorners) ? bgDrawable : NOT_ROUNDED_BG);
+    }
+
     protected void setRowBackgroundColor(int color) {
-        mRowView.setInt(mRowId, "setBackgroundColor", color);
+        setRowBackgroundColor(color, 0);
     }
 
     protected void setPrefs(SharedPreferences prefs) {
         // set Prefs for mLastItems
         isColorized = prefs.getBoolean(Settings.COLORIZE_PREFERENCE, Settings.COLORIZE_DEFAULT);
+        roundedCorners = prefs.getBoolean(Settings.ROUNDED_CORNERS_PREFERENCE, Settings.COLORIZE_DEFAULT);
         getColor = prefs.getInt(Settings.ICON_COLOR_PREFERENCE, Settings.ICON_COLOR_DEFAULT);
     }
 

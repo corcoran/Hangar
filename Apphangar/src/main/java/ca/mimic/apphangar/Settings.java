@@ -127,6 +127,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String MORE_APPS_PREFERENCE = "more_apps_preference";
     final static String MORE_APPS_PAGES_PREFERENCE = "more_apps_pages_preference";
     final static String MORE_APPS_ICON_PREFERENCE = "more_apps_icon_preference";
+    final static String ROUNDED_CORNERS_PREFERENCE = "rounded_corners_preference";
 
     protected static Settings mInstance;
     protected static AppsRowItem mIconTask;
@@ -163,6 +164,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static boolean IGNORE_PINNED_DEFAULT = false;
     final static boolean SMART_NOTIFICATION_DEFAULT = true;
     final static boolean MORE_APPS_DEFAULT = false;
+    final static boolean ROUNDED_CORNERS_DEFAULT = false;
 
     final static int WEIGHT_PRIORITY_DEFAULT = 0;
     final static int APPSNO_DEFAULT = 8;

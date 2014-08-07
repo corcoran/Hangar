@@ -74,6 +74,7 @@ public class AppsWidgetSettings extends PreferenceActivity {
         CheckBoxPreference weighted_recents_preference;
         CheckBoxPreference colorize_preference;
         CheckBoxPreference ignore_pinned_preference;
+        CheckBoxPreference rounded_corners_preference;
         ColorPickerPreference icon_color_preference;
         ColorPickerPreference background_color_preference;
         SwitchPreference apps_by_widget_size_preference;
@@ -142,6 +143,7 @@ public class AppsWidgetSettings extends PreferenceActivity {
             mEditor.putBoolean(Settings.IGNORE_PINNED_PREFERENCE, ignore_pinned_preference.isChecked());
             mEditor.putString(Settings.WEIGHT_PRIORITY_PREFERENCE, weight_priority_preference.getValue());
             mEditor.putBoolean(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE, apps_by_widget_size_preference.isChecked());
+            mEditor.putBoolean(Settings.ROUNDED_CORNERS_PREFERENCE, rounded_corners_preference.isChecked());
             mEditor.putString(Settings.STATS_WIDGET_APPSNO_PREFERENCE, appnos_preference.getValue());
             mEditor.putString(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE, appnos_ls_preference.getValue());
             int intHex = ColorPickerPreference.convertToColorInt(String.valueOf(background_color_preference.getSummary()));
@@ -209,6 +211,10 @@ public class AppsWidgetSettings extends PreferenceActivity {
             String hexColor2 = String.format("#%08x", (intColor2));
             icon_color_preference.setSummary(hexColor2);
             icon_color_preference.setOnPreferenceChangeListener(changeListener);
+
+            rounded_corners_preference = (CheckBoxPreference)findPreference(Settings.ROUNDED_CORNERS_PREFERENCE);
+            rounded_corners_preference.setChecked(mPrefs.getBoolean(Settings.ROUNDED_CORNERS_PREFERENCE, Settings.ROUNDED_CORNERS_DEFAULT));
+            rounded_corners_preference.setOnPreferenceChangeListener(changeListener);
 
             icon_size_preference = (UpdatingListPreference)findPreference(Settings.ICON_SIZE_PREFERENCE);
             icon_size_preference.setValue(mPrefs.getString(Settings.ICON_SIZE_PREFERENCE, Integer.toString(Settings.ICON_SIZE_DEFAULT)));

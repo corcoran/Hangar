@@ -94,6 +94,10 @@
             android:defaultValue="0x00000000"
             alphaSlider="true" />
 
+        <CheckBoxPreference
+            android:key="rounded_corners_preference"
+            android:title="@string/title_rounded_corners_preference" />
+
         <ca.mimic.apphangar.UpdatingListPreference
             android:key="alignment_preference"
             android:title="@string/title_alignment_preference"

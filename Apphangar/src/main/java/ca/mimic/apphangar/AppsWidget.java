@@ -102,6 +102,9 @@ public class AppsWidget extends AppWidgetProvider {
         int itemHeight = ICON_MEDIUM_HEIGHT;
         int itemWidth = ICON_MEDIUM_WIDTH;
 
+        final int TOP_ROW = 1;
+        final int BOT_ROW = 2;
+
         int iconSize = Integer.parseInt(mPrefs.getString(Settings.ICON_SIZE_PREFERENCE, Integer.toString(Settings.ICON_SIZE_DEFAULT)));
         int mGravity = Integer.parseInt(mPrefs.getString(Settings.ALIGNMENT_PREFERENCE, Integer.toString(Settings.ALIGNMENT_DEFAULT)));
 
@@ -229,7 +232,7 @@ public class AppsWidget extends AppWidgetProvider {
         appDrawer.setImageLayouts(imageButtonLayout, imageContLayout);
         appDrawer.setPrefs(mPrefs);
         appDrawer.setContext(mContext);
-        appDrawer.setRowBackgroundColor(getBackgroundColor);
+        appDrawer.setRowBackgroundColor(getBackgroundColor, TOP_ROW);
         appDrawer.setCount(numOfIcons, Settings.TASKLIST_QUEUE_SIZE, true);
 
         if (autoHeight && !appsNoByWidgetSize) {
@@ -285,6 +288,8 @@ public class AppsWidget extends AppWidgetProvider {
 
             appDrawer.addItem();
         }
+        // Last row is bottom row
+        appDrawer.setRowBackgroundColor(getBackgroundColor, BOT_ROW);
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

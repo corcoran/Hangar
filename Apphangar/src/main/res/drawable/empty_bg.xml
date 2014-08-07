@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:id="@+id/shape" android:shape="rectangle" />
+    </item>
+</layer-list>

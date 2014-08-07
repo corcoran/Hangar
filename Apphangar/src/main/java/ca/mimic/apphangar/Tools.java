@@ -30,10 +30,13 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Log;
 import android.util.TypedValue;
+import android.widget.RemoteViews;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +46,7 @@ import java.util.List;
 
 public class Tools {
     final static String TAG = "Apphangar";
+    static int mBackgroundResource;
 
     protected static void HangarLog(String message) {
         if (BuildConfig.BUILD_TYPE.equals("debug"))
@@ -87,6 +91,26 @@ public class Tools {
         settingsEditor.commit();
 
         return !removed;
+    }
+
+    protected static int getViewBackgroundResource () {
+        return mBackgroundResource;
+    }
+
+    protected static void setViewBackgroundColor (RemoteViews view, int color, int resource) {
+        if (resource != 0) {
+            mBackgroundResource = resource;
+            view.setImageViewResource(R.id.rootBackground, resource);
+        }
+
+
+        view.setInt(R.id.rootBackground, "setColorFilter", color);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            view.setInt(R.id.rootBackground, "setImageAlpha", Color.alpha(color));
+        } else {
+            view.setInt(R.id.rootBackground, "setAlpha", Color.alpha(color));
+        }
     }
 
 

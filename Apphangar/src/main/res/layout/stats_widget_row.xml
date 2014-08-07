@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:tag="portrait"
+    android:layout_gravity="center"
     android:id="@+id/appCont">
+
+    <ImageView
+        tools:ignore="ContentDescription"
+        android:id="@+id/rootBackground"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="fitXY" />
 
     <LinearLayout
         tools:ignore="UselessParent"
@@ -13,7 +21,7 @@
         android:background="?android:selectableItemBackground"
         android:focusable="true"
         android:clickable="true"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent">
 
         <LinearLayout
@@ -57,4 +65,4 @@
             android:layout_marginBottom="1dp"
             android:layout_marginTop="2dp" />
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>

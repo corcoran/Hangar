@@ -480,6 +480,7 @@
     <!-- Stats Widget -->
     <string name="stats_widget_name">Hangar Stats Widget</string>
     <string name="title_background_color_preference">Background color</string>
+    <string name="title_rounded_corners_preference">Rounded corners</string>
     <string name="button_name">Place widget</string>
     <string name="reconfigure_button_name">Save widget preferences</string>
     <string name="reconfigure_reminder">You can modify the widget settings at any time from the Hangar Settings menu</string>

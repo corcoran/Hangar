@@ -111,6 +111,7 @@ public class StatsWidget extends AppWidgetProvider {
             itemHeight = 35; // Not as large w/o dividers
         }
         boolean appsNoByWidgetSize = mPrefs.getBoolean(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE, Settings.APPS_BY_WIDGET_SIZE_DEFAULT);
+        boolean roundedCorners = mPrefs.getBoolean(Settings.ROUNDED_CORNERS_PREFERENCE, Settings.ROUNDED_CORNERS_DEFAULT);
         int appsNo;
         int appsNoLs;
 
@@ -163,12 +164,19 @@ public class StatsWidget extends AppWidgetProvider {
             int topPadding = 0;
             int bottomPadding = 0;
 
-            if (count == 0)
+            if (count == 0) {
                 topPadding = Tools.dpToPx(context, 6);
-            if (count == (appsNo-1))
+                Tools.setViewBackgroundColor(row, getColor, (roundedCorners) ? R.drawable.rounded_bg_top : R.drawable.empty_bg);
+            }
+            if (count == (appsNo-1)) {
                 bottomPadding = Tools.dpToPx(context, 6);
+                Tools.setViewBackgroundColor(row, getColor, (roundedCorners) ? R.drawable.rounded_bg_bottom : R.drawable.empty_bg);
+            }
+            if (count > 0 && count < (appsNo-1)) {
+                Tools.setViewBackgroundColor(row, getColor, R.drawable.empty_bg);
+            }
 
-            row.setViewPadding(R.id.appCont, 0, topPadding, 0, bottomPadding);
+            row.setViewPadding(R.id.clickCont, 0, topPadding, 0, bottomPadding);
 
             int clickID = context.getResources().getIdentifier("clickCont", "id", packageName);
             int iconID = context.getResources().getIdentifier("iconCont", "id", packageName);
@@ -232,8 +240,6 @@ public class StatsWidget extends AppWidgetProvider {
             } catch (PackageManager.NameNotFoundException e) {
 
             }
-
-            row.setInt(R.id.appCont, "setBackgroundColor", getColor);
             views.addView(R.id.taskRoot, row);
         }
         // Instruct the widget manager to update the widget

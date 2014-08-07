@@ -71,6 +71,7 @@ public class StatsWidgetSettings extends PreferenceActivity {
     public static class StatsWidgetFragment extends PreferenceFragment {
 
         CheckBoxPreference divider_preference;
+        CheckBoxPreference rounded_corners_preference;
         ColorPickerPreference background_color_preference;
         SwitchPreference apps_by_widget_size_preference;
         UpdatingListPreference appnos_preference;
@@ -126,6 +127,7 @@ public class StatsWidgetSettings extends PreferenceActivity {
         public void savePrefs() {
             final SharedPreferences.Editor mEditor = prefs.editorGet();
             mEditor.putBoolean(Settings.DIVIDER_PREFERENCE, divider_preference.isChecked());
+            mEditor.putBoolean(Settings.ROUNDED_CORNERS_PREFERENCE, rounded_corners_preference.isChecked());
             mEditor.putBoolean(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE, apps_by_widget_size_preference.isChecked());
             mEditor.putString(Settings.STATS_WIDGET_APPSNO_PREFERENCE, appnos_preference.getValue());
             mEditor.putString(Settings.STATS_WIDGET_APPSNO_LS_PREFERENCE, appnos_ls_preference.getValue());
@@ -147,6 +149,10 @@ public class StatsWidgetSettings extends PreferenceActivity {
             divider_preference = (CheckBoxPreference)findPreference(Settings.DIVIDER_PREFERENCE);
             divider_preference.setChecked(mPrefs.getBoolean(Settings.DIVIDER_PREFERENCE, Settings.DIVIDER_DEFAULT));
             divider_preference.setOnPreferenceChangeListener(changeListener);
+
+            rounded_corners_preference = (CheckBoxPreference)findPreference(Settings.ROUNDED_CORNERS_PREFERENCE);
+            rounded_corners_preference.setChecked(mPrefs.getBoolean(Settings.ROUNDED_CORNERS_PREFERENCE, Settings.ROUNDED_CORNERS_DEFAULT));
+            rounded_corners_preference.setOnPreferenceChangeListener(changeListener);
 
             apps_by_widget_size_preference = (SwitchPreference)findPreference(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE);
             apps_by_widget_size_preference.setChecked(mPrefs.getBoolean(Settings.APPS_BY_WIDGET_SIZE_PREFERENCE, Settings.APPS_BY_WIDGET_SIZE_DEFAULT));
