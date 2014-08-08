@@ -439,7 +439,12 @@ public class WatchfulService extends Service {
 
             Tools.HangarLog("getPageTasks i = " + start + " ; i < " + end);
 
-            if (start < 0) start = 0;
+            if (start < 0) {
+                // This is if pinned brings us into the negative.  We always need the right amount!
+                int diff = start * -1;
+                start = 0;
+                end = end + diff;
+            }
 
             if (taskList.size() < start) {
                 Tools.HangarLog("taskList.size() == " + taskList.size() + " < start(" + start + " )");
@@ -509,6 +514,8 @@ public class WatchfulService extends Service {
             pageList = new ArrayList<TaskInfo>(taskList);
             pageList = new Tools().getPinnedTasks(mContext, pinnedList, pageList, iconCacheCount, moreApps);
         } else {
+            if (pinnedCount > iconCacheCount)
+                pinnedCount = iconCacheCount - 1;
             pageList = getPageTasks(moreAppsPage, iconCacheCount);
             if (pageList == null) {
                 moreAppsPage = 1;

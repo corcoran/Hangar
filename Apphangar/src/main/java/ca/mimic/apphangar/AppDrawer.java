@@ -72,7 +72,8 @@ public class AppDrawer {
     public void setContext(Context context) {
         mContext = context;
         ih = new IconHelper(context);
-        mSize = Tools.dpToPx(context, Settings.CACHED_ICON_SIZE);
+        // mSize = Tools.dpToPx(context, Settings.CACHED_ICON_SIZE);
+        mSize = Math.round(mContext.getResources().getDimension(android.R.dimen.notification_large_icon_height) * 0.8f);
     }
 
     protected void setRowBackgroundColor(int color) {
