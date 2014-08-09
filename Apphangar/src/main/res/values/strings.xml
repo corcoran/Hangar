@@ -342,6 +342,7 @@
     <string name="changelog_coming_soon_text" translatable="false">App use by time period</string>
 
     <string-array name="versionNumbers" translatable="false">
+        <item>2.4 (August ???)</item>
         <item>2.3 (July 29th)</item>
         <item>2.2 (July 3rd)</item>
         <item>2.1 (May 29th)</item>
@@ -355,6 +356,10 @@
     </string-array>
 
     <string-array name="versionSummaries" translatable="false">
+        <item>
+"  &#8226; [New!] Multiple pages in notification bar
+  &#8226; [New!] Rounded corners option in widgets
+  &#8226; [Fix!] Fixed settings bug on app pin"</item>
         <item>
 "  &#8226; [New!] Pinned app feature
   &#8226; [New!] Icon pack support
