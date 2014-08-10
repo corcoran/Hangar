@@ -42,6 +42,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabaseLockedException;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -134,7 +135,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
     protected static boolean isBound = false;
     protected static boolean mLaunchedPaypal = false;
     protected static Display display;
-    boolean newStart;
 
     static AppsRowAdapter mAppRowAdapter;
     protected static boolean completeRedraw;
@@ -329,14 +329,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     actionBar.newTab()
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
-        }
-        db = TasksDataSource.getInstance(this);
-        db.open();
-
-        int allTasksSize = db.getAllTasks().size();
-        db.close();
-        if (allTasksSize == 0) {
-            newStart = true;
         }
         pageChangeListener.onPageSelected(GENERAL_TAB);
 
@@ -948,8 +940,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
                 String iconPackName = Tools.getApplicationName(mContext, prefs2.getString(ICON_PACK_PREFERENCE, null));
                 icon_pack_preference = findPreference(ICON_PACK_PREFERENCE);
-                if (iconPackName.isEmpty()) {
-                    iconPackName = getResources().getResourceName(R.string.title_icon_pack_picker);
+                if (iconPackName.isEmpty() || iconPackName.equals("")) {
+                    iconPackName = getResources().getString(R.string.title_icon_pack_picker);
                 }
 
                 icon_pack_preference.setSummary(iconPackName);
@@ -1208,6 +1200,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
     public static class AppsFragment extends Fragment implements OnItemClickListener {
 
+        static int failCount;
+
         public static Fragment newInstance() {
             return new AppsFragment();
         }
@@ -1304,12 +1298,32 @@ public class Settings extends Activity implements ActionBar.TabListener {
             return appsView;
         }
 
+        protected List<AppsRowItem> createAppTasksLoop() {
+            List<AppsRowItem> tmpApps = null;
+
+            try {
+                tmpApps = createAppTasks();
+            } catch (SQLiteDatabaseLockedException e) {
+                if (failCount >= 2) {
+                    e.printStackTrace();
+                    return null;
+                } else {
+                    failCount++;
+                    createAppTasksLoop();
+                }
+            }
+            return tmpApps;
+        }
+
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             Tools.HangarLog("onActivityCreated appsFragment");
 
-            List<AppsRowItem> appTasks = createAppTasks();
+            List<AppsRowItem> appTasks = createAppTasksLoop();
+            if (appTasks == null)
+                return;
+
             mAppRowAdapter = new AppsRowAdapter(mContext, appTasks);
             lv.setAdapter(mAppRowAdapter);
             lv.setOnItemClickListener(this);

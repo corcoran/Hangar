@@ -43,13 +43,9 @@ import ca.mimic.apphangar.Settings.PrefsGet;
 
 public class StatsWidget extends AppWidgetProvider {
 
-    protected static Context mContext;
-    protected static PrefsGet prefs;
-
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Tools.HangarLog("onUpdate [" + this.getClass().getCanonicalName() + "]");
-        mContext = context;
 
         // (re?)start service.  This is specifically so if hangar gets updated the service
         // is restarted
@@ -60,8 +56,6 @@ public class StatsWidget extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         Tools.HangarLog("onReceive [" + this.getClass().getCanonicalName() + "]");
-        if (mContext == null)
-            mContext = context;
 
         AppWidgetManager mgr = AppWidgetManager.getInstance(context);
 
@@ -72,7 +66,7 @@ public class StatsWidget extends AppWidgetProvider {
             try {
                 Bundle options=mgr.getAppWidgetOptions(id);
                 updateAppWidget(context, mgr, id, options);
-            } catch (NullPointerException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 Tools.HangarLog("NPE onReceive");
             }
@@ -80,12 +74,12 @@ public class StatsWidget extends AppWidgetProvider {
         super.onReceive(context, intent);
     }
 
-    public static Bitmap drawableToBitmap (Drawable drawable) {
+    public Bitmap drawableToBitmap (Context context, Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable)drawable).getBitmap();
         }
 
-        Bitmap bitmap = Bitmap.createBitmap(Tools.dpToPx(mContext, 100), Tools.dpToPx(mContext, 5), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(Tools.dpToPx(context, 100), Tools.dpToPx(context, 5), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
@@ -93,11 +87,11 @@ public class StatsWidget extends AppWidgetProvider {
         return bitmap;
     }
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+    void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
             int appWidgetId, Bundle options) {
 
         Tools.HangarLog("updateAppWidget (StatsWidget)");
-        prefs = new PrefsGet(context.getSharedPreferences("StatsWidget", Context.MODE_PRIVATE));
+        PrefsGet prefs = new PrefsGet(context.getSharedPreferences("StatsWidget", Context.MODE_PRIVATE));
 
         SharedPreferences mPrefs = prefs.prefsGet();
 
@@ -218,9 +212,9 @@ public class StatsWidget extends AppWidgetProvider {
             } else {
                 barColor = 0xFFFF4444;
             }
-            int[] colors = new int[]{barColor, Tools.dpToPx(context, secondsColor-1), 0x00000000, Tools.dpToPx(mContext, 100-secondsColor)};
+            int[] colors = new int[]{barColor, Tools.dpToPx(context, secondsColor-1), 0x00000000, Tools.dpToPx(context, 100-secondsColor)};
             Drawable sd = new BarDrawable(colors);
-            Bitmap bmpIcon2 = drawableToBitmap(sd);
+            Bitmap bmpIcon2 = drawableToBitmap(context, sd);
             row.setImageViewBitmap(imgID, bmpIcon2);
 
             int[] statsTime = new Settings().splitToComponentTimes(task.getSeconds());

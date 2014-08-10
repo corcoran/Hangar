@@ -36,10 +36,6 @@ import java.util.ArrayList;
 import ca.mimic.apphangar.Settings.PrefsGet;
 
 public class AppsWidget extends AppWidgetProvider {
-
-    protected static Context mContext;
-    protected static PrefsGet prefs;
-
     protected static final int SMALL_ICONS = 0;
     protected static final int LARGE_ICONS = 2;
 
@@ -53,7 +49,6 @@ public class AppsWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Tools.HangarLog("onUpdate [" + this.getClass().getCanonicalName() + "]");
-        mContext = context;
 
         // (re?)start service.  This is specifically so if hangar gets updated the service
         // is restarted
@@ -64,9 +59,6 @@ public class AppsWidget extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         Tools.HangarLog("onReceive [" + this.getClass().getCanonicalName() + "]");
-        if (mContext == null)
-            mContext = context;
-
         AppWidgetManager mgr = AppWidgetManager.getInstance(context);
 
         int[] ids = mgr.getAppWidgetIds(new ComponentName(context, AppsWidget.class));
@@ -76,7 +68,7 @@ public class AppsWidget extends AppWidgetProvider {
             try {
                 Bundle options=mgr.getAppWidgetOptions(id);
                 updateAppWidget(context, mgr, id, options);
-            } catch (NullPointerException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 Tools.HangarLog("NPE onReceive");
             }
@@ -88,11 +80,11 @@ public class AppsWidget extends AppWidgetProvider {
         return (int) Math.floor(widgetDimension / itemDimension);
     }
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+    void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
             int appWidgetId, Bundle options) {
 
         Tools.HangarLog("updateAppWidget (AppsWidget)");
-        prefs = new PrefsGet(context.getSharedPreferences("AppsWidget", Context.MODE_PRIVATE));
+        PrefsGet prefs = new PrefsGet(context.getSharedPreferences("AppsWidget", Context.MODE_PRIVATE));
 
         SharedPreferences mPrefs = prefs.prefsGet();
 
@@ -218,7 +210,7 @@ public class AppsWidget extends AppWidgetProvider {
         boolean ignorePinned = mPrefs.getBoolean(Settings.IGNORE_PINNED_PREFERENCE,
                 Settings.IGNORE_PINNED_DEFAULT);
         if (!ignorePinned) {
-            ArrayList<Tools.TaskInfo> pinnedList = Tools.buildPinnedList(mContext, db);
+            ArrayList<Tools.TaskInfo> pinnedList = Tools.buildPinnedList(context, db);
             appList = new Tools().getPinnedTasks(context, pinnedList, appList, numOfIcons, false);
         }
 
@@ -231,7 +223,7 @@ public class AppsWidget extends AppWidgetProvider {
         appDrawer.createRow(rowLayout, R.id.viewRow);
         appDrawer.setImageLayouts(imageButtonLayout, imageContLayout);
         appDrawer.setPrefs(mPrefs);
-        appDrawer.setContext(mContext);
+        appDrawer.setContext(context);
         appDrawer.setRowBackgroundColor(getBackgroundColor, TOP_ROW);
         appDrawer.setCount(numOfIcons, Settings.TASKLIST_QUEUE_SIZE, true);
 

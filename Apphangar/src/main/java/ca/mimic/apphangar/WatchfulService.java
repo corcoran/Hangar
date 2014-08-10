@@ -523,6 +523,10 @@ public class WatchfulService extends Service {
                 return;
             }
             pageList = new Tools().getPinnedTasks(mContext, null, pageList, iconCacheCount, moreApps);
+            if (pageList.size() == 1) {
+                moreAppsPage = 1;
+                return;
+            }
         }
 
         Tools.HangarLog("taskList.size(): " + taskList.size() + " pageList.size(): " + pageList.size() + " realmaxbuttons: " + numOfApps + " maxbuttons: " + maxButtons + " moreAppsPage: " + moreAppsPage);
