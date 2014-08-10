@@ -775,6 +775,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
             Toast.makeText(mContext, mContext.getResources().getString(R.string.switched_icon_packs_alert),
                     Toast.LENGTH_LONG).show();
             icon_pack_preference.setSummary(Tools.getApplicationName(mContext, prefs2.getString(ICON_PACK_PREFERENCE, null)));
+            updateIconPackIcon(mContext);
         }
     }
 
@@ -945,8 +946,14 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 boot_preference.setChecked(prefs2.getBoolean(BOOT_PREFERENCE, BOOT_DEFAULT));
                 boot_preference.setOnPreferenceChangeListener(changeListener);
 
+                String iconPackName = Tools.getApplicationName(mContext, prefs2.getString(ICON_PACK_PREFERENCE, null));
                 icon_pack_preference = findPreference(ICON_PACK_PREFERENCE);
-                icon_pack_preference.setSummary(Tools.getApplicationName(mContext, prefs2.getString(ICON_PACK_PREFERENCE, null)));
+                if (iconPackName.isEmpty()) {
+                    iconPackName = getResources().getResourceName(R.string.title_icon_pack_picker);
+                }
+
+                icon_pack_preference.setSummary(iconPackName);
+                updateIconPackIcon(mContext);
                 iconPackUpdate = new IconPackUpdate(prefs2, icon_pack_preference);
                 icon_pack_preference.setOnPreferenceClickListener(
                         new Preference.OnPreferenceClickListener() {
@@ -1154,6 +1161,20 @@ public class Settings extends Activity implements ActionBar.TabListener {
             mGeneralSettings.more_apps_icon_preference.setIcon(d);
         } catch (Exception e) {
         }
+    }
+
+    static void updateIconPackIcon(Context context) {
+        String iconPackPackage = prefs.prefsGet().getString(ICON_PACK_PREFERENCE, null);
+        Drawable icon;
+
+        icon = context.getResources().getDrawable(R.drawable.ic_launcher);
+        try {
+            Tools.HangarLog("iconPackPackage: " + iconPackPackage);
+            icon = new BitmapDrawable(context.getResources(), new IconHelper(mContext).cachedResourceIconHelper(iconPackPackage));
+        } catch (Exception e) {
+        }
+        PrefsFragment mGeneralSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(GENERAL_TAB);
+        mGeneralSettings.icon_pack_preference.setIcon(icon);
     }
 
     private static void setAppsnoSummary(Boolean second_row, Preference appnos_preference) {

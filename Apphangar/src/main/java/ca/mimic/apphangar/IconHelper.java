@@ -22,6 +22,7 @@ package ca.mimic.apphangar;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -70,8 +71,18 @@ public class IconHelper {
                 ich = new IconCacheHelper(mContext);
                 Tools.HangarLog("Loading new IconCacheHelper instance");
             }
-            iconPackIcon = mContext.getResources().getDrawable(Settings.MORE_APPS_DRAWABLE_RESOURCE);
-            IconCacheHelper.preloadIcon(mContext, resourceName, Tools.drawableToBitmap(iconPackIcon), Tools.dpToPx(mContext, Settings.CACHED_ICON_SIZE));
+            if (resourceName.equals(Settings.MORE_APPS_PACKAGE)) {
+                iconPackIcon = mContext.getResources().getDrawable(Settings.MORE_APPS_DRAWABLE_RESOURCE);
+                IconCacheHelper.preloadIcon(mContext, resourceName, Tools.drawableToBitmap(iconPackIcon), Tools.dpToPx(mContext, Settings.CACHED_ICON_SIZE));
+            } else {
+                Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(resourceName);
+                ResolveInfo rInfo = mContext.getPackageManager().resolveActivity(intent, 0);
+                if (rInfo == null)
+                    return null;
+
+                iconPackIcon = new IconCacheHelper(mContext).getFullResIcon(rInfo.activityInfo, true);
+                IconCacheHelper.preloadIcon(mContext, resourceName, Tools.drawableToBitmap(iconPackIcon), Tools.dpToPx(mContext, Settings.CACHED_ICON_SIZE));
+            }
 
         }
         if (iconPackIcon == null) {
