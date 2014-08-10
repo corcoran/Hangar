@@ -155,6 +155,7 @@ Cependant, nous vous remercions dans tous les cas d'utiliser Hangar et de nous s
   <string name="title_ignore_pinned_preference">Exclure les apps épinglées</string>
   <string name="stats_widget_name">Widget de stats de Hangar</string>
   <string name="title_background_color_preference">Couleur d\'arrière-plan</string>
+  <string name="title_rounded_corners_preference">Coins arrondis</string>
   <string name="button_name">Placer le Widget</string>
   <string name="reconfigure_button_name">Enregistrer les préférences du widget</string>
   <string name="reconfigure_reminder">Vous pouvez modifier les paramètres du widget à tout moment dans le menu paramètres de Hangar</string>

@@ -154,6 +154,7 @@
   <string name="title_ignore_pinned_preference">Udeluk fastgjorte apps</string>
   <string name="stats_widget_name">Hangar statistik Widget</string>
   <string name="title_background_color_preference">Baggrundsfarve</string>
+  <string name="title_rounded_corners_preference">Afrundede hjørner</string>
   <string name="button_name">Placer widget</string>
   <string name="reconfigure_button_name">Gem widget indstillinger</string>
   <string name="reconfigure_reminder">Du kan ændre widget-indstillinger til enhver tid fra menuen Indstillinger for Hangar</string>

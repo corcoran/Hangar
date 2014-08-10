@@ -154,6 +154,7 @@
   <string name="title_ignore_pinned_preference">Fixierte Apps ausschließen</string>
   <string name="stats_widget_name">Hangar Stats-Widget</string>
   <string name="title_background_color_preference">Hintergrundfarbe</string>
+  <string name="title_rounded_corners_preference">Abgerundete Ecken</string>
   <string name="button_name">Widget platzieren</string>
   <string name="reconfigure_button_name">Widget-Einstellungen speichern</string>
   <string name="reconfigure_reminder">Sie können die Widget-Einstellungen jederzeit aus dem Hangar Einstellungsmenü ändern</string>
