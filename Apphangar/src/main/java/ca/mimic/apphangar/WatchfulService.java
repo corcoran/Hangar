@@ -429,6 +429,11 @@ public class WatchfulService extends Service {
     }
 
     public ArrayList<TaskInfo> getPageTasks(int pageNum, int count) {
+        ArrayList<TaskInfo> copyList = new ArrayList<TaskInfo>();
+
+        if (taskList != null)
+            copyList = new ArrayList<TaskInfo>(taskList);
+
         ArrayList<TaskInfo> tmpList = new ArrayList<TaskInfo>();
 
         if (pageNum > moreAppsPages) return null;
@@ -446,19 +451,19 @@ public class WatchfulService extends Service {
                 end = end + diff;
             }
 
-            if (taskList.size() < start) {
-                Tools.HangarLog("taskList.size() == " + taskList.size() + " < start(" + start + " )");
+            if (copyList.size() < start) {
+                Tools.HangarLog("copyList.size() == " + copyList.size() + " < start(" + start + " )");
                 return null;
 //                return getPageTasks(moreAppsPage, count);
             }
-            if (taskList.size() < end) {
-                end = taskList.size();
-            } else if (taskList.size() == end) {
-                end = taskList.size() - 1;
+            if (copyList.size() < end) {
+                end = copyList.size();
+            } else if (copyList.size() == end) {
+                end = copyList.size() - 1;
             }
 
             for (int i = start; i < end; i++) {
-                tmpList.add(taskList.get(i));
+                tmpList.add(copyList.get(i));
             }
             return tmpList;
         } catch (Exception e) {
@@ -487,18 +492,7 @@ public class WatchfulService extends Service {
         appDrawer.setPrefs(prefs);
         appDrawer.setContext(mContext);
 
-        // Check if numOfApps is actually bigger than the number of tasks in db
-        if (taskList.size() < numOfApps) {
-            maxButtons = taskList.size();
-        } else {
-            maxButtons = numOfApps;
-        }
-
-        if (taskList.size() <= numOfApps) {
-            Tools.HangarLog("Not enough tasks to create second row");
-            // Not enough tasks to create second row.
-            secondRow = false;
-        }
+        maxButtons = numOfApps;
 
         int iconCacheCount = (maxButtons * (secondRow ? 2 : 1));
         appDrawer.setCount(iconCacheCount, Settings.CACHED_NOTIFICATION_ICON_LIMIT, secondRow);
