@@ -17,6 +17,7 @@ Features
 * Pin apps to always display
 * Supports icon packs and custom icons
 * Optional second row of icons
+* Multiple page switching in notifications
 * Blacklist unwanted apps
 * Fully customizable!  Change the number of shortcuts, icon color, icon size, background and more.
 * Additional re-sizeable widget to launch apps
