@@ -40,6 +40,7 @@ public class AppDrawer {
 
     boolean isColorized;
     boolean roundedCorners;
+    boolean isFloating;
     int getColor;
 
     int mImageButtonLayout;
@@ -128,6 +129,7 @@ public class AppDrawer {
         isColorized = prefs.getBoolean(Settings.COLORIZE_PREFERENCE, Settings.COLORIZE_DEFAULT);
         roundedCorners = prefs.getBoolean(Settings.ROUNDED_CORNERS_PREFERENCE, Settings.COLORIZE_DEFAULT);
         getColor = prefs.getInt(Settings.ICON_COLOR_PREFERENCE, Settings.ICON_COLOR_DEFAULT);
+        isFloating = prefs.getBoolean(Settings.FLOATING_WINDOWS_PREFERENCE, Settings.FLOATING_WINDOWS_DEFAULT);
     }
 
     protected void setCount(int count, int maxCount, boolean secondRow) {
@@ -194,6 +196,8 @@ public class AppDrawer {
                 }
                 intent.addCategory(Intent.CATEGORY_LAUNCHER);
                 intent.setAction(Intent.ACTION_MAIN);
+                if (isFloating)
+                    intent.addFlags(Settings.FLOATING_WINDOWS_INTENT_FLAG);
                 PendingIntent activity = PendingIntent.getActivity(mContext, pendingNum, intent,
                         PendingIntent.FLAG_CANCEL_CURRENT);
                 mLastItem.setOnClickPendingIntent(mImageContLayout, activity);

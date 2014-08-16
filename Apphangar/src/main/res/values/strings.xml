@@ -124,6 +124,10 @@
     <string name="title_smart_notification">Smart notification sort</string>
     <string name="summary_smart_notification">Only reorder when a new icon is added</string>
 
+    <string name="title_floating_windows">Launch apps in floating windows</string>
+    <string name="summary_floating_windows">Only available in supported ROMs</string>
+    <string name="alert_floating_windows">Supported in XHaloFloatingWindow, AOSPA and derivatives.</string>
+
     <!-- Appearance -->
 
     <string name="title_appsno_preference">Number of apps</string>

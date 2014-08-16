@@ -22,7 +22,6 @@ package ca.mimic.apphangar;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -129,6 +128,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String MORE_APPS_PAGES_PREFERENCE = "more_apps_pages_preference";
     final static String MORE_APPS_ICON_PREFERENCE = "more_apps_icon_preference";
     final static String ROUNDED_CORNERS_PREFERENCE = "rounded_corners_preference";
+    final static String FLOATING_WINDOWS_PREFERENCE = "floating_windows_preference";
 
     protected static Settings mInstance;
     protected static AppsRowItem mIconTask;
@@ -153,6 +153,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String MORE_APPS_ACTION = "ca.mimic.apphangar.action.MORE_APPS";
     final static int MORE_APPS_DRAWABLE_RESOURCE = R.drawable.ic_apps_plus;
 
+    final static int FLOATING_WINDOWS_INTENT_FLAG = 0x00002000;
+
     final static boolean DIVIDER_DEFAULT = false;
     final static boolean ROW_DIVIDER_DEFAULT = true;
     final static boolean TOGGLE_DEFAULT = true;
@@ -165,6 +167,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static boolean SMART_NOTIFICATION_DEFAULT = true;
     final static boolean MORE_APPS_DEFAULT = false;
     final static boolean ROUNDED_CORNERS_DEFAULT = false;
+    final static boolean FLOATING_WINDOWS_DEFAULT = false;
 
     final static int WEIGHT_PRIORITY_DEFAULT = 0;
     final static int APPSNO_DEFAULT = 8;
@@ -832,6 +835,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         CheckBoxPreference second_row_preference;
         CheckBoxPreference smart_notification_preference;
         CheckBoxPreference more_apps_preference;
+        CheckBoxPreference floating_windows_preference;
         ColorPickerPreference icon_color_preference;
         SwitchPreference toggle_preference;
         UpdatingListPreference appnos_preference;
@@ -926,6 +930,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 priority_preference.setValue(prefs2.getString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_DEFAULT)));
                 priority_preference.setOnPreferenceChangeListener(changeListener);
 
+                floating_windows_preference = (CheckBoxPreference)findPreference(FLOATING_WINDOWS_PREFERENCE);
+                floating_windows_preference.setChecked(prefs2.getBoolean(FLOATING_WINDOWS_PREFERENCE, FLOATING_WINDOWS_DEFAULT));
+                floating_windows_preference.setOnPreferenceChangeListener(changeListener);
+
             } catch (NullPointerException e) {
             }
             try {
@@ -1002,15 +1010,12 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 if (preference.getKey().equals(DIVIDER_PREFERENCE)) {
                     editor.putBoolean(DIVIDER_PREFERENCE, (Boolean) newValue);
                     editor.commit();
-                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(ROW_DIVIDER_PREFERENCE)) {
                     editor.putBoolean(ROW_DIVIDER_PREFERENCE, (Boolean) newValue);
                     editor.commit();
-                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(COLORIZE_PREFERENCE)) {
                     editor.putBoolean(COLORIZE_PREFERENCE, (Boolean) newValue);
                     editor.commit();
-                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(STATUSBAR_ICON_PREFERENCE)) {
                     final String mStatusBarIcon = (String) newValue;
                     if (mStatusBarIcon.equals(STATUSBAR_ICON_NONE)) {
@@ -1042,40 +1047,44 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         editor.putString(STATUSBAR_ICON_PREFERENCE, (String) newValue);
                         editor.commit();
                         myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
-                        myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                     }
+                    return true;
                 } else if (preference.getKey().equals(ICON_COLOR_PREFERENCE)) {
                     String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String.valueOf(newValue)));
                     preference.setSummary(hex);
                     int intHex = ColorPickerPreference.convertToColorInt(hex);
                     editor.putInt(ICON_COLOR_PREFERENCE, intHex);
                     editor.commit();
-                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(ICON_SIZE_PREFERENCE)) {
                     editor.putString(ICON_SIZE_PREFERENCE, (String) newValue);
                     editor.commit();
-                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(TOGGLE_PREFERENCE)) {
                     editor.putBoolean(TOGGLE_PREFERENCE, (Boolean) newValue);
                     editor.commit();
                     boolean toggleBool = (Boolean) newValue;
                     toggleDependencies(toggleBool);
                     myService.execute(toggleBool ? SERVICE_CREATE_NOTIFICATIONS : SERVICE_DESTROY_NOTIFICATIONS);
+                    return true;
                 } else if (preference.getKey().equals(BOOT_PREFERENCE)) {
                     editor.putBoolean(BOOT_PREFERENCE, (Boolean) newValue);
                     editor.commit();
+                    return true;
                 } else if (preference.getKey().equals(WEIGHT_PRIORITY_PREFERENCE)) {
                     editor.putString(WEIGHT_PRIORITY_PREFERENCE, (String) newValue);
                     editor.commit();
-                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(WEIGHTED_RECENTS_PREFERENCE)) {
                     editor.putBoolean(WEIGHTED_RECENTS_PREFERENCE, (Boolean) newValue);
                     editor.commit();
-                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(SMART_NOTIFICATION_PREFERENCE)) {
                     editor.putBoolean(SMART_NOTIFICATION_PREFERENCE, (Boolean) newValue);
                     editor.commit();
-                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
+                } else if (preference.getKey().equals(FLOATING_WINDOWS_PREFERENCE)) {
+                    Boolean isFloating = (Boolean) newValue;
+                    if (isFloating)
+                        Toast.makeText(mContext, mContext.getResources().getString(R.string.alert_floating_windows),
+                                Toast.LENGTH_LONG).show();
+                    editor.putBoolean(FLOATING_WINDOWS_PREFERENCE, isFloating);
+                    editor.commit();
                 } else if (preference.getKey().equals(MORE_APPS_PREFERENCE)) {
                     editor.putBoolean(MORE_APPS_PREFERENCE, (Boolean) newValue);
                     editor.commit();
@@ -1083,11 +1092,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 } else if (preference.getKey().equals(MORE_APPS_PAGES_PREFERENCE)) {
                     editor.putString(MORE_APPS_PAGES_PREFERENCE, (String) newValue);
                     editor.commit();
-                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(APPSNO_PREFERENCE)) {
                     editor.putString(APPSNO_PREFERENCE, (String) newValue);
                     editor.commit();
-                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(PRIORITY_PREFERENCE)) {
                     String mPriorityPreference = (String) newValue;
                     editor.putString(PRIORITY_PREFERENCE, mPriorityPreference);
@@ -1100,13 +1107,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     editor.commit();
                     launchPriorityWarning(prefs2);
                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
-                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(SECOND_ROW_PREFERENCE)) {
                     setAppsnoSummary((Boolean) newValue, appnos_preference);
                     editor.putBoolean(SECOND_ROW_PREFERENCE, (Boolean) newValue);
                     editor.commit();
                     launchPriorityWarning(prefs2);
-                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 } else if (preference.getKey().equals(PINNED_SORT_PREFERENCE)) {
                     editor.putString(PINNED_SORT_PREFERENCE, (String) newValue);
                     editor.commit();
@@ -1114,6 +1119,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     if (pinnedApps != null && !pinnedApps.isEmpty()) {
                         myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                     }
+                    return true;
                 } else if (preference.getKey().equals(PINNED_PLACEMENT_PREFERENCE)) {
                     editor.putString(PINNED_PLACEMENT_PREFERENCE, (String) newValue);
                     editor.commit();
@@ -1121,7 +1127,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     if (pinnedApps != null && !pinnedApps.isEmpty()) {
                         myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                     }
+                    return true;
                 }
+                myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 return true;
             }
         };
