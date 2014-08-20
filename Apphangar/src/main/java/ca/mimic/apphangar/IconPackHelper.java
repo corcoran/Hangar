@@ -509,7 +509,7 @@ public class IconPackHelper {
             Collections.sort(mSupportedPackages, new Comparator<IconPackInfo>() {
                 @Override
                 public int compare(IconPackInfo lhs, IconPackInfo rhs) {
-                    return lhs.label.toString().compareToIgnoreCase(rhs.toString());
+                    return lhs.label.toString().compareToIgnoreCase(rhs.label.toString());
                 }
             });
 
