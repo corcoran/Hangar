@@ -505,7 +505,11 @@ public class WatchfulService extends Service {
                 pinnedList = Tools.buildPinnedList(mContext, db);
                 pinnedCount = pinnedList.size();
             }
-            pageList = new ArrayList<TaskInfo>(taskList);
+            if (taskList != null) {
+                pageList = new ArrayList<TaskInfo>(taskList);
+            } else {
+                pageList = new ArrayList<TaskInfo>();
+            }
             pageList = new Tools().getPinnedTasks(mContext, pinnedList, pageList, iconCacheCount, moreApps);
         } else {
             if (pinnedCount > iconCacheCount)
