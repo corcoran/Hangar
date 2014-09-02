@@ -20,6 +20,7 @@
 
 package ca.mimic.apphangar;
 
+import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
@@ -45,10 +46,12 @@ public class AppDrawer {
     int mImageContLayout;
     int mRowId;
     int mSize;
+    long mTotalMem;
 
     int pendingNum;
     String mTaskPackage;
 
+    final int LOW_RAM_THRESHOLD = 1000000;
 
     AppDrawer(String packageName) {
         mTaskPackage = packageName;
@@ -75,6 +78,16 @@ public class AppDrawer {
         ih = new IconHelper(context);
         // mSize = Tools.dpToPx(context, Settings.CACHED_ICON_SIZE);
         mSize = Math.round(mContext.getResources().getDimension(android.R.dimen.notification_large_icon_height) * 0.8f);
+
+        ActivityManager actManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
+        actManager.getMemoryInfo(memInfo);
+        mTotalMem = memInfo.totalMem;
+        Tools.HangarLog("MemoryInfo.totalMem: " + mTotalMem);
+    }
+
+    public boolean needsScaling() {
+        return mContext.getResources().getBoolean(R.bool.notification_needs_scaling) | ((mTotalMem / 1024) <= LOW_RAM_THRESHOLD);
     }
 
     protected void setRowBackgroundColor(int color, int position) {
@@ -119,8 +132,8 @@ public class AppDrawer {
 
     protected void setCount(int count, int maxCount, boolean secondRow) {
         // Prevent TransactionTooLarge insanity while still keeping image quality where possible
-        boolean needsScaling = mContext.getResources().getBoolean(R.bool.notification_needs_scaling);
-        if (needsScaling) {
+
+        if (needsScaling()) {
             mSize = mContext.getResources().getInteger(R.integer.notification_icon_size);
             int rowValue = mContext.getResources().getInteger(R.integer.notification_row_value);
             int iconSize = mSize + (rowValue + maxCount - count) - (secondRow ? rowValue : 0);

@@ -350,7 +350,7 @@ public class IconPackHelper {
             noPackages = true;
         }
 
-        final IconAdapter adapter = new IconAdapter(context, supportedPackages, noPackages, isPicker, moreAppIcon);
+        final IconAdapter adapter = new IconAdapter(context, supportedPackages, isPicker, moreAppIcon);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         if (noPackages) {
             builder.setTitle(R.string.title_icon_pack_not_found);
@@ -503,7 +503,7 @@ public class IconPackHelper {
         String mCurrentIconPack;
         int mCurrentIconPackPosition;
 
-        IconAdapter(Context context, Map<String, IconPackInfo> supportedPackages, boolean noPackages, boolean isPicker, boolean moreAppIcon) {
+        IconAdapter(Context context, Map<String, IconPackInfo> supportedPackages, boolean isPicker, boolean moreAppIcon) {
             mLayoutInflater = LayoutInflater.from(context);
             mSupportedPackages = new ArrayList<IconPackInfo>(supportedPackages.values());
             Collections.sort(mSupportedPackages, new Comparator<IconPackInfo>() {
@@ -512,8 +512,6 @@ public class IconPackHelper {
                     return lhs.label.toString().compareToIgnoreCase(rhs.label.toString());
                 }
             });
-
-            if (noPackages && !isPicker) return;
 
             if (isPicker && (mTask != null || moreAppIcon)) {
                 Resources res = context.getResources();
@@ -529,7 +527,6 @@ public class IconPackHelper {
                     mSupportedPackages.add(0, new IconPackInfo(defaultLabel, icon, mTask.getPackageName()));
                 }
             } else {
-
                 Resources res = context.getResources();
                 String defaultLabel = res.getString(R.string.default_icon_pack);
                 Drawable icon = res.getDrawable(R.drawable.ic_launcher_home);
