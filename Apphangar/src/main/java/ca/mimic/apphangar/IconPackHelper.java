@@ -361,7 +361,7 @@ public class IconPackHelper {
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int position) {
                 String selectedPackage = adapter.getItem(position);
-                if (isPicker) {
+                if (isPicker && !selectedPackage.equals(Settings.PLAY_STORE_PACKAGENAME)) {
                     if (mTask != null && selectedPackage.equals(mTask.getPackageName())) {
                         ComponentName componentName = ComponentName.unflattenFromString(mTask.getPackageName() + "/" + mTask.getClassName());
                         Settings.resetIconComponent(componentName);
