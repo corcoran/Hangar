@@ -50,6 +50,9 @@
   <string name="priority_bottom">Unten (versteckt Statusbar-Symbol)</string>
   <string name="title_smart_notification">Benachrichtigungen intelligent sortieren</string>
   <string name="summary_smart_notification">Symbole nur neu anordnen, wenn ein neues hinzugefügt wird</string>
+  <string name="title_floating_windows">Apps in verschiebbaren Fenstern starten</string>
+  <string name="summary_floating_windows">Nur verfügbar wenn ROM es unterstützt</string>
+  <string name="alert_floating_windows">In XHaloFloatingWindow, AOSPA und Derivaten verfügbar.</string>
   <string name="title_appsno_preference">Anzahl der Apps</string>
   <string name="summary_appsno_preference">Zeige %s Apps</string>
   <string name="summary_appsno_second_row_preference">Zeige %s Apps pro Zeile</string>

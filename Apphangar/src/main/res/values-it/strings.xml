@@ -154,6 +154,7 @@
   <string name="title_ignore_pinned_preference">Escludi app bloccate</string>
   <string name="stats_widget_name">Hangar Widget statistiche</string>
   <string name="title_background_color_preference">Colore di sfondo</string>
+  <string name="title_rounded_corners_preference">Angoli arrotondati</string>
   <string name="button_name">Posiziona Widget</string>
   <string name="reconfigure_button_name">Salva preferenze widget</string>
   <string name="reconfigure_reminder">Puoi modificare le impostazioni del widget in qualsiasi momento dal menu Impostazioni di Hangar</string>
