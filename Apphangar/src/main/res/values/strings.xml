@@ -349,7 +349,7 @@
     <string name="changelog_accept_button">Continue</string>
     <string name="changelog_changes_title">Changes</string>
     <string name="changelog_coming_soon_title">Coming soon!</string>
-    <string name="changelog_coming_soon_text" translatable="false">App use by time period</string>
+    <string name="changelog_coming_soon_text" translatable="false">Icon masking, remove statusbar icon (Xposed module)</string>
 
     <string-array name="versionNumbers" translatable="false">
         <item>2.5 (Sept ???)</item>
@@ -368,10 +368,10 @@
 
     <string-array name="versionSummaries" translatable="false">
         <item>
-"  &#8226; [New!] Launch in floating windows
+"  &#8226; [New!] Launch apps in floating windows
      (supported ROMs only)
   &#8226; [Fix!] Crash on start
-  &#8226; [Fix!] Notification, Apps widget freeze
+  &#8226; [Fix!] Notification, Apps widget freezes
   &#8226; [Fix!] Icon pack sorting and bug
   &#8226; Added Chinese/Hebrew translations"</item>
         <item>
