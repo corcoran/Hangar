@@ -50,6 +50,9 @@
   <string name="priority_bottom">Dół (ukrywa ikonę paska statusu)</string>
   <string name="title_smart_notification">Inteligentne sortowanie powiadomień</string>
   <string name="summary_smart_notification">Zmieniaj kolejność tylko po dodaniu nowej ikony</string>
+  <string name="title_floating_windows">Uruchamianie aplikacji w pływających oknach</string>
+  <string name="summary_floating_windows">Dostępne tylko w obsługiwanych ROM-ach</string>
+  <string name="alert_floating_windows">Obsługiwane w XHaloFloatingWindow, AOSPA i pochodnych.</string>
   <string name="title_appsno_preference">Liczba aplikacji</string>
   <string name="summary_appsno_preference">Pokazywanie %s aplikacji</string>
   <string name="summary_appsno_second_row_preference">Pokazywanie %s aplikacji w wierszu</string>

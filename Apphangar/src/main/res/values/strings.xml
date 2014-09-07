@@ -321,6 +321,12 @@
     <string name="contributors_name9" translatable="false">Jan Madsen</string>
     <string name="contributors_role9">Danish translations</string>
 
+    <string name="contributors_name10" translatable="false">Anthony King</string>
+    <string name="contributors_role10">English (UK) translations</string>
+
+    <string name="contributors_name11" translatable="false">SiiiE</string>
+    <string name="contributors_role11">Hebrew translations</string>
+
     <string name="contributors_special_thanks" translatable="false">&lt;3 Bridget W, Jeff DeChambeau, Joel Burke, Jonathan Kagan, Derek Rauch, Griffin Millender &amp; Anthony King</string>
 
     <string name="contribute_accept_button">Continue</string>
