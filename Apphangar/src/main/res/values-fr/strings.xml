@@ -139,6 +139,8 @@ Cependant, nous vous remercions dans tous les cas d'utiliser Hangar et de nous s
   <string name="contributors_role7">Traductions russes</string>
   <string name="contributors_role8">Traductions en allemand</string>
   <string name="contributors_role9">Traductions danoises</string>
+  <string name="contributors_role10">Traductions de l\'anglais (Royaume-Uni)</string>
+  <string name="contributors_role11">Traductions en Hébreu</string>
   <string name="contribute_accept_button">Continuer</string>
   <string name="license_title">Licence et code source</string>
   <string name="license_head">Hangar est distribué sous la licence GPLv3 de la Free Software Foundation. Copyright  © 2014 Jeff Corcoran.\n\nSous la licence GPL, Hangar est distribué gratuitement sous la licence GPLv3 dans la mesure où l\'utilisation de Hangar est compatible avec les termes de la licence GPL.\n\nLes uttilisateurs peuvent télécharger le logiciel gratuitement, l\'intégrer et le distribuer. Cependant, les utilisateurs doivent respecter les termes de la GPL, qui stipulent que si un dérivatif de Hangar est distribué, l\'entièreté du code source du dérivatif doit etre ouvert et redistribuable selon les termes de la GPL.\n\nVoir la GPL et la FAQ de la Free Software Foundation pour plus de détails.</string>
