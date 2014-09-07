@@ -94,10 +94,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
     final static String VERSION_CHECK = "version_check";
 
-    final static int GENERAL_TAB = 0;
-    final static int BEHAVIOR_TAB = 1;
-    final static int APPEARANCE_TAB = 2;
-    final static int APPS_TAB = 3;
+    final static int GENERAL_TAB = 1;
+    final static int BEHAVIOR_TAB = 2;
+    final static int APPEARANCE_TAB = 3;
+    final static int APPS_TAB = 0;
 
     final static String DIVIDER_PREFERENCE = "divider_preference";
     final static String ROW_DIVIDER_PREFERENCE = "row_divider_preference";
