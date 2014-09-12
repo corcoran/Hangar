@@ -50,6 +50,9 @@
   <string name="priority_bottom">Parte inferior (ocultar icono en barra de estado)</string>
   <string name="title_smart_notification">Orden de notificaciones inteligentes</string>
   <string name="summary_smart_notification">Reordenar sólo cuando se añade un nuevo icono</string>
+  <string name="title_floating_windows">Lanzar aplicaciones en ventanas flotantes</string>
+  <string name="summary_floating_windows">Sólo disponible en ROMs soportadas</string>
+  <string name="alert_floating_windows">Compatible con XHaloFloatingWindow, AOSPA y derivados.</string>
   <string name="title_appsno_preference">Número de aplicaciones</string>
   <string name="summary_appsno_preference">Mostrando %s apps</string>
   <string name="summary_appsno_second_row_preference">Mostrando %s apps por fila</string>
@@ -135,6 +138,8 @@
   <string name="contributors_role7">Traducción al ruso</string>
   <string name="contributors_role8">Traducción al alemán</string>
   <string name="contributors_role9">Traducción al danés</string>
+  <string name="contributors_role10">Traducción en inglés (Reino Unido)</string>
+  <string name="contributors_role11">Traducción en  hebreo</string>
   <string name="contribute_accept_button">Continuar</string>
   <string name="license_title">Licencia y código fuente</string>
   <string name="license_head">Hangar está licenciado bajo la licencia GPLv3 de la Free Software Foundation (Fundación para el sofware libre) y es Copyright © 2014 Jeff Corcoran.\n\nBajo la licencia GPL, Hangar está disponible de forma gratuita cuando el uso del Hangar se adhiere a los términos de la licencia GPL.\n\nLos usuarios pueden descargar el software de forma gratuita, modificarlo, integrarlo y distribuirlo. Sin embargo, los usuarios GPL deben acatar las reglas de la GPL, que estipulan que si un trabajo basado en Hangar se redistribuye, el código fuente completo de este trabajo también debe estar abierto y disponible para su redistribución bajo los términos de la GPL.\n\nVer la GPL y las preguntas frecuentes de la Free Software Foundation para obtener más detalles.</string>
