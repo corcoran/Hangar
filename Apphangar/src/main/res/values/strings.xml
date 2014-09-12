@@ -198,6 +198,8 @@
     <string name="title_icon_color_category">Icon Color</string>
 
     <!-- Apps -->
+    <string name="apps_loading">Loading apps..</string>
+
     <string name="title_top_spinner">Top</string>
     <string name="title_sort_spinner">Sort by</string>
     <string name="refresh_button">Refresh</string>

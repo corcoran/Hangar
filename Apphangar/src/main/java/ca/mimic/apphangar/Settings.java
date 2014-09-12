@@ -1218,7 +1218,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
             public void run() {
                 if (!mAppsLoaded) {
                     RelativeLayout bg = (RelativeLayout) lv.getParent();
-                    bg.findViewById(R.id.loading_bg).setVisibility(View.GONE);
+                    bg.findViewById(R.id.loading_text).setVisibility(View.GONE);
 
                     mAppsLoaded = true;
                 }
