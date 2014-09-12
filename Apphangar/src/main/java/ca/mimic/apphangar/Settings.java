@@ -41,7 +41,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteDatabaseLockedException;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -73,6 +72,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -220,6 +220,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
     final static int START_SERVICE = 0;
     final static int STOP_SERVICE = 1;
+
+    static boolean mAppsLoaded = false;
 
     static int displayWidth;
 
@@ -436,6 +438,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
         myService.execute(SERVICE_CREATE_NOTIFICATIONS);
     }
+
     protected static void resetIconComponent(ComponentName componentName) {
         Tools.HangarLog("resetIconCache!: " + componentName.getPackageName());
 
@@ -694,6 +697,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         getMenuInflater().inflate(R.menu.settings, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -752,16 +756,19 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
 
         public void iconPackUpdated() {
-            List<AppsRowItem> appTasks = createAppTasks();
-            rebuildIconCache(appTasks);
-
-            final List<AppsRowItem> finalTasks = appTasks;
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable(){
+            Runnable runnable = new Runnable() {
                 public void run(){
-                    mAppRowAdapter = new AppsRowAdapter(mContext, finalTasks);
-                    mAppRowAdapter.notifyDataSetChanged();
-                    lv.setAdapter(mAppRowAdapter);
+                    final List<AppsRowItem> appTasks = createAppTasks();
+                    rebuildIconCache(appTasks);
+                    mAppRowAdapter = new AppsRowAdapter(mContext, appTasks);
+                }
+            };
+            new Thread(runnable).start();
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    updateListView(true);
                 }
             }, 1000); // Add delay to reduce risk of conflicting image lookups during cache
                       // reconstruction
@@ -1206,9 +1213,26 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
     }
 
-    public static class AppsFragment extends Fragment implements OnItemClickListener {
+    public synchronized static void updateListView(final boolean setAdapter) {
+        Runnable runnable = new Runnable() {
+            public void run() {
+                if (!mAppsLoaded) {
+                    RelativeLayout bg = (RelativeLayout) lv.getParent();
+                    bg.findViewById(R.id.loading_bg).setVisibility(View.GONE);
 
-        static int failCount;
+                    mAppsLoaded = true;
+                }
+                if (setAdapter) {
+                    lv.setAdapter(mAppRowAdapter);
+                }
+                mAppRowAdapter.notifyDataSetChanged();
+            }
+        };
+        mInstance.runOnUiThread(runnable);
+    }
+
+
+    public static class AppsFragment extends Fragment implements OnItemClickListener {
 
         public static Fragment newInstance() {
             return new AppsFragment();
@@ -1219,13 +1243,25 @@ public class Settings extends Activity implements ActionBar.TabListener {
         public void onResume() {
             super.onResume();
 
+            if (mAppRowAdapter == null)
+                return;
+
+            mAppsLoaded = false;
+
             mAppRowAdapter.reDraw(completeRedraw);
             updateRowItem(null);
         }
 
         public void buildList() {
-            mAppRowAdapter.mRowItems = createAppTasks();
-            mAppRowAdapter.notifyDataSetChanged();
+            Runnable runnable = new Runnable() {
+                public void run() {
+                    if (mAppRowAdapter == null)
+                        return;
+                    mAppRowAdapter.mRowItems = createAppTasks();
+                    updateListView(false);
+                }
+            };
+            new Thread(runnable).start();
         }
 
         Spinner.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener() {
@@ -1255,6 +1291,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             setHasOptionsMenu(true);
+
+            mAppsLoaded = false;
             View appsView = inflater.inflate(R.layout.apps_settings, container, false);
             lv = (ListView) appsView.findViewById(R.id.list);
 
@@ -1306,36 +1344,24 @@ public class Settings extends Activity implements ActionBar.TabListener {
             return appsView;
         }
 
-        protected List<AppsRowItem> createAppTasksLoop() {
-            List<AppsRowItem> tmpApps = null;
-
-            try {
-                tmpApps = createAppTasks();
-            } catch (SQLiteDatabaseLockedException e) {
-                if (failCount >= 2) {
-                    e.printStackTrace();
-                    return null;
-                } else {
-                    failCount++;
-                    createAppTasksLoop();
-                }
-            }
-            return tmpApps;
-        }
-
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             Tools.HangarLog("onActivityCreated appsFragment");
 
-            List<AppsRowItem> appTasks = createAppTasksLoop();
-            if (appTasks == null)
-                return;
-
-            mAppRowAdapter = new AppsRowAdapter(mContext, appTasks);
-            lv.setAdapter(mAppRowAdapter);
             lv.setOnItemClickListener(this);
-            mAppRowAdapter.notifyDataSetChanged();
+
+            Runnable runnable = new Runnable() {
+                public void run() {
+                    List<AppsRowItem> appTasks = createAppTasks();
+                    if (appTasks == null)
+                        return;
+
+                    mAppRowAdapter = new AppsRowAdapter(mContext, appTasks);
+                    updateListView(true);
+                }
+            };
+            new Thread(runnable).start();
         }
 
         @Override
@@ -1433,7 +1459,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
 
         mAppRowAdapter.mRowItems = newAppList;
-        mAppRowAdapter.notifyDataSetChanged();
+        updateListView(false);
     }
 
     public static AppsRowItem createAppRowItem(TasksModel task, int highestSeconds){
