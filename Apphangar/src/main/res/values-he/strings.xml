@@ -63,6 +63,7 @@
   <string name="title_statusbar_icon_preference">אייקון שורת מצב</string>
   <string name="dialog_statusbar_icon_preference">בחירת סגנון האייקון</string>
   <string name="alert_title_statusbar_icon_preference">לידיעתכם..</string>
+  <string name="alert_message_statusbar_icon_preference">עקב מגבלות Android, ניתן לנטרל את האייקון בשורת המצב רק על-ידי הורדת עדיפות ההתרעה.\n\nהסרגל Hangar שלכם יהיה בתחתית מגירת ההתרעות.</string>
   <string name="statusbar_icon_warm_white">אייקון לבן חמים</string>
   <string name="statusbar_icon_cold_white">סמל לבן קר</string>
   <string name="statusbar_icon_blue_white">אייקון כחול לבן</string>
@@ -80,6 +81,7 @@
   <string name="summary_colorize_preference">שינוי צבע האייקונים של ההתרעות</string>
   <string name="title_icon_color_preference">צבע</string>
   <string name="title_icon_color_category">צבע האייקון</string>
+  <string name="apps_loading">מעלה אפליקציות..</string>
   <string name="title_top_spinner">עליונה</string>
   <string name="title_sort_spinner">סידור לפי</string>
   <string name="refresh_button">רענון</string>
@@ -104,6 +106,7 @@
   <string name="configure_license">רישיון</string>
   <string name="configure_contribute">תרומה</string>
   <string name="donate_title">רוצים לקנות לי בירה (תרומה)?</string>
+  <string name="donate_head">תרומות מתקבלות בברכה תמיד ומועילות בפיתוח עתידי של אפליקציה זו ואחרות.\n\nבכל אופן, אם הנכם מוצאים את Hangar שימושי ורוצים להראות את תודתכם על העבודה שהושקעה בו, בקרו בחלק את של התרומה כדי לראות את הדרכים הרבות בהן אתם יכולים לעזור.\n\nאם אתם במצב רוח נדיב, אתם יכולים לתרום בעזרת  <b>Google Play</b> או <b>PayPal</b> למטה.</string>
   <string name="donate_google">תרומה באמצעות גוגל</string>
   <string name="donate_paypal">תרומה באמצעות PayPal</string>
   <string name="donate_contribute">שפר את Hangar!</string>
@@ -136,6 +139,8 @@
   <string name="contributors_role7">תרגומים לרוסית</string>
   <string name="contributors_role8">תרגומים לגרמנית</string>
   <string name="contributors_role9">תרגומים לדנית</string>
+  <string name="contributors_role10">תרגומים לאנגלית (UK)</string>
+  <string name="contributors_role11">תרגומים לעברית</string>
   <string name="contribute_accept_button">המשך</string>
   <string name="license_title">רישיון ומקור</string>
   <string name="license_view_source">לבקר את Hangar ב-Github</string>
