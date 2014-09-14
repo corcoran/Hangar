@@ -143,6 +143,7 @@
   <string name="contributors_role11">תרגומים לעברית</string>
   <string name="contribute_accept_button">המשך</string>
   <string name="license_title">רישיון ומקור</string>
+  <string name="license_head">Hangar מאושר ע\"י רישיון GNU GPLv3 מאת הקרן לתוכנה חופשית ומוגן תחת זכויות יוצרים ל-  Copyright © 2014 Jeff Corcoran.\n\nתחת רישיון GPL, אפליקציית Hangar זמינה בחינם כל עוד השימוש בה דבק בתנאי ה-GPL.\n\n משתמשים מורשים להוריד את התוכנה בחינם, ולשנותה, למזגה ולהפיצה. אולם, משתמשי GPL חייבים לציית לחוקי ה-GPL, אשר מציינים שאם עבודה המבוססת על Hangar מופצת מחדש, הקוד המקור כולו לעבודה זו חייב להיות פתוח וגם זמין להפצה מחדש תחת תנאי ה-GPL.\n\nראו את ה-GPL והשאלות והתשובות של הקרן לתוכנה חופשית לפרטים נוספים.</string>
   <string name="license_view_source">לבקר את Hangar ב-Github</string>
   <string name="license_accept_button">המשך</string>
   <string name="changelog_title">שינויי Hangar</string>
@@ -185,7 +186,9 @@
   <string name="instructions_2_1">"סטטיסטיקה"</string>
   <string name="instructions_2_2">"Hangar גם עוקב אחר השימוש שלכם בתוך האפליקציה!"</string>
   <string name="instructions_title_2">ווידג\'ט סטטיסטיקה</string>
+  <string name="instructions_2_3">"ניתן לבדוק את הסטטיסטיקות תחת <b>לשונית האפליקציות</b> של Hangar או ע"י מיקום <b>ווידג\'ט הסטטיסטיקות</b> במסך הבית."</string>
   <string name="instructions_3_1">"התאמות אישיות"</string>
+  <string name="instructions_3_2">"בנוסף לסרגל קיצורי הדרך של האפליקציות הברירת מחדל <b>במגירת ההתרעות</b>, ניתן להוסיף <b>ווידג\'ט</b> מותאם אישית להפעלת אפליקציות. ניתן להגדיר צבע, גודל, כמות, צבע רקע ועוד."</string>
   <string name="instructions_title_4">תפריט אפשרויות היישום</string>
   <string name="instructions_4_1">"צא לדרך"</string>
   <string name="instructions_4_2">"Hangar הנו כלי קל משקל המאפשר הפעלה נוחה של יישומים מכל מקום ב-Android. \n\nTo כדי ליהנות ממלוא יתרונותיו של כלי זה, צריך להיות לו לפחות יום של ניטור סטטיסטיקות אפליקציה כדי שיהיה על מה לבסס את המלצותיו.\n\nתהנו ותודה שניסיתם את Hangar!"</string>
