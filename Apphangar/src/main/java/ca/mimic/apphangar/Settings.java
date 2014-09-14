@@ -1198,11 +1198,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
         for (int i=start, j=lv.getLastVisiblePosition(); i<=j; i++) {
             if (rowItem == null) {
                 View view = lv.getChildAt(i - start);
-                lv.getAdapter().getView(i, view, lv);
+                mAppRowAdapter.getView(i, view, lv);
             } else {
                 if (rowItem == lv.getItemAtPosition(i)) {
                     View view = lv.getChildAt(i - start);
-                    lv.getAdapter().getView(i, view, lv);
+                    mAppRowAdapter.getView(i, view, lv);
                     break;
                 }
             }
