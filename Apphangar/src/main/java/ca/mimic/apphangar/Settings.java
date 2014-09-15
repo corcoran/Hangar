@@ -234,7 +234,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         updateRowItems();
 
         mAppRowAdapter.reDraw(false);
-        updateRowItem(null);
+        updateRowItem();
     }
 
     protected void setUpSpinner(Spinner spinner) {
@@ -451,7 +451,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
             IconCacheHelper.preloadComponent(mContext, componentName, bitmap, Tools.dpToPx(mContext, CACHED_ICON_SIZE));
             myService.execute(SERVICE_CREATE_NOTIFICATIONS);
             mAppRowAdapter.reDraw(true);
-            updateRowItem(null);
+            updateRowItem();
         } catch (Exception e) {
             Tools.HangarLog("reset Icon Cache exception: " + e);
         }
@@ -1193,24 +1193,14 @@ public class Settings extends Activity implements ActionBar.TabListener {
         }
     }
 
-    public static void updateRowItem(AppsRowItem rowItem) {
+    public static void updateRowItem() {
         int start = lv.getFirstVisiblePosition();
         for (int i=start, j=lv.getLastVisiblePosition(); i<=j; i++) {
-            if (rowItem == null) {
                 View view = lv.getChildAt(i - start);
                 mAppRowAdapter.getView(i, view, lv);
-            } else {
-                if (rowItem == lv.getItemAtPosition(i)) {
-                    View view = lv.getChildAt(i - start);
-                    mAppRowAdapter.getView(i, view, lv);
-                    break;
-                }
-            }
         }
-        if (rowItem == null) {
-            completeRedraw = false;
-            mAppRowAdapter.reDraw(false);
-        }
+        completeRedraw = false;
+        mAppRowAdapter.reDraw(false);
     }
 
     public synchronized static void updateListView(final boolean setAdapter) {
@@ -1225,6 +1215,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 if (setAdapter) {
                     lv.setAdapter(mAppRowAdapter);
                 }
+                lv.invalidateViews();
                 mAppRowAdapter.notifyDataSetChanged();
             }
         };
@@ -1249,7 +1240,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
             mAppsLoaded = false;
 
             mAppRowAdapter.reDraw(completeRedraw);
-            updateRowItem(null);
+            lv.invalidateViews();
         }
 
         public void buildList() {
@@ -1258,7 +1249,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     if (mAppRowAdapter == null)
                         return;
                     mAppRowAdapter.mRowItems = createAppTasks();
-                    updateListView(false);
+                    updateListView(true);
                 }
             };
             new Thread(runnable).start();
@@ -1402,7 +1393,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                             db.close();
                             break;
                     }
-                    updateRowItem(rowItem);
+                    lv.invalidateViews();
                     myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                     return true;
                 }
