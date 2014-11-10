@@ -111,16 +111,13 @@ TL;DR你Hangar栏会在通知抽屉的底部。\"</string>
   <string name="donate_title">想要给我买一杯啤酒吗？</string>
   <string name="donate_head">\"捐赠始终是被感谢和对应用程序的未来发展是有帮助的。
 但是，如果您发现Hangar 很有用，想要表达感谢，访问“贡献”部分可以看到很多可以提供帮助的方法。
-如果你很慷慨，你可以使用下面的\"<b>Google Play</b> 或 <b>PayPal</b>进行捐助\"</string>
+如果你很慷慨，你可以使用下面的\"<b>Google Play</b>进行捐助\"</string>
   <string name="donate_google">使用Google账户捐赠</string>
-  <string name="donate_paypal">使用PayPal捐赠</string>
   <string name="donate_contribute">使 Hangar更好 ！</string>
   <string name="donate_accept_button">"继续坚持下去"</string>
-  <string name="donate_try_paypal">"Hm......看起来Google Play不喜欢那样。也许应该尝试PayPal?"</string>
   <string name="donate_thanks_title">谢谢！</string>
   <string name="donate_thanks_continue">回到Hangar</string>
   <string name="donate_thanks">"很感谢你对Hangar的发展做出的贡献 ！安卓社区因为像你这样的人而变得更好，这会激励开发者。"</string>
-  <string name="donate_thanks_paypal">"Hangar不知道是否实际捐款是使用贝宝，因为我们只是送你到您最喜爱的浏览器通过PayPal链接。然而，我们要感谢您无论您的继续的使用和支持 ！:)"</string>
   <string name="contribute_title">对Hangar作出贡献</string>
   <string name="contribute_google_title">打分+评价</string>
   <string name="contribute_google_text">"更高的评价和积极的回复可以提升让Hangar在Play Store中的评价. 这也是最容易和最快的做贡献的方式!"</string>

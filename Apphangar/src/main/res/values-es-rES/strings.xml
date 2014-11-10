@@ -105,16 +105,13 @@
   <string name="configure_license">Licencia</string>
   <string name="configure_contribute">Contribuir</string>
   <string name="donate_title">¿Me quiere invitar una cerveza?</string>
-  <string name="donate_head">Donaciones siempre son apreciadas y útiles para el futuro desarrollo de esta y otras apps.\n\nSi usted encuentra que Hangar sea útil y quiere mostrar agradecimiento por el trabajo que se ha hecho en la creación de la app, no dude en dejar una opinion que refleja su experiencia con la aplicación. Si se siente generoso, puede donar usando <b>Google Play</b> o <b>PayPal</b>.</string>
+  <string name="donate_head">Donaciones siempre son apreciadas y útiles para el futuro desarrollo de esta y otras apps.\n\nSi usted encuentra que Hangar sea útil y quiere mostrar agradecimiento por el trabajo que se ha hecho en la creación de la app, no dude en dejar una opinion que refleja su experiencia con la aplicación. Si se siente generoso, puede donar usando <b>Google Play</b>.</string>
   <string name="donate_google">Donar con Google</string>
-  <string name="donate_paypal">Donar con PayPal</string>
   <string name="donate_contribute">¡Mejorar Hangar!</string>
   <string name="donate_accept_button">"Volver a la aplicación"</string>
-  <string name="donate_try_paypal">"Mmmm... Pasó algo raro con Google Play.  ¿Tal vez pruebe con PayPal?"</string>
   <string name="donate_thanks_title">¡Gracias!</string>
   <string name="donate_thanks_continue">Volver a Hangar</string>
   <string name="donate_thanks">"¡Su contribución al desarrollo de Hangar es muy apreciado! La comunidad Android se hace mejor por gente como usted que apoya y motiva a los desarrolladores."</string>
-  <string name="donate_thanks_paypal">"Hangar no sabe si realmente se hizo una donación utilizando PayPal, ya que le enviamos a un enlace PayPal a través de tu navegador favorito.  Sin embargo vamos a agradecer su uso continuo y apoyo! :)"</string>
   <string name="contribute_title">Contribuir a Hangar</string>
   <string name="contribute_google_title">Calificar &amp; Comentar</string>
   <string name="contribute_google_text">"Altas calificaciones y comentarios positivos ayudan a subir el rango de Hangar en el Play Store. ¡Es la forma más rápida y sencilla de contribuir al proyecto!"</string>

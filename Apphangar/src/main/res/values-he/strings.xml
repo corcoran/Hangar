@@ -106,16 +106,13 @@
   <string name="configure_license">רישיון</string>
   <string name="configure_contribute">תרומה</string>
   <string name="donate_title">רוצים לקנות לי בירה (תרומה)?</string>
-  <string name="donate_head">תרומות מתקבלות בברכה תמיד ומועילות בפיתוח עתידי של אפליקציה זו ואחרות.\n\nבכל אופן, אם הנכם מוצאים את Hangar שימושי ורוצים להראות את תודתכם על העבודה שהושקעה בו, בקרו בחלק את של התרומה כדי לראות את הדרכים הרבות בהן אתם יכולים לעזור.\n\nאם אתם במצב רוח נדיב, אתם יכולים לתרום בעזרת  <b>Google Play</b> או <b>PayPal</b> למטה.</string>
+  <string name="donate_head">תרומות מתקבלות בברכה תמיד ומועילות בפיתוח עתידי של אפליקציה זו ואחרות.\n\nבכל אופן, אם הנכם מוצאים את Hangar שימושי ורוצים להראות את תודתכם על העבודה שהושקעה בו, בקרו בחלק את של התרומה כדי לראות את הדרכים הרבות בהן אתם יכולים לעזור.\n\nאם אתם במצב רוח נדיב, אתם יכולים לתרום בעזרת  <b>Google Play</b> למטה.</string>
   <string name="donate_google">תרומה באמצעות גוגל</string>
-  <string name="donate_paypal">תרומה באמצעות PayPal</string>
   <string name="donate_contribute">שפר את Hangar!</string>
   <string name="donate_accept_button">"אל תפסיק"</string>
-  <string name="donate_try_paypal">"המ...  נראה ש-Google Play לא אהב את זה. נסו את PayPal במקום?"</string>
   <string name="donate_thanks_title">תודה רבה!</string>
   <string name="donate_thanks_continue">חזרה ל-Hangar</string>
   <string name="donate_thanks">"תרומתכם לפיתוח של Hangar מוערכת מאוד! קהילת Android הופכת לטובה יותר ע\"י אנשים כמוכם אשר תומכים ומתמרצים מפתחים."</string>
-  <string name="donate_thanks_paypal">"Hangar איננה יודעת אם אכן בוצעה התרומה דרך PayPal, שכן רק כרגע שלחנו אותך לקישור PayPal בדפדפן המועדף עליכם. ובכל זאת אנו מודים לכם ללא קשר לשימוש והתמיכה המתמשכים שלכם! :)"</string>
   <string name="contribute_title">תרומה ל-Hangar</string>
   <string name="contribute_google_title">דירוג + ביקורת</string>
   <string name="contribute_google_text">"דירוג גבוה ותגובות חיוביות עוזרות להפיץ את הבשורה ע\"י קידום הדירוג של Hangar ב-Play Store. זוהי גם הדרך המהירה והפשוטה ביותר לתרום!"</string>

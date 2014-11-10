@@ -20,6 +20,9 @@
 
 package ca.mimic.apphangar;
 
+import android.annotation.TargetApi;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -46,6 +49,9 @@ import java.util.List;
 
 public class Tools {
     final static String TAG = "Apphangar";
+    final static int USAGE_STATS_QUERY_TIMEFRAME = 7200000;
+    final static String USAGE_STATS_SERVICE_NAME = "usagestats";
+
     static int mBackgroundResource;
 
     protected static void HangarLog(String message) {
@@ -179,6 +185,20 @@ public class Tools {
         }
     }
 
+    protected static class LollipopTaskInfo {
+        protected String packageName = "";
+        protected String lastRecentPackageName = "";
+        protected String className = "";
+        protected String lastPackageName = "";
+        protected long lastUsedStamp;
+        protected long timeInFGDelta;
+        protected long timeInFG;
+
+        LollipopTaskInfo (String string) {
+            packageName = string;
+        }
+    }
+
     public static Bitmap drawableToBitmap (Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable)drawable).getBitmap();
@@ -190,6 +210,68 @@ public class Tools {
         drawable.draw(canvas);
 
         return bitmap;
+    }
+
+    public static boolean isLollipop() {
+        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    @TargetApi(21)
+    public static List<UsageStats> getUsageStats(Context context) {
+        final UsageStatsManager usageStatsManager = (UsageStatsManager)context.getSystemService(USAGE_STATS_SERVICE_NAME); // Context.USAGE_STATS_SERVICE);
+        long time = System.currentTimeMillis();
+
+        List<UsageStats> stats = usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - USAGE_STATS_QUERY_TIMEFRAME, time);
+
+        if (stats.size() > 1) {
+            Collections.sort(stats, new Tools.UsageStatsComparator());
+        }
+
+        return stats;
+
+    }
+
+    @TargetApi(21)
+    public static String firstPackage(List<UsageStats> stats) {
+        return stats.get(0).getPackageName();
+    }
+
+    @TargetApi(21)
+    public static LollipopTaskInfo parseUsageStats(List<UsageStats> stats, LollipopTaskInfo lollipopTaskInfo) {
+        UsageStats aRunner = stats.get(0);
+        UsageStats bRunner = null;
+
+        if (lollipopTaskInfo == null) {
+            // setup new lollipopTaskInfo object!
+
+            lollipopTaskInfo = new Tools.LollipopTaskInfo(aRunner.getPackageName());
+        } else if (lollipopTaskInfo.packageName.equals(aRunner.getPackageName())) {
+//            Tools.HangarLog("Last package same as current top, skipping! [" + lollipopTaskInfo.packageName + "]");
+            return lollipopTaskInfo;
+        }
+
+        // TODO change this to keep track of all usagestats and compare timeinFg deltas
+        // Will need to refactor buildTasks to manage bulk time change to db as well as
+        // new runningTask.
+
+        for (UsageStats s : stats) {
+            if (s.getPackageName().equals(lollipopTaskInfo.packageName)) {
+                bRunner = s;
+            }
+        }
+
+        lollipopTaskInfo.lastPackageName = lollipopTaskInfo.packageName;
+        lollipopTaskInfo.packageName = aRunner.getPackageName();
+        if (bRunner == null) {
+            Tools.HangarLog("Couldn't find previous task [" + lollipopTaskInfo.packageName + "]");
+        } else {
+            lollipopTaskInfo.timeInFGDelta = bRunner.getTotalTimeInForeground() - lollipopTaskInfo.timeInFG;
+        }
+        lollipopTaskInfo.timeInFG = aRunner.getTotalTimeInForeground();
+
+        Tools.HangarLog("New [" + lollipopTaskInfo.packageName + "] old [" + lollipopTaskInfo.lastPackageName + "] old FG delta: " + lollipopTaskInfo.timeInFGDelta);
+
+        return lollipopTaskInfo;
     }
 
     protected static class AppRowComparator implements Comparator<AppsRowItem> {
@@ -256,8 +338,20 @@ public class Tools {
             return firstCompare;
         }
     }
-    protected static class TaskComparator implements Comparator<TaskInfoOrder>
-    {
+
+    @TargetApi(21)
+    protected static class UsageStatsComparator implements Comparator<UsageStats> {
+        Long o1;
+        Long o2;
+        @Override
+        public int compare(UsageStats t1, UsageStats t2) {
+            o1 = t1.getLastTimeUsed();
+            o2 = t2.getLastTimeUsed();
+            return o2.compareTo(o1);
+        }
+    }
+
+    protected static class TaskComparator implements Comparator<TaskInfoOrder> {
         private String mType;
         private int weightPriority;
         private Float numToCompare;
@@ -272,8 +366,8 @@ public class Tools {
             HangarLog("num: " + num + " calNum: " + calNum + " baseRecency: " + baseRecency + " numToCompare: " + numToCompare);
 
         }
-        public int compare(TaskInfoOrder c1, TaskInfoOrder c2)
-        {
+
+        public int compare(TaskInfoOrder c1, TaskInfoOrder c2) {
             Float a1;
             Float a2;
             Float c1p = c1.placeOrder * baseRecency;
@@ -452,12 +546,12 @@ public class Tools {
         if (!ignorePinned)
             pinnedApps = new Tools().getPinned(context);
 
-        Tools.HangarLog("buildTaskList queueSize: " + queueSize + " weighted: " + weighted);
+        Tools.HangarLog("buildTaskList queueSize: " + queueSize + " weighted: " + weighted + " taskList: " + taskList + " pinnedApps: " + pinnedApps.size());
 
         if (queueSize == 0) {
             // queueSize 0 gets pinnedTasks.
             if (pinnedApps.size() == 0) {
-                return null;
+                return taskList;
             }
             tasks = db.getPinnedTasks(pinnedApps, pinnedSort);
         } else if (weighted) {

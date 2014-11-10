@@ -32,6 +32,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.usage.UsageStats;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -129,6 +130,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String MORE_APPS_ICON_PREFERENCE = "more_apps_icon_preference";
     final static String ROUNDED_CORNERS_PREFERENCE = "rounded_corners_preference";
     final static String FLOATING_WINDOWS_PREFERENCE = "floating_windows_preference";
+    final static String NOTIFICATION_BG_PREFERENCE = "notification_bg_preference";
 
     protected static Settings mInstance;
     protected static AppsRowItem mIconTask;
@@ -199,10 +201,13 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String STATUSBAR_ICON_NONE = "**none**";
     final static String STATUSBAR_ICON_DEFAULT = STATUSBAR_ICON_WHITE;
 
+    final static String NOTIFICATION_BG_DEFAULT_VALUE = "**default**";
+
     final static String PINNED_APPS = "pinned_apps";
     final static int PINNED_PLACEMENT_LEFT = 0;
 
     final static int ICON_SIZE_DEFAULT = 1;
+    final static int NOTIFICATION_BG_DEFAULT = 0;
     final static int CACHED_ICON_SIZE = 72;
     final static int CACHED_NOTIFICATION_ICON_LIMIT = 20;
     final static String ACTION_ADW_PICK_ICON = "org.adw.launcher.icons.ACTION_PICK_ICON";
@@ -213,7 +218,6 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int SERVICE_DESTROY_NOTIFICATIONS = 3;
 
     final static int THANK_YOU_GOOGLE = 0;
-    final static int THANK_YOU_PAYPAL = 1;
 
     final static int APPLIST_TOP_DEFAULT = 2;
     final static int APPLIST_SORT_DEFAULT = 0;
@@ -293,6 +297,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
             launchChangelog();
         }
 
+        if (Tools.isLollipop() && needsUsPermission()) {
+            launchUsPermission(mContext);
+        }
+
         display = getWindowManager().getDefaultDisplay();
         updateDisplayWidth();
 
@@ -348,10 +356,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
             ((Spinner) getActionBar().getCustomView().findViewById(R.id.config_spinner)).setSelection(0);
         } catch (Exception e) {
         }
-        if (mLaunchedPaypal) {
-            mLaunchedPaypal = false;
-            launchThanks(THANK_YOU_PAYPAL);
-        }
+//        if (mLaunchedPaypal) {
+//            mLaunchedPaypal = false;
+//            launchThanks(THANK_YOU_PAYPAL);
+//        }
         myService.watchHelper(START_SERVICE);
     }
 
@@ -394,7 +402,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
             } else {
                 if (responseCode > 1) {
                     Tools.HangarLog("Not user's fault, tried to purchase but bailed.");
-                    Toast.makeText(mContext, getResources().getString(R.string.donate_try_paypal),
+                    Toast.makeText(mContext, getResources().getString(R.string.donate_sorry),
                             Toast.LENGTH_LONG).show();
                 }
                 launchDonate();
@@ -486,8 +494,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
     protected void launchThanks(int which) {
         String thankYouMsg = getResources().getString(R.string.donate_thanks);
-        if (which == THANK_YOU_PAYPAL)
-                thankYouMsg += "\n\n" + getResources().getString(R.string.donate_thanks_paypal);
+//        if (which == THANK_YOU_PAYPAL)
+//                thankYouMsg += "\n\n" + getResources().getString(R.string.donate_thanks_paypal);
 
         AlertDialog alert = new AlertDialog.Builder(Settings.this)
                 .setTitle(R.string.donate_thanks_title)
@@ -556,6 +564,26 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 .show();
     }
 
+    @TargetApi(21)
+    static protected void launchUsPermission(Context context) {
+        UsPermission usPermission = new UsPermission(context);
+        View mUsPermission = usPermission.getView();
+        mUsPermission.refreshDrawableState();
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.us_permission_title)
+                .setIcon(R.drawable.ic_logo)
+                .setView(mUsPermission)
+                .setPositiveButton(R.string.us_permission_settings_button,
+                        new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mContext.startActivity(new Intent(
+                                android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS));
+                    }
+                })
+                .show();
+    }
+
     protected void launchDonate() {
         final Donate donate = new Donate(this);
         donate.bindServiceConn();
@@ -592,6 +620,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
             isBound = false;
         }
     };
+
+    protected boolean needsUsPermission() {
+        List<UsageStats> listStats = Tools.getUsageStats(mContext);
+        return (listStats.size() == 0);
+    }
 
     protected boolean showChangelog(PrefsGet prefs) {
         SharedPreferences mPrefs = prefs.prefsGet();
@@ -675,7 +708,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                             public void run() {
                                 try {
                                     s.createNotification();
-                                } catch (Exception e) {
+                                } catch (RemoteException e) {
                                     Tools.HangarLog("buildReorderAndLaunch exception: " + e);
                                 }
                             }
@@ -798,7 +831,12 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     ih.cachedIconHelper(componentName);
                 }
                 Tools.updateWidget(mContext);
-                myService.execute(SERVICE_CREATE_NOTIFICATIONS);
+
+                // TODO: Should create new method specifically for this with preference
+                final SharedPreferences prefs2 = prefs.prefsGet();
+                boolean toggleBool = prefs2.getBoolean(TOGGLE_PREFERENCE, TOGGLE_DEFAULT);
+                if (toggleBool)
+                    myService.execute(SERVICE_CREATE_NOTIFICATIONS);
             }
         };
         new Thread(runnable).start();
@@ -853,6 +891,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         UpdatingListPreference pinned_sort_preference;
         UpdatingListPreference pinned_placement_preference;
         UpdatingListPreference more_apps_pages_preference;
+        UpdatingListPreference notification_bg_preference;
         Preference icon_pack_preference;
         Preference more_apps_icon_preference;
 
@@ -907,6 +946,10 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 icon_size_preference = (UpdatingListPreference)findPreference(ICON_SIZE_PREFERENCE);
                 icon_size_preference.setValue(prefs2.getString(ICON_SIZE_PREFERENCE, Integer.toString(ICON_SIZE_DEFAULT)));
                 icon_size_preference.setOnPreferenceChangeListener(changeListener);
+
+                notification_bg_preference = (UpdatingListPreference)findPreference(NOTIFICATION_BG_PREFERENCE);
+                notification_bg_preference.setValue(prefs2.getString(NOTIFICATION_BG_PREFERENCE, NOTIFICATION_BG_DEFAULT_VALUE));
+                notification_bg_preference.setOnPreferenceChangeListener(changeListener);
 
                 second_row_preference = (CheckBoxPreference)findPreference(SECOND_ROW_PREFERENCE);
                 Boolean secondRow = prefs2.getBoolean(SECOND_ROW_PREFERENCE, SECOND_ROW_DEFAULT);
@@ -1135,6 +1178,12 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                     }
                     return true;
+                } else if (preference.getKey().equals(NOTIFICATION_BG_PREFERENCE)) {
+                    editor.putString(NOTIFICATION_BG_PREFERENCE, (String) newValue);
+                    editor.commit();
+                    myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
+                    myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
+                    return true;
                 }
                 myService.execute(SERVICE_BUILD_REORDER_LAUNCH);
                 return true;
@@ -1143,6 +1192,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
         void toggleDependencies(boolean isToggled) {
             try {
+                PrefsFragment mGeneralFrag = (PrefsFragment) mGetFragments.getFragmentByPosition(GENERAL_TAB);
+                mGeneralFrag.more_apps_icon_preference.setEnabled(isToggled);
+                mGeneralFrag.more_apps_pages_preference.setEnabled(isToggled);
+                mGeneralFrag.more_apps_preference.setEnabled(isToggled);
+
                 PrefsFragment mBehaviorFrag = (PrefsFragment) mGetFragments.getFragmentByPosition(BEHAVIOR_TAB);
                 mBehaviorFrag.priority_preference.setEnabled(isToggled);
                 mBehaviorFrag.weighted_recents_preference.setEnabled(isToggled);
@@ -1156,6 +1210,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 mAppearanceFrag.row_divider_preference.setEnabled(isToggled);
                 mAppearanceFrag.colorize_preference.setEnabled(isToggled);
                 mAppearanceFrag.icon_size_preference.setEnabled(isToggled);
+                mAppearanceFrag.notification_bg_preference.setEnabled(Tools.isLollipop() && isToggled);
             } catch (Exception e) {
             }
         }

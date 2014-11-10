@@ -106,16 +106,13 @@
   <string name="configure_license">Licens</string>
   <string name="configure_contribute">Bidrag</string>
   <string name="donate_title">Vil du købe mig en øl?</string>
-  <string name="donate_head">Donationer er altid værdsatte og hjælper med at finansiere den fremtidige udvikling af denne og andre apps.\n\nSåfremt du finder Hangar nyttigt og ønsker at vise tak for det arbejde, der er laver, kan du besøge Bidrage afsnittet for at se de mange måder, du kan hjælpe på.\n\nHvis du er i et generøs humør, kan du donere med <b>Google Play</b> eller <b>PayPal</b> nedenfor.</string>
+  <string name="donate_head">Donationer er altid værdsatte og hjælper med at finansiere den fremtidige udvikling af denne og andre apps.\n\nSåfremt du finder Hangar nyttigt og ønsker at vise tak for det arbejde, der er laver, kan du besøge Bidrage afsnittet for at se de mange måder, du kan hjælpe på.\n\nHvis du er i et generøs humør, kan du donere med <b>Google Play</b> nedenfor.</string>
   <string name="donate_google">Doner med Google</string>
-  <string name="donate_paypal">Doner med PayPal</string>
   <string name="donate_contribute">Gør Hangar bedre!</string>
   <string name="donate_accept_button">"Fortsæt"</string>
-  <string name="donate_try_paypal">"Hm... Ser ud som Google Play ikke kunne lide det.  Prøv i stedet PayPal?"</string>
   <string name="donate_thanks_title">Tak!</string>
   <string name="donate_thanks_continue">Tilbage til Hangar</string>
   <string name="donate_thanks">"Dit bidrag til udviklingen af Hangar er meget værdsat! Android fællesskabet bliver bedre af folk som dig der støtter og motiverer udviklere."</string>
-  <string name="donate_thanks_paypal">"Hangar ved ikke om en donation faktisk  blev foretaget ved hjælp af PayPal, da vi lige har videresendt dig  til PayPal. Men uanset hvad vil vi gerne takke dig for din fortsatte brug og støtte! :)"</string>
   <string name="contribute_title">Bidrag til Hangar</string>
   <string name="contribute_google_title">Bedøm + anmeld</string>
   <string name="contribute_google_text">"Højere bedømmelser og positive anmeldelser hjælper med at fremme Hangar bedømmelse i Play butikken. Det er også den nemmeste og hurtigste måde at bidrage på!"</string>

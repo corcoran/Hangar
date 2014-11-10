@@ -102,16 +102,13 @@
   <string name="configure_license">Licença</string>
   <string name="configure_contribute">Contribua</string>
   <string name="donate_title">Quer me pagar uma cerveja?</string>
-  <string name="donate_head">As doações são sempre apreciadas e útil ao finaciar o desenvolvimento futuro deste e de outros apps.\n\nSe você achar o Hangar útil e quer mostrar agradecimento pelo trabalho que tem ido para isso, sinta-se livre para deixar um review sobre sua experiência com o app, se você também é generoso doê usando <b>Google Play</b> ou <b>PayPal</b> abaixo.</string>
+  <string name="donate_head">As doações são sempre apreciadas e útil ao finaciar o desenvolvimento futuro deste e de outros apps.\n\nSe você achar o Hangar útil e quer mostrar agradecimento pelo trabalho que tem ido para isso, sinta-se livre para deixar um review sobre sua experiência com o app, se você também é generoso doê usando <b>Google Play</b> abaixo.</string>
   <string name="donate_google">Doê com Google</string>
-  <string name="donate_paypal">Doê com PayPal</string>
   <string name="donate_contribute">Faça o Hangar melhor!</string>
   <string name="donate_accept_button">"Voltar as Configurações do Hangar"</string>
-  <string name="donate_try_paypal">"Hm... Parece que o Google Play não gostava disso.  Tentar com o PayPal em vez disso?"</string>
   <string name="donate_thanks_title">Obrigado!</string>
   <string name="donate_thanks_continue">Voltar ao Hangar</string>
   <string name="donate_thanks">"Sua contribuição para o desenvolvimento do Hangar é muito apreciada! A comunidade Android é a melhor devido a pessoas como você que apoiam e motivam os desenvolvedores."</string>
-  <string name="donate_thanks_paypal">"Hangar não sabe se uma doação realmente foi feita usando PayPal, pois lhe enviámos para um link paypal através do seu navegador favorito.  No entanto nós vamos te agradecer independentemente de seu uso contínuo e apoio! :)"</string>
   <string name="contribute_title">Contribua com o Hangar</string>
   <string name="contribute_google_title">Nota + Review</string>
   <string name="contribute_google_text">"Notas altas &amp; e reviewa positivos ajudam à espalhar a palavra ao elevavar o Hangar no rank da Play Store. É o jeito mais fácil e rápido de contribuir!"</string>

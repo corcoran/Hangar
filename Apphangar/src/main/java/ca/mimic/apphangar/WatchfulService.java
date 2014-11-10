@@ -20,10 +20,13 @@
 
 package ca.mimic.apphangar;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.app.usage.UsageStats;
 import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -33,6 +36,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -47,6 +52,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import ca.mimic.apphangar.Tools.TaskInfo;
+import ca.mimic.apphangar.Tools.LollipopTaskInfo;
 
 public class WatchfulService extends Service {
 
@@ -62,6 +68,7 @@ public class WatchfulService extends Service {
     static ArrayList<TaskInfo> pinnedList;
     static ArrayList<TaskInfo> taskList;
     static ArrayList<String> notificationTasks;
+    static LollipopTaskInfo lollipopTaskInfo;
 
     // createNotification variables
 
@@ -82,9 +89,12 @@ public class WatchfulService extends Service {
     int iconSize;
     int itemLayout;
     String mIcon;
+    String notificationBg;
 
     String launcherPackage = null;
     boolean isNotificationRunning;
+    boolean needsPermissionsRunning;
+    long lastPermissionTimestamp;
 
     final int MAX_RUNNING_TASKS = 20;
     final int LOOP_SECONDS = 3;
@@ -230,6 +240,7 @@ public class WatchfulService extends Service {
         if (className.equals("com.android.internal.app.ResolverActivity") ||
                 Tools.isBlacklistedOrBad(packageName, getApplicationContext(), db) ||
                 packageName.equals(launcherPackage)) {
+            Tools.HangarLog("buildTaskInfo -- task [" + packageName + "] is bad?  Bailing!");
             return;
         }
         runningTask = new TaskInfo(packageName);
@@ -250,78 +261,174 @@ public class WatchfulService extends Service {
             @Override
             public void run() {
                 try {
+                    boolean isLollipop;
+                    boolean newActivity = false;
+                    boolean recentTasksEmpty = true;
+
                     boolean isToggled = prefs.getBoolean(Settings.TOGGLE_PREFERENCE, Settings.TOGGLE_DEFAULT);
                     boolean smartNotification = prefs.getBoolean(Settings.SMART_NOTIFICATION_PREFERENCE, Settings.SMART_NOTIFICATION_DEFAULT);
 
-                    final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-                    final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(MAX_RUNNING_TASKS);
-                    final Context mContext = getApplicationContext();
+                    final Context context = getApplicationContext();
 
-                    db = TasksDataSource.getInstance(mContext);
+                    String taskClass = "";
+                    String taskPackage = "";
+                    String lTaskClass = "";
+                    String lTaskPackage = "";
+
+                    // TODO: This whole thing needs major refactoring.  Needs <=KK and =>L methods
+
+                    isLollipop = Tools.isLollipop();
+
+                    db = TasksDataSource.getInstance(context);
                     db.open();
 
                     pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
+                    final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                    final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager.getRunningTasks(MAX_RUNNING_TASKS);
+
                     if (recentTasks != null && recentTasks.size() > 0) {
+                        recentTasksEmpty = false;
                         ComponentName task = recentTasks.get(0).baseActivity;
-                        String taskClass = task.getClassName();
-                        String taskPackage = task.getPackageName();
+                        taskPackage = task.getPackageName();
+                        taskClass = task.getClassName();
+                    }
 
-                        if (launcherPackage != null && taskPackage != null &&
-                                taskPackage.equals(launcherPackage)) {
-                            if (runningTask == null || !runningTask.packageName.equals(taskPackage)) {
-                                if (!isToggled && isAppsWidget()) {
-                                    taskList = Tools.buildTaskList(getApplicationContext(), db, Settings.TASKLIST_QUEUE_LIMIT);
-                                    reorderAndLaunch(true);
-                                }
+                    if (isLollipop) {
+                        String oldPackage = "";
+                        String newPackage;
 
-                                // First time in launcher?  Update the widget!
-                                Tools.HangarLog("Found launcher -- Calling updateWidget!");
-                                Tools.updateWidget(mContext);
-                                runningTask = new TaskInfo(taskPackage);
+                        if (lollipopTaskInfo != null)
+                            oldPackage = lollipopTaskInfo.packageName;
 
-                                buildReorderAndLaunch(isToggled & !isNotificationRunning);
+                        List<UsageStats> listStats = Tools.getUsageStats(context);
+                        if (listStats.size() == 0) {
+                            // We either don't have permission or the foreground app hasn't changed
+                            // in > Tools.USAGE_STATS_QUERY_TIMEFRAME
+                            long timeStamp = System.currentTimeMillis();
+                            long timeDelta = timeStamp - lastPermissionTimestamp;
+//                            Tools.HangarLog("timeDelta: " + timeDelta + " timeStamp: " + timeStamp + " USQT: " + Tools.USAGE_STATS_QUERY_TIMEFRAME);
+                            if (timeDelta <= Tools.USAGE_STATS_QUERY_TIMEFRAME) {
+                                // We don't have permission !!!
+                                needsPermissionsNotification(context);
                             }
                             return;
                         }
-                        if (taskClass.equals("com.android.internal.app.ResolverActivity") ||
-                                Tools.isBlacklistedOrBad(taskPackage, mContext, db)) {
-                            buildReorderAndLaunch(isToggled & !isNotificationRunning);
-                            return;
+                        if (needsPermissionsRunning) {
+                            cancelPermissionsNotification();
+                            if (isToggled)
+                                createNotification();
+                        }
+                        lollipopTaskInfo = Tools.parseUsageStats(listStats, lollipopTaskInfo);
+
+                        if (listStats.size() < 2 && listStats.size() > 0) {
+                            newPackage = Tools.firstPackage(listStats);
+                        } else {
+                            newPackage = lollipopTaskInfo.packageName;
                         }
 
-                        if (runningTask != null && runningTask.packageName.equals(taskPackage)) {
-                            if (pm.isScreenOn()) {
-                                runningTask.seconds += LOOP_SECONDS;
-                                if (runningTask.seconds >= LOOP_SECONDS * 5) {
-                                    db.addSeconds(taskPackage, runningTask.seconds);
-                                    runningTask.totalseconds += runningTask.seconds;
-                                    runningTask.seconds = 0;
-                                }
+                        lTaskPackage = lollipopTaskInfo.lastPackageName;
+                        if (!Tools.isBlacklistedOrBad(lTaskPackage, context, db)) {
+                            ResolveInfo resolveInfo = new Tools().cachedImageResolveInfo(context, lTaskPackage);
+                            lTaskClass = resolveInfo.activityInfo.name;
+
+                            newActivity = !oldPackage.equals(newPackage) && (lTaskClass != null);
+                            if (newActivity) {
+                                lastPermissionTimestamp = System.currentTimeMillis();
+                                Tools.HangarLog("Lollipop!  newActivity? true");
                             }
-                            return;
+
+                        }
+                        if (!newActivity) return;
+
+                    }
+
+                    if (!recentTasksEmpty) {
+                        if (isLollipop && taskPackage.equals(lollipopTaskInfo.lastRecentPackageName)) {
+                            Tools.HangarLog("blanking taskPackage and taskClass (runningTask: " + taskPackage + ")");
+                            taskPackage = "";
+                            taskClass = "";
                         }
 
-                        buildTaskInfo(taskClass, taskPackage);
+                        if (isLollipop)
+                            lollipopTaskInfo.lastRecentPackageName = taskPackage;
+                    }
 
-                        if (taskClass.equals(getPackageName())) {
+                    if (launcherPackage != null && !taskPackage.isEmpty() &&
+                            taskPackage.equals(launcherPackage)) {
+                        boolean runningTaskLauncher = runningTask == null || !runningTask.packageName.equals(taskPackage);
+                        boolean runningTaskLauncherL = false;
+
+                        if (isLollipop)
+                            runningTaskLauncherL = lollipopTaskInfo.lastRecentPackageName.equals(taskPackage);
+
+                        if (runningTaskLauncher || (isLollipop && runningTaskLauncherL)) {
+                            if (!isToggled && isAppsWidget()) {
+                                taskList = Tools.buildTaskList(getApplicationContext(), db, Settings.TASKLIST_QUEUE_LIMIT);
+                                reorderAndLaunch(true);
+                            }
+
+                            // First time in launcher?  Update the widget!
+                            Tools.HangarLog("Found launcher -- Calling updateWidget!");
+                            Tools.updateWidget(context);
+                            runningTask = new TaskInfo(taskPackage);
+
                             buildReorderAndLaunch(isToggled & !isNotificationRunning);
-                            return;
                         }
 
-                        // If task is showing we do not need to update the notification drawer.
-                        if (smartNotification && isToggled) {
-                            if (notificationTasks != null && new Tools().isInArray(notificationTasks, taskPackage)) {
-                                buildReorderAndLaunch(!isNotificationRunning);
-                                return;
-                            } else if (notificationTasks == null) {
-                                moreAppsPage = 1;
+                        if (!isLollipop) return;
+                    }
+
+                    if (taskClass.equals("com.android.internal.app.ResolverActivity") ||
+                            Tools.isBlacklistedOrBad(taskPackage, context, db)) {
+                        buildReorderAndLaunch(isToggled & !isNotificationRunning);
+
+                        if (!isLollipop) return;
+                    }
+
+                    if (runningTask != null && runningTask.packageName.equals(isLollipop ? lTaskPackage : taskPackage)) {
+                        if (isLollipop) return;
+                        if (pm.isScreenOn()) {
+                            runningTask.seconds += LOOP_SECONDS;
+                            if (runningTask.seconds >= LOOP_SECONDS * 5) {
+                                db.addSeconds(taskPackage, runningTask.seconds);
+                                runningTask.totalseconds += runningTask.seconds;
+                                runningTask.seconds = 0;
                             }
                         }
-                        if (new Tools().isPinned(mContext, taskPackage)) {
-                            buildReorderAndLaunch(isToggled & !isNotificationRunning);
-                            return;
+                        return;
+                    }
+
+                    buildTaskInfo(isLollipop ? lTaskClass : taskClass, isLollipop ? lTaskPackage : taskPackage);
+
+                    if (isLollipop) {
+                        if (newActivity) {
+                            int activityDelta = (int) Math.ceil(lollipopTaskInfo.timeInFGDelta / 1000);
+
+                            Tools.HangarLog("New activity found, seconds in old: " + activityDelta);
+                            if (activityDelta > 0) {
+                                db.addSeconds(lollipopTaskInfo.lastPackageName, activityDelta);
+                            }
                         }
+                    }
+
+                    if (taskClass.equals(getPackageName())) {
+                        buildReorderAndLaunch(isToggled & !isNotificationRunning);
+                        return;
+                    }
+
+                    // If task is showing we do not need to update the notification drawer.
+                    if (smartNotification && isToggled) {
+                        if (notificationTasks != null && new Tools().isInArray(notificationTasks, isLollipop ? lTaskPackage : taskPackage)) {
+                            buildReorderAndLaunch(!isNotificationRunning);
+                            return;
+                        } else if (notificationTasks == null) {
+                            moreAppsPage = 1;
+                        }
+                    }
+                    if (new Tools().isPinned(context, isLollipop ? lTaskPackage : taskPackage)) {
+                        buildReorderAndLaunch(isToggled & !isNotificationRunning);
+                        return;
                     }
                     buildReorderAndLaunch(isToggled);
                 } catch (Exception e) {
@@ -329,6 +436,7 @@ public class WatchfulService extends Service {
                         e.printStackTrace();
                         Tools.HangarLog("failCount reached limit.  Giving up!");
                     } else {
+                        failCount++;
                         Tools.HangarLog("Exception hit!  Restarting buildTasks.. [" + failCount + "]");
                         WatchfulService.this.buildTasks();
                     }
@@ -345,6 +453,40 @@ public class WatchfulService extends Service {
             handler.postDelayed(this, LOOP_SECONDS * 1000);
         }
     };
+
+    public void cancelPermissionsNotification() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(1338);
+        needsPermissionsRunning = false;
+    }
+
+    @TargetApi(21)
+    public void needsPermissionsNotification(Context context) {
+        if (isNotificationRunning) {
+            destroyNotification();
+        }
+
+        if (needsPermissionsRunning)
+            return;
+
+        int smallIcon = iconMap.get(Settings.STATUSBAR_ICON_WHITE_WARM);
+        Intent intent = new Intent(
+                android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS);
+        PendingIntent activity = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification notification = new Notification.Builder(WatchfulService.this).
+                setContentTitle(getResources().getString(R.string.app_name))
+                .setContentText(getResources().getString(R.string.us_permission_notification))
+                .setSmallIcon(smallIcon)
+                .setOngoing(true)
+                .setContentIntent(activity)
+                .build();
+        notificationManager.notify(1338, notification);
+        needsPermissionsRunning = true;
+
+    }
+
     public synchronized int updateOrAdd(TaskInfo newInfo) {
         int rows = db.updateTaskTimestamp(newInfo.packageName);
         if (rows > 0) {
@@ -415,6 +557,7 @@ public class WatchfulService extends Service {
         moreApps = prefs.getBoolean(Settings.MORE_APPS_PREFERENCE, Settings.MORE_APPS_DEFAULT);
         moreAppsPages = Integer.parseInt(prefs.getString(Settings.MORE_APPS_PAGES_PREFERENCE, Integer.toString(Settings.MORE_APPS_PAGES_DEFAULT)));
         iconSize = Integer.parseInt(prefs.getString(Settings.ICON_SIZE_PREFERENCE, Integer.toString(Settings.ICON_SIZE_DEFAULT)));
+        notificationBg = prefs.getString(Settings.NOTIFICATION_BG_PREFERENCE, Settings.NOTIFICATION_BG_DEFAULT_VALUE);
 
         itemLayout = R.layout.notification_item;
 
@@ -511,6 +654,7 @@ public class WatchfulService extends Service {
                 pageList = new ArrayList<TaskInfo>();
             }
             pageList = new Tools().getPinnedTasks(mContext, pinnedList, pageList, iconCacheCount, moreApps);
+            Tools.HangarLog("after getPinnedTasks! 1");
         } else {
             if (pinnedCount > iconCacheCount)
                 pinnedCount = iconCacheCount - 1;
@@ -521,13 +665,15 @@ public class WatchfulService extends Service {
                 return;
             }
             pageList = new Tools().getPinnedTasks(mContext, null, pageList, iconCacheCount, moreApps);
+            Tools.HangarLog("pageList is " + pageList);
             if (pageList.size() == 1) {
                 moreAppsPage = 1;
                 return;
             }
         }
 
-        Tools.HangarLog("taskList.size(): " + taskList.size() + " pageList.size(): " + pageList.size() + " realmaxbuttons: " + numOfApps + " maxbuttons: " + maxButtons + " moreAppsPage: " + moreAppsPage);
+//        Tools.HangarLog("taskList: " + taskList + " pageList: " + pageList + " realmaxbuttons: " + numOfApps + " maxbuttons: " + maxButtons + " moreAppsPage: " + moreAppsPage);
+//        Tools.HangarLog("taskList.size(): " + taskList.size() + " pageList.size(): " + pageList.size() + " realmaxbuttons: " + numOfApps + " maxbuttons: " + maxButtons + " moreAppsPage: " + moreAppsPage);
 
         customNotifBigView.removeAllViews(R.id.notifContainer);
         notificationTasks = new ArrayList<String>();
@@ -560,13 +706,17 @@ public class WatchfulService extends Service {
             }
         }
 
+        if (!notificationBg.equals(Settings.NOTIFICATION_BG_DEFAULT_VALUE)) {
+            customNotifView.setInt(R.id.notifContainer, "setBackgroundColor",
+                    Color.parseColor(notificationBg));
+        }
+
         if (filledSecondRow && secondRow) {
             Tools.HangarLog("Second row is not full -- adding expanded row anyway!");
             // Second row is not full :(
             customNotifBigView = customNotifView;
             customNotifBigView.addView(R.id.notifContainer, appDrawer.getRow());
         }
-
 
         // Set statusbar icon
         int smallIcon = iconMap.get(Settings.STATUSBAR_ICON_WHITE_WARM);
@@ -576,21 +726,28 @@ public class WatchfulService extends Service {
             e.printStackTrace();
         }
 
-        Notification notification = new Notification.Builder(WatchfulService.this).
+        Notification notification;
+        Notification.Builder builder = new Notification.Builder(WatchfulService.this).
                 setContentTitle(getResources().getString(R.string.app_name))
                 .setContentText(getResources().getString(R.string.app_name))
                 .setSmallIcon(smallIcon)
                 .setContent(customNotifView)
                 .setOngoing(true)
-                .setPriority(setPriority)
-                .build();
+                .setPriority(setPriority);
+
+        if (Tools.isLollipop())
+            lollipopNotificationSettings(builder);
+
+        notification = builder.build();
+
         if (secondRow) {
             notification.bigContentView = customNotifBigView;
         }
+
         Tools.HangarLog("isNotificationRunning: " + isNotificationRunning);
         if (isNotificationRunning) {
-            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(1337, notification);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(1337, notification);
         } else {
             startForeground(1337, notification);
         }
@@ -601,6 +758,14 @@ public class WatchfulService extends Service {
         }
 
         isNotificationRunning = true;
+    }
+
+    @TargetApi(21)
+    public void lollipopNotificationSettings(Notification.Builder builder) {
+        if (Tools.isLollipop()) {
+            builder.setVisibility(Notification.VISIBILITY_PUBLIC);
+        }
+
     }
 
     public BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {

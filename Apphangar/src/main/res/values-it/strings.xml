@@ -105,16 +105,13 @@
   <string name="configure_license">Licenza</string>
   <string name="configure_contribute">Contributi</string>
   <string name="donate_title">Mi vuoi offrire una birra?</string>
-  <string name="donate_head">Le donazioni sono sempre apprezzate ed aiutano a finanziare i futuri sviluppi di questa ed altre app.\n\nSe tu trovi Hangar utile e mi vuoi dimostrare gratitudine, sentiti libero di fare una recensione della tua esperienza con l\'app, o se ti senti generoso, puoi fare una donazione usando<b>Google Play</b> o <b>PayPal</b> qui sotto.</string>
+  <string name="donate_head">Le donazioni sono sempre apprezzate ed aiutano a finanziare i futuri sviluppi di questa ed altre app.\n\nSe tu trovi Hangar utile e mi vuoi dimostrare gratitudine, sentiti libero di fare una recensione della tua esperienza con l\'app, o se ti senti generoso, puoi fare una donazione usando<b>Google Play</b> qui sotto.</string>
   <string name="donate_google">Donazione con Google</string>
-  <string name="donate_paypal">Donazione con Paypal</string>
   <string name="donate_contribute">Rendi Hangar migliore!</string>
   <string name="donate_accept_button">"Continua a seguirci"</string>
-  <string name="donate_try_paypal">"Hm.. sembra che non sia piaciuto a Google Play.  Vuoi provare, invece, con PayPal?"</string>
   <string name="donate_thanks_title">Grazie!</string>
   <string name="donate_thanks_continue">Torna ad Hangar</string>
   <string name="donate_thanks">"Il tuo contributo allo sviluppo di Hangar è molto apprezzato! La comunità di Android è resa migliore da persone come te che sostengono e motivano gli sviluppatori."</string>
-  <string name="donate_thanks_paypal">"Hangar non sa se una donazione è stata fatta su Paypal, dal momento che ti abbiamo inviato un link a Paypal da utilizzare via browser.  Nonostante ciò ti ringraziamo per il tuo utilizzo e supporto! :)"</string>
   <string name="contribute_title">Contribuisci ad Hangar</string>
   <string name="contribute_google_title">Vota + Commenta</string>
   <string name="contribute_google_text">"Voti più alti e commenti positivi aiutano a diffondere Hangar migliorando la posizione di Hangar nel Play store.  E' anche il modo più facile e veloce per contribuire!"</string>

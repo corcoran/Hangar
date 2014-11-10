@@ -102,16 +102,13 @@
   <string name="configure_license">Лицензия</string>
   <string name="configure_contribute">Внести вклад</string>
   <string name="donate_title">Хотите дать мне на пиво?</string>
-  <string name="donate_head">Вложения полезны и принимаются во внимание при разработке приложений.\n\nЕсли Вы нашли полезным Hangar и желаете выразить признательность за проделанную работу, загляните в раздел \"Внести вклад\", в нём Вы найдёте несколько способов помочь.\n\nВы также можете произвести оплату ниже через <b>Google Play</b> или <b>PayPal</b>.</string>
+  <string name="donate_head">Вложения полезны и принимаются во внимание при разработке приложений.\n\nЕсли Вы нашли полезным Hangar и желаете выразить признательность за проделанную работу, загляните в раздел \"Внести вклад\", в нём Вы найдёте несколько способов помочь.\n\nВы также можете произвести оплату ниже через <b>Google Play</b>.</string>
   <string name="donate_google">Оплатить через Google</string>
-  <string name="donate_paypal">Оплатить через PayPal</string>
   <string name="donate_contribute">Сделать Hangar лучше!</string>
   <string name="donate_accept_button">"Продолжить использование"</string>
-  <string name="donate_try_paypal">"Хм.. видимо Google Play это не одобряет. Может стоит попробовать через PayPal?"</string>
   <string name="donate_thanks_title">Спасибо!</string>
   <string name="donate_thanks_continue">Вернуться в Hangar</string>
   <string name="donate_thanks">"Ваше участие в разработке неоценимо! Android сообщество становится лучше за счёт таких людей как Вы, тех, кто поддерживает и мотивирует разработчиков."</string>
-  <string name="donate_thanks_paypal">"Hangar не в курсе, проведена ли оплата через PayPal, мы лишь отправили ссылку в Ваш любимый браузер. Тем не менее, мы благодарим Вас за продолжительное использование и поддержку! :)"</string>
   <string name="contribute_title">Вклад в Hangar</string>
   <string name="contribute_google_title">Оцените и напишите отзыв</string>
   <string name="contribute_google_text">"Высокие рейтинги и положительные отзывы способствуют распространению Hangar за счёт оценки в Play Маркет. Это самый быстрый и наипростейший способ содействия!"</string>

@@ -108,7 +108,7 @@
 
     <string name="priority_top">Top</string>
     <string name="priority_normal">Normal</string>
-    <string name="priority_bottom">Bottom (hides statusBar icon)</string>
+    <string name="priority_bottom">Bottom (hides in statusbar/lockscreen)</string>
 
     <string-array name="entries_priority_preference" translatable="false">
         <item>@string/priority_top</item>
@@ -197,6 +197,25 @@
     <string name="title_icon_color_preference">Color</string>
     <string name="title_icon_color_category">Icon Color</string>
 
+    <string name="title_lollipop_category">Lollipop</string>
+    <string name="title_notification_bg_preference">Background color</string>
+    <string name="summary_notification_bg_preference">Choose a background color</string>
+
+    <string name="notification_bg_default">Default (with rounded corners)</string>
+    <string name="notification_bg_dark">Material dark</string>
+    <string name="notification_bg_black">Black</string>
+
+    <string-array name="entries_notification_bg_preference" translatable="false">
+        <item>@string/notification_bg_default</item>
+        <item>@string/notification_bg_dark</item>
+        <item>@string/notification_bg_black</item>
+    </string-array>
+    <string-array name="values_notification_bg_preference" translatable="false">
+        <item>**default**</item>
+        <item>#263238</item>
+        <item>#000000</item>
+    </string-array>
+
     <!-- Apps -->
     <string name="apps_loading">Loading apps..</string>
 
@@ -255,11 +274,9 @@
 
     <!-- Donate -->
     <string name="donate_title">Want to buy me a beer?</string>
-    <string name="donate_head">Donations are always appreciated and helpful in funding the future development of this and other apps.\n\nHowever, if you find Hangar useful and want to show thanks for the work that has gone into it, visit the Contribute section to see the many ways you can help.\n\nIf you\'re in a generous mood, you can donate using <b>Google Play</b> or <b>PayPal</b> below.</string>
+    <string name="donate_head">Donations are always appreciated and helpful in funding the future development of this and other apps.\n\nHowever, if you find Hangar useful and want to show thanks for the work that has gone into it, visit the Contribute section to see the many ways you can help.\n\nIf you\'re in a generous mood, you can donate using <b>Google Play</b> below.</string>
     <string name="donate_title_google" translatable="false">Google Play</string>
-    <string name="donate_title_paypal" translatable="false">PayPal</string>
     <string name="donate_google">Donate with Google</string>
-    <string name="donate_paypal">Donate with PayPal</string>
     <string name="donate_contribute">Make Hangar better!</string>
     <string name="donate_accept_button">"Keep on keepin' on"</string>
     <string-array name="entries_google_donate" translatable="false">
@@ -269,12 +286,10 @@
         <item>$4 (USD)</item>
         <item>$5 (USD)</item>
     </string-array>
-    <string name="donate_paypal_url" formatted="false" translatable="false">https://www.paypal.com/cgi-bin/webscr?cmd=_donations%26business=8M2WWALSUHQUW%26lc=CA%26item_name=Hangar%26currency_code=USD%26bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted</string>
-    <string name="donate_try_paypal">"Hm.. looks like Google Play didn't like that.  Maybe try PayPal instead?"</string>
+    <string name="donate_sorry">"Hm.. looks like Google Play didn't like that.  Sorry :("</string>
     <string name="donate_thanks_title">Thank you!</string>
     <string name="donate_thanks_continue">Back to Hangar</string>
     <string name="donate_thanks">"Your contribution to the development of Hangar is much appreciated! The Android community is made better by people like you who support and motivate developers."</string>
-    <string name="donate_thanks_paypal">"Hangar doesn't know if an actual donation was made using PayPal, since we just sent you off to a PayPal link via your favorite browser.  However we're going to thank you regardless for your continued use and support! :)"</string>
 
     <!-- Contribute -->
     <string name="contribute_title">Contribute to Hangar</string>
@@ -337,6 +352,12 @@
 
     <string name="contribute_accept_button">Continue</string>
 
+    <!-- Usage Stats permission -->
+    <string name="us_permission_title">Permission needed</string>
+    <string name="us_permission_head">Hangar now requires the new Usage Stats permission as of Android 5.0 (Lollipop).\n\nPermission must be granted manually in order for Hangar to be able to monitor app use.</string>
+    <string name="us_permission_settings_button">Grant Hangar permission</string>
+    <string name="us_permission_notification">Extra permissions required</string>
+
     <!-- License -->
     <string name="license_title">License and Source</string>
     <string name="license_head">Hangar is licensed under the GNU GPLv3 from the Free Software Foundation and is Copyright © 2014 Jeff Corcoran.\n\nUnder the GPL, Hangar is available free of charge as long as the use of Hangar adheres to the terms of the GPL.\n\nUsers may download the software for free, and modify, integrate and distribute it. However, GPL users must abide by the rules of the GPL, which stipulate that if a work based on Hangar is redistributed, the complete source code for this work must also be open and available for redistribution under the terms of the GPL.\n\nSee the GPL and the FAQ of the Free Software Foundation for more details.</string>
@@ -351,9 +372,10 @@
     <string name="changelog_accept_button">Continue</string>
     <string name="changelog_changes_title">Changes</string>
     <string name="changelog_coming_soon_title">Coming soon!</string>
-    <string name="changelog_coming_soon_text" translatable="false">Icon masking, remove statusbar icon (Xposed module)</string>
+    <string name="changelog_coming_soon_text" translatable="false">Divider color on white background, Stats widget additions</string>
 
     <string-array name="versionNumbers" translatable="false">
+        <item>2.6 (Nov 26th)</item>
         <item>2.5 (Sept 14th)</item>
         <item>2.4 (August 14th)</item>
         <item>2.3 (July 29th)</item>
@@ -369,6 +391,10 @@
     </string-array>
 
     <string-array name="versionSummaries" translatable="false">
+        <item>
+"  &#8226; [Fix!] Android L support!
+  &#8226; [New!] Added background color option for L devices
+  &#8226; Updated translations"</item>
         <item>
 "  &#8226; [New!] Launch apps in floating windows
      (supported ROMs only)

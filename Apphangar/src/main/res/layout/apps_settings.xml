@@ -108,7 +108,7 @@
         android:id="@+id/applist_action_line"
         android:layout_height="2dp"
         android:layout_above="@+id/applist_action_bar_scroll"
-        android:background="#33b5e5"
+        android:background="@color/applist_action_line_color"
         android:layout_width="fill_parent" />
 
 </RelativeLayout>

@@ -105,16 +105,13 @@
   <string name="configure_license">Licencja</string>
   <string name="configure_contribute">Weź udział w rozwoju</string>
   <string name="donate_title">Chcesz kupić mi piwo?</string>
-  <string name="donate_head">Darowizny są zawsze mile widziane i pomocne w finansowanie przyszłego rozwoju tej i innych aplikacji.\n\nJeśli uważasz, że Hangar jest przydatną aplikacją i chcesz podziękować za włożoną w nią pracę, możesz pozostawić recenzję odzwierciedlającą Twoje doświadczenia z aplikacji, lub jeśli jesteś w hojnym nastroju , możesz przekazać donację za pomocą <b>Google Play</b> lub <b>PayPal</b> poniżej.</string>
+  <string name="donate_head">Darowizny są zawsze mile widziane i pomocne w finansowanie przyszłego rozwoju tej i innych aplikacji.\n\nJeśli uważasz, że Hangar jest przydatną aplikacją i chcesz podziękować za włożoną w nią pracę, możesz pozostawić recenzję odzwierciedlającą Twoje doświadczenia z aplikacji, lub jeśli jesteś w hojnym nastroju , możesz przekazać donację za pomocą <b>Google Play</b> poniżej.</string>
   <string name="donate_google">Wspomóż przy pomocy Google</string>
-  <string name="donate_paypal">Wspomóż przy pomocy PayPal</string>
   <string name="donate_contribute">Pozwól, aby Hangar stał się lepszy!</string>
   <string name="donate_accept_button">"Kontynuuj"</string>
-  <string name="donate_try_paypal">"Wygląda na to, że wystąpił drobny błąd Google Play. Może chcesz spróbować poprzez PayPal?"</string>
   <string name="donate_thanks_title">Dziękuję!</string>
   <string name="donate_thanks_continue">Wróc do Hangar</string>
   <string name="donate_thanks">"Dziękuję za wsparcie rozwoju Hangar! Społeczność Androida może rozwijać się dzięki ludziom, który wspierają i motywują twórców aplikacji."</string>
-  <string name="donate_thanks_paypal">"Hangar nie wie, czy faktycznie dokonano darowizny za pomocą systemu PayPal, ponieważ aplikacja otworzyła jedynie link do PayPal w Twojej domyślnej przeglądarce. Niezależnie od tego, chcemy Ci podziękować za używanie aplikacji i jej wsparcie! :)"</string>
   <string name="contribute_title">Przyczyń się do rozwoju Hangar</string>
   <string name="contribute_google_title">Oceń i napisz recenzję</string>
   <string name="contribute_google_text">"Wyższe oceny i pozytywne recenzje pomagają innym znaleźć Hangar w sklepie Play. To także najłatwiejsza i najszybsza forma wsparcia!"</string>

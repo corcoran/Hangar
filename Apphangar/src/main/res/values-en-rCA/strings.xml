@@ -95,16 +95,13 @@
   <string name="configure_license">Licence</string>
   <string name="configure_contribute">Contribute</string>
   <string name="donate_title">Want to buy me a beer?</string>
-  <string name="donate_head">Donations are always appreciated and helpful in funding the future development of this and other apps.\n\nHowever, if you find Hangar useful and want to show thanks for the work that has gone into it, visit the Contribute section to see the many ways you can help.\n\nIf you\'re in a generous mood, you can donate using <b>Google Play</b> or <b>PayPal</b> below.</string>
+  <string name="donate_head">Donations are always appreciated and helpful in funding the future development of this and other apps.\n\nHowever, if you find Hangar useful and want to show thanks for the work that has gone into it, visit the Contribute section to see the many ways you can help.\n\nIf you\'re in a generous mood, you can donate using <b>Google Play</b> below.</string>
   <string name="donate_google">Donate with Google</string>
-  <string name="donate_paypal">Donate with PayPal</string>
   <string name="donate_contribute">Make Hangar better!</string>
   <string name="donate_accept_button">"Keep on keepin' on"</string>
-  <string name="donate_try_paypal">"Hm.. looks like Google Play didn't like that.  Maybe try PayPal instead?"</string>
   <string name="donate_thanks_title">Thank you!</string>
   <string name="donate_thanks_continue">Back to Hangar</string>
   <string name="donate_thanks">"Your contribution to the development of Hangar is much appreciated! The Android community is made better by people like you who support and motivate developers."</string>
-  <string name="donate_thanks_paypal">"Hangar doesn't know if an actual donation was made using PayPal, since we just sent you off to a PayPal link via your favourite browser.  However we're going to thank you regardless for your continued use and support! :)"</string>
   <string name="contribute_title">Contribute to Hangar</string>
   <string name="contribute_google_title">Rate + Review</string>
   <string name="contribute_google_text">"Higher ratings &amp; positive reviews help spread the word by promoting Hangar's rank in the Play Store.  It's also the easiest and quickest way to contribute!"</string>
