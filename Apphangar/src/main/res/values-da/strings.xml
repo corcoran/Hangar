@@ -47,7 +47,6 @@
   <string name="dialog_priority_preference">Vælg en placering</string>
   <string name="priority_top">Top</string>
   <string name="priority_normal">Normal</string>
-  <string name="priority_bottom">Bunden (skjul statuslinie ikon)</string>
   <string name="title_smart_notification">Smart sortering af meddelelser</string>
   <string name="summary_smart_notification">Ændre kun rækkefølgen når der tilføjes et nyt ikon</string>
   <string name="title_floating_windows">Start apps i flydende vinduer</string>
@@ -81,6 +80,7 @@
   <string name="summary_colorize_preference">Skift farve på meddelses ikonerne</string>
   <string name="title_icon_color_preference">Farve</string>
   <string name="title_icon_color_category">Ikon farve</string>
+  <string name="title_notification_bg_preference">Baggrundsfarve</string>
   <string name="apps_loading">Indlæser apps ..</string>
   <string name="title_top_spinner">Top</string>
   <string name="title_sort_spinner">Sorter efter</string>
@@ -106,7 +106,6 @@
   <string name="configure_license">Licens</string>
   <string name="configure_contribute">Bidrag</string>
   <string name="donate_title">Vil du købe mig en øl?</string>
-  <string name="donate_head">Donationer er altid værdsatte og hjælper med at finansiere den fremtidige udvikling af denne og andre apps.\n\nSåfremt du finder Hangar nyttigt og ønsker at vise tak for det arbejde, der er laver, kan du besøge Bidrage afsnittet for at se de mange måder, du kan hjælpe på.\n\nHvis du er i et generøs humør, kan du donere med <b>Google Play</b> nedenfor.</string>
   <string name="donate_google">Doner med Google</string>
   <string name="donate_contribute">Gør Hangar bedre!</string>
   <string name="donate_accept_button">"Fortsæt"</string>

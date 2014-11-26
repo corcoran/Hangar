@@ -47,7 +47,6 @@
   <string name="dialog_priority_preference">בחירת מיקום</string>
   <string name="priority_top">עליונה</string>
   <string name="priority_normal">רגיל</string>
-  <string name="priority_bottom">תחתון (מסתיר את סמל שורת המצב)</string>
   <string name="title_smart_notification">סידור התרעות חכם</string>
   <string name="summary_smart_notification">לסדר מחדש רק  כשנוסף אייקון חדש</string>
   <string name="title_floating_windows">הפעלת אפליקציות בחלונות צפים</string>
@@ -81,6 +80,7 @@
   <string name="summary_colorize_preference">שינוי צבע האייקונים של ההתרעות</string>
   <string name="title_icon_color_preference">צבע</string>
   <string name="title_icon_color_category">צבע האייקון</string>
+  <string name="title_notification_bg_preference">צבע הרקע</string>
   <string name="apps_loading">מעלה אפליקציות..</string>
   <string name="title_top_spinner">עליונה</string>
   <string name="title_sort_spinner">סידור לפי</string>
@@ -106,7 +106,6 @@
   <string name="configure_license">רישיון</string>
   <string name="configure_contribute">תרומה</string>
   <string name="donate_title">רוצים לקנות לי בירה (תרומה)?</string>
-  <string name="donate_head">תרומות מתקבלות בברכה תמיד ומועילות בפיתוח עתידי של אפליקציה זו ואחרות.\n\nבכל אופן, אם הנכם מוצאים את Hangar שימושי ורוצים להראות את תודתכם על העבודה שהושקעה בו, בקרו בחלק את של התרומה כדי לראות את הדרכים הרבות בהן אתם יכולים לעזור.\n\nאם אתם במצב רוח נדיב, אתם יכולים לתרום בעזרת  <b>Google Play</b> למטה.</string>
   <string name="donate_google">תרומה באמצעות גוגל</string>
   <string name="donate_contribute">שפר את Hangar!</string>
   <string name="donate_accept_button">"אל תפסיק"</string>
@@ -186,7 +185,9 @@
   <string name="instructions_2_3">"ניתן לבדוק את הסטטיסטיקות תחת <b>לשונית האפליקציות</b> של Hangar או ע"י מיקום <b>ווידג\'ט הסטטיסטיקות</b> במסך הבית."</string>
   <string name="instructions_3_1">"התאמות אישיות"</string>
   <string name="instructions_3_2">"בנוסף לסרגל קיצורי הדרך של האפליקציות הברירת מחדל <b>במגירת ההתרעות</b>, ניתן להוסיף <b>ווידג\'ט</b> מותאם אישית להפעלת אפליקציות. ניתן להגדיר צבע, גודל, כמות, צבע רקע ועוד."</string>
+  <string name="instructions_title_3">למשל 2 סגנונות שונים לווידג\'ט האפליקציות</string>
   <string name="instructions_title_4">תפריט אפשרויות היישום</string>
+  <string name="instructions_3_3">"ניתן גם <b>לנעוץ</b> אפליקציות שיהיו מעוגנות באופן קבוע. יש לכם <b>ערכת אייקונים</b> שאתם אוהבים? Hangar תומך בערכות אייקונים ואפילו את היכולת לשנות אייקון של אפליקציה מסוימת.\n\nולבסוף, ניתן למנוע מאפליקציות מסוימות מלהופיע עם אפשרות <b>הרשימה השחורה</b>. עשו את כל זאת ועוד מתוך <b>לשונית האפליקציות</b> של Hangar."</string>
   <string name="instructions_4_1">"צא לדרך"</string>
   <string name="instructions_4_2">"Hangar הנו כלי קל משקל המאפשר הפעלה נוחה של יישומים מכל מקום ב-Android. \n\nTo כדי ליהנות ממלוא יתרונותיו של כלי זה, צריך להיות לו לפחות יום של ניטור סטטיסטיקות אפליקציה כדי שיהיה על מה לבסס את המלצותיו.\n\nתהנו ותודה שניסיתם את Hangar!"</string>
   <string name="instructions_4_button">הגדרת Hangar</string>

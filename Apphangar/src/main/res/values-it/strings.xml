@@ -47,7 +47,6 @@
   <string name="dialog_priority_preference">Scegli una posizione</string>
   <string name="priority_top">In cima</string>
   <string name="priority_normal">Normale</string>
-  <string name="priority_bottom">In fondo (nasconde l\'icona della Barra di stato)</string>
   <string name="title_smart_notification">Ordinamento notifiche smart</string>
   <string name="summary_smart_notification">Cambia ordine solo all\'aggiunta di una nuova icona</string>
   <string name="title_floating_windows">Lancia le app in popup</string>
@@ -81,6 +80,8 @@
   <string name="summary_colorize_preference">Cambia il colore delle icone di notifica</string>
   <string name="title_icon_color_preference">Colore</string>
   <string name="title_icon_color_category">Colore Icona</string>
+  <string name="title_notification_bg_preference">Colore di sfondo</string>
+  <string name="apps_loading">Carico lista app...</string>
   <string name="title_top_spinner">In cima</string>
   <string name="title_sort_spinner">Ordina oer</string>
   <string name="refresh_button">Aggiorna</string>
@@ -105,7 +106,6 @@
   <string name="configure_license">Licenza</string>
   <string name="configure_contribute">Contributi</string>
   <string name="donate_title">Mi vuoi offrire una birra?</string>
-  <string name="donate_head">Le donazioni sono sempre apprezzate ed aiutano a finanziare i futuri sviluppi di questa ed altre app.\n\nSe tu trovi Hangar utile e mi vuoi dimostrare gratitudine, sentiti libero di fare una recensione della tua esperienza con l\'app, o se ti senti generoso, puoi fare una donazione usando<b>Google Play</b> qui sotto.</string>
   <string name="donate_google">Donazione con Google</string>
   <string name="donate_contribute">Rendi Hangar migliore!</string>
   <string name="donate_accept_button">"Continua a seguirci"</string>
@@ -189,6 +189,6 @@
   <string name="instructions_title_4">Menu opzioni app</string>
   <string name="instructions_3_3">"Puoi <b>bloccare</b> le app in modo che siano fisse.  Hai un <b>icon pack</b> che ti piace?  Hangar supporta gli supports icon pack e anche la possibilità di cambiare manualmente l\'icona di una singola app.\n\nInfine, puoi escludere delle app dalla visualizzazione con l\'opzione <b>blacklist</b> .  Puoi tutto questo ed altro ancora dall\'<b>Apps tab</b> di Hangar."</string>
   <string name="instructions_4_1">"Per iniziare"</string>
-  <string name="instructions_4_2">"Hangar è uno strumento veloce che facilita l\'avvio delle app in qualsiasi situazione in Android.\n\nPer utilizzare al meglio questo strumento occorre che siano raccolte le statistiche d\'uso delle app di almeno un giorno su cui basare le raccomandazioni.\n\nGrazie per l\'utilizzo e l\'apprezzamento di Hangar!"</string>
+  <string name="instructions_4_2">"Hangar è uno strumento veloce che facilita l'avvio delle app in qualsiasi situazione in Android.\n\nPer utilizzare al meglio questo strumento occorre che siano raccolte le statistiche d'uso delle app di almeno un giorno su cui basare le raccomandazioni.\n\nGrazie per l'utilizzo e l'apprezzamento di Hangar!"</string>
   <string name="instructions_4_button">Configura Hangar</string>
 </resources>

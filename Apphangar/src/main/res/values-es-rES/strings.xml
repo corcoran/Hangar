@@ -47,7 +47,7 @@
   <string name="dialog_priority_preference">Elegir una posición</string>
   <string name="priority_top">Parte superior</string>
   <string name="priority_normal">Normal</string>
-  <string name="priority_bottom">Parte inferior (ocultar icono en barra de estado)</string>
+  <string name="priority_bottom">Parte inferior (ocultada en barra de estado / pantalla de bloqueo)</string>
   <string name="title_smart_notification">Orden de notificaciones inteligentes</string>
   <string name="summary_smart_notification">Reordenar sólo cuando se añade un nuevo icono</string>
   <string name="title_floating_windows">Lanzar aplicaciones en ventanas flotantes</string>
@@ -81,6 +81,13 @@
   <string name="summary_colorize_preference">Cambiar el color de los iconos de notificaciones</string>
   <string name="title_icon_color_preference">Color</string>
   <string name="title_icon_color_category">Color de icono</string>
+  <string name="title_lollipop_category">Lollipop</string>
+  <string name="title_notification_bg_preference">Color de fondo</string>
+  <string name="summary_notification_bg_preference">Elegir un color de fondo</string>
+  <string name="notification_bg_default">Por defecto (con esquinas redondeadas)</string>
+  <string name="notification_bg_dark">Material oscuro</string>
+  <string name="notification_bg_black">Negro</string>
+  <string name="apps_loading">Cargando apps..</string>
   <string name="title_top_spinner">Parte superior</string>
   <string name="title_sort_spinner">Ordenar por</string>
   <string name="refresh_button">Actualizar</string>
@@ -105,10 +112,11 @@
   <string name="configure_license">Licencia</string>
   <string name="configure_contribute">Contribuir</string>
   <string name="donate_title">¿Me quiere invitar una cerveza?</string>
-  <string name="donate_head">Donaciones siempre son apreciadas y útiles para el futuro desarrollo de esta y otras apps.\n\nSi usted encuentra que Hangar sea útil y quiere mostrar agradecimiento por el trabajo que se ha hecho en la creación de la app, no dude en dejar una opinion que refleja su experiencia con la aplicación. Si se siente generoso, puede donar usando <b>Google Play</b>.</string>
+  <string name="donate_head">Las donaciones siempre son apreciadas y útiles para el futuro desarrollo de este y otros apps.\n\nSin embargo, si encuentras que Hangar sea útil y quiere mostrar su agradecimiento por el esfuerzo de su desarrollo, visitar la sección Contribuir para ver las maneras en que puedes ayudar.\n\nSi se siente generoso, usted puede donar usando <b>Google Play</b> abajo.</string>
   <string name="donate_google">Donar con Google</string>
   <string name="donate_contribute">¡Mejorar Hangar!</string>
   <string name="donate_accept_button">"Volver a la aplicación"</string>
+  <string name="donate_sorry">"HM... Parece que a Google Play no le gustó.  Lo siento :("</string>
   <string name="donate_thanks_title">¡Gracias!</string>
   <string name="donate_thanks_continue">Volver a Hangar</string>
   <string name="donate_thanks">"¡Su contribución al desarrollo de Hangar es muy apreciado! La comunidad Android se hace mejor por gente como usted que apoya y motiva a los desarrolladores."</string>
@@ -138,6 +146,10 @@
   <string name="contributors_role10">Traducción en inglés (Reino Unido)</string>
   <string name="contributors_role11">Traducción en  hebreo</string>
   <string name="contribute_accept_button">Continuar</string>
+  <string name="us_permission_title">Se necesita autorización</string>
+  <string name="us_permission_head">Hangar ahora requiere el nuevo permiso de las estadísticas de uso a partir de Android 5.0 (Lollipop).\n\nSe debe de conceder este permiso manualmente para que Hangar pueda monitorear el uso de las aplicaciones.</string>
+  <string name="us_permission_settings_button">Autorizar a Hangar</string>
+  <string name="us_permission_notification">Se requiere permisos adicionales</string>
   <string name="license_title">Licencia y código fuente</string>
   <string name="license_head">Hangar está licenciado bajo la licencia GPLv3 de la Free Software Foundation (Fundación para el sofware libre) y es Copyright © 2014 Jeff Corcoran.\n\nBajo la licencia GPL, Hangar está disponible de forma gratuita cuando el uso del Hangar se adhiere a los términos de la licencia GPL.\n\nLos usuarios pueden descargar el software de forma gratuita, modificarlo, integrarlo y distribuirlo. Sin embargo, los usuarios GPL deben acatar las reglas de la GPL, que estipulan que si un trabajo basado en Hangar se redistribuye, el código fuente completo de este trabajo también debe estar abierto y disponible para su redistribución bajo los términos de la GPL.\n\nVer la GPL y las preguntas frecuentes de la Free Software Foundation para obtener más detalles.</string>
   <string name="license_view_source">Visite Hangar en Github</string>

@@ -47,9 +47,11 @@
   <string name="dialog_priority_preference">Выберите позицию</string>
   <string name="priority_top">Верхняя</string>
   <string name="priority_normal">Обычная</string>
-  <string name="priority_bottom">Нижняя (без значка в панели уведомлений)</string>
   <string name="title_smart_notification">Продвинутая сортировка</string>
   <string name="summary_smart_notification">Перераспрелять исключительно при появлении нового значка</string>
+  <string name="title_floating_windows">Запуск прил. в оконном режиме</string>
+  <string name="summary_floating_windows">Доступно только в прошивках с поддержкой функции</string>
+  <string name="alert_floating_windows">Поддерживается с модулем XHaloFloatingWindow, и в прошивках, основанных на AOSPA.</string>
   <string name="title_appsno_preference">Количество приложений</string>
   <string name="summary_appsno_preference">Отображается не более %s приложений</string>
   <string name="summary_appsno_second_row_preference">Отображается по %s приложений в ряду</string>
@@ -78,6 +80,8 @@
   <string name="summary_colorize_preference">Изменить цвета значков в уведомлении</string>
   <string name="title_icon_color_preference">Цвет</string>
   <string name="title_icon_color_category">Окрас значков</string>
+  <string name="title_notification_bg_preference">Цвет фона</string>
+  <string name="apps_loading">Загрузка...</string>
   <string name="title_top_spinner">Верхняя</string>
   <string name="title_sort_spinner">Сорт.</string>
   <string name="refresh_button">Обновить</string>
@@ -102,7 +106,6 @@
   <string name="configure_license">Лицензия</string>
   <string name="configure_contribute">Внести вклад</string>
   <string name="donate_title">Хотите дать мне на пиво?</string>
-  <string name="donate_head">Вложения полезны и принимаются во внимание при разработке приложений.\n\nЕсли Вы нашли полезным Hangar и желаете выразить признательность за проделанную работу, загляните в раздел \"Внести вклад\", в нём Вы найдёте несколько способов помочь.\n\nВы также можете произвести оплату ниже через <b>Google Play</b>.</string>
   <string name="donate_google">Оплатить через Google</string>
   <string name="donate_contribute">Сделать Hangar лучше!</string>
   <string name="donate_accept_button">"Продолжить использование"</string>
@@ -132,6 +135,8 @@
   <string name="contributors_role7">за русский перевод</string>
   <string name="contributors_role8">за немецкий перевод</string>
   <string name="contributors_role9">за датский перевод</string>
+  <string name="contributors_role10">за великобританский перевод</string>
+  <string name="contributors_role11">за перевод на иврит</string>
   <string name="contribute_accept_button">Продолжить</string>
   <string name="license_title">Лицензия и исходный код</string>
   <string name="license_head">Hangar распространяется под лицензией GPLv3 Фонда свободного ПО и принадлежит Джеффу Коркорану © 2014.\n\nБудучи под лицензией GPL, Hangar распространяется бесплатно до тех пор, пока использование приложения проходит с соблюдением правил данной лицензии.\n\nПользователи имеют возможность бесплатного скачивания данного ПО, а также его изменения, внедрения и распространения. Пользователи GPL обязаны следовать данным правилам, обусловленными тем, что работа, основанная на Hangar, преобразуется и полный исходный код конечного продукта должен быть так же открытым и доступным для распространения на правах GPL.\n\nПрочтите GPL и ЧаВо Фонда свободного ПО для получения дополнительной информации.</string>
