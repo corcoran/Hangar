@@ -81,7 +81,6 @@
   <string name="summary_colorize_preference">Cambia il colore delle icone di notifica</string>
   <string name="title_icon_color_preference">Colore</string>
   <string name="title_icon_color_category">Colore Icona</string>
-  <string name="title_lollipop_category">Lollipop</string>
   <string name="title_notification_bg_preference">Colore di sfondo</string>
   <string name="summary_notification_bg_preference">Scegli un colore di sfondo</string>
   <string name="notification_bg_default">Predefinito (con angoli arrotondati)</string>

@@ -81,7 +81,6 @@
   <string name="summary_colorize_preference">Farbe der Benachrichtigungssymbole ändern</string>
   <string name="title_icon_color_preference">Farbe</string>
   <string name="title_icon_color_category">Symbolfarbe</string>
-  <string name="title_lollipop_category">Lollipop</string>
   <string name="title_notification_bg_preference">Hintergrundfarbe</string>
   <string name="summary_notification_bg_preference">Wählen Sie eine Hintergrundfarbe</string>
   <string name="notification_bg_default">Standard (mit abgerundeten Ecken)</string>

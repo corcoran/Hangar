@@ -80,7 +80,6 @@
   <string name="summary_colorize_preference">Skift farve på meddelses ikonerne</string>
   <string name="title_icon_color_preference">Farve</string>
   <string name="title_icon_color_category">Ikon farve</string>
-  <string name="title_lollipop_category">Lollipop</string>
   <string name="title_notification_bg_preference">Baggrundsfarve</string>
   <string name="summary_notification_bg_preference">Vælg baggrundsfarve</string>
   <string name="notification_bg_default">Standard (med afrundede hjørner)</string>
