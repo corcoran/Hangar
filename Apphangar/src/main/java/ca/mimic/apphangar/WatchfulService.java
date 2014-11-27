@@ -308,7 +308,7 @@ public class WatchfulService extends Service {
                             long timeStamp = System.currentTimeMillis();
                             long timeDelta = timeStamp - lastPermissionTimestamp;
 //                            Tools.HangarLog("timeDelta: " + timeDelta + " timeStamp: " + timeStamp + " USQT: " + Tools.USAGE_STATS_QUERY_TIMEFRAME);
-                            if (timeDelta <= Tools.USAGE_STATS_QUERY_TIMEFRAME) {
+                            if (timeDelta + Tools.USAGE_STATS_QUERY_TIMEBUFFER <= Tools.USAGE_STATS_QUERY_TIMEFRAME) {
                                 // We don't have permission !!!
                                 needsPermissionsNotification(context);
                             }

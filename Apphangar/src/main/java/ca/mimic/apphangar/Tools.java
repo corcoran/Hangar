@@ -49,7 +49,10 @@ import java.util.List;
 
 public class Tools {
     final static String TAG = "Apphangar";
-    final static int USAGE_STATS_QUERY_TIMEFRAME = 7200000;
+    // 15 min buffer for the timestamp
+    final static int USAGE_STATS_QUERY_TIMEBUFFER = 900000;
+    // Query usage stats this amount of time
+    final static int USAGE_STATS_QUERY_TIMEFRAME = 46800000;
     final static String USAGE_STATS_SERVICE_NAME = "usagestats";
 
     static int mBackgroundResource;
