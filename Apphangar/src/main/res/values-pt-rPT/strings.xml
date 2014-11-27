@@ -47,6 +47,7 @@
   <string name="dialog_priority_preference">Escolha uma posição</string>
   <string name="priority_top">Cima</string>
   <string name="priority_normal">Normal</string>
+  <string name="priority_bottom">Fundo (esconder na barra de estado/lockscreen)</string>
   <string name="title_smart_notification">Ordenação da notificação inteligente</string>
   <string name="summary_smart_notification">Reordenar apenas quando é adicionado um novo ícone</string>
   <string name="title_floating_windows">Abrir aplicações em janelas flutuantes</string>
@@ -80,7 +81,12 @@
   <string name="summary_colorize_preference">Mudar a cor dos ícones de notificação</string>
   <string name="title_icon_color_preference">Cor</string>
   <string name="title_icon_color_category">Cor do ícone</string>
+  <string name="title_lollipop_category">Lollipop</string>
   <string name="title_notification_bg_preference">Cor de fundo</string>
+  <string name="summary_notification_bg_preference">Escolha uma cor de fundo</string>
+  <string name="notification_bg_default">Padrão (com cantos arredondados)</string>
+  <string name="notification_bg_dark">Material escuro</string>
+  <string name="notification_bg_black">Preto</string>
   <string name="apps_loading">A carregar aplicações..</string>
   <string name="title_top_spinner">Cima</string>
   <string name="title_sort_spinner">Classificar por</string>
@@ -106,9 +112,11 @@
   <string name="configure_license">Licença</string>
   <string name="configure_contribute">Contribuir</string>
   <string name="donate_title">Queres pagar-me uma cerveja?</string>
+  <string name="donate_head">As doações são sempre apreciadas e úteis no financiamento de futuro desenvolvimentos desta e outras aplicações.\n\nNo entanto, se considera o Hangar útil e quer mostrar o seu agradecimento pelo trabalho que tem sido feito, visite a secção do Donativos para ver de que maneiras em pode ajudar.\n\nSe está com vontade de doar, pode faze-lo usando o <b>Google Play</b> ou <b>PayPal</b>.</string>
   <string name="donate_google">Doar com o Google</string>
   <string name="donate_contribute">Torne o Hangar melhor!</string>
   <string name="donate_accept_button">"Continue a ajudar-nos"</string>
+  <string name="donate_sorry">"Hum... Parece que o Google Play não gostou disso.  Desculpe :("</string>
   <string name="donate_thanks_title">Obrigado!</string>
   <string name="donate_thanks_continue">Voltar ao Hangar</string>
   <string name="donate_thanks">"A sua contribuição para o desenvolvimento do Hangar é muito apreciada! A comunidade Android é melhor por pessoas como você que apoiam e motivam os desenvolvedores."</string>
@@ -138,6 +146,10 @@
   <string name="contributors_role10">Tradução de Inglês (Reino Unido)</string>
   <string name="contributors_role11">Tradução de Hebraico</string>
   <string name="contribute_accept_button">Seguinte</string>
+  <string name="us_permission_title">Permissão necessária</string>
+  <string name="us_permission_head">O Hangar exige agora a nova permissão de estatísticas de uso do Android 5.0 (Lollipop).\n\nA permissão deve ser concedida manualmente de forma a o Hangar ser capaz de monitorar o uso de aplicações.</string>
+  <string name="us_permission_settings_button">Garantir permissão ao Hangar</string>
+  <string name="us_permission_notification">Permissões extras necessárias</string>
   <string name="license_title">Licença e fonte</string>
   <string name="license_head">O Hangar é licenciado sob a GPLv3 GNU da Free Software Foundation e é Copyright © 2014 Jeff Corcoran.\n\nSobre a GPL, o Hangar está disponível livre de encargos, enquanto o uso do Hangar adere aos termos do GPL.\n\nOs utilizadores podem baixar o software gratuitamente e modificar, integrar e distribuí-lo. No entanto, os utilizadores GPL devem aceitar as regras da GPL, que estipula que, se um trabalho baseado no Hangar é redistribuído, o código-fonte completo para este trabalho também deve ser aberto e disponível para redistribuição, nos termos do GPL.\n\nVeja o GPL e o FAQ da Free Software Foundation para mais detalhes.</string>
   <string name="license_view_source">Visitar o Hangar no Github</string>
