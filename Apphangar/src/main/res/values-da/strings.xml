@@ -80,7 +80,12 @@
   <string name="summary_colorize_preference">Skift farve på meddelses ikonerne</string>
   <string name="title_icon_color_preference">Farve</string>
   <string name="title_icon_color_category">Ikon farve</string>
+  <string name="title_lollipop_category">Lollipop</string>
   <string name="title_notification_bg_preference">Baggrundsfarve</string>
+  <string name="summary_notification_bg_preference">Vælg baggrundsfarve</string>
+  <string name="notification_bg_default">Standard (med afrundede hjørner)</string>
+  <string name="notification_bg_dark">Material mørk</string>
+  <string name="notification_bg_black">Sort</string>
   <string name="apps_loading">Indlæser apps ..</string>
   <string name="title_top_spinner">Top</string>
   <string name="title_sort_spinner">Sorter efter</string>
@@ -138,6 +143,8 @@
   <string name="contributors_role10">Engelsk (UK) oversættelse</string>
   <string name="contributors_role11">Hebræisk oversættelse</string>
   <string name="contribute_accept_button">Fortsæt</string>
+  <string name="us_permission_title">Tilladelse nødvendig</string>
+  <string name="us_permission_notification">Ekstra tilladelser krævet</string>
   <string name="license_title">Licens og kildekode</string>
   <string name="license_head">Hangar er licenseret under GPLv3 fra Free Software Foundation og er Copyright © 2014 Jeff Corcoran.\n\nUnder GPL licensen, Hangar er tilgængelig gratis uden beregning så længe brugen af Hangar overholder vilkårene i GPL license.\n\nBrugere kan hente softwaren gratis, og redigere, integrere og distribuere det. Dog skal GPL brugere overholde reglerne for GPL, som fastsætter, at hvis et værk baseret på Hangar redistribueres, skal den komplette kildekode for dette arbejde skal også være åben og tilgængelig for redistribution i henhold til GPL.\n\nSe GPL og FAQ fra Free Software Foundation for flere detaljer.</string>
   <string name="license_view_source">Besøg Hangar på Github</string>
@@ -177,7 +184,7 @@
   <string name="instructions_1_1">"Velkommen til Hangar!"</string>
   <string name="instructions_1_2">"Nu da hangar er installeret, er der tilføjet en <b>app genvejslinie</b> til meddelelsesområdet. Det vil begynde at overvåge hyppigheden og mængden af ​​tid, du bruger i dine apps."</string>
   <string name="instructions_1_3">"Som Hangar følger dit daglige brug, vil den bruge disse data til at prioritere de vigtigste  apps. For hver app du bruger, bliver hangar klogere og ændrer disse genveje i realtid,  til dine behov."</string>
-  <string name="instructions_title_1">"Hangar's app genvejslinie i meddelelsesområde"</string>
+  <string name="instructions_title_1">"Hangar\'s app genvejslinie i meddelelsesområde"</string>
   <string name="instructions_1_swipe">Stryg til næste side</string>
   <string name="instructions_2_1">"Statistik"</string>
   <string name="instructions_2_2">"Hangar måler også den tid, du tilbringer i hver app!"</string>

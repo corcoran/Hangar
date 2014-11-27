@@ -197,7 +197,7 @@
     <string name="title_icon_color_preference">Color</string>
     <string name="title_icon_color_category">Icon Color</string>
 
-    <string name="title_lollipop_category">Lollipop</string>
+    <string name="title_lollipop_category" translatable="false">Lollipop</string>
     <string name="title_notification_bg_preference">Background color</string>
     <string name="summary_notification_bg_preference">Choose a background color</string>
 
@@ -278,7 +278,7 @@
     <string name="donate_title_google" translatable="false">Google Play</string>
     <string name="donate_google">Donate with Google</string>
     <string name="donate_contribute">Make Hangar better!</string>
-    <string name="donate_accept_button">"Keep on keepin' on"</string>
+    <string name="donate_accept_button">"Keep on keepin\' on"</string>
     <string-array name="entries_google_donate" translatable="false">
         <item>$1 (USD)</item>
         <item>$2 (USD)</item>
@@ -286,7 +286,7 @@
         <item>$4 (USD)</item>
         <item>$5 (USD)</item>
     </string-array>
-    <string name="donate_sorry">"Hm.. looks like Google Play didn't like that.  Sorry :("</string>
+    <string name="donate_sorry">"Hm.. looks like Google Play didn\'t like that.  Sorry :("</string>
     <string name="donate_thanks_title">Thank you!</string>
     <string name="donate_thanks_continue">Back to Hangar</string>
     <string name="donate_thanks">"Your contribution to the development of Hangar is much appreciated! The Android community is made better by people like you who support and motivate developers."</string>
@@ -295,7 +295,7 @@
     <string name="contribute_title">Contribute to Hangar</string>
 
     <string name="contribute_google_title">Rate + Review</string>
-    <string name="contribute_google_text">"Higher ratings &amp; positive reviews help spread the word by promoting Hangar's rank in the Play Store.  It's also the easiest and quickest way to contribute!"</string>
+    <string name="contribute_google_text">"Higher ratings &amp; positive reviews help spread the word by promoting Hangar\'s rank in the Play Store.  It\'s also the easiest and quickest way to contribute!"</string>
     <string name="contribute_google_link">Rate on Google Play</string>
     <string name="contribute_google_url" translatable="false">market://details?id=ca.mimic.apphangar</string>
 
@@ -611,7 +611,7 @@
     <string name="instructions_2_1">"Statistics"</string>
     <string name="instructions_2_2">"Hangar also keeps track of your in-app usage!"</string>
     <string name="instructions_title_2">Stats widget</string>
-    <string name="instructions_2_3">"You can check the stats under Hangar's <b>Apps tab</b> or by placing the <b>Stats widget</b> on your homescreen."</string>
+    <string name="instructions_2_3">"You can check the stats under Hangar\'s <b>Apps tab</b> or by placing the <b>Stats widget</b> on your homescreen."</string>
 
     <string name="instructions_3_1">"Customizations"</string>
     <string name="instructions_3_2">"In addition to the default <b>notification drawer</b> app shortcut bar, you can add and customize a <b>widget</b> for launching apps.  Specify the color, size, quantity, background color and more."</string>
@@ -620,7 +620,7 @@
     <string name="instructions_3_3">"You can also <b>pin</b> apps to be permanently anchored.  Got an <b>icon pack</b> you like?  Hangar supports icon packs and even the ability to manually change an individual app\'s icon.\n\nFinally, you can exclude apps from showing up with the <b>blacklist</b> option.  Do all this and more from the Hangar <b>Apps tab</b>."</string>
 
     <string name="instructions_4_1">"Get started"</string>
-    <string name="instructions_4_2">"Hangar is a lightweight tool that makes launching apps convenient from anywhere in Android.\n\nTo enjoy the full benefits of this tool, it should have at least a day's worth of monitored app statistics to base its recommendations on.\n\nEnjoy and thank you for trying Hangar!"</string>
+    <string name="instructions_4_2">"Hangar is a lightweight tool that makes launching apps convenient from anywhere in Android.\n\nTo enjoy the full benefits of this tool, it should have at least a day\'s worth of monitored app statistics to base its recommendations on.\n\nEnjoy and thank you for trying Hangar!"</string>
     <string name="instructions_4_button">Configure Hangar</string>
 
 </resources>
