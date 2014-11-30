@@ -393,7 +393,8 @@
     <string-array name="versionSummaries" translatable="false">
         <item>
 "  &#8226; [Fix!] Android L support!
-  &#8226; [New!] Added background color option for L devices
+  &#8226; [New!] Added background color option for
+     L devices
   &#8226; Updated translations"</item>
         <item>
 "  &#8226; [New!] Launch apps in floating windows

@@ -47,6 +47,7 @@
   <string name="dialog_priority_preference">בחירת מיקום</string>
   <string name="priority_top">עליונה</string>
   <string name="priority_normal">רגיל</string>
+  <string name="priority_bottom">תחתית (מוסתר בשורת המצב ומסך הנעילה)</string>
   <string name="title_smart_notification">סידור התרעות חכם</string>
   <string name="summary_smart_notification">לסדר מחדש רק  כשנוסף אייקון חדש</string>
   <string name="title_floating_windows">הפעלת אפליקציות בחלונות צפים</string>
@@ -81,6 +82,10 @@
   <string name="title_icon_color_preference">צבע</string>
   <string name="title_icon_color_category">צבע האייקון</string>
   <string name="title_notification_bg_preference">צבע הרקע</string>
+  <string name="summary_notification_bg_preference">בחירת צבע הרקע</string>
+  <string name="notification_bg_default">ברירת מחדל (עם פינות מעוגלות)</string>
+  <string name="notification_bg_dark">Material כהה</string>
+  <string name="notification_bg_black">שחור</string>
   <string name="apps_loading">מעלה אפליקציות..</string>
   <string name="title_top_spinner">עליונה</string>
   <string name="title_sort_spinner">סידור לפי</string>
@@ -109,6 +114,7 @@
   <string name="donate_google">תרומה באמצעות גוגל</string>
   <string name="donate_contribute">שפר את Hangar!</string>
   <string name="donate_accept_button">"אל תפסיק"</string>
+  <string name="donate_sorry">"הממ.. נראה שגוגל פליי לא אהב את זה. מצטער :("</string>
   <string name="donate_thanks_title">תודה רבה!</string>
   <string name="donate_thanks_continue">חזרה ל-Hangar</string>
   <string name="donate_thanks">"תרומתכם לפיתוח של Hangar מוערכת מאוד! קהילת Android הופכת לטובה יותר ע\"י אנשים כמוכם אשר תומכים ומתמרצים מפתחים."</string>
@@ -138,6 +144,10 @@
   <string name="contributors_role10">תרגומים לאנגלית (UK)</string>
   <string name="contributors_role11">תרגומים לעברית</string>
   <string name="contribute_accept_button">המשך</string>
+  <string name="us_permission_title">נדרשת הרשאה</string>
+  <string name="us_permission_head">Hangar דורש כעת הרשאת סטטיסטיקת שימוש חדשה החל מאנדרואיד 5.0 (Lollipop).\n\nההרשאה חייבת להינתן ידנית בכדי ש-Hangar יוכל לנטר את השימוש באפליקציות.</string>
+  <string name="us_permission_settings_button">הענקת הרשאת Hangar</string>
+  <string name="us_permission_notification">דרושות הרשאות נוספות</string>
   <string name="license_title">רישיון ומקור</string>
   <string name="license_head">Hangar מאושר ע\"י רישיון GNU GPLv3 מאת הקרן לתוכנה חופשית ומוגן תחת זכויות יוצרים ל-  Copyright © 2014 Jeff Corcoran.\n\nתחת רישיון GPL, אפליקציית Hangar זמינה בחינם כל עוד השימוש בה דבק בתנאי ה-GPL.\n\n משתמשים מורשים להוריד את התוכנה בחינם, ולשנותה, למזגה ולהפיצה. אולם, משתמשי GPL חייבים לציית לחוקי ה-GPL, אשר מציינים שאם עבודה המבוססת על Hangar מופצת מחדש, הקוד המקור כולו לעבודה זו חייב להיות פתוח וגם זמין להפצה מחדש תחת תנאי ה-GPL.\n\nראו את ה-GPL והשאלות והתשובות של הקרן לתוכנה חופשית לפרטים נוספים.</string>
   <string name="license_view_source">לבקר את Hangar ב-Github</string>
