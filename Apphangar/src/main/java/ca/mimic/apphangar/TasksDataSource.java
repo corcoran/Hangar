@@ -58,11 +58,15 @@ public class TasksDataSource {
     }
 
     public void open() throws SQLException {
-        database = dbHelper.getWritableDatabase();
+        if (database == null)
+            database = dbHelper.getWritableDatabase();
     }
 
     public void close() {
-        dbHelper.close();
+        if (dbHelper != null) {
+            dbHelper.close();
+            database = null;
+        }
     }
 
     public TasksModel createTask(String name, String packagename, String classname,
@@ -134,36 +138,40 @@ public class TasksDataSource {
     }
 
     public int getHighestSeconds() {
-        //Cursor cursor = database.query(Tasks.TABLE_TASKS,
-        //        allColumns, Tasks.COLUMN_SECONDS + " = (SELECT MAX(seconds))",
-        //        null, null, null, null);
-        Cursor cursor = database.query(Tasks.TABLE_TASKS, new String [] {"MAX(" + Tasks.COLUMN_SECONDS + ")"}, Tasks.COLUMN_BLACKLISTED + " = " + 0, null, null, null, null);
-        // Tools.HangarLog("getHighestSeconds cursor:" + cursor.getInt(0));
-        try {
-            while (cursor.moveToFirst()) {
-                return cursor.getInt(0);
-                //TasksModel task = cursorToTasks(cursor);
-                //Tools.HangarLog("highest Seconds [" + task.getName() + "] s[" + task.getSeconds() + "]");
-                //return task.getSeconds();
+        synchronized (this) {
+            //Cursor cursor = database.query(Tasks.TABLE_TASKS,
+            //        allColumns, Tasks.COLUMN_SECONDS + " = (SELECT MAX(seconds))",
+            //        null, null, null, null);
+            Cursor cursor = database.query(Tasks.TABLE_TASKS, new String[]{"MAX(" + Tasks.COLUMN_SECONDS + ")"}, Tasks.COLUMN_BLACKLISTED + " = " + 0, null, null, null, null);
+            // Tools.HangarLog("getHighestSeconds cursor:" + cursor.getInt(0));
+            try {
+                while (cursor.moveToFirst()) {
+                    return cursor.getInt(0);
+                    //TasksModel task = cursorToTasks(cursor);
+                    //Tools.HangarLog("highest Seconds [" + task.getName() + "] s[" + task.getSeconds() + "]");
+                    //return task.getSeconds();
+                }
+                //} catch (ParseException e) {
+                //    Tools.HangarLog("getHighestSeconds parse error [" + e + "]");
+            } finally {
+                cursor.close();
             }
-        //} catch (ParseException e) {
-        //    Tools.HangarLog("getHighestSeconds parse error [" + e + "]");
-        } finally {
-            cursor.close();
+            return 0;
         }
-        return 0;
     }
 
     public int getHighestLaunch() {
-        Cursor cursor = database.query(Tasks.TABLE_TASKS, new String[]{"MAX(" + Tasks.COLUMN_LAUNCHES + ")"}, Tasks.COLUMN_BLACKLISTED + " = " + 0, null, null, null, null);
-        try {
-            while (cursor.moveToFirst()) {
-                return cursor.getInt(0);
+        synchronized (this) {
+            Cursor cursor = database.query(Tasks.TABLE_TASKS, new String[]{"MAX(" + Tasks.COLUMN_LAUNCHES + ")"}, Tasks.COLUMN_BLACKLISTED + " = " + 0, null, null, null, null);
+            try {
+                while (cursor.moveToFirst()) {
+                    return cursor.getInt(0);
+                }
+            } finally {
+                cursor.close();
             }
-        } finally {
-            cursor.close();
+            return 0;
         }
-        return 0;
     }
 
     public void deleteTask(TasksModel task) {
@@ -184,19 +192,21 @@ public class TasksDataSource {
     }
 
     public TasksModel getTask(String name) {
-        Cursor cursor = database.query(Tasks.TABLE_TASKS,
-                allColumns, Tasks.COLUMN_PACKAGENAME + " = '" + name + "'", null, null, null, null);
-        try {
-            while (cursor.moveToFirst()) {
-                TasksModel task = cursorToTasks(cursor);
-                return task;
+        synchronized (this) {
+            Cursor cursor = database.query(Tasks.TABLE_TASKS,
+                    allColumns, Tasks.COLUMN_PACKAGENAME + " = '" + name + "'", null, null, null, null);
+            try {
+                while (cursor.moveToFirst()) {
+                    TasksModel task = cursorToTasks(cursor);
+                    return task;
+                }
+            } catch (ParseException e) {
+                Tools.HangarLog("getTask parse error [" + e + "]");
+            } finally {
+                cursor.close();
             }
-        } catch (ParseException e) {
-            Tools.HangarLog("getTask parse error [" + e + "]");
-        } finally {
-            cursor.close();
+            return null;
         }
-        return null;
     }
 
     public void resetTaskStats(TasksModel task) {
@@ -219,25 +229,27 @@ public class TasksDataSource {
     }
 
     public List<TasksModel> getBlacklisted() {
-        List<TasksModel> tasks = new ArrayList<TasksModel>();
+        synchronized (this) {
+            List<TasksModel> tasks = new ArrayList<TasksModel>();
 
-        Cursor cursor = database.query(Tasks.TABLE_TASKS,
-                allColumns, Tasks.COLUMN_BLACKLISTED + " = " + 1,
-                null, null, null, Tasks.COLUMN_TIMESTAMP + " DESC");
+            Cursor cursor = database.query(Tasks.TABLE_TASKS,
+                    allColumns, Tasks.COLUMN_BLACKLISTED + " = " + 1,
+                    null, null, null, Tasks.COLUMN_TIMESTAMP + " DESC");
 
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            try {
-                TasksModel task = cursorToTasks(cursor);
-                tasks.add(task);
-                cursor.moveToNext();
-            } catch (ParseException e) {
-                Tools.HangarLog("blacklistTask parse error [" + e + "]");
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                try {
+                    TasksModel task = cursorToTasks(cursor);
+                    tasks.add(task);
+                    cursor.moveToNext();
+                } catch (ParseException e) {
+                    Tools.HangarLog("blacklistTask parse error [" + e + "]");
+                }
             }
+            // make sure to close the cursor
+            cursor.close();
+            return tasks;
         }
-        // make sure to close the cursor
-        cursor.close();
-        return tasks;
     }
 
     public int updateTaskTimestamp(String name) {
@@ -281,76 +293,80 @@ public class TasksDataSource {
     }
 
     public List<TasksModel> getPinnedTasks(ArrayList<String> pinnedApps, int sortType) {
-        if (pinnedApps == null)
-            return null;
-        List<TasksModel> tasks = new ArrayList<TasksModel>();
+        synchronized (this) {
+            if (pinnedApps == null)
+                return null;
+            List<TasksModel> tasks = new ArrayList<TasksModel>();
 
-        String sortString = null;
-        switch (sortType) {
-            case 0:
-                sortString = Tasks.COLUMN_SECONDS + " DESC";
-                break;
-            case 1:
-                sortString = "lower(" + Tasks.COLUMN_NAME + ")";
-                break;
-            case 2:
-                sortString = Tasks.COLUMN_TIMESTAMP + " DESC";
-                break;
-        }
-
-        Cursor cursor = database.query(Tasks.TABLE_TASKS,
-                allColumns, Tasks.COLUMN_BLACKLISTED + " = " + 0 + filterPinned(pinnedApps, false),
-                null, null, null, sortString, null);
-
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            try {
-                TasksModel task = cursorToTasks(cursor);
-                tasks.add(task);
-                cursor.moveToNext();
-            } catch (ParseException e) {
-                Tools.HangarLog("getPinnedTasks parse error [" + e + "]");
+            String sortString = null;
+            switch (sortType) {
+                case 0:
+                    sortString = Tasks.COLUMN_SECONDS + " DESC";
+                    break;
+                case 1:
+                    sortString = "lower(" + Tasks.COLUMN_NAME + ")";
+                    break;
+                case 2:
+                    sortString = Tasks.COLUMN_TIMESTAMP + " DESC";
+                    break;
             }
-        }
-        // make sure to close the cursor
-        cursor.close();
-        if (sortType == 3) {
-            List<TasksModel> addedPins = new ArrayList<TasksModel>();
 
-            for (int i=pinnedApps.size() - 1; i >= 0; i--) {
-                String packageName = pinnedApps.get(i);
-                for (TasksModel task : tasks) {
-                    if (task.getPackageName().equals(packageName)) {
-                        addedPins.add(task);
+            Cursor cursor = database.query(Tasks.TABLE_TASKS,
+                    allColumns, Tasks.COLUMN_BLACKLISTED + " = " + 0 + filterPinned(pinnedApps, false),
+                    null, null, null, sortString, null);
+
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                try {
+                    TasksModel task = cursorToTasks(cursor);
+                    tasks.add(task);
+                    cursor.moveToNext();
+                } catch (ParseException e) {
+                    Tools.HangarLog("getPinnedTasks parse error [" + e + "]");
+                }
+            }
+            // make sure to close the cursor
+            cursor.close();
+            if (sortType == 3) {
+                List<TasksModel> addedPins = new ArrayList<TasksModel>();
+
+                for (int i = pinnedApps.size() - 1; i >= 0; i--) {
+                    String packageName = pinnedApps.get(i);
+                    for (TasksModel task : tasks) {
+                        if (task.getPackageName().equals(packageName)) {
+                            addedPins.add(task);
+                        }
                     }
                 }
-           }
-           return addedPins;
+                return addedPins;
+            }
+            return tasks;
         }
-        return tasks;
     }
 
     public List<TasksModel> getAllTasks(int limit, ArrayList<String> pinnedApps) {
-        List<TasksModel> tasks = new ArrayList<TasksModel>();
+        synchronized (this) {
+            List<TasksModel> tasks = new ArrayList<TasksModel>();
 
-        Cursor cursor = database.query(Tasks.TABLE_TASKS,
-                allColumns, limit == 0 ? null : Tasks.COLUMN_BLACKLISTED + " = " + 0 + filterPinned(pinnedApps, true),
-                null, null, null, Tasks.COLUMN_TIMESTAMP + " DESC",
-                limit == 0 ? null : Integer.toString(limit));
+            Cursor cursor = database.query(Tasks.TABLE_TASKS,
+                    allColumns, limit == 0 ? null : Tasks.COLUMN_BLACKLISTED + " = " + 0 + filterPinned(pinnedApps, true),
+                    null, null, null, Tasks.COLUMN_TIMESTAMP + " DESC",
+                    limit == 0 ? null : Integer.toString(limit));
 
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            try {
-                TasksModel task = cursorToTasks(cursor);
-                tasks.add(task);
-                cursor.moveToNext();
-            } catch (ParseException e) {
-                Tools.HangarLog("getAllTasks parse error [" + e + "]");
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                try {
+                    TasksModel task = cursorToTasks(cursor);
+                    tasks.add(task);
+                    cursor.moveToNext();
+                } catch (ParseException e) {
+                    Tools.HangarLog("getAllTasks parse error [" + e + "]");
+                }
             }
+            // make sure to close the cursor
+            cursor.close();
+            return tasks;
         }
-        // make sure to close the cursor
-        cursor.close();
-        return tasks;
     }
 
     public List<TasksModel> getAllTasks(int limit) {
@@ -370,37 +386,39 @@ public class TasksDataSource {
     }
 
     public List<TasksModel> getOrderedTasks(int limit, boolean widget, ArrayList<String> pinnedApps) {
-        List<TasksModel> tasks = new ArrayList<TasksModel>();
+        synchronized (this) {
+            List<TasksModel> tasks = new ArrayList<TasksModel>();
 
-        Cursor cursor;
-        if (widget) {
-            cursor = database.query(Tasks.TABLE_TASKS,
-                    allColumns, Tasks.COLUMN_WIDGET_ORDER + " > 0 or (" +
-                        Tasks.COLUMN_WIDGET_ORDER + " = 0 and " +
-                        Tasks.COLUMN_ORDER + " > 0)" +
-                        (limit == 0 ? null : " and " + Tasks.COLUMN_BLACKLISTED + " = " + 0 + filterPinned(pinnedApps, true)),
-                    null, null, null, Tasks.COLUMN_WIDGET_ORDER + " desc, " + Tasks.COLUMN_ORDER + " desc",
-                    limit == 0 ? null : Integer.toString(limit));
-        } else {
-            cursor = database.query(Tasks.TABLE_TASKS,
-                    allColumns, Tasks.COLUMN_ORDER + " > 0" + (limit == 0 ? null : " and " + Tasks.COLUMN_BLACKLISTED + " = " + 0 + filterPinned(pinnedApps, true)),
-                    null, null, null, Tasks.COLUMN_ORDER + " desc",
-                    limit == 0 ? null : Integer.toString(limit));
-        }
-
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            try {
-                TasksModel task = cursorToTasks(cursor);
-                tasks.add(task);
-                cursor.moveToNext();
-            } catch (ParseException e) {
-                Tools.HangarLog("getOrderedTasks parse error [" + e + "]");
+            Cursor cursor;
+            if (widget) {
+                cursor = database.query(Tasks.TABLE_TASKS,
+                        allColumns, Tasks.COLUMN_WIDGET_ORDER + " > 0 or (" +
+                                Tasks.COLUMN_WIDGET_ORDER + " = 0 and " +
+                                Tasks.COLUMN_ORDER + " > 0)" +
+                                (limit == 0 ? null : " and " + Tasks.COLUMN_BLACKLISTED + " = " + 0 + filterPinned(pinnedApps, true)),
+                        null, null, null, Tasks.COLUMN_WIDGET_ORDER + " desc, " + Tasks.COLUMN_ORDER + " desc",
+                        limit == 0 ? null : Integer.toString(limit));
+            } else {
+                cursor = database.query(Tasks.TABLE_TASKS,
+                        allColumns, Tasks.COLUMN_ORDER + " > 0" + (limit == 0 ? null : " and " + Tasks.COLUMN_BLACKLISTED + " = " + 0 + filterPinned(pinnedApps, true)),
+                        null, null, null, Tasks.COLUMN_ORDER + " desc",
+                        limit == 0 ? null : Integer.toString(limit));
             }
+
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                try {
+                    TasksModel task = cursorToTasks(cursor);
+                    tasks.add(task);
+                    cursor.moveToNext();
+                } catch (ParseException e) {
+                    Tools.HangarLog("getOrderedTasks parse error [" + e + "]");
+                }
+            }
+            // make sure to close the cursor
+            cursor.close();
+            return tasks;
         }
-        // make sure to close the cursor
-        cursor.close();
-        return tasks;
     }
 
 //    public List<TasksModel> getOrderedTasks(int limit, boolean widget) {

@@ -4,6 +4,7 @@
     <style name="AppTheme" parent="android:ThemeOverlay.Material.Dark">
         <!-- Customize your theme here. -->
     </style>
+
     <color name="applist_action_line_color">#7fcac3</color>
 
 </resources>

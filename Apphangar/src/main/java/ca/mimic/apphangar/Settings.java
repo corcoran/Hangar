@@ -59,6 +59,7 @@ import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -70,7 +71,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
@@ -226,6 +229,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static int STOP_SERVICE = 1;
 
     static boolean mAppsLoaded = false;
+    static boolean mIsLollipop;
 
     static int displayWidth;
 
@@ -292,12 +296,13 @@ public class Settings extends Activity implements ActionBar.TabListener {
         prefs = new PrefsGet(getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS));
 
         mContext = this;
+        mIsLollipop = Tools.isLollipop();
 
         if (showChangelog(prefs)) {
             launchChangelog();
         }
 
-        if (Tools.isLollipop() && needsUsPermission()) {
+        if (mIsLollipop && needsUsPermission()) {
             launchUsPermission(mContext);
         }
 
@@ -512,7 +517,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
         ChangeLog changelog = new ChangeLog(this);
         View mChg = changelog.getView();
         mChg.refreshDrawableState();
-        new AlertDialog.Builder(Settings.this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this)
                 .setTitle(R.string.changelog_title)
                 .setIcon(R.drawable.ic_logo)
                 .setView(mChg)
@@ -536,8 +541,40 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
                         }
                 )
-                .setPositiveButton(R.string.changelog_accept_button, null)
-                .show();
+                .setPositiveButton(R.string.changelog_accept_button, null);
+
+        AlertDialog alert = builder.show();
+
+        if (!getResources().getBoolean(R.bool.wrap_dialog_buttons)) return;
+
+        // This is a huge hack
+        // What we're doing is moving the neutral button, which is the first button in L to its own
+        // line and having the positive/negative buttons in a little container side by side.
+
+        Button positive = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+        Button negative = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        params.setMargins(0, -10, 0, -5);
+        LinearLayout parent = (LinearLayout) positive.getParent();
+        parent.setLayoutParams(params);
+        parent.setPadding(parent.getPaddingLeft(), 0, parent.getPaddingRight(), parent.getPaddingBottom());
+        parent.setGravity(Gravity.RIGHT);
+        parent.setOrientation(LinearLayout.VERTICAL);
+        parent.removeView(negative);
+        parent.removeView(positive);
+
+        LinearLayout bottomCont = new LinearLayout(mContext);
+        bottomCont.setLayoutParams(params);
+        bottomCont.setOrientation(LinearLayout.HORIZONTAL);
+        bottomCont.setGravity(Gravity.RIGHT);
+        bottomCont.addView(negative);
+        bottomCont.addView(positive);
+        parent.addView(bottomCont);
     }
 
     protected void launchLicense() {
@@ -577,6 +614,13 @@ public class Settings extends Activity implements ActionBar.TabListener {
                         new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        mContext.startActivity(new Intent(
+                                android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS));
+                    }
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
                         mContext.startActivity(new Intent(
                                 android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS));
                     }
@@ -1210,7 +1254,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 mAppearanceFrag.row_divider_preference.setEnabled(isToggled);
                 mAppearanceFrag.colorize_preference.setEnabled(isToggled);
                 mAppearanceFrag.icon_size_preference.setEnabled(isToggled);
-                mAppearanceFrag.notification_bg_preference.setEnabled(Tools.isLollipop() && isToggled);
+                mAppearanceFrag.notification_bg_preference.setEnabled(mIsLollipop && isToggled);
             } catch (Exception e) {
             }
         }
@@ -1462,8 +1506,15 @@ public class Settings extends Activity implements ActionBar.TabListener {
     public static List<AppsRowItem> createAppTasks() {
         db = TasksDataSource.getInstance(mContext);
         db.open();
-        int highestSeconds = db.getHighestSeconds();
-        List<TasksModel> tasks = db.getAllTasks();
+        int highestSeconds;
+        List<TasksModel> tasks;
+        try {
+            highestSeconds = db.getHighestSeconds();
+            tasks = db.getAllTasks();
+        } catch (Exception e) {
+            Tools.HangarLog("createAppTasks exception: " + e);
+            return new ArrayList<AppsRowItem>();
+        }
 
         List<AppsRowItem> appTasks = new ArrayList<AppsRowItem>();
 

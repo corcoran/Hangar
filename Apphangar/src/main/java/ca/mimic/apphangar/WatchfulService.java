@@ -22,6 +22,7 @@ package ca.mimic.apphangar;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -41,6 +42,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.widget.RemoteViews;
 
 import java.text.SimpleDateFormat;
@@ -170,6 +172,23 @@ public class WatchfulService extends Service {
         iconMap.put(Settings.STATUSBAR_ICON_BLACK_COLD, R.drawable.ic_apps_cold_black);
         iconMap.put(Settings.STATUSBAR_ICON_BLACK_BLUE, R.drawable.ic_apps_blue_black);
         iconMap.put(Settings.STATUSBAR_ICON_TRANSPARENT, R.drawable.ic_apps_transparent);
+
+        setRefreshAlarm(getApplicationContext());
+    }
+
+    public static void setRefreshAlarm(Context context) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(context, BootStart.class);
+        intent.setAction(Tools.REFRESH_ACTION);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 1339,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager.setRepeating(
+                AlarmManager.ELAPSED_REALTIME,
+                SystemClock.elapsedRealtime() + Tools.AWAKE_REFRESH,
+                Tools.AWAKE_REFRESH,
+                pi);
     }
 
     @Override
@@ -181,7 +200,6 @@ public class WatchfulService extends Service {
             return START_STICKY;
         }
 
-        Tools.HangarLog("Getting prefs");
         prefs = getSharedPreferences(getPackageName(), MODE_MULTI_PROCESS);
         widgetPrefs = getSharedPreferences("AppsWidget", Context.MODE_MULTI_PROCESS);
         pkgm = getPackageManager();
@@ -210,15 +228,45 @@ public class WatchfulService extends Service {
             Tools.HangarLog("buildReorderAndLaunch isToggled");
             // Grab new taskList and check if this is a new install
             taskList = Tools.buildTaskList(getApplicationContext(), db, Settings.TASKLIST_QUEUE_LIMIT);
+            Tools.HangarLog("BaseTask 0: " + taskList.get(0).packageName);
+            Tools.HangarLog("BaseTask size: " + taskList.size());
+            // TODO: This needs to be more elegant for L...
             if (taskList.size() == 0 ||
-                    (taskList.size() == 1 && taskList.get(0).packageName.equals(getPackageName()))) {
-                buildBaseTasks();
+                    (taskList.size() == 1 && (taskList.get(0).packageName.equals(getPackageName()) || taskList.get(0).packageName.equals("com.android.settings")))) {
+                if (Tools.isLollipop()) {
+                    buildLBaseTasks();
+                } else {
+                    buildBaseTasks();
+                }
                 taskList = Tools.buildTaskList(getApplicationContext(), db, Settings.TASKLIST_QUEUE_LIMIT);
             }
             reorderAndLaunch();
         }
     }
 
+    protected String getClassName(Context context, String taskPackage) {
+        String className = null;
+        ResolveInfo resolveInfo;
+        try {
+            resolveInfo = new Tools().cachedImageResolveInfo(context, taskPackage);
+            className = resolveInfo.activityInfo.name;
+        } catch (Exception e) {
+        }
+        return className;
+    }
+
+    @TargetApi(21)
+    protected void buildLBaseTasks() {
+        Context context = getApplicationContext();
+        List<UsageStats> stats = Tools.getUsageStats(context);
+
+        for (UsageStats task : stats) {
+            String taskPackage = task.getPackageName();
+            String taskClass = getClassName(context, taskPackage);
+            Tools.HangarLog("buildLBaseTask: package: " + taskPackage + " class: " + taskClass);
+            buildTaskInfo(taskClass, taskPackage);
+        }
+    }
     protected void buildBaseTasks() {
         // taskList is blank!  Populating db from apps in memory.
         final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -231,14 +279,16 @@ public class WatchfulService extends Service {
                     String taskPackage = task.getPackageName();
 
                     buildTaskInfo(taskClass, taskPackage);
-                } catch (NullPointerException e) { }
+                } catch (NullPointerException e) {
+                }
             }
         }
     }
 
     protected void buildTaskInfo(String className, String packageName) {
-        if (className.equals("com.android.internal.app.ResolverActivity") ||
-                Tools.isBlacklistedOrBad(packageName, getApplicationContext(), db) ||
+        boolean isTaskBlacklisted = Tools.isBlacklistedOrBad(packageName, getApplicationContext(), db);
+        if (className == null || className.equals("com.android.internal.app.ResolverActivity") ||
+                isTaskBlacklisted ||
                 packageName.equals(launcherPackage)) {
             Tools.HangarLog("buildTaskInfo -- task [" + packageName + "] is bad?  Bailing!");
             return;
@@ -328,9 +378,9 @@ public class WatchfulService extends Service {
                         }
 
                         lTaskPackage = lollipopTaskInfo.lastPackageName;
-                        if (!Tools.isBlacklistedOrBad(lTaskPackage, context, db)) {
-                            ResolveInfo resolveInfo = new Tools().cachedImageResolveInfo(context, lTaskPackage);
-                            lTaskClass = resolveInfo.activityInfo.name;
+                        boolean isTaskBlacklisted = Tools.isBlacklistedOrBad(lTaskPackage, context, db);
+                        if (!isTaskBlacklisted) {
+                            lTaskClass = getClassName(context, lTaskPackage);
 
                             newActivity = !oldPackage.equals(newPackage) && (lTaskClass != null);
                             if (newActivity) {
@@ -339,7 +389,9 @@ public class WatchfulService extends Service {
                             }
 
                         }
-                        if (!newActivity) return;
+                        if (!newActivity) {
+                            return;
+                        }
 
                     }
 
@@ -376,18 +428,25 @@ public class WatchfulService extends Service {
                             buildReorderAndLaunch(isToggled & !isNotificationRunning);
                         }
 
-                        if (!isLollipop) return;
+                        if (!isLollipop) {
+                            return;
+                        }
                     }
 
+                    boolean isTaskBlacklisted = Tools.isBlacklistedOrBad(taskPackage, context, db);
                     if (taskClass.equals("com.android.internal.app.ResolverActivity") ||
-                            Tools.isBlacklistedOrBad(taskPackage, context, db)) {
+                            isTaskBlacklisted) {
                         buildReorderAndLaunch(isToggled & !isNotificationRunning);
 
-                        if (!isLollipop) return;
+                        if (!isLollipop) {
+                            return;
+                        }
                     }
 
                     if (runningTask != null && runningTask.packageName.equals(isLollipop ? lTaskPackage : taskPackage)) {
-                        if (isLollipop) return;
+                        if (isLollipop) {
+                            return;
+                        }
                         if (pm.isScreenOn()) {
                             runningTask.seconds += LOOP_SECONDS;
                             if (runningTask.seconds >= LOOP_SECONDS * 5) {
@@ -437,7 +496,8 @@ public class WatchfulService extends Service {
                         Tools.HangarLog("failCount reached limit.  Giving up!");
                     } else {
                         failCount++;
-                        Tools.HangarLog("Exception hit!  Restarting buildTasks.. [" + failCount + "]");
+                        e.printStackTrace();
+                        Tools.HangarLog("Exception hit!  Restarting buildTasks.. [" + failCount + "] exception: " + e);
                         WatchfulService.this.buildTasks();
                     }
                 }

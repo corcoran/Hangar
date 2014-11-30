@@ -213,7 +213,7 @@
     <string-array name="values_notification_bg_preference" translatable="false">
         <item>**default**</item>
         <item>#263238</item>
-        <item>#000000</item>
+        <item>#212121</item>
     </string-array>
 
     <!-- Apps -->
@@ -375,7 +375,7 @@
     <string name="changelog_coming_soon_text" translatable="false">Divider color on white background, Stats widget additions</string>
 
     <string-array name="versionNumbers" translatable="false">
-        <item>2.6 (Nov 26th)</item>
+        <item>2.6 (Nov 30th)</item>
         <item>2.5 (Sept 14th)</item>
         <item>2.4 (August 14th)</item>
         <item>2.3 (July 29th)</item>

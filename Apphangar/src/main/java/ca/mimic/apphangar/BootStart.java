@@ -29,10 +29,18 @@ public class BootStart extends BroadcastReceiver {
     SharedPreferences prefs;
 
     public void onReceive(Context context, Intent arg1) {
+        String action = "";
+
         prefs = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
 
-        if (prefs.getBoolean(Settings.BOOT_PREFERENCE, Settings.BOOT_DEFAULT)) {
-            Tools.HangarLog("Starting WatchfulService on boot");
+        try {
+            action = arg1.getAction();
+        } catch (Exception e) {
+        }
+
+        if ((action.equals(Tools.BOOT_ACTION) && prefs.getBoolean(Settings.BOOT_PREFERENCE, Settings.BOOT_DEFAULT)) ||
+                action.equals(Tools.REPLACE_ACTION) || action.equals(Tools.REFRESH_ACTION)) {
+//            Tools.HangarLog("Starting WatchfulService: " + action);
 
             Intent intent = new Intent(context, WatchfulService.class);
             context.startService(intent);

@@ -34,6 +34,9 @@
 
     <ScrollView
         android:orientation="vertical"
+        android:fadingEdge="vertical"
+        android:requiresFadingEdge="vertical"
+        android:fadingEdgeLength="2dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 

@@ -54,6 +54,11 @@ public class Tools {
     // Query usage stats this amount of time
     final static int USAGE_STATS_QUERY_TIMEFRAME = 46800000;
     final static String USAGE_STATS_SERVICE_NAME = "usagestats";
+    final static int AWAKE_REFRESH = 60000;
+
+    final static String REFRESH_ACTION = "ca.mimic.hangar.SCREEN_ON_REFRESH";
+    final static String REPLACE_ACTION = "android.intent.action.PACKAGE_REPLACED";
+    final static String BOOT_ACTION = "android.intent.action.BOOT_COMPLETED";
 
     static int mBackgroundResource;
 
@@ -268,7 +273,7 @@ public class Tools {
         if (bRunner == null) {
             Tools.HangarLog("Couldn't find previous task [" + lollipopTaskInfo.packageName + "]");
         } else {
-            lollipopTaskInfo.timeInFGDelta = bRunner.getTotalTimeInForeground() - lollipopTaskInfo.timeInFG;
+            lollipopTaskInfo.timeInFGDelta = (lollipopTaskInfo.timeInFG > 0) ? bRunner.getTotalTimeInForeground() - lollipopTaskInfo.timeInFG : 0;
         }
         lollipopTaskInfo.timeInFG = aRunner.getTotalTimeInForeground();
 
@@ -424,7 +429,6 @@ public class Tools {
             TasksDataSource db = TasksDataSource.getInstance(mContext);
             db.open();
             db.deletePackageName(packageName);
-            db.close();
         }
         return rInfo;
     }
