@@ -357,7 +357,7 @@ public class WatchfulService extends Service {
                             // in > Tools.USAGE_STATS_QUERY_TIMEFRAME
                             long timeStamp = System.currentTimeMillis();
                             long timeDelta = timeStamp - lastPermissionTimestamp;
-//                            Tools.HangarLog("timeDelta: " + timeDelta + " timeStamp: " + timeStamp + " USQT: " + Tools.USAGE_STATS_QUERY_TIMEFRAME);
+                            Tools.HangarLog("timeDelta: " + timeDelta + " timeStamp: " + timeStamp + " USQT: " + Tools.USAGE_STATS_QUERY_TIMEFRAME);
                             if (timeDelta + Tools.USAGE_STATS_QUERY_TIMEBUFFER <= Tools.USAGE_STATS_QUERY_TIMEFRAME) {
                                 // We don't have permission !!!
                                 needsPermissionsNotification(context);
@@ -569,6 +569,7 @@ public class WatchfulService extends Service {
         pinnedList = null;
         notificationTasks = null;
         moreAppsPage = 1;
+        lastPermissionTimestamp = 0;
         stopForeground(true);
     }
 
@@ -612,7 +613,11 @@ public class WatchfulService extends Service {
                 getResources().getIdentifier("notification_row_no_dividers", "layout", taskPackage);
 
         numOfApps = Integer.parseInt(prefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.APPSNO_DEFAULT)));
-        setPriority = Integer.parseInt(prefs.getString(Settings.PRIORITY_PREFERENCE, Integer.toString(Settings.PRIORITY_DEFAULT)));
+        if (Tools.isLollipop()) {
+            setPriority = Settings.PRIORITY_ON_L_DEFAULT;
+        } else {
+            setPriority = Integer.parseInt(prefs.getString(Settings.PRIORITY_PREFERENCE, Integer.toString(Settings.PRIORITY_DEFAULT)));
+        }
         secondRow = prefs.getBoolean(Settings.SECOND_ROW_PREFERENCE, Settings.SECOND_ROW_DEFAULT);
         moreApps = prefs.getBoolean(Settings.MORE_APPS_PREFERENCE, Settings.MORE_APPS_DEFAULT);
         moreAppsPages = Integer.parseInt(prefs.getString(Settings.MORE_APPS_PAGES_PREFERENCE, Integer.toString(Settings.MORE_APPS_PAGES_DEFAULT)));
@@ -628,6 +633,7 @@ public class WatchfulService extends Service {
         }
 
         mIcon = prefs.getString(Settings.STATUSBAR_ICON_PREFERENCE, Settings.STATUSBAR_ICON_DEFAULT);
+        Tools.HangarLog("mIcon: " + mIcon);
 
     }
 
@@ -714,7 +720,6 @@ public class WatchfulService extends Service {
                 pageList = new ArrayList<TaskInfo>();
             }
             pageList = new Tools().getPinnedTasks(mContext, pinnedList, pageList, iconCacheCount, moreApps);
-            Tools.HangarLog("after getPinnedTasks! 1");
         } else {
             if (pinnedCount > iconCacheCount)
                 pinnedCount = iconCacheCount - 1;
@@ -725,7 +730,6 @@ public class WatchfulService extends Service {
                 return;
             }
             pageList = new Tools().getPinnedTasks(mContext, null, pageList, iconCacheCount, moreApps);
-            Tools.HangarLog("pageList is " + pageList);
             if (pageList.size() == 1) {
                 moreAppsPage = 1;
                 return;
@@ -779,7 +783,7 @@ public class WatchfulService extends Service {
         }
 
         // Set statusbar icon
-        int smallIcon = iconMap.get(Settings.STATUSBAR_ICON_WHITE_WARM);
+        int smallIcon = iconMap.get(Settings.STATUSBAR_ICON_WHITE);
         try {
             smallIcon = iconMap.get(mIcon);
         } catch (NullPointerException e) {

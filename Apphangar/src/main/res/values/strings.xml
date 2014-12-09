@@ -121,6 +121,10 @@
         <item>-2</item>
     </string-array>
 
+    <string name="summary_priority_on_l_notification">With Lollipop, Hangar will always be set to bottom.  In order to set top priority for Hangar, you must use the new built-in toggle that Android provides.\n\n<b>Turn on Priority after launching notification settings.</b>"</string>
+    <string name="priority_on_l_accept_button">Launch notification settings</string>
+    <string name="priority_on_l_cancel_button">Cancel</string>
+
     <string name="title_smart_notification">Smart notification sort</string>
     <string name="summary_smart_notification">Only reorder when a new icon is added</string>
 

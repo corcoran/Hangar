@@ -139,6 +139,17 @@ public class Tools {
         return (String) (ai != null ? pm.getApplicationLabel(ai) : "");
     }
 
+    public static int getUid(Context context, String packageName) {
+        final PackageManager pm = context.getPackageManager();
+        ApplicationInfo ai;
+        try {
+            ai = pm.getApplicationInfo(packageName, 0);
+        } catch (final PackageManager.NameNotFoundException e) {
+            ai = null;
+        }
+        return (ai != null ? ai.uid : 0);
+    }
+
     protected static String getLauncher(Context context) {
         final Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);

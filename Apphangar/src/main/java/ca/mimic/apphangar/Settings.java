@@ -176,7 +176,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
     final static int WEIGHT_PRIORITY_DEFAULT = 0;
     final static int APPSNO_DEFAULT = 8;
+    final static int PRIORITY_TOP = 2;
     final static int PRIORITY_DEFAULT = 2;
+    final static int PRIORITY_ON_L_DEFAULT = -2;
     final static int PRIORITY_BOTTOM = -2;
     final static int ICON_COLOR_DEFAULT = 0xffffffff;
     final static int BACKGROUND_COLOR_DEFAULT = 0x5e000000;
@@ -203,6 +205,11 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static String STATUSBAR_ICON_TRANSPARENT = "**transparent**";
     final static String STATUSBAR_ICON_NONE = "**none**";
     final static String STATUSBAR_ICON_DEFAULT = STATUSBAR_ICON_WHITE;
+
+    public static final String ACTION_APP_NOTIFICATION_SETTINGS = "android.settings.APP_NOTIFICATION_SETTINGS";
+    final static String EXTRA_APP_UID = "app_uid";
+    final static String EXTRA_APP_PACKAGE = "app_package";
+
 
     final static String NOTIFICATION_BG_DEFAULT_VALUE = "**default**";
 
@@ -483,11 +490,27 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
     protected static void launchPriorityWarning(SharedPreferences prefs) {
         String priority = prefs.getString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_DEFAULT));
-        if (Integer.parseInt(priority) != PRIORITY_DEFAULT && prefs.getBoolean(SECOND_ROW_PREFERENCE, SECOND_ROW_DEFAULT)) {
+        if (Integer.parseInt(priority) != PRIORITY_TOP && prefs.getBoolean(SECOND_ROW_PREFERENCE, SECOND_ROW_DEFAULT)) {
             new AlertDialog.Builder(mContext)
                     .setTitle(R.string.title_second_row_preference)
                     .setMessage(R.string.alert_second_row_summary)
                     .setPositiveButton(R.string.contribute_accept_button, null)
+                    .show();
+        }
+    }
+    protected static void launchPriorityOnL(SharedPreferences prefs) {
+        String priority = prefs.getString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_DEFAULT));
+        if (Integer.parseInt(priority) != PRIORITY_BOTTOM) {
+            new AlertDialog.Builder(mContext)
+                    .setTitle(R.string.title_priority_preference)
+                    .setMessage(R.string.summary_priority_on_l_notification)
+                    .setPositiveButton(R.string.priority_on_l_accept_button, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            launchNotificationSettings();
+                        }
+                    })
+                    .setNegativeButton(R.string.priority_on_l_cancel_button, null)
                     .show();
         }
     }
@@ -612,12 +635,12 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 .setView(mUsPermission)
                 .setPositiveButton(R.string.us_permission_settings_button,
                         new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mContext.startActivity(new Intent(
-                                android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS));
-                    }
-                })
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mContext.startActivity(new Intent(
+                                        android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS));
+                            }
+                        })
                 .setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
@@ -986,6 +1009,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 statusbar_icon_preference = (UpdatingListPreference)findPreference(STATUSBAR_ICON_PREFERENCE);
                 statusbar_icon_preference.setValue(prefs2.getString(STATUSBAR_ICON_PREFERENCE, STATUSBAR_ICON_DEFAULT));
                 statusbar_icon_preference.setOnPreferenceChangeListener(changeListener);
+                statusbar_icon_preference.setEnabled(!mIsLollipop);
 
                 icon_size_preference = (UpdatingListPreference)findPreference(ICON_SIZE_PREFERENCE);
                 icon_size_preference.setValue(prefs2.getString(ICON_SIZE_PREFERENCE, Integer.toString(ICON_SIZE_DEFAULT)));
@@ -1021,7 +1045,9 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 smart_notification_preference.setOnPreferenceChangeListener(changeListener);
 
                 priority_preference = (UpdatingListPreference)findPreference(PRIORITY_PREFERENCE);
-                priority_preference.setValue(prefs2.getString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_DEFAULT)));
+                priority_preference.setValue(mIsLollipop ?
+                        Integer.toString(PRIORITY_ON_L_DEFAULT) :
+                        prefs2.getString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_DEFAULT)));
                 priority_preference.setOnPreferenceChangeListener(changeListener);
 
                 floating_windows_preference = (CheckBoxPreference)findPreference(FLOATING_WINDOWS_PREFERENCE);
@@ -1132,17 +1158,12 @@ public class Settings extends Activity implements ActionBar.TabListener {
                                     statusbar_icon_preference.setValue(prefs2.getString(STATUSBAR_ICON_PREFERENCE, STATUSBAR_ICON_DEFAULT));
                                 }
                             }).show();
+                        return true;
                     } else {
-                        PrefsFragment mBehaviorSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(BEHAVIOR_TAB);
-                        if (mBehaviorSettings.priority_preference.getValue().equals(Integer.toString(PRIORITY_BOTTOM))) {
-                            editor.putString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_DEFAULT));
-                            mBehaviorSettings.priority_preference.setValue(Integer.toString(PRIORITY_DEFAULT));
-                        }
-                        editor.putString(STATUSBAR_ICON_PREFERENCE, (String) newValue);
+                        editor.putString(STATUSBAR_ICON_PREFERENCE, mStatusBarIcon);
                         editor.commit();
                         myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                     }
-                    return true;
                 } else if (preference.getKey().equals(ICON_COLOR_PREFERENCE)) {
                     String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String.valueOf(newValue)));
                     preference.setSummary(hex);
@@ -1190,16 +1211,23 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     editor.putString(APPSNO_PREFERENCE, (String) newValue);
                     editor.commit();
                 } else if (preference.getKey().equals(PRIORITY_PREFERENCE)) {
-                    String mPriorityPreference = (String) newValue;
-                    editor.putString(PRIORITY_PREFERENCE, mPriorityPreference);
-                    PrefsFragment mAppearanceSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(APPEARANCE_TAB);
-                    if (!mPriorityPreference.equals(Integer.toString(PRIORITY_BOTTOM)) &&
-                            mAppearanceSettings.statusbar_icon_preference.getValue().equals(STATUSBAR_ICON_NONE)) {
-                        editor.putString(STATUSBAR_ICON_PREFERENCE, STATUSBAR_ICON_DEFAULT);
-                        mAppearanceSettings.statusbar_icon_preference.setValue(STATUSBAR_ICON_DEFAULT);
+                    if (!mIsLollipop) {
+                        String mPriorityPreference = (String) newValue;
+                        editor.putString(PRIORITY_PREFERENCE, mPriorityPreference);
+                        PrefsFragment mAppearanceSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(APPEARANCE_TAB);
+                        if (!mPriorityPreference.equals(Integer.toString(PRIORITY_BOTTOM)) &&
+                                mAppearanceSettings.statusbar_icon_preference.getValue().equals(STATUSBAR_ICON_NONE)) {
+                            editor.putString(STATUSBAR_ICON_PREFERENCE, STATUSBAR_ICON_DEFAULT);
+                            mAppearanceSettings.statusbar_icon_preference.setValue(STATUSBAR_ICON_DEFAULT);
+                        }
+                        editor.commit();
+                        launchPriorityWarning(prefs2);
+                    } else {
+                        PrefsFragment mBehaviorSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(BEHAVIOR_TAB);
+                        mBehaviorSettings.priority_preference.setSummary(R.string.priority_bottom);
+                        launchPriorityOnL(prefs2);
+                        return true;
                     }
-                    editor.commit();
-                    launchPriorityWarning(prefs2);
                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);
                 } else if (preference.getKey().equals(SECOND_ROW_PREFERENCE)) {
                     setAppsnoSummary((Boolean) newValue, appnos_preference);
@@ -1249,7 +1277,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 PrefsFragment mAppearanceFrag = (PrefsFragment) mGetFragments.getFragmentByPosition(APPEARANCE_TAB);
                 mAppearanceFrag.appnos_preference.setEnabled(isToggled);
                 mAppearanceFrag.second_row_preference.setEnabled(isToggled);
-                mAppearanceFrag.statusbar_icon_preference.setEnabled(isToggled);
+                mAppearanceFrag.statusbar_icon_preference.setEnabled(!mIsLollipop && isToggled);
                 mAppearanceFrag.divider_preference.setEnabled(isToggled);
                 mAppearanceFrag.row_divider_preference.setEnabled(isToggled);
                 mAppearanceFrag.colorize_preference.setEnabled(isToggled);
@@ -1290,6 +1318,16 @@ public class Settings extends Activity implements ActionBar.TabListener {
         } else {
             appnos_preference.setSummary(R.string.summary_appsno_preference);
         }
+    }
+
+    private static void launchNotificationSettings() {
+        final Intent intent = new Intent(ACTION_APP_NOTIFICATION_SETTINGS);
+        final String packageName = mContext.getPackageName();
+        final int appUid = Tools.getUid(mContext, packageName);
+
+        intent.putExtra(EXTRA_APP_PACKAGE, packageName);
+        intent.putExtra(EXTRA_APP_UID, appUid);
+        mInstance.startActivity(intent);
     }
 
     public static void updateRowItem() {
