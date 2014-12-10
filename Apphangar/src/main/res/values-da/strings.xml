@@ -47,6 +47,7 @@
   <string name="dialog_priority_preference">Vælg en placering</string>
   <string name="priority_top">Top</string>
   <string name="priority_normal">Normal</string>
+  <string name="priority_bottom">I bunden (skjult i statuslinjen/låseskærmen)</string>
   <string name="title_smart_notification">Smart sortering af meddelelser</string>
   <string name="summary_smart_notification">Ændre kun rækkefølgen når der tilføjes et nyt ikon</string>
   <string name="title_floating_windows">Start apps i flydende vinduer</string>
@@ -110,9 +111,11 @@
   <string name="configure_license">Licens</string>
   <string name="configure_contribute">Bidrag</string>
   <string name="donate_title">Vil du købe mig en øl?</string>
+  <string name="donate_head">Donationer er altid værdsatte og hjælper med at finansiere den fremtidige udvikling af denne og andre apps.\n\nSåfremt du finder Hangar nyttigt og ønsker at vise tak for det arbejde, der er laver, kan du besøge Bidrage afsnittet for at se de mange måder, du kan hjælpe på.\n\nHvis du er i et generøs humør, kan du donere med <b>Google Play</b> nedenfor.</string>
   <string name="donate_google">Doner med Google</string>
   <string name="donate_contribute">Gør Hangar bedre!</string>
   <string name="donate_accept_button">"Fortsæt"</string>
+  <string name="donate_sorry">"Hm.. det ser ud som Google Play ikke brød sig om det. Beklager :("</string>
   <string name="donate_thanks_title">Tak!</string>
   <string name="donate_thanks_continue">Tilbage til Hangar</string>
   <string name="donate_thanks">"Dit bidrag til udviklingen af Hangar er meget værdsat! Android fællesskabet bliver bedre af folk som dig der støtter og motiverer udviklere."</string>
@@ -143,6 +146,8 @@
   <string name="contributors_role11">Hebræisk oversættelse</string>
   <string name="contribute_accept_button">Fortsæt</string>
   <string name="us_permission_title">Tilladelse nødvendig</string>
+  <string name="us_permission_head">Hangar kræver nu den nye Usage Stats tilladelse fra Android 5.0 (Lollipop). \n\n Tilladelsen skal gives manuelt, for at Hangar  kan overvåge app brug.</string>
+  <string name="us_permission_settings_button">Tildel Hangar tilladelse</string>
   <string name="us_permission_notification">Ekstra tilladelser krævet</string>
   <string name="license_title">Licens og kildekode</string>
   <string name="license_head">Hangar er licenseret under GPLv3 fra Free Software Foundation og er Copyright © 2014 Jeff Corcoran.\n\nUnder GPL licensen, Hangar er tilgængelig gratis uden beregning så længe brugen af Hangar overholder vilkårene i GPL license.\n\nBrugere kan hente softwaren gratis, og redigere, integrere og distribuere det. Dog skal GPL brugere overholde reglerne for GPL, som fastsætter, at hvis et værk baseret på Hangar redistribueres, skal den komplette kildekode for dette arbejde skal også være åben og tilgængelig for redistribution i henhold til GPL.\n\nSe GPL og FAQ fra Free Software Foundation for flere detaljer.</string>

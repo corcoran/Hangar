@@ -14,7 +14,7 @@
   <string name="switched_icon_packs_alert">Обновление кэша значков. Это может занять несколько секунд!</string>
   <string name="title_icon_pack_picker">Выберите набор значков</string>
   <string name="title_icon_pack_choose_from">Выберите набор значков</string>
-  <string name="title_icon_pack_not_found">Набор значков не обнаружен</string>
+  <string name="title_icon_pack_not_found">Наборы значков не обнаружены</string>
   <string name="title_icon_pack_install">Найти набор значков</string>
   <string name="title_icon_pack_no_single_ui">Выбранный Вами набор не (%1$s) поддерживает выбор значка для конкретного приложения.\n\nСвяжитесь с автором набора значков для получения большей информации.</string>
   <string name="title_icon_pack_no_single_picks">Вы так и не выбрали основной набор значков для всех ярлыков Hangar.\n\nВозможно, Вы захотите сперва сменить их во вкладке <b>Общие</b>.</string>
@@ -47,6 +47,7 @@
   <string name="dialog_priority_preference">Выберите позицию</string>
   <string name="priority_top">Верхняя</string>
   <string name="priority_normal">Обычная</string>
+  <string name="priority_bottom">Нижняя (скрывается в строке состояния и на экане блокировки)</string>
   <string name="title_smart_notification">Продвинутая сортировка</string>
   <string name="summary_smart_notification">Перераспрелять исключительно при появлении нового значка</string>
   <string name="title_floating_windows">Запуск прил. в оконном режиме</string>
@@ -81,6 +82,10 @@
   <string name="title_icon_color_preference">Цвет</string>
   <string name="title_icon_color_category">Окрас значков</string>
   <string name="title_notification_bg_preference">Цвет фона</string>
+  <string name="summary_notification_bg_preference">Выберите цвет фона</string>
+  <string name="notification_bg_default">По умолчанию (с закруглёнными углами)</string>
+  <string name="notification_bg_dark">Тёмный \"осязаемый\"</string>
+  <string name="notification_bg_black">Чёрный</string>
   <string name="apps_loading">Загрузка...</string>
   <string name="title_top_spinner">Верхняя</string>
   <string name="title_sort_spinner">Сорт.</string>
@@ -106,9 +111,11 @@
   <string name="configure_license">Лицензия</string>
   <string name="configure_contribute">Внести вклад</string>
   <string name="donate_title">Хотите дать мне на пиво?</string>
+  <string name="donate_head">Вложения полезны и принимаются во внимание при разработке приложений.\n\nЕсли Вы нашли полезным Hangar и желаете выразить признательность за проделанную работу, загляните в раздел \"Внести вклад\", в нём Вы найдёте несколько способов помочь.\n\nВы также можете произвести оплату ниже через <b>Google Play</b>.</string>
   <string name="donate_google">Оплатить через Google</string>
   <string name="donate_contribute">Сделать Hangar лучше!</string>
   <string name="donate_accept_button">"Продолжить использование"</string>
+  <string name="donate_sorry">"Хм... видимо Google Play это не понравилось.  Извините :("</string>
   <string name="donate_thanks_title">Спасибо!</string>
   <string name="donate_thanks_continue">Вернуться в Hangar</string>
   <string name="donate_thanks">"Ваше участие в разработке неоценимо! Android сообщество становится лучше за счёт таких людей как Вы, тех, кто поддерживает и мотивирует разработчиков."</string>
@@ -138,6 +145,10 @@
   <string name="contributors_role10">за великобританский перевод</string>
   <string name="contributors_role11">за перевод на иврит</string>
   <string name="contribute_accept_button">Продолжить</string>
+  <string name="us_permission_title">Требуется разрешение</string>
+  <string name="us_permission_head">В связи с изменениями в Android 5.0 (Lollipop), для работы Hangar теперь требуется разрешение на сбор статистики использования.\n\nОно должно быть предоставлено вручную, чтобы Hangar имел возможность следить за использованием приложений.</string>
+  <string name="us_permission_settings_button">Предоставить</string>
+  <string name="us_permission_notification">Требуются дополнительные разрешения</string>
   <string name="license_title">Лицензия и исходный код</string>
   <string name="license_head">Hangar распространяется под лицензией GPLv3 Фонда свободного ПО и принадлежит Джеффу Коркорану © 2014.\n\nБудучи под лицензией GPL, Hangar распространяется бесплатно до тех пор, пока использование приложения проходит с соблюдением правил данной лицензии.\n\nПользователи имеют возможность бесплатного скачивания данного ПО, а также его изменения, внедрения и распространения. Пользователи GPL обязаны следовать данным правилам, обусловленными тем, что работа, основанная на Hangar, преобразуется и полный исходный код конечного продукта должен быть так же открытым и доступным для распространения на правах GPL.\n\nПрочтите GPL и ЧаВо Фонда свободного ПО для получения дополнительной информации.</string>
   <string name="license_view_source">Посетить Hangar на Github</string>
@@ -189,6 +200,6 @@
   <string name="instructions_title_4">Настройка конкретных приложений</string>
   <string name="instructions_3_3">"Вы также можете <b>закреплять</b> приложения, чтобы всегда иметь их под рукой.  Нашли желаемый <b>набор значков</b>?  Hangar не только поддерживает наборы значков, но и позволяет вручную менять значки отдельным приложениям.\n\nНаконец, имеется возможность исключить показ конкретных приложений с помощью <b>чёрного списка</b>. Всё это и кое-что другое доступно во <b>вкладке Приложения</b>."</string>
   <string name="instructions_4_1">"Приступая к работе"</string>
-  <string name="instructions_4_2">"Hangar это малопотребное приложение, позволяющее удобно запускать приложения отовсюду в Android.\n\nЧтобы насладиться всеми преимуществами этого приложения, оставьте его хотя бы на день для формирования базовых рекоммендаций.\n\nПриятного использования и благодарим Вас за испытание Hangar!"</string>
+  <string name="instructions_4_2">"Hangar это малозатратное приложение, позволяющее удобно запускать приложения отовсюду в Android.\n\nЧтобы насладиться всеми преимуществами этого приложения, оставьте его хотя бы на день для формирования базовых рекоммендаций.\n\nПриятного использования и благодарим Вас за испытание Hangar!"</string>
   <string name="instructions_4_button">Настроить Hangar</string>
 </resources>
