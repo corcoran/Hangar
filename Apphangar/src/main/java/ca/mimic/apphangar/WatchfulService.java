@@ -298,12 +298,22 @@ public class WatchfulService extends Service {
         try {
             ApplicationInfo appInfo = pkgm.getApplicationInfo(packageName, 0);
             runningTask.appName = appInfo.loadLabel(pkgm).toString();
+            if (runningTask.appName.isEmpty()) {
+                Tools.HangarLog("Can't add task [" + packageName + "] to db -- appName is blank!");
+                return;
+            }
             updateOrAdd(runningTask);
         } catch (Exception e) {
             Tools.HangarLog("NPE taskPackage: " + packageName);
             e.printStackTrace();
         }
 
+    }
+
+    protected void checkPermissionsRunning(boolean isToggled) {
+        cancelPermissionsNotification();
+        if (isToggled)
+            createNotification();
     }
 
     protected void buildTasks() {
@@ -361,14 +371,16 @@ public class WatchfulService extends Service {
                             if (timeDelta + Tools.USAGE_STATS_QUERY_TIMEBUFFER <= Tools.USAGE_STATS_QUERY_TIMEFRAME) {
                                 // We don't have permission !!!
                                 needsPermissionsNotification(context);
+                            } else {
+                                if (needsPermissionsRunning) {
+                                    checkPermissionsRunning(isToggled);
+                                } else {
+                                    return;
+                                }
                             }
-                            return;
                         }
-                        if (needsPermissionsRunning) {
-                            cancelPermissionsNotification();
-                            if (isToggled)
-                                createNotification();
-                        }
+                        if (needsPermissionsRunning)
+                            checkPermissionsRunning(isToggled);
                         lollipopTaskInfo = Tools.parseUsageStats(listStats, lollipopTaskInfo);
 
                         if (listStats.size() < 2 && listStats.size() > 0) {
