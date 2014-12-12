@@ -95,8 +95,6 @@ public class WatchfulService extends Service {
 
     String launcherPackage = null;
     boolean isNotificationRunning;
-    boolean needsPermissionsRunning;
-    long lastPermissionTimestamp;
 
     final int MAX_RUNNING_TASKS = 20;
     final int LOOP_SECONDS = 3;
@@ -310,12 +308,6 @@ public class WatchfulService extends Service {
 
     }
 
-    protected void checkPermissionsRunning(boolean isToggled) {
-        cancelPermissionsNotification();
-        if (isToggled)
-            createNotification();
-    }
-
     protected void buildTasks() {
         Runnable runnable = new Runnable() {
             @Override
@@ -363,24 +355,16 @@ public class WatchfulService extends Service {
 
                         List<UsageStats> listStats = Tools.getUsageStats(context);
                         if (listStats.size() == 0) {
-                            // We either don't have permission or the foreground app hasn't changed
-                            // in > Tools.USAGE_STATS_QUERY_TIMEFRAME
-                            long timeStamp = System.currentTimeMillis();
-                            long timeDelta = timeStamp - lastPermissionTimestamp;
-                            Tools.HangarLog("timeDelta: " + timeDelta + " timeStamp: " + timeStamp + " USQT: " + Tools.USAGE_STATS_QUERY_TIMEFRAME);
-                            if (timeDelta + Tools.USAGE_STATS_QUERY_TIMEBUFFER <= Tools.USAGE_STATS_QUERY_TIMEFRAME) {
-                                // We don't have permission !!!
-                                needsPermissionsNotification(context);
-                            } else {
-                                if (needsPermissionsRunning) {
-                                    checkPermissionsRunning(isToggled);
-                                } else {
-                                    return;
-                                }
+                            // Either no permission or nothing new.  Move along
+                            return;
+                        } else {
+                            if (lollipopTaskInfo == null) {
+                                // listStats has been 0 up until now, force newActivity
+                                Tools.HangarLog("newActivity being set to True");
+                                newActivity = true;
                             }
+                            Tools.HangarLog("listStats size is " + listStats.size());
                         }
-                        if (needsPermissionsRunning)
-                            checkPermissionsRunning(isToggled);
                         lollipopTaskInfo = Tools.parseUsageStats(listStats, lollipopTaskInfo);
 
                         if (listStats.size() < 2 && listStats.size() > 0) {
@@ -395,13 +379,9 @@ public class WatchfulService extends Service {
                             lTaskClass = getClassName(context, lTaskPackage);
 
                             newActivity = !oldPackage.equals(newPackage) && (lTaskClass != null);
-                            if (newActivity) {
-                                lastPermissionTimestamp = System.currentTimeMillis();
-                                Tools.HangarLog("Lollipop!  newActivity? true");
-                            }
-
                         }
                         if (!newActivity) {
+                            Tools.HangarLog("newActivity? " + newActivity);
                             return;
                         }
 
@@ -526,39 +506,6 @@ public class WatchfulService extends Service {
         }
     };
 
-    public void cancelPermissionsNotification() {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(1338);
-        needsPermissionsRunning = false;
-    }
-
-    @TargetApi(21)
-    public void needsPermissionsNotification(Context context) {
-        if (isNotificationRunning) {
-            destroyNotification();
-        }
-
-        if (needsPermissionsRunning)
-            return;
-
-        int smallIcon = iconMap.get(Settings.STATUSBAR_ICON_WHITE_WARM);
-        Intent intent = new Intent(
-                android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS);
-        PendingIntent activity = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification.Builder(WatchfulService.this).
-                setContentTitle(getResources().getString(R.string.app_name))
-                .setContentText(getResources().getString(R.string.us_permission_notification))
-                .setSmallIcon(smallIcon)
-                .setOngoing(true)
-                .setContentIntent(activity)
-                .build();
-        notificationManager.notify(1338, notification);
-        needsPermissionsRunning = true;
-
-    }
-
     public synchronized int updateOrAdd(TaskInfo newInfo) {
         int rows = db.updateTaskTimestamp(newInfo.packageName);
         if (rows > 0) {
@@ -581,7 +528,6 @@ public class WatchfulService extends Service {
         pinnedList = null;
         notificationTasks = null;
         moreAppsPage = 1;
-        lastPermissionTimestamp = 0;
         stopForeground(true);
     }
 
