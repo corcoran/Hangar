@@ -498,9 +498,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     .show();
         }
     }
-    protected static void launchPriorityOnL(SharedPreferences prefs) {
-        String priority = prefs.getString(PRIORITY_PREFERENCE, Integer.toString(PRIORITY_DEFAULT));
-        if (Integer.parseInt(priority) != PRIORITY_BOTTOM) {
+    protected static void launchPriorityOnL(String priorityPreference) {
+        if (Integer.parseInt(priorityPreference) != PRIORITY_BOTTOM) {
             new AlertDialog.Builder(mContext)
                     .setTitle(R.string.title_priority_preference)
                     .setMessage(R.string.summary_priority_on_l_notification)
@@ -1211,8 +1210,8 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     editor.putString(APPSNO_PREFERENCE, (String) newValue);
                     editor.commit();
                 } else if (preference.getKey().equals(PRIORITY_PREFERENCE)) {
+                    String mPriorityPreference = (String) newValue;
                     if (!mIsLollipop) {
-                        String mPriorityPreference = (String) newValue;
                         editor.putString(PRIORITY_PREFERENCE, mPriorityPreference);
                         PrefsFragment mAppearanceSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(APPEARANCE_TAB);
                         if (!mPriorityPreference.equals(Integer.toString(PRIORITY_BOTTOM)) &&
@@ -1225,7 +1224,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                     } else {
                         PrefsFragment mBehaviorSettings = (PrefsFragment) mGetFragments.getFragmentByPosition(BEHAVIOR_TAB);
                         mBehaviorSettings.priority_preference.setSummary(R.string.priority_bottom);
-                        launchPriorityOnL(prefs2);
+                        launchPriorityOnL(mPriorityPreference);
                         return true;
                     }
                     myService.execute(SERVICE_DESTROY_NOTIFICATIONS);

@@ -363,7 +363,6 @@ public class WatchfulService extends Service {
                                 Tools.HangarLog("newActivity being set to True");
                                 newActivity = true;
                             }
-                            Tools.HangarLog("listStats size is " + listStats.size());
                         }
                         lollipopTaskInfo = Tools.parseUsageStats(listStats, lollipopTaskInfo);
 
@@ -381,7 +380,6 @@ public class WatchfulService extends Service {
                             newActivity = !oldPackage.equals(newPackage) && (lTaskClass != null);
                         }
                         if (!newActivity) {
-                            Tools.HangarLog("newActivity? " + newActivity);
                             return;
                         }
 
