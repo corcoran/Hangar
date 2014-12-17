@@ -175,7 +175,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
     final static boolean FLOATING_WINDOWS_DEFAULT = false;
 
     final static int WEIGHT_PRIORITY_DEFAULT = 0;
-    final static int APPSNO_DEFAULT = 8;
+    final static int APPSNO_DEFAULT = 7;
     final static int PRIORITY_TOP = 2;
     final static int PRIORITY_DEFAULT = 2;
     final static int PRIORITY_ON_L_DEFAULT = -2;
