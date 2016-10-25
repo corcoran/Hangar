@@ -231,8 +231,9 @@ public class Tools {
         return bitmap;
     }
 
-    public static boolean isLollipop() {
-        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    public static boolean isLollipop(boolean exact) {
+        boolean match = exact ? android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP : android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+        return match;
     }
 
     @TargetApi(21)

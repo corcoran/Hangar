@@ -237,6 +237,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
     static boolean mAppsLoaded = false;
     static boolean mIsLollipop;
+    static boolean mIsAtLeastLollipop;
 
     static int displayWidth;
 
@@ -303,13 +304,14 @@ public class Settings extends Activity implements ActionBar.TabListener {
         prefs = new PrefsGet(getSharedPreferences(getPackageName(), Context.MODE_MULTI_PROCESS));
 
         mContext = this;
-        mIsLollipop = Tools.isLollipop();
+        mIsLollipop = Tools.isLollipop(true);
+        mIsAtLeastLollipop = Tools.isLollipop(false);
 
         if (showChangelog(prefs)) {
             launchChangelog();
         }
 
-        if (mIsLollipop && needsUsPermission()) {
+        if (mIsAtLeastLollipop && needsUsPermission()) {
             launchUsPermission(mContext);
         }
 
@@ -1008,7 +1010,7 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 statusbar_icon_preference = (UpdatingListPreference)findPreference(STATUSBAR_ICON_PREFERENCE);
                 statusbar_icon_preference.setValue(prefs2.getString(STATUSBAR_ICON_PREFERENCE, STATUSBAR_ICON_DEFAULT));
                 statusbar_icon_preference.setOnPreferenceChangeListener(changeListener);
-                statusbar_icon_preference.setEnabled(!mIsLollipop);
+                statusbar_icon_preference.setEnabled(!mIsAtLeastLollipop);
 
                 icon_size_preference = (UpdatingListPreference)findPreference(ICON_SIZE_PREFERENCE);
                 icon_size_preference.setValue(prefs2.getString(ICON_SIZE_PREFERENCE, Integer.toString(ICON_SIZE_DEFAULT)));
@@ -1276,12 +1278,12 @@ public class Settings extends Activity implements ActionBar.TabListener {
                 PrefsFragment mAppearanceFrag = (PrefsFragment) mGetFragments.getFragmentByPosition(APPEARANCE_TAB);
                 mAppearanceFrag.appnos_preference.setEnabled(isToggled);
                 mAppearanceFrag.second_row_preference.setEnabled(isToggled);
-                mAppearanceFrag.statusbar_icon_preference.setEnabled(!mIsLollipop && isToggled);
+                mAppearanceFrag.statusbar_icon_preference.setEnabled(!mIsAtLeastLollipop && isToggled);
                 mAppearanceFrag.divider_preference.setEnabled(isToggled);
                 mAppearanceFrag.row_divider_preference.setEnabled(isToggled);
                 mAppearanceFrag.colorize_preference.setEnabled(isToggled);
                 mAppearanceFrag.icon_size_preference.setEnabled(isToggled);
-                mAppearanceFrag.notification_bg_preference.setEnabled(mIsLollipop && isToggled);
+                mAppearanceFrag.notification_bg_preference.setEnabled(mIsAtLeastLollipop && isToggled);
             } catch (Exception e) {
             }
         }

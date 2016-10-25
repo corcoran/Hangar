@@ -43,6 +43,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import java.text.SimpleDateFormat;
@@ -231,7 +232,7 @@ public class WatchfulService extends Service {
             // TODO: This needs to be more elegant for L...
             if (taskList.size() == 0 ||
                     (taskList.size() == 1 && (taskList.get(0).packageName.equals(getPackageName()) || taskList.get(0).packageName.equals("com.android.settings")))) {
-                if (Tools.isLollipop()) {
+                if (Tools.isLollipop(false)) {
                     buildLBaseTasks();
                 } else {
                     buildBaseTasks();
@@ -329,7 +330,7 @@ public class WatchfulService extends Service {
 
                     // TODO: This whole thing needs major refactoring.  Needs <=KK and =>L methods
 
-                    isLollipop = Tools.isLollipop();
+                    isLollipop = Tools.isLollipop(false);
 
                     db = TasksDataSource.getInstance(context);
                     db.open();
@@ -569,7 +570,7 @@ public class WatchfulService extends Service {
                 getResources().getIdentifier("notification_row_no_dividers", "layout", taskPackage);
 
         numOfApps = Integer.parseInt(prefs.getString(Settings.APPSNO_PREFERENCE, Integer.toString(Settings.APPSNO_DEFAULT)));
-        if (Tools.isLollipop()) {
+        if (Tools.isLollipop(true)) {
             setPriority = Settings.PRIORITY_ON_L_DEFAULT;
         } else {
             setPriority = Integer.parseInt(prefs.getString(Settings.PRIORITY_PREFERENCE, Integer.toString(Settings.PRIORITY_DEFAULT)));
@@ -747,15 +748,16 @@ public class WatchfulService extends Service {
         }
 
         Notification notification;
-        Notification.Builder builder = new Notification.Builder(WatchfulService.this).
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(WatchfulService.this).
                 setContentTitle(getResources().getString(R.string.app_name))
                 .setContentText(getResources().getString(R.string.app_name))
                 .setSmallIcon(smallIcon)
                 .setContent(customNotifView)
                 .setOngoing(true)
+                .setWhen(System.currentTimeMillis())
                 .setPriority(setPriority);
 
-        if (Tools.isLollipop())
+        if (Tools.isLollipop(false))
             lollipopNotificationSettings(builder);
 
         notification = builder.build();
@@ -781,8 +783,8 @@ public class WatchfulService extends Service {
     }
 
     @TargetApi(21)
-    public void lollipopNotificationSettings(Notification.Builder builder) {
-        if (Tools.isLollipop()) {
+    public void lollipopNotificationSettings(NotificationCompat.Builder builder) {
+        if (Tools.isLollipop(false)) {
             builder.setVisibility(Notification.VISIBILITY_PUBLIC);
         }
 
