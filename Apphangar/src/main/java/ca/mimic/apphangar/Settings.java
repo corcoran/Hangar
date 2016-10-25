@@ -72,6 +72,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -571,34 +572,47 @@ public class Settings extends Activity implements ActionBar.TabListener {
 
         if (!getResources().getBoolean(R.bool.wrap_dialog_buttons)) return;
 
-        // This is a huge hack
-        // What we're doing is moving the neutral button, which is the first button in L to its own
-        // line and having the positive/negative buttons in a little container side by side.
+        // This is somewhat of a hack
+        // We're adding each button to a single LinearLayout and preventing wrapping.  This
+        // fixes an issue with the Material design style Dialogs mucking up a 3 button dialog
 
-        Button positive = alert.getButton(DialogInterface.BUTTON_POSITIVE);
-        Button negative = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
+        Button[] buttons = new Button[]{alert.getButton(DialogInterface.BUTTON_POSITIVE),
+                alert.getButton(DialogInterface.BUTTON_NEGATIVE),
+                alert.getButton(DialogInterface.BUTTON_NEUTRAL)};
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
 
-        params.setMargins(0, -10, 0, -5);
-        LinearLayout parent = (LinearLayout) positive.getParent();
-        parent.setLayoutParams(params);
-        parent.setPadding(parent.getPaddingLeft(), 0, parent.getPaddingRight(), parent.getPaddingBottom());
-        parent.setGravity(Gravity.RIGHT);
-        parent.setOrientation(LinearLayout.VERTICAL);
-        parent.removeView(negative);
-        parent.removeView(positive);
+        params.weight = 1;
+
+        LinearLayout parent = (LinearLayout) buttons[0].getParent();
+        parent.setGravity(Gravity.CENTER);
+        parent.setOrientation(LinearLayout.HORIZONTAL);
 
         LinearLayout bottomCont = new LinearLayout(mContext);
+
+        for (int i = 0; i <= 2; i++) {
+            setupButton(buttons[i], params);
+            parent.removeView(buttons[i]);
+            bottomCont.addView(buttons[i], 0);
+        }
+
+        params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+
+        bottomCont.setPadding(20, 20, 20, 20);
+        bottomCont.setGravity(Gravity.CENTER);
         bottomCont.setLayoutParams(params);
-        bottomCont.setOrientation(LinearLayout.HORIZONTAL);
-        bottomCont.setGravity(Gravity.RIGHT);
-        bottomCont.addView(negative);
-        bottomCont.addView(positive);
+
         parent.addView(bottomCont);
+
+    }
+
+    protected void setupButton(Button button, LinearLayout.LayoutParams params) {
+        button.setSingleLine(false);
+        button.setAllCaps(true);
+        button.setLayoutParams(params);
     }
 
     protected void launchLicense() {
