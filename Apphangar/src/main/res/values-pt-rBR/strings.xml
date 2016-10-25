@@ -47,7 +47,6 @@
   <string name="dialog_priority_preference">Escolha uma posição</string>
   <string name="priority_top">Topo</string>
   <string name="priority_normal">Normal</string>
-  <string name="priority_bottom">Abaixo (Esconde o ícone da StatusBar)</string>
   <string name="title_smart_notification">Classificação inteligente de notificação</string>
   <string name="summary_smart_notification">Reordenar somente quando é adicionado um novo ícone</string>
   <string name="title_appsno_preference">Número de aplicativos</string>
@@ -78,6 +77,7 @@
   <string name="summary_colorize_preference">Mudar a cor dos ícones de notificação</string>
   <string name="title_icon_color_preference">Cor</string>
   <string name="title_icon_color_category">Cor do ícone</string>
+  <string name="title_notification_bg_preference">Cor de fundo</string>
   <string name="title_top_spinner">Topo</string>
   <string name="title_sort_spinner">Classificar por</string>
   <string name="refresh_button">Atualizar</string>
@@ -102,7 +102,6 @@
   <string name="configure_license">Licença</string>
   <string name="configure_contribute">Contribua</string>
   <string name="donate_title">Quer me pagar uma cerveja?</string>
-  <string name="donate_head">As doações são sempre apreciadas e útil ao finaciar o desenvolvimento futuro deste e de outros apps.\n\nSe você achar o Hangar útil e quer mostrar agradecimento pelo trabalho que tem ido para isso, sinta-se livre para deixar um review sobre sua experiência com o app, se você também é generoso doê usando <b>Google Play</b> abaixo.</string>
   <string name="donate_google">Doê com Google</string>
   <string name="donate_contribute">Faça o Hangar melhor!</string>
   <string name="donate_accept_button">"Voltar as Configurações do Hangar"</string>

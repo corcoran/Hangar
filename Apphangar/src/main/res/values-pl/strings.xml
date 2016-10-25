@@ -47,7 +47,6 @@
   <string name="dialog_priority_preference">Wybierz pozycję</string>
   <string name="priority_top">Góra</string>
   <string name="priority_normal">Domyślna</string>
-  <string name="priority_bottom">Dół (ukrywa ikonę paska statusu)</string>
   <string name="title_smart_notification">Inteligentne sortowanie powiadomień</string>
   <string name="summary_smart_notification">Zmieniaj kolejność tylko po dodaniu nowej ikony</string>
   <string name="title_floating_windows">Uruchamianie aplikacji w pływających oknach</string>
@@ -81,6 +80,7 @@
   <string name="summary_colorize_preference">Zmień kolory ikon powiadomień</string>
   <string name="title_icon_color_preference">Kolor</string>
   <string name="title_icon_color_category">Kolor ikony</string>
+  <string name="title_notification_bg_preference">Kolor tła</string>
   <string name="title_top_spinner">Góra</string>
   <string name="title_sort_spinner">Sortuj według</string>
   <string name="refresh_button">Odśwież</string>
@@ -105,7 +105,6 @@
   <string name="configure_license">Licencja</string>
   <string name="configure_contribute">Weź udział w rozwoju</string>
   <string name="donate_title">Chcesz kupić mi piwo?</string>
-  <string name="donate_head">Darowizny są zawsze mile widziane i pomocne w finansowanie przyszłego rozwoju tej i innych aplikacji.\n\nJeśli uważasz, że Hangar jest przydatną aplikacją i chcesz podziękować za włożoną w nią pracę, możesz pozostawić recenzję odzwierciedlającą Twoje doświadczenia z aplikacji, lub jeśli jesteś w hojnym nastroju , możesz przekazać donację za pomocą <b>Google Play</b> poniżej.</string>
   <string name="donate_google">Wspomóż przy pomocy Google</string>
   <string name="donate_contribute">Pozwól, aby Hangar stał się lepszy!</string>
   <string name="donate_accept_button">"Kontynuuj"</string>

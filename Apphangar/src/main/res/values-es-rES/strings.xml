@@ -6,6 +6,8 @@
   <string name="title_appearance">Apariencia</string>
   <string name="title_apps">Apps</string>
   <string name="title_activity_settings">Configuración de Hangar</string>
+  <!-- Preferences -->
+  <!-- General -->
   <string name="title_toggle_preference">Panel de notificaciones</string>
   <string name="title_boot_preference">Ejecutarse al arrancar</string>
   <string name="title_icon_pack_preference">Paquete de Iconos</string>
@@ -33,6 +35,7 @@
   <string name="title_more_apps_pages">Número de páginas</string>
   <string name="summary_more_apps_pages">Cambiar entre %s páginas</string>
   <string name="title_more_apps_icon">Icono del botón</string>
+  <!-- Behavior -->
   <string name="title_weight_category">Clasificación y orden de iconos</string>
   <string name="title_weighted_recents_preference">Clasificación ponderada</string>
   <string name="summary_weighted_recents_preference">Aplicaciones ordenadas por más utilizados y recencia</string>
@@ -53,6 +56,7 @@
   <string name="title_floating_windows">Lanzar aplicaciones en ventanas flotantes</string>
   <string name="summary_floating_windows">Sólo disponible en ROMs soportadas</string>
   <string name="alert_floating_windows">Compatible con XHaloFloatingWindow, AOSPA y derivados.</string>
+  <!-- Appearance -->
   <string name="title_appsno_preference">Número de aplicaciones</string>
   <string name="summary_appsno_preference">Mostrando %s apps</string>
   <string name="summary_appsno_second_row_preference">Mostrando %s apps por fila</string>
@@ -86,6 +90,7 @@
   <string name="notification_bg_default">Por defecto (con esquinas redondeadas)</string>
   <string name="notification_bg_dark">Material oscuro</string>
   <string name="notification_bg_black">Negro</string>
+  <!-- Apps -->
   <string name="apps_loading">Cargando apps..</string>
   <string name="title_top_spinner">Parte superior</string>
   <string name="title_sort_spinner">Ordenar por</string>
@@ -94,22 +99,27 @@
   <string name="top_blacklisted">En la lista negra</string>
   <string name="top_none">Ninguna</string>
   <string name="sort_time_spent">Tiempo de uso de la aplicación</string>
-  <string name="sort_alphabetical">Alphabetical</string>
+  <string name="sort_alphabetical">Alfabéticamente</string>
+  <!-- Color Picker -->
   <string name="dialog_color_picker">Selector de color</string>
   <string name="press_color_to_apply">Presione un color abajo para aplicar los cambios</string>
   <string name="hex">Hex:</string>
+  <!-- Action menu -->
   <string name="action_pin">Anclar app</string>
   <string name="action_unpin">Desanclar app</string>
   <string name="action_blacklist">Lista negra</string>
   <string name="action_pick_icon">Cambiar icono</string>
   <string name="action_reset_stats">Resetear estadísticas</string>
+  <!-- Action spinner -->
   <string name="title_activity_apps_widget">Widget de Aplicaciones</string>
   <string name="title_activity_stats_widget">Widget de Estadísticas</string>
+  <!-- Settings menu -->
   <string name="configure_changelog">Cambios recientes</string>
   <string name="configure_instructions">Instrucciones</string>
   <string name="configure_donate">Donar</string>
   <string name="configure_license">Licencia</string>
   <string name="configure_contribute">Contribuir</string>
+  <!-- Donate -->
   <string name="donate_title">¿Me quiere invitar una cerveza?</string>
   <string name="donate_head">Las donaciones siempre son apreciadas y útiles para el futuro desarrollo de este y otros apps.\n\nSin embargo, si encuentras que Hangar sea útil y quiere mostrar su agradecimiento por el esfuerzo de su desarrollo, visitar la sección Contribuir para ver las maneras en que puedes ayudar.\n\nSi se siente generoso, usted puede donar usando <b>Google Play</b> abajo.</string>
   <string name="donate_google">Donar con Google</string>
@@ -119,6 +129,7 @@
   <string name="donate_thanks_title">¡Gracias!</string>
   <string name="donate_thanks_continue">Volver a Hangar</string>
   <string name="donate_thanks">"¡Su contribución al desarrollo de Hangar es muy apreciado! La comunidad Android se hace mejor por gente como usted que apoya y motiva a los desarrolladores."</string>
+  <!-- Contribute -->
   <string name="contribute_title">Contribuir a Hangar</string>
   <string name="contribute_google_title">Calificar &amp; Comentar</string>
   <string name="contribute_google_text">"Altas calificaciones y comentarios positivos ayudan a subir el rango de Hangar en el Play Store. ¡Es la forma más rápida y sencilla de contribuir al proyecto!"</string>
@@ -145,26 +156,31 @@
   <string name="contributors_role10">Traducción en inglés (Reino Unido)</string>
   <string name="contributors_role11">Traducción en  hebreo</string>
   <string name="contribute_accept_button">Continuar</string>
+  <!-- Usage Stats permission -->
   <string name="us_permission_title">Se necesita autorización</string>
   <string name="us_permission_head">Hangar ahora requiere el nuevo permiso de las estadísticas de uso a partir de Android 5.0 (Lollipop).\n\nSe debe de conceder este permiso manualmente para que Hangar pueda monitorear el uso de las aplicaciones.</string>
   <string name="us_permission_settings_button">Autorizar a Hangar</string>
   <string name="us_permission_notification">Se requiere permisos adicionales</string>
+  <!-- License -->
   <string name="license_title">Licencia y código fuente</string>
   <string name="license_head">Hangar está licenciado bajo la licencia GPLv3 de la Free Software Foundation (Fundación para el sofware libre) y es Copyright © 2014 Jeff Corcoran.\n\nBajo la licencia GPL, Hangar está disponible de forma gratuita cuando el uso del Hangar se adhiere a los términos de la licencia GPL.\n\nLos usuarios pueden descargar el software de forma gratuita, modificarlo, integrarlo y distribuirlo. Sin embargo, los usuarios GPL deben acatar las reglas de la GPL, que estipulan que si un trabajo basado en Hangar se redistribuye, el código fuente completo de este trabajo también debe estar abierto y disponible para su redistribución bajo los términos de la GPL.\n\nVer la GPL y las preguntas frecuentes de la Free Software Foundation para obtener más detalles.</string>
   <string name="license_view_source">Visite Hangar en Github</string>
   <string name="license_accept_button">Continuar</string>
+  <!-- Changelog -->
   <string name="changelog_title">Cambios de Hangar</string>
   <string name="changelog_donate_button">Mostrar gracias</string>
   <string name="changelog_contribute_button">¡Mejorar Hangar!</string>
   <string name="changelog_accept_button">Continuar</string>
   <string name="changelog_changes_title">Cambios</string>
   <string name="changelog_coming_soon_title">¡Próximamente!</string>
+  <!-- Apps Widget -->
   <string name="apps_widget_name">Widget de aplicaciones Hangar</string>
   <string name="title_icon_size_preference">Tamaño de icono</string>
   <string name="icon_size_small">Pequeño</string>
   <string name="icon_size_medium">Mediano (por defecto)</string>
   <string name="icon_size_large">Grande</string>
   <string name="title_ignore_pinned_preference">Excluir apps destacadas</string>
+  <!-- Stats Widget -->
   <string name="stats_widget_name">Widget de estadísticas Hangar</string>
   <string name="title_background_color_preference">Color de fondo</string>
   <string name="title_rounded_corners_preference">Puntas redondeadas</string>
@@ -184,6 +200,7 @@
   <string name="alignment_top">Parte superior</string>
   <string name="alignment_center">Centro (por defecto)</string>
   <string name="alignment_bottom">Parte inferior</string>
+  <!-- Instructions -->
   <string name="instructions_title">Instrucciones de Hangar</string>
   <string name="instructions_1_1">"¡Bienvenido a Hangar!"</string>
   <string name="instructions_1_2">"Hangar ha añadido una <b>barra de acceso directo a aplicaciones</b> a tu panel de notificaciones.  También se iniciará el monitoreo de la frecuencia y la cantidad de tiempo que pasas en tus aplicaciones."</string>
