@@ -398,9 +398,9 @@
     <string-array name="versionSummaries" translatable="false">
         <item>
 "  &#8226; [Fix!] Bring back position setting for
-            MM/L users
+     MM/L users
   &#8226; [New!] Hangar Settings shortcut from
-            Notification/App settings
+     Notification/App settings
   &#8226; Updated translations"</item>
         <item>
 "  &#8226; [Fix!] Android L support!
