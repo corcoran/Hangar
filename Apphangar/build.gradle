@@ -30,6 +30,8 @@ android {
         targetSdkVersion 22
         versionCode 75
         versionName "2.7"
+
+        project.ext.set("VERSION_NAME", defaultConfig.versionName)
     }
     lintOptions {
         abortOnError true
@@ -43,21 +45,20 @@ android {
         debug {
             debuggable true
         }
+
         applicationVariants.all { variant ->
-            variant.outputs.each { variantEach ->
-                appendVersionNameVersionCode(variant, variantEach, defaultConfig, manifestParser)
+            variant.outputs.each { output ->
+                
+                def newVersionName = project.VERSION_NAME
+
+                if (variant.buildType.name == android.buildTypes.debug.name) {
+                    newVersionName += "-" + variant.buildType.name
+                }
+                output.outputFile = new File(output.outputFile.parent, "Hangar.apk".replace(".apk", "-" + newVersionName + ".apk"))
             }
+
         }
     }
-}
-
-def appendVersionNameVersionCode(variant, variantEach, defaultConfig, manifestParser) {
-    def versionName = manifestParser.getVersionName(android.sourceSets.main.manifest.srcFile)
-    if(variant.buildType.name == android.buildTypes.debug.name) {
-        versionName += "-debug"
-    }
-    def file = variantEach.outputFile
-    variantEach.outputFile = new File(file.parent, "Hangar.apk".replace(".apk", "-" + versionName + ".apk"))
 }
 
 dependencies {
