@@ -2,9 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ca.mimic.apphangar"
     xmlns:tools="http://schemas.android.com/tools"
-    android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
-    android:versionCode="75"
-    android:versionName="2.7" >
+    android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
 
     <uses-permission android:name="android.permission.GET_TASKS"
         tools:ignore="" />
