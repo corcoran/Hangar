@@ -1,5 +1,9 @@
 Hangar
 ================
+**This version of Hangar is outdated!**
+
+There is a new, work-in-progress re-write updated for newer versions of Android. It's in the process of reaching feature parity and at the moment is only available on github. See here: https://github.com/mimicmobile/hangar
+===
 
 Hangar is an Android app that provides easy, relevant shortcuts in your notification drawer to your most used and relied upon apps.
 
