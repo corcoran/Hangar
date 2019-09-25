@@ -99,7 +99,7 @@ public class AppsRowAdapter extends BaseAdapter {
         if (completeRedraw) {
             holder.taskIcon.setImageBitmap(null);
         }
-        if (!ih.cachedIconHelper(holder.taskIcon, rowItem.getComponentName())) {
+        if (rowItem.getComponentName() == null || !ih.cachedIconHelper(holder.taskIcon, rowItem.getComponentName())) {
             mRowItems.remove(rowItem);
         }
         holder.taskIcon.setContentDescription(rowItem.getName());
